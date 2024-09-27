@@ -93,7 +93,7 @@ const componentMappers: {
   },
   PersonalizationContainer(node, options) {
     const block = blockToBuilder(node, options, { skipMapper: true });
-
+    // console.log('block', node);
     const variants: any[] = [];
     let defaultVariant: BuilderElement[] = [];
     const validFakeNodeNames = [
@@ -103,18 +103,27 @@ const componentMappers: {
       'Personalization',
     ];
     block.children!.forEach((item) => {
+      console.log('item', item);
       if (item.component && validFakeNodeNames.includes(item.component?.name)) {
         let query: any;
         if (item.component.options.query) {
-          const queryArray = item.component.options.query;
-          if (Array.isArray(queryArray)) {
-            query = queryArray.map((query) => ({
+          const optionsQuery = item.component.options.query;
+          if (Array.isArray(optionsQuery)) {
+            query = optionsQuery.map((q) => ({
               '@type': '@builder.io/core:Query',
-              ...query,
+              ...q,
             }));
+          } else {
+            query = [
+              {
+                '@type': '@builder.io/core:Query',
+                ...optionsQuery,
+              },
+            ];
           }
           const newVariant = {
             ...item.component.options,
+            query,
             blocks: item.children,
           };
           variants.push(newVariant);

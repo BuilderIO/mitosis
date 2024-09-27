@@ -373,11 +373,16 @@ const componentMappers: {
           meta: getMetaFromBlock(block, options),
           children: variant.blocks.map((col: any) => builderElementToMitosisNode(col, options)),
         });
-        const query = variant.query as any[];
-        if (Array.isArray(query)) {
+        const queryOptions = variant.query as any[];
+        if (Array.isArray(queryOptions)) {
           variantNode.bindings.query = {
             type: 'single',
-            code: JSON.stringify(query.map(({ '@type': t, ...rest }) => rest)),
+            code: JSON.stringify(queryOptions.map((q) => omit(q, '@type'))),
+          };
+        } else if (queryOptions) {
+          variantNode.bindings.query = {
+            type: 'single',
+            code: JSON.stringify(omit(queryOptions, '@type')),
           };
         }
         return variantNode;
