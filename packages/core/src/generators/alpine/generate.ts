@@ -1,3 +1,4 @@
+import { ToAlpineOptions } from '@/generators/alpine/types';
 import { babelTransformCode } from '@/helpers/babel-transform';
 import { dashCase } from '@/helpers/dash-case';
 import { fastClone } from '@/helpers/fast-clone';
@@ -11,7 +12,7 @@ import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
 import { collectCss } from '@/helpers/styles/collect-css';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { checkIsForNode, ForNode, MitosisNode } from '@/types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
+import { TranspilerGenerator } from '@/types/transpiler';
 import { camelCase, flowRight as compose, curry, flow } from 'lodash';
 import { format } from 'prettier/standalone';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
@@ -23,17 +24,6 @@ import {
 } from '../../modules/plugins';
 import { renderMountHook } from './render-mount-hook';
 import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
-
-export interface ToAlpineOptions extends BaseTranspilerOptions {
-  /**
-   * use @on and : instead of `x-on` and `x-bind`
-   */
-  useShorthandSyntax?: boolean;
-  /**
-   * If true, the javascript won't be extracted into a separate script block.
-   */
-  inlineState?: boolean;
-}
 
 export const checkIsComponentNode = (node: MitosisNode): boolean =>
   node.name === '@builder.io/mitosis/component';
