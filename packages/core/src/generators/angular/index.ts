@@ -37,7 +37,7 @@ import { BaseHook, MitosisComponent } from '@/types/mitosis-component';
 import { Binding, MitosisNode, checkIsForNode } from '@/types/mitosis-node';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { flow, pipe } from 'fp-ts/lib/function';
-import { isString, kebabCase, uniq } from 'lodash';
+import { camelCase, isString, kebabCase, uniq } from 'lodash';
 import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
 import isChildren from '../../helpers/is-children';
@@ -238,6 +238,22 @@ const stringifyBinding =
       return `[${keyToUse}]="${codeToUse}"`;
     }
   };
+
+export const stripOutputEmits = (code?: string, outputEventEmitters?: string[]): string => {
+  let newCode = code || '';
+
+  if (!outputEventEmitters?.length) {
+    return newCode;
+  }
+
+  outputEventEmitters?.forEach((_var) => {
+    const regexp = '(^|\\s|;|\\()(props\\.?)' + _var + '\\(';
+    const replacer = '$1this.' + removeOnFromAngularOutputEvent(_var) + '.emit(';
+    newCode = newCode.replace(new RegExp(regexp, 'g'), replacer);
+  });
+
+  return newCode;
+};
 
 const handleNgOutletBindings = (node: MitosisNode, options: ToAngularOptions) => {
   let allProps = '';
@@ -558,9 +574,9 @@ const processAngularCode =
       DO_NOT_USE_VARS_TRANSFORMS(code, {
         contextVars,
         domRefs,
-        outputVars,
         stateVars,
       }),
+      (newCode) => stripOutputEmits(newCode, outputVars),
       (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
     );
 
@@ -722,6 +738,10 @@ const classPropertiesPlugin = () => ({
   },
 });
 
+export function removeOnFromAngularOutputEvent(outputName: string): string {
+  return outputName.startsWith('on') ? camelCase(outputName.substring(2)) : camelCase(outputName);
+}
+
 // if any state "property" is trying to access state.* or props.*
 // then we need to move them to onInit where they can be accessed
 const transformState = (json: MitosisComponent) => {
@@ -865,11 +885,12 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       props.delete(variableName);
     });
 
-    const outputs = outputVars.map((variableName) => {
+    // Building the @Output() EventEmitters
+    const outputEvents = outputVars.map((outputName) => {
       if (options?.experimental?.outputs) {
-        return options?.experimental?.outputs(json, variableName);
+        return options?.experimental?.outputs(json, outputName);
       }
-      return `@Output() ${variableName} = new EventEmitter()`;
+      return `@Output() ${removeOnFromAngularOutputEvent(outputName)} = new EventEmitter()`;
     });
 
     const domRefs = getRefs(json);
@@ -992,7 +1013,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       Boolean(injectables.length) || dynamicComponents.size || refsForObjSpread.size;
 
     const angularCoreImports = [
-      ...(outputs.length ? ['Output', 'EventEmitter'] : []),
+      ...(outputEvents.length ? ['Output', 'EventEmitter'] : []),
       ...(options?.experimental?.inject ? ['Inject', 'forwardRef'] : []),
       'Component',
       ...(domRefs.size || dynamicComponents.size || refsForObjSpread.size
@@ -1041,7 +1062,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         })
         .join('\n')}
 
-      ${outputs.join('\n')}
+      ${outputEvents.join('\n')}
 
       ${Array.from(domRefs)
         .map(

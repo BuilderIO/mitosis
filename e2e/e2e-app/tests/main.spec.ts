@@ -46,7 +46,6 @@ test.describe('e2e', () => {
     await expect(page.locator(`${textLocator}2`)).toBeVisible();
     await expect(page.locator(`${textLocator}3`)).toBeVisible();
   });
-
   test.describe('special HTML tags', () => {
     test('template tag', async ({ page, packageName }) => {
       await page.goto('/special-tags/');
@@ -99,6 +98,30 @@ test.describe('e2e', () => {
 
       const nativeEnabled = page.getByTestId('native-input-enabled');
       await expect(nativeEnabled).toBeEditable();
+    });
+  });
+
+  test.describe('Event Listener', () => {
+    test('Single Event without parameter', async ({ page, packageName }) => {
+      await page.goto('/event-listener/');
+
+      const cancelButton = page.getByRole('button', { name: 'Cancel' });
+
+      await cancelButton.click();
+
+      await expect(page.getByTestId('event-log')).toHaveText('Cancel event called');
+    });
+
+    test('Single Event with parameter', async ({ page, packageName }) => {
+      await page.goto('/event-listener/');
+
+      const confirmButton = page.getByRole('button', { name: 'Confirm' });
+
+      await confirmButton.click();
+
+      await expect(page.getByTestId('event-log')).toHaveText(
+        'Confirm event called with parameter: Joe',
+      );
     });
   });
 });

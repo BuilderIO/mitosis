@@ -49,7 +49,7 @@ export type DO_NOT_USE_ARGS = {
  * Do not use these anywhere. We are migrating to AST transforms and should avoid Regex String.replace() as they are
  * very brittle.
  *
- * If you need to re-use a part of this, re-create it as an AST tranform first.
+ * If you need to re-use a part of this, re-create it as an AST transform first.
  */
 export const DO_NOT_USE_VARS_TRANSFORMS = (
   newCode: string,
