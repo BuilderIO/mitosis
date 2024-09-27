@@ -434,7 +434,7 @@ describe('Builder', () => {
         .foo {
           background: green;
         }
-        
+
         .bar {
           font-weight: bold;
         }
@@ -455,6 +455,96 @@ describe('Builder', () => {
 
     const jsxToMitosis = parseJsx(jsx);
     expect(jsxToMitosis.style).toMatchSnapshot();
+  });
+
+  test('Snapshot PersonalizedContainer', () => {
+    const code = dedent`
+      import { PersonalizationContainer, Variant } from "@components";
+
+      export default function MyComponent(props) {
+        return (
+          <PersonalizationContainer>
+            <Variant
+              name="variant1"
+              startDate="2024-01-01"
+              query={{
+                property: "urlPath",
+                operation: "is",
+                value: "/home",
+              }}
+            >
+              <div>Home</div>
+              <div>Div</div>
+            </Variant>
+            <PersonalizationOption
+              name="2"
+              query={[
+                {
+                  property: "gendr",
+                  operation: "is",
+                  value: ["male", "female"],
+                },
+              ]}
+            >
+              <>Male</>
+            </PersonalizationOption>
+            <Variant>
+              <div>Default</div>
+            </Variant>
+            <div>More tree</div>
+
+          </PersonalizationContainer>
+        );
+      }
+    `;
+
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
+    expect(builderJson.data?.blocks?.[0]).toMatchSnapshot();
+
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
+    });
+    expect(mitosis.trim()).toMatchSnapshot();
+  });
+
+  test('Regenerate PersonalizedContainer', () => {
+    const code = dedent`
+      import { PersonalizationContainer, Variant } from "@components";
+
+      export default function MyComponent(props) {
+        return (
+          <PersonalizationContainer>
+            <Variant
+              name="2"
+              startDate="2024-01-01"
+              endDate="2024-01-31"
+              query={[
+                {
+                  property: "gendr",
+                  operation: "is",
+                  value: "male",
+                },
+              ]}
+            >
+              <div>Male</div>
+            </Variant>
+            <Variant default="">
+              <div>Default</div>
+            </Variant>
+          </PersonalizationContainer>
+        );
+      }
+    `;
+
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
+    });
+    expect(mitosis.trim()).toEqual(code.trim());
   });
 });
 
