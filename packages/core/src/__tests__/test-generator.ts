@@ -677,7 +677,6 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                   if (shouldFail) {
                     expect(getOutput).toThrowError();
                   } else {
-                    let output;
                     try {
                       const output = getOutput();
                       if (logOutput) {
