@@ -2,8 +2,9 @@ import { babelTransformExpression } from '@/helpers/babel-transform';
 import { capitalize } from '@/helpers/capitalize';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { createCodeProcessorPlugin } from '@/helpers/plugins/process-code';
+import { NodeMap, replaceNodes } from '@/helpers/replace-identifiers';
 import { MitosisComponent, MitosisState, StateValue } from '@/types/mitosis-component';
-import { NodePath } from '@babel/core';
+import { NodePath, types } from '@babel/core';
 import {
   BlockStatement,
   Expression,
@@ -152,6 +153,13 @@ export function mapStateIdentifiers(json: MitosisComponent) {
   });
 }
 
+const replaceThisWithStateNodes: NodeMap[] = [
+  {
+    from: types.thisExpression(),
+    to: types.identifier('state'),
+  },
+];
+
 const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValue => {
   if (isObjectProperty(item)) {
     if (isFunctionExpression(item.value)) {
@@ -166,7 +174,9 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
         item.value.params,
         item.value.body as BlockStatement,
       );
-      const code = parseCode(n).trim();
+      // Replace this. with state. to handle following
+      // const state = useStore({ _do: () => {this._active = !!id;}})
+      const code = replaceNodes({ code: parseCode(n).trim(), nodeMaps: replaceThisWithStateNodes });
       return {
         code: code,
         type: 'method',

@@ -6657,10 +6657,11 @@ class UseValueAndFnFromStore extends HTMLElement {
       _id: \\"abc\\",
       _active: false,
       _do(id) {
-        this._active = !!id;
+        self.state._active = !!id;
+        self.update();
 
         if (self.props.onChange) {
-          self.props.onChange(this._active);
+          self.props.onChange(self.state._active);
         }
       },
     };
@@ -21855,10 +21856,11 @@ class UseValueAndFnFromStore extends HTMLElement {
       _id: \\"abc\\",
       _active: false,
       _do(id?: string) {
-        this._active = !!id;
+        self.state._active = !!id;
+        self.update();
 
         if (self.props.onChange) {
-          self.props.onChange(this._active);
+          self.props.onChange(self.state._active);
         }
       },
     };

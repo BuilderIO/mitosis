@@ -655,15 +655,17 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
     for (const { name, parser, testsArray } of parsers) {
       if (testsArray) {
         describe(name, () => {
-          if (name === 'jsx' && options.typescript === false) {
-            test('Remove Internal mitosis package', async () => {
-              const t = await basicMitosis;
-              const component = parseJsx(t.code, {
-                compileAwayPackages: ['@dummy/custom-mitosis'],
+          if (!only) {
+            if (name === 'jsx' && options.typescript === false) {
+              test('Remove Internal mitosis package', async () => {
+                const t = await basicMitosis;
+                const component = parseJsx(t.code, {
+                  compileAwayPackages: ['@dummy/custom-mitosis'],
+                });
+                const output = generator(options)({ component, path: t.filePath });
+                expect(output).toMatchSnapshot();
               });
-              const output = generator(options)({ component, path: t.filePath });
-              expect(output).toMatchSnapshot();
-            });
+            }
           }
           describe(testName, () => {
             testsArray.forEach((tests) => {
