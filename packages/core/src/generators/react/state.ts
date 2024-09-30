@@ -1,4 +1,5 @@
 import { capitalize } from '@/helpers/capitalize';
+import { getTypedFunction } from '@/helpers/get-typed-function';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { prefixWithFunction, replaceGetterWithFunction } from '@/helpers/patterns';
 import { transformStateSetters } from '@/helpers/transform-state-setters';
@@ -36,25 +37,27 @@ const processStateValue = (options: ToReactOptions) => {
     if (!stateVal) {
       return '';
     }
-    const getDefaultCase = () =>
-      `const [${key}, ${getSetStateFnName(key)}] = useState(() => (${mapValue(value)}))`;
 
-    const value = stateVal.code || '';
+    let value = stateVal.code || '';
     const type = stateVal.type;
-    if (typeof value === 'string') {
-      switch (type) {
-        case 'getter':
-          return pipe(value, replaceGetterWithFunction, mapValue);
-        case 'function':
-          return mapValue(value);
-        case 'method':
-          return pipe(value, prefixWithFunction, mapValue);
-        default:
-          return getDefaultCase();
-      }
+    const typeParameter = stateVal.typeParameter;
+    const stateType =
+      options.typescript && stateVal.typeParameter ? `<${stateVal.typeParameter}>` : '';
+
+    let result = '';
+    if (type === 'getter') {
+      result = pipe(value, replaceGetterWithFunction, mapValue);
+    } else if (type === 'function') {
+      result = mapValue(value);
+    } else if (type === 'method') {
+      result = pipe(value, prefixWithFunction, mapValue);
     } else {
-      return getDefaultCase();
+      return `const [${key}, ${getSetStateFnName(key)}] = useState${stateType}(() => (${mapValue(
+        value,
+      )}))`;
     }
+
+    return getTypedFunction(result, options.typescript, typeParameter);
   };
 };
 

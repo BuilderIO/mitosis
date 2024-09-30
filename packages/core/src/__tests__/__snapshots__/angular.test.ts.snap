@@ -12288,6 +12288,140 @@ export default class TypeDependency {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > typeExternalStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"type-external-store\\",
+  template: \`
+    <div>Hello {{_name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeExternalStore {
+  _name = \\"test\\";
+}
+
+@NgModule({
+  declarations: [TypeExternalStore],
+  imports: [CommonModule],
+  exports: [TypeExternalStore],
+})
+export class TypeExternalStoreModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > typeExternalStore 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"type-external-store\\",
+  template: \`
+    <div>Hello {{_name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class TypeExternalStore {
+  _name = \\"test\\";
+}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > typeGetterStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"type-getter-store\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeGetterStore {
+  name = \\"test\\";
+  getName() {
+    if (this.name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return this.name;
+  }
+  get test() {
+    return \\"test\\";
+  }
+}
+
+@NgModule({
+  declarations: [TypeGetterStore],
+  imports: [CommonModule],
+  exports: [TypeGetterStore],
+})
+export class TypeGetterStoreModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > typeGetterStore 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"type-getter-store\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class TypeGetterStore {
+  name = \\"test\\";
+  getName() {
+    if (this.name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return this.name;
+  }
+  get test() {
+    return \\"test\\";
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > use-style 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -13044,8 +13178,8 @@ export default class MyBasicComponent {
   underscore_fn_name() {
     return \\"bar\\";
   }
-  age = 1;
-  sports = [\\"\\"];
+  age: number = 1;
+  sports: Array<string> = [\\"\\"];
 }
 
 @NgModule({
@@ -13148,8 +13282,8 @@ export default class MyBasicComponent {
   underscore_fn_name() {
     return \\"bar\\";
   }
-  age = 1;
-  sports = [\\"\\"];
+  age: number = 1;
+  sports: Array<string> = [\\"\\"];
 }
 "
 `;
@@ -26045,6 +26179,156 @@ import type { Foo as Foo2 } from \\"./type-export.js\\";
 })
 export default class TypeDependency {
   @Input() foo!: TypeDependencyProps[\\"foo\\"];
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > typeExternalStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+import { FooStore } from \\"./foo-store\\";
+
+@Component({
+  selector: \\"type-external-store\\",
+  template: \`
+    <div>Hello {{_name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeExternalStore {
+  _name: FooStore[\\"_name\\"] = \\"test\\";
+}
+
+@NgModule({
+  declarations: [TypeExternalStore],
+  imports: [CommonModule],
+  exports: [TypeExternalStore],
+})
+export class TypeExternalStoreModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > typeExternalStore 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { FooStore } from \\"./foo-store\\";
+
+@Component({
+  selector: \\"type-external-store\\",
+  template: \`
+    <div>Hello {{_name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class TypeExternalStore {
+  _name: FooStore[\\"_name\\"] = \\"test\\";
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > typeGetterStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+@Component({
+  selector: \\"type-getter-store\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeGetterStore {
+  name: GetterStore[\\"name\\"] = \\"test\\";
+  getName(): GetterStore[\\"getName\\"] {
+    if (this.name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return this.name;
+  }
+  get test(): GetterStore[\\"test\\"] {
+    return \\"test\\";
+  }
+}
+
+@NgModule({
+  declarations: [TypeGetterStore],
+  imports: [CommonModule],
+  exports: [TypeGetterStore],
+})
+export class TypeGetterStoreModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > typeGetterStore 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+@Component({
+  selector: \\"type-getter-store\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class TypeGetterStore {
+  name: GetterStore[\\"name\\"] = \\"test\\";
+  getName(): GetterStore[\\"getName\\"] {
+    if (this.name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return this.name;
+  }
+  get test(): GetterStore[\\"test\\"] {
+    return \\"test\\";
+  }
 }
 "
 `;

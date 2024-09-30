@@ -3259,6 +3259,48 @@ export default TypeDependency;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > typeExternalStore 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function TypeExternalStore(props) {
+  const [_name, set_name] = useState(() => \\"test\\");
+
+  return <div>Hello {_name}! </div>;
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > typeGetterStore 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function TypeGetterStore(props) {
+  const [name, setName] = useState(() => \\"test\\");
+
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test() {
+    return \\"test\\";
+  }
+
+  return <div>Hello {name}! </div>;
+}
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > use-style 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -3486,9 +3528,9 @@ function MyBasicComponent(props: MyBasicComponentProps) {
     return \\"bar\\";
   }
 
-  const [age, setAge] = useState(() => 1);
+  const [age, setAge] = useState<number>(() => 1);
 
-  const [sports, setSports] = useState(() => [\\"\\"]);
+  const [sports, setSports] = useState<Array<string>>(() => [\\"\\"]);
 
   return (
     <Fragment>
@@ -7078,6 +7120,55 @@ function TypeDependency(props: TypeDependencyProps) {
 }
 
 export default TypeDependency;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > typeExternalStore 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+import { FooStore } from \\"./foo-store\\";
+
+function TypeExternalStore(props: any) {
+  const [_name, set_name] = useState<FooStore[\\"_name\\"]>(() => \\"test\\");
+
+  return <div>Hello {_name}! </div>;
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > typeGetterStore 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+function TypeGetterStore(props: any) {
+  const [name, setName] = useState<GetterStore[\\"name\\"]>(() => \\"test\\");
+
+  function getName(): GetterStore[\\"getName\\"] {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test(): GetterStore[\\"test\\"] {
+    return \\"test\\";
+  }
+
+  return <div>Hello {name}! </div>;
+}
+
+export default TypeGetterStore;
 "
 `;
 
