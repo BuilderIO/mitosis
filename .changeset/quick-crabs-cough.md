@@ -2,4 +2,6 @@
 '@builder.io/mitosis': patch
 ---
 
-feat: add typescript support for useStore (angular,react,vue)
+[Angular, React, Vue] feat: add typescript support for ``useStore`` 
+
+[All] Add new snapshot tests to check if TypeScript works for ``useStore``

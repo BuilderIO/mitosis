@@ -41,7 +41,8 @@ const processStateValue = (options: ToReactOptions) => {
     let value = stateVal.code || '';
     const type = stateVal.type;
     const typeParameter = stateVal.typeParameter;
-    const stateType = options.typescript ? `<${stateVal.typeParameter ?? 'any'}>` : '';
+    const stateType =
+      options.typescript && stateVal.typeParameter ? `<${stateVal.typeParameter}>` : '';
 
     let result = '';
     if (type === 'getter') {
