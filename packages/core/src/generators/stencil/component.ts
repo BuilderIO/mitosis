@@ -109,8 +109,10 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
     const coreImports = getStencilCoreImportsAsString(wrap, events, props, dataString);
 
     let str = dedent`
-    ${getImports}
-    import { ${coreImports} } from '@stencil/core';    
+    ${getImports(json, options, childComponents)}
+    
+    import { ${coreImports} } from '@stencil/core';
+        
     ${json.types ? json.types.join('\n') : ''}
     
     @Component({

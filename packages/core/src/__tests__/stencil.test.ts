@@ -8,7 +8,7 @@ describe('Stencil', () => {
     options: {},
   });
 });
-
+/*
 describe('Stencil local', () => {
   runTestsForTarget({
     target: 'stencil',
@@ -17,4 +17,4 @@ describe('Stencil local', () => {
     logOutput: true,
     only: ['subComponent'],
   });
-});
+});*/
