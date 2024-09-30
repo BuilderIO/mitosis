@@ -3221,6 +3221,50 @@ export default TypeDependency;
 "
 `;
 
+exports[`Taro > jsx > Javascript Test > typeExternalStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function TypeExternalStore(props) {
+  const [_name, set_name] = useState(() => \\"test\\");
+
+  return <View>Hello {_name}! </View>;
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > typeGetterStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function TypeGetterStore(props) {
+  const [name, setName] = useState(() => \\"test\\");
+
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test() {
+    return \\"test\\";
+  }
+
+  return <View>Hello {name}! </View>;
+}
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`Taro > jsx > Javascript Test > use-style 1`] = `
 "import * as React from \\"react\\";
 import { Button, View, Text } from \\"@tarojs/components\\";
@@ -3453,9 +3497,9 @@ function MyBasicComponent(props: MyBasicComponentProps) {
     return \\"bar\\";
   }
 
-  const [age, setAge] = useState(() => 1);
+  const [age, setAge] = useState<number>(() => 1);
 
-  const [sports, setSports] = useState(() => [\\"\\"]);
+  const [sports, setSports] = useState<Array<string>>(() => [\\"\\"]);
 
   return (
     <>
@@ -7035,6 +7079,57 @@ function TypeDependency(props: TypeDependencyProps) {
 }
 
 export default TypeDependency;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > typeExternalStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { FooStore } from \\"./foo-store\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function TypeExternalStore(props: any) {
+  const [_name, set_name] = useState<FooStore[\\"_name\\"]>(() => \\"test\\");
+
+  return <View>Hello {_name}! </View>;
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > typeGetterStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+import { View, Text } from \\"@tarojs/components\\";
+
+function TypeGetterStore(props: any) {
+  const [name, setName] = useState<GetterStore[\\"name\\"]>(() => \\"test\\");
+
+  function getName(): GetterStore[\\"getName\\"] {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test(): GetterStore[\\"test\\"] {
+    return \\"test\\";
+  }
+
+  return <View>Hello {name}! </View>;
+}
+
+export default TypeGetterStore;
 "
 `;
 

@@ -5,16 +5,19 @@ export const FUNCTION_HACK_PLUGIN: Plugin = () => ({
   json: {
     pre: (json) => {
       for (const key in json.state) {
-        const value = json.state[key]?.code;
-        const type = json.state[key]?.type;
+        const state = json.state[key];
+        const value = state?.code;
+        const type = state?.type;
         if (typeof value === 'string' && type === 'method') {
           const newValue = prefixWithFunction(value);
           json.state[key] = {
+            ...state,
             code: newValue,
             type: 'method',
           };
         } else if (typeof value === 'string' && type === 'function') {
           json.state[key] = {
+            ...state,
             code: value,
             type: 'method',
           };

@@ -49,6 +49,8 @@ const propsType = getRawFile('./data/types/component-props-type.raw.tsx');
 const propsInterface = getRawFile('./data/types/component-props-interface.raw.tsx');
 const preserveTyping = getRawFile('./data/types/preserve-typing.raw.tsx');
 const typeDependency = getRawFile('./data/types/type-dependency.raw.tsx');
+const typeExternalStore = getRawFile('./data/types/type-external-store.raw.tsx');
+const typeGetterStore = getRawFile('./data/types/type-getter-store.raw.tsx');
 
 const defaultProps = getRawFile('./data/default-props/default-props.raw.tsx');
 const defaultPropsOutsideComponent = getRawFile(
@@ -198,6 +200,8 @@ const BASIC_TESTS: Tests = {
   defaultPropsOutsideComponent,
   preserveTyping: preserveTyping,
   typeDependency,
+  typeExternalStore,
+  typeGetterStore,
   defaultValsWithTypes: getRawFile('./data/types/component-with-default-values-types.raw.tsx'),
   'import types': builderRenderContent,
   subComponent,
@@ -675,17 +679,14 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                   } else {
                     let output;
                     try {
-                      output = getOutput();
+                      const output = getOutput();
                       if (logOutput) {
                         process.stdout.write(`--- Start: ${key} ---\n\n`);
                         process.stdout.write(output);
                         process.stdout.write(`--- End: ${key} ---\n\n`);
                       }
                       expect(output).toMatchSnapshot();
-                    } catch (error: any) {
-                      if (logOutput) {
-                        process.stdout.write(error.message);
-                      }
+                    } catch (error) {
                       expect(getOutput).toThrowErrorMatchingSnapshot();
                     }
                   }

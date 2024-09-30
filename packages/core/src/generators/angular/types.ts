@@ -1,3 +1,4 @@
+import { MitosisComponent } from '@/types/mitosis-component';
 import { BaseTranspilerOptions } from '@/types/transpiler';
 
 export const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment', 'Slot']);
@@ -10,6 +11,11 @@ export interface ToAngularOptions extends BaseTranspilerOptions {
   importMapper?: Function;
   bootstrapMapper?: Function;
   visuallyIgnoreHostElement?: boolean;
+  experimental?: {
+    injectables?: (variableName: string, variableType: string) => string;
+    inject?: boolean;
+    outputs?: (json: MitosisComponent, variableName: string) => string;
+  };
 }
 
 export const DEFAULT_ANGULAR_OPTIONS: ToAngularOptions = {
