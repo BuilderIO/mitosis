@@ -63,9 +63,6 @@ export function generateCompositionApiScript(
     getters: false,
     functions: true,
     format: 'variables',
-    /*    valueMapper: (code) => {
-      return code.replaceAll('this.', ''); // Composition api isn't a class we don't need "this." here
-    },*/
   });
 
   if (template.includes('_classStringToObject')) {
