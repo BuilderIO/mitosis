@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.7
+
+### Patch Changes
+
+- 068efab: [Angular, React, Vue] feat: add typescript support for `useStore`
+
 ## 0.4.6
 
 ### Patch Changes
