@@ -1,14 +1,13 @@
+import { ToRscOptions } from '@/generators/rsc/types';
 import traverse from 'neotraverse/legacy';
-import { Plugin } from '..';
-import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { mergeOptions } from '../helpers/merge-options';
-import { checkIsDefined } from '../helpers/nullable';
-import { MitosisComponent } from '../types/mitosis-component';
-import { TranspilerGenerator } from '../types/transpiler';
-import { checkIfIsClientComponent } from './helpers/rsc';
-import { componentToReact, ToReactOptions } from './react';
-
-export type ToRscOptions = ToReactOptions;
+import { Plugin } from '../..';
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { mergeOptions } from '../../helpers/merge-options';
+import { checkIsDefined } from '../../helpers/nullable';
+import { MitosisComponent } from '../../types/mitosis-component';
+import { TranspilerGenerator } from '../../types/transpiler';
+import { checkIfIsClientComponent } from '../helpers/rsc';
+import { componentToReact } from '../react';
 
 /**
  * Transform react to be RSC compatible, such as

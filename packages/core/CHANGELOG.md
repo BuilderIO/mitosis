@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.5
+
+### Patch Changes
+
+- 428b3ab: chore: update internal structure for generators and add more information for options and metadata
+
 ## 0.4.4
 
 ### Patch Changes
