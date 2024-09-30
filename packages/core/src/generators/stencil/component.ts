@@ -9,7 +9,7 @@ import {
   needsWrap,
   ProcessBindingOptions,
 } from '@/generators/stencil/helpers';
-import { getCodeProcessorPlugins } from '@/generators/stencil/helpers/get-code-processor-plugins';
+import { getCodeProcessorPlugins } from '@/generators/stencil/plugins/get-code-processor-plugins';
 import { ToStencilOptions } from '@/generators/stencil/types';
 import { dedent } from '@/helpers/dedent';
 import { fastClone } from '@/helpers/fast-clone';
