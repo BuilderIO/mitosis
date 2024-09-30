@@ -1,7 +1,8 @@
 import { ToStencilOptions } from '@/generators/stencil/types';
 import { dashCase } from '@/helpers/dash-case';
+import { renderPreComponent } from '@/helpers/render-imports';
 import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
-import { MitosisState } from '@/types/mitosis-component';
+import { MitosisComponent, MitosisState } from '@/types/mitosis-component';
 import { MitosisNode } from '@/types/mitosis-node';
 
 export const isEvent = (key: string): boolean => key.startsWith('on');
@@ -107,4 +108,24 @@ export const getStencilCoreImportsAsString = (
     .map(([key, bool]) => (bool ? key : ''))
     .filter((key) => !!key)
     .join(', ');
+};
+
+export const getImports = (
+  json: MitosisComponent,
+  options: ToStencilOptions,
+  childComponents: string[],
+) => {
+  return renderPreComponent({
+    explicitImportFileExtension: options.explicitImportFileExtension,
+    component: json,
+    target: 'stencil',
+    importMapper: (_: any, theImport: any, importedValues: any) => {
+      const childImport = importedValues.defaultImport;
+      if (childImport && childComponents.includes(childImport)) {
+        return `import {${childImport}} from '${theImport.path}';`;
+      }
+
+      return undefined;
+    },
+  });
 };
