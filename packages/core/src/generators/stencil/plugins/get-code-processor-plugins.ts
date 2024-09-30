@@ -8,7 +8,6 @@ export const getCodeProcessorPlugins = (
 ) => {
   return [
     ...(options.plugins || []),
-    // Strip types from any JS code that ends up in the template, because Svelte does not support TS code in templates.
     CODE_PROCESSOR_PLUGIN((codeType) => {
       switch (codeType) {
         case 'bindings':
