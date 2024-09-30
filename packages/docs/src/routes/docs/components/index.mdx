@@ -200,19 +200,16 @@ export default function CSSExample() {
 
 ### `headless components`
 
-You should consider developing your components without a fixed style inside the Mitosis component.
-Loading the style inside the consuming app via bundler (vite, webpack, etc.) or with default `<link rel="stylesheet" ...`,
-enables a flexible approach. You would use `class` or `data-*` attributes inside your Mitosis component:
+Another approach is to develop your components without a fixed style inside the Mitosis component, a.k.a. "headless components".
+
+You can do so by loading the styles inside the consuming webapp via a bundler (vite, webpack, etc.) or with a head stylesheet `<link rel="stylesheet" ...`.
+You can then use `class` or `data-*` attributes inside your Mitosis component to apply those styles:
 
 ```tsx
 /* ./src/my-component/my-component.lite.tsx */
 export default function CSSExample() {
   return <div class="my-component" />;
 }
-```
-
-The advantage of this is, that you can rely on the CSS ecosystem (sass, less, etc.).
-But you might encounter some problems when you want to use web-components with shadowDOM.
 
 ## `class` vs `className`
 
