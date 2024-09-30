@@ -330,9 +330,14 @@ const _componentToReact = (
   const hasState = options.stateType === 'builder' || checkHasState(json);
 
   const [forwardRef, hasPropRef] = getPropsRef(json);
-  const isForwardRef = !options.preact && Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
+  const isForwardRef =
+    !options.preact &&
+    Boolean(
+      json.meta.useMetadata?.forwardRef || json.meta.useMetadata?.react?.forwardRef || hasPropRef,
+    );
   if (isForwardRef) {
-    const meta = json.meta.useMetadata?.forwardRef as string;
+    const meta = (json.meta.useMetadata?.forwardRef ||
+      json.meta.useMetadata?.react?.forwardRef) as string;
     options.forwardRef = meta || forwardRef;
   }
   const forwardRefType =

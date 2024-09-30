@@ -1,3 +1,5 @@
+import { SELF_CLOSING_HTML_TAGS } from '@/constants/html_tags';
+import { ToMarkoOptions } from '@/generators/marko/types';
 import { dashCase } from '@/helpers/dash-case';
 import { dedent } from '@/helpers/dedent';
 import { fastClone } from '@/helpers/fast-clone';
@@ -13,22 +15,19 @@ import { renderPreComponent } from '@/helpers/render-imports';
 import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
 import { collectCss } from '@/helpers/styles/collect-css';
-import { MitosisComponent } from '@/types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '@/types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
-import hash from 'hash-sum';
-import { camelCase } from 'lodash';
-import { format } from 'prettier/standalone';
-import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
-} from '../../modules/plugins';
+} from '@/modules/plugins';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { MitosisNode, checkIsForNode } from '@/types/mitosis-node';
+import { TranspilerGenerator } from '@/types/transpiler';
+import hash from 'hash-sum';
+import { camelCase } from 'lodash';
+import { format } from 'prettier/standalone';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
-
-export interface ToMarkoOptions extends BaseTranspilerOptions {}
 
 interface InternalToMarkoOptions extends ToMarkoOptions {
   component: MitosisComponent;
