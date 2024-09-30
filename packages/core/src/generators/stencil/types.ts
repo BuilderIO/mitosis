@@ -13,10 +13,4 @@ export interface ToStencilOptions extends BaseTranspilerOptions {
   prefix?: string;
 }
 
-export interface StencilMetadata {
-  /**
-   * @deprecated Change the tag of your component.
-   * Note: Its deprecated change the class name of your component instead.
-   */
-  tagName?: string;
-}
+export type StencilMetadata = {};

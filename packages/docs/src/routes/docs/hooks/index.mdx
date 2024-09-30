@@ -247,3 +247,59 @@ export default function Button(props) {
   return <span>{props.text}</span>;
 }
 ```
+
+
+## useTarget
+
+The `useTarget` hook returns a variable or runs a function based on the target
+
+### Get variable based on target
+
+```tsx
+import { useTarget, useStore } from '@builder.io/mitosis';
+
+export default function MyName() {
+  const state = useStore({
+    get name() {
+      const prefix = useTarget<string | number | boolean>({
+        default: 'Default str',
+        react: 123,
+        angular: true,
+        vue: 'v',
+      });
+      return prefix + 'foo';
+    }
+  });
+
+  return (
+    <div>{state.name}</div>
+  );
+}
+```
+
+`default` target is the fallback if the correct target can't be found in the object you pass into `useTarget`.
+
+
+### Run function based on target
+
+```tsx
+import { onMount, useTarget } from '@builder.io/mitosis';
+
+export default function MyLogger() {
+     onMount(() => {
+        useTarget({
+          react: () => {
+            console.log('react');
+          },
+          qwik: () => {
+            console.log('qwik');
+          },
+          default: () => {
+            console.log('the rest');
+          },
+        });
+    });
+
+  return <span></span>;
+}
+```
