@@ -28346,7 +28346,7 @@ class MyBasicComponent extends HTMLElement {
 
     this.componentProps = [\\"id\\", \\"foo\\"];
 
-    this.updateDeps = [[this.props.id, this.props.foo.value.bar.baz]];
+    this.updateDeps = [[this.props.id, this.props.foo.bar.baz]];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
@@ -28382,7 +28382,7 @@ class MyBasicComponent extends HTMLElement {
       <div class=\\"test div-my-basic-component\\">
         <template data-el=\\"div-my-basic-component-1\\"><!-- props.id --></template>
         <template data-el=\\"div-my-basic-component-2\\">
-          <!-- props.foo.value.bar.baz -->
+          <!-- props.foo.bar.baz -->
         </template>
       </div>
       <style>
@@ -28407,13 +28407,10 @@ class MyBasicComponent extends HTMLElement {
       const __hasChange = __prev.find((val, index) => val !== __next[index]);
       if (__hasChange !== undefined) {
         console.log(\\"props.id changed\\", self.props.id);
-        console.log(
-          \\"props.foo.value.bar.baz changed\\",
-          self.props.foo.value.bar.baz
-        );
+        console.log(\\"props.foo.value.bar.baz changed\\", self.props.foo.bar.baz);
         self.updateDeps[0] = __next;
       }
-    })(self.updateDeps[0], [self.props.id, self.props.foo.value.bar.baz]);
+    })(self.updateDeps[0], [self.props.id, self.props.foo.bar.baz]);
   }
 
   update() {
@@ -28442,7 +28439,7 @@ class MyBasicComponent extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-el='div-my-basic-component-2']\\")
       .forEach((el) => {
-        this.renderTextNode(el, this.props.foo.value.bar.baz);
+        this.renderTextNode(el, this.props.foo.bar.baz);
       });
   }
 
