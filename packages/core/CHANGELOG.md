@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.4.5
+
+### Patch Changes
+
+- 428b3ab: chore: update internal structure for generators and add more information for options and metadata
+
+## 0.4.4
+
+### Patch Changes
+
+- ad7e576: [Builder]: fix Text node crash with bindings
+- 52dc749: [Builder]: preserve global CSS when converting from/to Builder JSON.
+
 ## 0.4.3
 
 ### Patch Changes

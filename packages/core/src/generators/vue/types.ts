@@ -12,6 +12,8 @@ export interface ToVueOptions extends BaseTranspilerOptions {
   casing?: 'pascal' | 'kebab';
 }
 
+export type VueMetadata = {};
+
 export type Prop<T> =
   | { (): T }
   | { new (...args: never[]): T & object }

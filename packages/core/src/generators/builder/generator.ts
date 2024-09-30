@@ -1,31 +1,28 @@
+import { mediaQueryRegex, sizes } from '@/constants/media-sizes';
+import { ToBuilderOptions } from '@/generators/builder/types';
+import { dedent } from '@/helpers/dedent';
+import { fastClone } from '@/helpers/fast-clone';
+import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
+import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
+import { hasProps } from '@/helpers/has-props';
+import { isComponent } from '@/helpers/is-component';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
+import { isUpperCase } from '@/helpers/is-upper-case';
+import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { replaceNodes } from '@/helpers/replace-identifiers';
+import { checkHasState } from '@/helpers/state';
+import { isBuilderElement, symbolBlocksAsChildren } from '@/parsers/builder';
+import { hashCodeAsString } from '@/symbols/symbol-processor';
+import { ForNode, MitosisNode } from '@/types/mitosis-node';
+import { MitosisStyles } from '@/types/mitosis-styles';
+import { TranspilerArgs } from '@/types/transpiler';
 import { types } from '@babel/core';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { attempt, mapValues, omit, omitBy, set } from 'lodash';
 import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
-import { mediaQueryRegex, sizes } from '../constants/media-sizes';
-import { dedent } from '../helpers/dedent';
-import { fastClone } from '../helpers/fast-clone';
-import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { hasProps } from '../helpers/has-props';
-import { isComponent } from '../helpers/is-component';
-import { isUpperCase } from '../helpers/is-upper-case';
-import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { checkHasState } from '../helpers/state';
-import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
-import { hashCodeAsString } from '../symbols/symbol-processor';
-import { ForNode, MitosisNode } from '../types/mitosis-node';
-import { MitosisStyles } from '../types/mitosis-styles';
-import { BaseTranspilerOptions, TranspilerArgs } from '../types/transpiler';
-import { stringifySingleScopeOnMount } from './helpers/on-mount';
-
-export interface ToBuilderOptions extends BaseTranspilerOptions {
-  includeIds?: boolean;
-}
+import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 
 const omitMetaProperties = (obj: Record<string, any>) =>
   omitBy(obj, (_value, key) => key.startsWith('$'));
@@ -91,6 +88,57 @@ const componentMappers: {
     block.component!.options.columns = columns;
 
     block.children = [];
+
+    return block;
+  },
+  PersonalizationContainer(node, options) {
+    const block = blockToBuilder(node, options, { skipMapper: true });
+    // console.log('block', node);
+    const variants: any[] = [];
+    let defaultVariant: BuilderElement[] = [];
+    const validFakeNodeNames = [
+      'Variant',
+      'PersonalizationOption',
+      'PersonalizationVariant',
+      'Personalization',
+    ];
+    block.children!.forEach((item) => {
+      console.log('item', item);
+      if (item.component && validFakeNodeNames.includes(item.component?.name)) {
+        let query: any;
+        if (item.component.options.query) {
+          const optionsQuery = item.component.options.query;
+          if (Array.isArray(optionsQuery)) {
+            query = optionsQuery.map((q) => ({
+              '@type': '@builder.io/core:Query',
+              ...q,
+            }));
+          } else {
+            query = [
+              {
+                '@type': '@builder.io/core:Query',
+                ...optionsQuery,
+              },
+            ];
+          }
+          const newVariant = {
+            ...item.component.options,
+            query,
+            blocks: item.children,
+          };
+          variants.push(newVariant);
+        } else if (item.children) {
+          defaultVariant.push(...item.children);
+        }
+      } else {
+        defaultVariant.push(item);
+      }
+    });
+    delete block.properties;
+    delete block.bindings;
+
+    block.component!.options.variants = variants;
+    block.children = defaultVariant;
 
     return block;
   },
@@ -211,7 +259,8 @@ export const blockToBuilder = (
         component: {
           name: 'Text',
           options: {
-            text: json.properties._text,
+            // Mitosis uses {} for bindings, but Builder expects {{}} so we need to convert
+            text: json.properties._text?.replace(/\{(.*?)\}/g, '{{$1}}'),
           },
         },
       },
@@ -338,7 +387,7 @@ export const componentToBuilder =
         ${!hasProps(component) ? '' : `var props = state;`}
 
         ${!hasState ? '' : `Object.assign(state, ${getStateObjectStringFromComponent(component)});`}
-        
+
         ${stringifySingleScopeOnMount(component)}
       `),
         tsCode: tryFormat(dedent`
@@ -354,6 +403,7 @@ export const componentToBuilder =
               })`
         }
       `),
+        cssCode: component?.style,
         blocks: component.children
           .filter(filterEmptyTextNodes)
           .map((child) => blockToBuilder(child, options)),
