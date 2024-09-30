@@ -91,6 +91,57 @@ const componentMappers: {
 
     return block;
   },
+  PersonalizationContainer(node, options) {
+    const block = blockToBuilder(node, options, { skipMapper: true });
+    // console.log('block', node);
+    const variants: any[] = [];
+    let defaultVariant: BuilderElement[] = [];
+    const validFakeNodeNames = [
+      'Variant',
+      'PersonalizationOption',
+      'PersonalizationVariant',
+      'Personalization',
+    ];
+    block.children!.forEach((item) => {
+      console.log('item', item);
+      if (item.component && validFakeNodeNames.includes(item.component?.name)) {
+        let query: any;
+        if (item.component.options.query) {
+          const optionsQuery = item.component.options.query;
+          if (Array.isArray(optionsQuery)) {
+            query = optionsQuery.map((q) => ({
+              '@type': '@builder.io/core:Query',
+              ...q,
+            }));
+          } else {
+            query = [
+              {
+                '@type': '@builder.io/core:Query',
+                ...optionsQuery,
+              },
+            ];
+          }
+          const newVariant = {
+            ...item.component.options,
+            query,
+            blocks: item.children,
+          };
+          variants.push(newVariant);
+        } else if (item.children) {
+          defaultVariant.push(...item.children);
+        }
+      } else {
+        defaultVariant.push(item);
+      }
+    });
+    delete block.properties;
+    delete block.bindings;
+
+    block.component!.options.variants = variants;
+    block.children = defaultVariant;
+
+    return block;
+  },
   For(_node, options) {
     // rename `index` var to `state.$index`
     const replaceIndex = (node: MitosisNode) => {
@@ -336,7 +387,7 @@ export const componentToBuilder =
         ${!hasProps(component) ? '' : `var props = state;`}
 
         ${!hasState ? '' : `Object.assign(state, ${getStateObjectStringFromComponent(component)});`}
-        
+
         ${stringifySingleScopeOnMount(component)}
       `),
         tsCode: tryFormat(dedent`
