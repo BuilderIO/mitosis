@@ -63,7 +63,7 @@ exports[`Vue > jsx > Javascript Test > Basic 1`] = `
       :value=\\"DEFAULT_VALUES.name || name\\"
       @change=\\"name = $event.target.value\\"
     />
-    Hello! I can run in React, Vue, Solid, or Liquid!
+    Hello! I can run in React, Vue, Solid, or Liquid! &gt;
   </div>
 </template>
 
@@ -2974,6 +2974,42 @@ const props = defineProps([\\"foo\\"]);
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > typeExternalStore 1`] = `
+"<template>
+  <div>Hello {{ _name }}!</div>
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const _name = ref(\\"test\\");
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > typeGetterStore 1`] = `
+"<template>
+  <div>Hello {{ name }}!</div>
+</template>
+
+<script setup>
+import { computed, ref } from \\"vue\\";
+
+const name = ref(\\"test\\");
+
+const test = computed(() => {
+  return \\"test\\";
+});
+
+function getName() {
+  if (name.value === \\"a\\") {
+    return \\"b\\";
+  }
+
+  return name.value;
+}
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > use-style 1`] = `
 "<template>
   <button type=\\"button\\">Button</button>
@@ -3141,7 +3177,7 @@ exports[`Vue > jsx > Typescript Test > Basic 1`] = `
       :value=\\"DEFAULT_VALUES.name || name\\"
       @change=\\"name = $event.target.value\\"
     />
-    Hello! I can run in React, Vue, Solid, or Liquid!
+    Hello! I can run in React, Vue, Solid, or Liquid! &gt;
   </div>
 </template>
 
@@ -6424,6 +6460,50 @@ export type TypeDependencyProps = {
 };
 
 const props = defineProps<TypeDependencyProps>();
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > typeExternalStore 1`] = `
+"<template>
+  <div>Hello {{ _name }}!</div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+import { FooStore } from \\"./foo-store\\";
+
+const _name = ref<FooStore[\\"_name\\"]>(\\"test\\");
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > typeGetterStore 1`] = `
+"<template>
+  <div>Hello {{ name }}!</div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { computed, ref } from \\"vue\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+const name = ref<GetterStore[\\"name\\"]>(\\"test\\");
+
+const test = computed(() => {
+  return \\"test\\";
+});
+
+function getName(): GetterStore[\\"getName\\"] {
+  if (name.value === \\"a\\") {
+    return \\"b\\";
+  }
+
+  return name.value;
+}
 </script>"
 `;
 

@@ -45,6 +45,8 @@ const propsType = getRawFile('./data/types/component-props-type.raw.tsx');
 const propsInterface = getRawFile('./data/types/component-props-interface.raw.tsx');
 const preserveTyping = getRawFile('./data/types/preserve-typing.raw.tsx');
 const typeDependency = getRawFile('./data/types/type-dependency.raw.tsx');
+const typeExternalStore = getRawFile('./data/types/type-external-store.raw.tsx');
+const typeGetterStore = getRawFile('./data/types/type-getter-store.raw.tsx');
 
 const defaultProps = getRawFile('./data/default-props/default-props.raw.tsx');
 const defaultPropsOutsideComponent = getRawFile(
@@ -203,6 +205,8 @@ const BASIC_TESTS: Tests = {
   defaultPropsOutsideComponent,
   preserveTyping: preserveTyping,
   typeDependency,
+  typeExternalStore,
+  typeGetterStore,
   defaultValsWithTypes: getRawFile('./data/types/component-with-default-values-types.raw.tsx'),
   'import types': builderRenderContent,
   subComponent,

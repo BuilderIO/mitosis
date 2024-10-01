@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.4.7
+
+### Patch Changes
+
+- 068efab: [Angular, React, Vue] feat: add typescript support for `useStore`
+
+## 0.4.6
+
+### Patch Changes
+
+- a7fd87f: [All] Fix: Property handle escaped text in JSXString nodes.
+- a7fd87f: [Builder] Feature: Parse and serialize PersonalizedContainer in a JSX/LLM friendly way (like Columns)
+
 ## 0.4.5
 
 ### Patch Changes

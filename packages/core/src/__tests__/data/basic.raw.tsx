@@ -26,7 +26,7 @@ export default function MyBasicComponent(props: { id: string }) {
         value={DEFAULT_VALUES.name || state.name}
         onChange={(myEvent) => (state.name = myEvent.target.value)}
       />
-      Hello! I can run in React, Vue, Solid, or Liquid!
+      Hello! I can run in React, Vue, Solid, or Liquid! &gt;
     </div>
   );
 }

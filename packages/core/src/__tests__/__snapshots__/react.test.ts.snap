@@ -88,7 +88,7 @@ function MyBasicComponent(props) {
           value={DEFAULT_VALUES.name || name}
           onChange={(myEvent) => setName(myEvent.target.value)}
         />
-        Hello! I can run in React, Vue, Solid, or Liquid!
+        Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
       <style jsx>{\`
         .div {
@@ -3240,6 +3240,48 @@ export default TypeDependency;
 "
 `;
 
+exports[`React > jsx > Javascript Test > typeExternalStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function TypeExternalStore(props) {
+  const [_name, set_name] = useState(() => \\"test\\");
+
+  return <div>Hello {_name}! </div>;
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`React > jsx > Javascript Test > typeGetterStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function TypeGetterStore(props) {
+  const [name, setName] = useState(() => \\"test\\");
+
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test() {
+    return \\"test\\";
+  }
+
+  return <div>Hello {name}! </div>;
+}
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`React > jsx > Javascript Test > use-style 1`] = `
 "import * as React from \\"react\\";
 
@@ -3466,9 +3508,9 @@ function MyBasicComponent(props: MyBasicComponentProps) {
     return \\"bar\\";
   }
 
-  const [age, setAge] = useState(() => 1);
+  const [age, setAge] = useState<number>(() => 1);
 
-  const [sports, setSports] = useState(() => [\\"\\"]);
+  const [sports, setSports] = useState<Array<string>>(() => [\\"\\"]);
 
   return (
     <>
@@ -3477,7 +3519,7 @@ function MyBasicComponent(props: MyBasicComponentProps) {
           value={DEFAULT_VALUES.name || name}
           onChange={(myEvent) => setName(myEvent.target.value)}
         />
-        Hello! I can run in React, Vue, Solid, or Liquid!
+        Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
       <style jsx>{\`
         .div {
@@ -7053,6 +7095,55 @@ function TypeDependency(props: TypeDependencyProps) {
 }
 
 export default TypeDependency;
+"
+`;
+
+exports[`React > jsx > Typescript Test > typeExternalStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { FooStore } from \\"./foo-store\\";
+
+function TypeExternalStore(props: any) {
+  const [_name, set_name] = useState<FooStore[\\"_name\\"]>(() => \\"test\\");
+
+  return <div>Hello {_name}! </div>;
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`React > jsx > Typescript Test > typeGetterStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+function TypeGetterStore(props: any) {
+  const [name, setName] = useState<GetterStore[\\"name\\"]>(() => \\"test\\");
+
+  function getName(): GetterStore[\\"getName\\"] {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test(): GetterStore[\\"test\\"] {
+    return \\"test\\";
+  }
+
+  return <div>Hello {name}! </div>;
+}
+
+export default TypeGetterStore;
 "
 `;
 

@@ -110,7 +110,7 @@ function MyBasicComponent(props) {
         value={DEFAULT_VALUES.name || name}
         onChange={(myEvent) => setName(myEvent.target.value)}
       />
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid! &gt;</Text>
     </View>
   );
 }
@@ -4640,6 +4640,84 @@ export default TypeDependency;
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > typeExternalStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function TypeExternalStore(props) {
+  const [_name, set_name] = useState(() => \\"test\\");
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{_name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > typeGetterStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function TypeGetterStore(props) {
+  const [name, setName] = useState(() => \\"test\\");
+
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test() {
+    return \\"test\\";
+  }
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > use-style 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -4955,9 +5033,9 @@ function MyBasicComponent(props: MyBasicComponentProps) {
     return \\"bar\\";
   }
 
-  const [age, setAge] = useState(() => 1);
+  const [age, setAge] = useState<number>(() => 1);
 
-  const [sports, setSports] = useState(() => [\\"\\"]);
+  const [sports, setSports] = useState<Array<string>>(() => [\\"\\"]);
 
   return (
     <View style={styles.view1}>
@@ -4965,7 +5043,7 @@ function MyBasicComponent(props: MyBasicComponentProps) {
         value={DEFAULT_VALUES.name || name}
         onChange={(myEvent) => setName(myEvent.target.value)}
       />
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid! &gt;</Text>
     </View>
   );
 }
@@ -9919,6 +9997,91 @@ function TypeDependency(props: TypeDependencyProps) {
 }
 
 export default TypeDependency;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > typeExternalStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+import { FooStore } from \\"./foo-store\\";
+
+function TypeExternalStore(props: any) {
+  const [_name, set_name] = useState<FooStore[\\"_name\\"]>(() => \\"test\\");
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{_name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > typeGetterStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+function TypeGetterStore(props: any) {
+  const [name, setName] = useState<GetterStore[\\"name\\"]>(() => \\"test\\");
+
+  function getName(): GetterStore[\\"getName\\"] {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test(): GetterStore[\\"test\\"] {
+    return \\"test\\";
+  }
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeGetterStore;
 "
 `;
 

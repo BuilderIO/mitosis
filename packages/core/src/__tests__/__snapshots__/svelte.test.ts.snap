@@ -74,7 +74,7 @@ exports[`Svelte > jsx > Javascript Test > Basic 1`] = `
       name = myEvent.target.value;
     }}
   />
-  Hello! I can run in React, Vue, Solid, or Liquid!
+  Hello! I can run in React, Vue, Solid, or Liquid! &gt;
 </div>
 
 <style>
@@ -2787,6 +2787,33 @@ exports[`Svelte > jsx > Javascript Test > typeDependency 1`] = `
 <div>{foo}</div>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > typeExternalStore 1`] = `
+"<script>
+  let _name = \\"test\\";
+</script>
+
+<div>Hello {_name}!</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > typeGetterStore 1`] = `
+"<script>
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+  $: test = () => {
+    return \\"test\\";
+  };
+
+  let name = \\"test\\";
+</script>
+
+<div>Hello {name}!</div>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > use-style 1`] = `
 "<button type=\\"button\\">Button</button>
 
@@ -2959,7 +2986,7 @@ exports[`Svelte > jsx > Typescript Test > Basic 1`] = `
       name = myEvent.target.value;
     }}
   />
-  Hello! I can run in React, Vue, Solid, or Liquid!
+  Hello! I can run in React, Vue, Solid, or Liquid! &gt;
 </div>
 
 <style>
@@ -6274,6 +6301,43 @@ exports[`Svelte > jsx > Typescript Test > typeDependency 1`] = `
 </script>
 
 <div>{foo}</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > typeExternalStore 1`] = `
+"<script lang=\\"ts\\">
+  import { FooStore } from \\"./foo-store\\";
+
+  let _name = \\"test\\";
+</script>
+
+<div>Hello {_name}!</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > typeGetterStore 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type GetterStore = {
+    getName: () => string;
+    name: string;
+    get test(): string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+  $: test = () => {
+    return \\"test\\";
+  };
+
+  let name = \\"test\\";
+</script>
+
+<div>Hello {name}!</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > use-style 1`] = `
