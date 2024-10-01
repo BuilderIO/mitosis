@@ -16,5 +16,5 @@ export const getTypedFunction = (code: string, typescript?: boolean, typeParamet
   const preType = code.slice(0, firstParenthesisIndex - 1);
   const postType = code.slice(firstParenthesisIndex, code.length);
 
-  return [preType, ': ', typeParameter, postType].join('');
+  return [preType, ': ', `ReturnType<${typeParameter}>`, postType].join('');
 };
