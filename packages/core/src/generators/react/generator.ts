@@ -405,7 +405,7 @@ const _componentToReact = (
   // side effects that delete styles bindings from the JSON.
   const reactNativeStyles =
     options.stylesType === 'react-native' && componentHasStyles
-      ? collectReactNativeStyles(json)
+      ? collectReactNativeStyles(json, options)
       : undefined;
 
   const propType = json.propsTypeRef || 'any';

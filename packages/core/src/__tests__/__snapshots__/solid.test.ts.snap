@@ -152,14 +152,14 @@ function MyBasicComponent(props) {
 
   return (
     <>
-      <div class=\\"test div-6bae243e\\">
+      <div class=\\"test div-046ccea4\\">
         <input
           value={DEFAULT_VALUES.name || name()}
           onInput={(myEvent) => setName(myEvent.target.value)}
         />
-        Hello! I can run in React, Vue, Solid, or Liquid!
+        Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
-      <style>{\`.div-6bae243e {
+      <style>{\`.div-046ccea4 {
   padding: 10px;
 }\`}</style>
     </>
@@ -228,14 +228,14 @@ function MyBasicComponent(props) {
 
   return (
     <>
-      <div class=\\"test div-6bae243e\\">
+      <div class=\\"test div-046ccea4\\">
         <input
           value={DEFAULT_VALUES.name || name()}
           onInput={(myEvent) => setName(myEvent.target.value)}
         />
-        Hello! I can run in React, Vue, Solid, or Liquid!
+        Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
-      <style>{\`.div-6bae243e {
+      <style>{\`.div-046ccea4 {
   padding: 10px;
 }\`}</style>
     </>
@@ -4062,7 +4062,7 @@ function Button(props) {
           <button
             type=\\"button\\"
             {...props.attributes}
-            onClick={(event) => props.onClick(event)}
+            onClick={(event) => props.onClick()}
           >
             {props.buttonText}
           </button>
@@ -4096,7 +4096,7 @@ function Button(props) {
           <button
             type=\\"button\\"
             {...props.attributes}
-            onClick={(event) => props.onClick(event)}
+            onClick={(event) => props.onClick()}
           >
             {props.buttonText}
           </button>
@@ -6596,6 +6596,110 @@ export default TypeDependency;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > typeExternalStore 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function TypeExternalStore(props) {
+  const [_name, set_name] = createSignal(\\"test\\");
+
+  return (
+    <>
+      <div>
+        Hello
+        {_name()}!{\\" \\"}
+      </div>
+    </>
+  );
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > typeExternalStore 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function TypeExternalStore(props) {
+  const [_name, set_name] = createSignal(\\"test\\");
+
+  return (
+    <>
+      <div>
+        Hello
+        {_name()}!{\\" \\"}
+      </div>
+    </>
+  );
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > typeGetterStore 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function TypeGetterStore(props) {
+  const [name, setName] = createSignal(\\"test\\");
+
+  function getName() {
+    if (name() === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name();
+  }
+
+  const test = createMemo(() => {
+    return \\"test\\";
+  });
+
+  return (
+    <>
+      <div>
+        Hello
+        {name()}!{\\" \\"}
+      </div>
+    </>
+  );
+}
+
+export default TypeGetterStore;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > typeGetterStore 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function TypeGetterStore(props) {
+  const [name, setName] = createSignal(\\"test\\");
+
+  function getName() {
+    if (name() === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name();
+  }
+
+  const test = createMemo(() => {
+    return \\"test\\";
+  });
+
+  return (
+    <>
+      <div>
+        Hello
+        {name()}!{\\" \\"}
+      </div>
+    </>
+  );
+}
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > use-style 1`] = `
 "function MyComponent(props) {
   return (
@@ -7028,14 +7132,14 @@ function MyBasicComponent(props: MyBasicComponentProps) {
 
   return (
     <>
-      <div class=\\"test div-13f579ae\\">
+      <div class=\\"test div-3c5f02b2\\">
         <input
           value={DEFAULT_VALUES.name || name()}
           onInput={(myEvent) => setName(myEvent.target.value)}
         />
-        Hello! I can run in React, Vue, Solid, or Liquid!
+        Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
-      <style>{\`.div-13f579ae {
+      <style>{\`.div-3c5f02b2 {
   padding: 10px;
 }\`}</style>
     </>
@@ -7108,14 +7212,14 @@ function MyBasicComponent(props: MyBasicComponentProps) {
 
   return (
     <>
-      <div class=\\"test div-13f579ae\\">
+      <div class=\\"test div-3c5f02b2\\">
         <input
           value={DEFAULT_VALUES.name || name()}
           onInput={(myEvent) => setName(myEvent.target.value)}
         />
-        Hello! I can run in React, Vue, Solid, or Liquid!
+        Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
-      <style>{\`.div-13f579ae {
+      <style>{\`.div-3c5f02b2 {
   padding: 10px;
 }\`}</style>
     </>
@@ -11484,7 +11588,7 @@ function Button(props: ButtonProps) {
           <button
             type=\\"button\\"
             {...props.attributes}
-            onClick={(event) => props.onClick(event)}
+            onClick={(event) => props.onClick()}
           >
             {props.buttonText}
           </button>
@@ -11528,7 +11632,7 @@ function Button(props: ButtonProps) {
           <button
             type=\\"button\\"
             {...props.attributes}
-            onClick={(event) => props.onClick(event)}
+            onClick={(event) => props.onClick()}
           >
             {props.buttonText}
           </button>
@@ -14293,6 +14397,126 @@ function TypeDependency(props: TypeDependencyProps) {
 }
 
 export default TypeDependency;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > typeExternalStore 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+import { FooStore } from \\"./foo-store\\";
+
+function TypeExternalStore(props: any) {
+  const [_name, set_name] = createSignal(\\"test\\");
+
+  return (
+    <>
+      <div>
+        Hello
+        {_name()}!{\\" \\"}
+      </div>
+    </>
+  );
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > typeExternalStore 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+import { FooStore } from \\"./foo-store\\";
+
+function TypeExternalStore(props: any) {
+  const [_name, set_name] = createSignal(\\"test\\");
+
+  return (
+    <>
+      <div>
+        Hello
+        {_name()}!{\\" \\"}
+      </div>
+    </>
+  );
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > typeGetterStore 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+function TypeGetterStore(props: any) {
+  const [name, setName] = createSignal(\\"test\\");
+
+  function getName() {
+    if (name() === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name();
+  }
+
+  const test = createMemo(() => {
+    return \\"test\\";
+  });
+
+  return (
+    <>
+      <div>
+        Hello
+        {name()}!{\\" \\"}
+      </div>
+    </>
+  );
+}
+
+export default TypeGetterStore;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > typeGetterStore 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+function TypeGetterStore(props: any) {
+  const [name, setName] = createSignal(\\"test\\");
+
+  function getName() {
+    if (name() === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name();
+  }
+
+  const test = createMemo(() => {
+    return \\"test\\";
+  });
+
+  return (
+    <>
+      <div>
+        Hello
+        {name()}!{\\" \\"}
+      </div>
+    </>
+  );
+}
+
+export default TypeGetterStore;
 "
 `;
 

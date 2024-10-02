@@ -58,7 +58,7 @@ exports[`Alpine.js > jsx > Javascript Test > Basic 1`] = `
     x-on:change=\\"name = myEvent.target.value\\"
   />
 
-  Hello! I can run in React, Vue, Solid, or Liquid!
+  Hello! I can run in React, Vue, Solid, or Liquid! &gt;
 </div>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
@@ -1633,7 +1633,7 @@ exports[`Alpine.js > jsx > Javascript Test > defaultProps 1`] = `
     </a>
   </template>
   <template x-if=\\"!link\\">
-    <button type=\\"button\\" x-bind=\\"attributes\\" x-on:click=\\"onClick($event)\\">
+    <button type=\\"button\\" x-bind=\\"attributes\\" x-on:click=\\"onClick()\\">
       <span x-html=\\"buttonText\\"></span>
     </button>
   </template>
@@ -2644,6 +2644,50 @@ exports[`Alpine.js > jsx > Javascript Test > typeDependency 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > typeExternalStore 1`] = `
+"<div x-data=\\"typeExternalStore()\\">
+  Hello
+  <span x-html=\\"_name\\"></span>
+  !
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"typeExternalStore\\", () => ({
+      _name: \\"test\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > typeGetterStore 1`] = `
+"<div x-data=\\"typeGetterStore()\\">
+  Hello
+  <span x-html=\\"name\\"></span>
+  !
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"typeGetterStore\\", () => ({
+      name: \\"test\\",
+
+      getName() {
+        if (this.name === \\"a\\") {
+          return \\"b\\";
+        }
+
+        return this.name;
+      },
+
+      get test() {
+        return \\"test\\";
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > use-style 1`] = `
 "<style>
   button {
@@ -2813,7 +2857,7 @@ exports[`Alpine.js > jsx > Typescript Test > Basic 1`] = `
     x-on:change=\\"name = myEvent.target.value\\"
   />
 
-  Hello! I can run in React, Vue, Solid, or Liquid!
+  Hello! I can run in React, Vue, Solid, or Liquid! &gt;
 </div>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
@@ -4377,7 +4421,7 @@ exports[`Alpine.js > jsx > Typescript Test > defaultProps 1`] = `
     </a>
   </template>
   <template x-if=\\"!link\\">
-    <button type=\\"button\\" x-bind=\\"attributes\\" x-on:click=\\"onClick($event)\\">
+    <button type=\\"button\\" x-bind=\\"attributes\\" x-on:click=\\"onClick()\\">
       <span x-html=\\"buttonText\\"></span>
     </button>
   </template>
@@ -5386,6 +5430,50 @@ exports[`Alpine.js > jsx > Typescript Test > typeDependency 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"typeDependency\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > typeExternalStore 1`] = `
+"<div x-data=\\"typeExternalStore()\\">
+  Hello
+  <span x-html=\\"_name\\"></span>
+  !
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"typeExternalStore\\", () => ({
+      _name: \\"test\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > typeGetterStore 1`] = `
+"<div x-data=\\"typeGetterStore()\\">
+  Hello
+  <span x-html=\\"name\\"></span>
+  !
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"typeGetterStore\\", () => ({
+      name: \\"test\\",
+
+      getName() {
+        if (this.name === \\"a\\") {
+          return \\"b\\";
+        }
+
+        return this.name;
+      },
+
+      get test() {
+        return \\"test\\";
+      },
+    }));
   });
 </script>
 "

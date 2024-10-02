@@ -173,7 +173,11 @@ export const renderImport = ({
   }
 
   if (importMapper) {
-    return importMapper(component, theImport, importedValues, componentsUsed);
+    const importMapperResult = importMapper(component, theImport, importedValues, componentsUsed);
+    // If import mapper has no result we skip this
+    if (importMapperResult) {
+      return importMapperResult;
+    }
   }
 
   return importValue
