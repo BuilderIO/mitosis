@@ -11,7 +11,7 @@ export default function SetState() {
 
   return (
     <div>
-      <button onClick={state.someFn}>Click me</button>
+      <button onClick={() => state.someFn()}>Click me</button>
     </div>
   );
 }

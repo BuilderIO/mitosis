@@ -3005,7 +3005,7 @@ function SetState(props) {
 
   return (
     <View>
-      <Button onClick={(event) => someFn}>Click me</Button>
+      <Button onClick={(event) => someFn()}>Click me</Button>
     </View>
   );
 }
@@ -5282,7 +5282,7 @@ function UseValueAndFnFromStore(props: MyProps) {
 
   const [_active, set_active] = useState<MyStore[\\"_active\\"]>(() => false);
 
-  function _do(id?: string): MyStore[\\"_do\\"] {
+  function _do(id?: string): ReturnType<MyStore[\\"_do\\"]> {
     set_active(!!id);
 
     if (props.onChange) {
@@ -6923,7 +6923,7 @@ function SetState(props: any) {
 
   return (
     <View>
-      <Button onClick={(event) => someFn}>Click me</Button>
+      <Button onClick={(event) => someFn()}>Click me</Button>
     </View>
   );
 }
