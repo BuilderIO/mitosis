@@ -1977,7 +1977,7 @@ function Button(props) {
         <button
           type=\\"button\\"
           {...props.attributes}
-          onClick={(event) => props.onClick(event)}
+          onClick={(event) => props.onClick()}
         >
           {props.buttonText}
         </button>
@@ -5439,7 +5439,7 @@ function Button(props: ButtonProps) {
         <button
           type=\\"button\\"
           {...props.attributes}
-          onClick={(event) => props.onClick(event)}
+          onClick={(event) => props.onClick()}
         >
           {props.buttonText}
         </button>
@@ -6604,7 +6604,7 @@ type GetterStore = {
 function TypeGetterStore(props: any) {
   const [name, setName] = useState<GetterStore[\\"name\\"]>(() => \\"test\\");
 
-  function getName(): GetterStore[\\"getName\\"] {
+  function getName(): ReturnType<GetterStore[\\"getName\\"]> {
     if (name === \\"a\\") {
       return \\"b\\";
     }
@@ -6612,7 +6612,7 @@ function TypeGetterStore(props: any) {
     return name;
   }
 
-  function test(): GetterStore[\\"test\\"] {
+  function test(): ReturnType<GetterStore[\\"test\\"]> {
     return \\"test\\";
   }
 
