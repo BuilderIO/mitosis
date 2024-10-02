@@ -1,5 +1,5 @@
 ---
-'@builder.io/mitosis': minor
+'@builder.io/mitosis': patch
 ---
 
-React-Native Styling support
+[React-Native] Bug: React-Native Styling support.
