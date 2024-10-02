@@ -2,6 +2,7 @@ import { componentToReactNative } from '../generators/react-native';
 import { runTestsForTarget } from './test-generator';
 
 import { parseJsx } from '..';
+import nativeStyles from './data/react-native/native-styles.raw.tsx?raw';
 import twrncStateComplexStyledComponentRN from './data/react-native/twrnc-state-complex-styled-component.raw.tsx?raw';
 import twrncStateStyledComponentRN from './data/react-native/twrnc-state-styled-component.raw.tsx?raw';
 import twrncStyledComponentRN from './data/react-native/twrnc-styled-component.raw.tsx?raw';
@@ -13,6 +14,16 @@ describe('React Native', () => {
     const component = parseJsx(twrncStyledComponentRN);
     const output = componentToReactNative({
       stylesType: 'twrnc',
+    })({ component });
+
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Vaild react-native styles', () => {
+    const component = parseJsx(nativeStyles);
+    const output = componentToReactNative({
+      // stylesType: 'twrnc',
+      sanitizeReactNative: true,
     })({ component });
 
     expect(output).toMatchSnapshot();
