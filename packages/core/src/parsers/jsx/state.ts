@@ -2,7 +2,7 @@ import { babelTransformExpression } from '@/helpers/babel-transform';
 import { capitalize } from '@/helpers/capitalize';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { createCodeProcessorPlugin } from '@/helpers/plugins/process-code';
-import { NodeMap, replaceNodes } from '@/helpers/replace-identifiers';
+import { replaceNodes } from '@/helpers/replace-identifiers';
 import { MitosisComponent, MitosisState, StateValue } from '@/types/mitosis-component';
 import { NodePath, types } from '@babel/core';
 import {
@@ -153,18 +153,27 @@ export function mapStateIdentifiers(json: MitosisComponent) {
   });
 }
 
-const replaceThisWithStateNodes: NodeMap[] = [
-  {
-    from: types.thisExpression(),
-    to: types.identifier('state'),
-  },
-];
+/**
+ * Replaces `this.` with `state.` and trims code
+ * @param code origin code
+ */
+const getCleanedStateCode = (code: string): string => {
+  return replaceNodes({
+    code,
+    nodeMaps: [
+      {
+        from: types.thisExpression(),
+        to: types.identifier('state'),
+      },
+    ],
+  }).trim();
+};
 
 const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValue => {
   if (isObjectProperty(item)) {
     if (isFunctionExpression(item.value)) {
       return {
-        code: parseCode(item.value).trim(),
+        code: getCleanedStateCode(parseCode(item.value)),
         type: 'function',
       };
     } else if (isArrowFunctionExpression(item.value)) {
@@ -176,7 +185,7 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
       );
       // Replace this. with state. to handle following
       // const state = useStore({ _do: () => {this._active = !!id;}})
-      const code = replaceNodes({ code: parseCode(n).trim(), nodeMaps: replaceThisWithStateNodes });
+      const code = getCleanedStateCode(parseCode(n));
       return {
         code: code,
         type: 'method',
@@ -186,19 +195,19 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
       // { foo: ('string' as SomeType) }
       if (isTSAsExpression(item.value)) {
         return {
-          code: parseCode(item.value.expression).trim(),
+          code: getCleanedStateCode(parseCode(item.value.expression)),
           type: 'property',
           propertyType: 'normal',
         };
       }
       return {
-        code: parseCode(item.value).trim(),
+        code: getCleanedStateCode(parseCode(item.value)),
         type: 'property',
         propertyType: 'normal',
       };
     }
   } else if (isObjectMethod(item)) {
-    const n = parseCode({ ...item, returnType: null }).trim();
+    const n = getCleanedStateCode(parseCode({ ...item, returnType: null }));
 
     const isGetter = item.kind === 'get';
 

@@ -4894,9 +4894,11 @@ type MyStore = {
 };
 
 function NestedStore(props: any) {
-  const [_id, set_id] = useState(() => \\"abc\\");
+  const [_id, set_id] = useState<MyStore[\\"_id\\"]>(() => \\"abc\\");
 
-  const [_messageId, set_messageId] = useState(() => _id + \\"-message\\");
+  const [_messageId, set_messageId] = useState<MyStore[\\"_messageId\\"]>(
+    () => _id + \\"-message\\"
+  );
 
   return (
     <div id={_id}>
@@ -5303,11 +5305,11 @@ type MyStore = {
 };
 
 function UseValueAndFnFromStore(props: MyProps) {
-  const [_id, set_id] = useState(() => \\"abc\\");
+  const [_id, set_id] = useState<MyStore[\\"_id\\"]>(() => \\"abc\\");
 
-  const [_active, set_active] = useState(() => false);
+  const [_active, set_active] = useState<MyStore[\\"_active\\"]>(() => false);
 
-  function _do(id?: string) {
+  function _do(id?: string): MyStore[\\"_do\\"] {
     set_active(!!id);
 
     if (props.onChange) {

@@ -53,8 +53,7 @@ export function generateCompositionApiScript(
     getters: false,
     format: 'variables',
     valueMapper: (code, _, typeParameter) => {
-      const cleanCode = code.replaceAll('this.', ''); // Composition api isn't a class we don't need "this." here
-      return isTs && typeParameter ? `ref<${typeParameter}>(${cleanCode})` : `ref(${cleanCode})`;
+      return isTs && typeParameter ? `ref<${typeParameter}>(${code})` : `ref(${code})`;
     },
     keyPrefix: 'const',
   });

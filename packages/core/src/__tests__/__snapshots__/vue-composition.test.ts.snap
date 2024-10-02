@@ -4394,8 +4394,8 @@ type MyStore = {
   _messageId?: string;
 };
 
-const _id = ref(\\"abc\\");
-const _messageId = ref(_id.value + \\"-message\\");
+const _id = ref<MyStore[\\"_id\\"]>(\\"abc\\");
+const _messageId = ref<MyStore[\\"_messageId\\"]>(_id.value + \\"-message\\");
 </script>"
 `;
 
@@ -4756,8 +4756,8 @@ type MyStore = {
 };
 
 const props = defineProps<MyProps>();
-const _id = ref(\\"abc\\");
-const _active = ref(false);
+const _id = ref<MyStore[\\"_id\\"]>(\\"abc\\");
+const _active = ref<MyStore[\\"_active\\"]>(false);
 
 onUpdated(() => {
   if (_do) {
@@ -4765,7 +4765,7 @@ onUpdated(() => {
   }
 });
 
-function _do(id?: string) {
+function _do(id?: string): MyStore[\\"_do\\"] {
   _active.value = !!id;
 
   if (props.onChange) {

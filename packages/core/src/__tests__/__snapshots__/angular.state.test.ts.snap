@@ -2093,7 +2093,11 @@ import { Component } from \\"@angular/core\\";
 })
 export default class NestedStore {
   _id = \\"abc\\";
-  _messageId = this._id + \\"-message\\";
+  _messageId = null;
+
+  ngOnInit() {
+    this._messageId = this._id + \\"-message\\";
+  }
 }
 
 @NgModule({
@@ -9531,8 +9535,12 @@ type MyStore = {
   ],
 })
 export default class NestedStore {
-  _id = \\"abc\\";
-  _messageId = this._id + \\"-message\\";
+  _id: MyStore[\\"_id\\"] = \\"abc\\";
+  _messageId: MyStore[\\"_messageId\\"] = null;
+
+  ngOnInit() {
+    this._messageId = this._id + \\"-message\\";
+  }
 }
 
 @NgModule({
@@ -10499,9 +10507,9 @@ type MyStore = {
 export default class UseValueAndFnFromStore {
   @Output() onChange = new EventEmitter();
 
-  _id = \\"abc\\";
-  _active = false;
-  _do(id?: string) {
+  _id: MyStore[\\"_id\\"] = \\"abc\\";
+  _active: MyStore[\\"_active\\"] = false;
+  _do(id?: string): MyStore[\\"_do\\"] {
     this._active = !!id;
 
     if (this.onChange) {
