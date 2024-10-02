@@ -125,17 +125,17 @@ class {
 }
 
 style { 
-  .div-724f419e {
+  .div-360ae4be {
     padding: 10px;
   }
 }
-<div class=\\"test div-724f419e\\">
+<div class=\\"test div-360ae4be\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
   />
 
-  Hello! I can run in React, Vue, Solid, or Liquid!
+  Hello! I can run in React, Vue, Solid, or Liquid! &gt;
 </div>"
 `;
 
@@ -1545,7 +1545,7 @@ exports[`Marko > jsx > Javascript Test > defaultProps 1`] = `
     <button
       type=\\"button\\"
       ...(props.attributes)
-      on-click(event => input.onClick(event))
+      on-click(event => input.onClick())
     >
       \${input.buttonText}
     </button></if>
@@ -2412,6 +2412,37 @@ exports[`Marko > jsx > Javascript Test > typeDependency 1`] = `
 <div>\${input.foo}</div>"
 `;
 
+exports[`Marko > jsx > Javascript Test > typeExternalStore 1`] = `
+"class {
+  onCreate() {
+    this.state = { _name: \\"test\\" };
+  }
+}
+
+<div>Hello \${state._name} !</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > typeGetterStore 1`] = `
+"class {
+  getName() {
+    if (this.state.name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return this.state.name;
+  }
+  get test() {
+    return \\"test\\";
+  }
+
+  onCreate() {
+    this.state = { name: \\"test\\" };
+  }
+}
+
+<div>Hello \${state.name} !</div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > use-style 1`] = `
 "class {}
 
@@ -2565,17 +2596,17 @@ class {
 }
 
 style { 
-  .div-f70acf48 {
+  .div-11706802 {
     padding: 10px;
   }
 }
-<div class=\\"test div-f70acf48\\">
+<div class=\\"test div-11706802\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
   />
 
-  Hello! I can run in React, Vue, Solid, or Liquid!
+  Hello! I can run in React, Vue, Solid, or Liquid! &gt;
 </div>"
 `;
 
@@ -3998,7 +4029,7 @@ exports[`Marko > jsx > Typescript Test > defaultProps 1`] = `
     <button
       type=\\"button\\"
       ...(props.attributes)
-      on-click(event => input.onClick(event))
+      on-click(event => input.onClick())
     >
       \${input.buttonText}
     </button></if>
@@ -4872,6 +4903,39 @@ import type { Foo as Foo2 } from \\"./type-export.marko\\";
 class {}
 
 <div>\${input.foo}</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > typeExternalStore 1`] = `
+"import { FooStore } from \\"./foo-store\\";
+
+class {
+  onCreate() {
+    this.state = { _name: \\"test\\" };
+  }
+}
+
+<div>Hello \${state._name} !</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > typeGetterStore 1`] = `
+"class {
+  getName() {
+    if (this.state.name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return this.state.name;
+  }
+  get test() {
+    return \\"test\\";
+  }
+
+  onCreate() {
+    this.state = { name: \\"test\\" };
+  }
+}
+
+<div>Hello \${state.name} !</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > use-style 1`] = `

@@ -1761,7 +1761,7 @@ export const MyBasicComponent = component$((props) => {
         value={DEFAULT_VALUES.name || state.name}
         onChange$={$((event) => (state.name = myEvent.target.value))}
       />
-      Hello! I can run in React, Vue, Solid, or Liquid!
+      Hello! I can run in React, Vue, Solid, or Liquid! &gt;
     </div>
   );
 });
@@ -3695,7 +3695,7 @@ export const Button = component$((props) => {
         <button
           type=\\"button\\"
           {...props.attributes}
-          onClick$={$((event) => props.onClick(event))}
+          onClick$={$((event) => props.onClick())}
         >
           {props.buttonText}
         </button>
@@ -4896,6 +4896,48 @@ export default TypeDependency;
 "
 `;
 
+exports[`qwik > jsx > Javascript Test > typeExternalStore 1`] = `
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+
+export const TypeExternalStore = component$((props) => {
+  const state = useStore({ _name: \\"test\\" });
+
+  return <div>Hello {state._name}! </div>;
+});
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > typeGetterStore 1`] = `
+"import {
+  Fragment,
+  component$,
+  h,
+  useComputed$,
+  useStore,
+} from \\"@builder.io/qwik\\";
+
+export const getName = function getName(props, state, test) {
+  if (state.name === \\"a\\") {
+    return \\"b\\";
+  }
+
+  return state.name;
+};
+export const TypeGetterStore = component$((props) => {
+  const test = useComputed$(() => {
+    return \\"test\\";
+  });
+  const state = useStore({ name: \\"test\\" });
+
+  return <div>Hello {state.name}! </div>;
+});
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`qwik > jsx > Javascript Test > use-style 1`] = `
 "import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
 
@@ -5067,7 +5109,7 @@ export const MyBasicComponent = component$((props: MyBasicComponentProps) => {
         value={DEFAULT_VALUES.name || state.name}
         onChange$={$((event) => (state.name = myEvent.target.value))}
       />
-      Hello! I can run in React, Vue, Solid, or Liquid!
+      Hello! I can run in React, Vue, Solid, or Liquid! &gt;
     </div>
   );
 });
@@ -7248,7 +7290,7 @@ export const Button = component$((props: ButtonProps) => {
         <button
           type=\\"button\\"
           {...props.attributes}
-          onClick$={$((event) => props.onClick(event))}
+          onClick$={$((event) => props.onClick())}
         >
           {props.buttonText}
         </button>
@@ -8576,6 +8618,55 @@ export const TypeDependency = component$((props: TypeDependencyProps) => {
 });
 
 export default TypeDependency;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > typeExternalStore 1`] = `
+"import { FooStore } from \\"./foo-store\\";
+
+import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+
+export const TypeExternalStore = component$((props: any) => {
+  const state = useStore<any>({ _name: \\"test\\" });
+
+  return <div>Hello {state._name}! </div>;
+});
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > typeGetterStore 1`] = `
+"import {
+  Fragment,
+  component$,
+  h,
+  useComputed$,
+  useStore,
+} from \\"@builder.io/qwik\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+export const getName = function getName(props, state, test) {
+  if (state.name === \\"a\\") {
+    return \\"b\\";
+  }
+
+  return state.name;
+};
+export const TypeGetterStore = component$((props: any) => {
+  const test = useComputed$(() => {
+    return \\"test\\";
+  });
+  const state = useStore<any>({ name: \\"test\\" });
+
+  return <div>Hello {state.name}! </div>;
+});
+
+export default TypeGetterStore;
 "
 `;
 

@@ -1,4 +1,4 @@
-import { componentToStencil } from '../generators/stencil';
+import { componentToStencil } from '@/generators/stencil';
 import { runTestsForTarget } from './test-generator';
 
 describe('Stencil', () => {
@@ -8,3 +8,13 @@ describe('Stencil', () => {
     options: {},
   });
 });
+/*
+describe('Stencil local', () => {
+  runTestsForTarget({
+    target: 'stencil',
+    generator: componentToStencil,
+    options: {},
+    logOutput: true,
+    only: ['subComponent'],
+  });
+});*/

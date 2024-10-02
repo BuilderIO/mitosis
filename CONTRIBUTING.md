@@ -64,3 +64,19 @@ Before submitting your PR, please make sure to format the codebase and update al
 - format the codebase: from the root, run `yarn fmt:prettier`.
 - update all snapshots (in core & CLI): from the root, run `yarn test:update`. This will run an Nx command that will update all the snapshots in the `core` and `cli` packages. while making sure all required dependencies are built beforehand.
 - add Changeset entry: from the root, run `yarn g:changeset` and follow the CLI instructions.
+
+#### Changeset format
+
+Here's the changeset format we like to follow (this is mostly relvant for the core package):
+
+```
+[GENERATORS_IMPACTED] TYPE: DESCRIPTION
+```
+
+Examples:
+
+```
+[React,Vue,Solid] Bug: Fix style bindings not applying.
+[Angular] Feature: Add support for ngFor bindings.
+[All] Feature: store state types.
+```

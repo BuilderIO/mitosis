@@ -1,22 +1,19 @@
+import { ToLiquidOptions } from '@/generators/liquid/types';
 import { format } from 'prettier/standalone';
-import { SELF_CLOSING_HTML_TAGS } from '../constants/html_tags';
-import { fastClone } from '../helpers/fast-clone';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
-import { collectCss } from '../helpers/styles/collect-css';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
+import { fastClone } from '../../helpers/fast-clone';
+import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { collectCss } from '../../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
-} from '../modules/plugins';
-import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-
-export interface ToLiquidOptions extends BaseTranspilerOptions {
-  reactive?: boolean;
-}
+} from '../../modules/plugins';
+import { MitosisNode, checkIsForNode } from '../../types/mitosis-node';
+import { TranspilerGenerator } from '../../types/transpiler';
 
 /**
  * Test if the binding expression would be likely to generate

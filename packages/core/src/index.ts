@@ -25,7 +25,7 @@ export * from './generators/rsc';
 export * from './generators/solid';
 export * from './generators/stencil';
 export * from './generators/svelte';
-export * from './generators/swift-ui';
+export * from './generators/swift';
 export * from './generators/taro';
 export * from './generators/template';
 export * from './generators/vue';
