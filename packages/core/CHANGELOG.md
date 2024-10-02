@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.1
+
+### Patch Changes
+
+- dbd5a50: [React-Native] Feature: add `sanitizeReactNative` flag responsible for sanitizing styles. Defaults to `false`.
+
 ## 0.5.0
 
 ### Minor Changes
