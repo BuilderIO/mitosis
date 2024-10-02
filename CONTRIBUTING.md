@@ -38,7 +38,7 @@ In `core`, we use vitest snapshots & integeration tests for test coverage. If yo
 
 - copy your fiddle component into a file in `packages/core/src/__tests__/data`. See [packages/core/src/**tests**/data/basic.raw.tsx](/packages/core/src/__tests__/data/basic.raw.tsx) as an example.
 - add that test to the [test generator](/packages/core/src/__tests__/test-generator.ts), most likely in `BASIC_TESTS`.
-- run `yarn nx test:watch` in the `packages/core` directory to run the snapshot tests in watch mode
+- run `yarn g:nx test:watch` in the `packages/core` directory to run the snapshot tests in watch mode
 
 PS: don't worry about failing imports in the raw test TSX files. These are not an issue, since the files are standalone and don't actually belong to a cohesive project.
 
