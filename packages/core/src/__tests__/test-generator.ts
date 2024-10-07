@@ -10,6 +10,9 @@ const getRawFile = async (filePath: string) => {
 
 type RawFile = ReturnType<typeof getRawFile>;
 
+const classAndClassNameInComponent = getRawFile(
+  './data/styles/class-and-className-in-component.raw.tsx',
+);
 const getterState = getRawFile('./data/blocks/getter-state.raw.tsx');
 const basicForShow = getRawFile('./data/basic-for-show.raw.tsx');
 const basicBooleanAttribute = getRawFile('./data/basic-boolean-attribute.raw.tsx');
@@ -216,6 +219,7 @@ const BASIC_TESTS: Tests = {
   'Basic OnMount Update': basicOnMountUpdate,
   preserveExportOrLocalStatement,
   'class + css': classRaw,
+  'class and className in component': classAndClassNameInComponent,
   'className + css': className,
   'class + ClassName + css': classAndClassName,
   'use-style': useStyle,
