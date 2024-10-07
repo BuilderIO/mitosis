@@ -643,7 +643,7 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
       },
       {
         name: 'svelte',
-        parser: async ({ filePath, code }) => parseSvelte(code),
+        parser: async ({ code }) => parseSvelte(code),
         testsArray: filterTests([SVELTE_SYNTAX_TESTS], only),
       },
     ];
