@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.2
+
+### Patch Changes
+
+- dad8e2f: Fix: do not consolidate class and className for Mitosis components
+
 ## 0.5.1
 
 ### Patch Changes
