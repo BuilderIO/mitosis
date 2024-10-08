@@ -1,8 +1,9 @@
 import { parseJsx } from '@/parsers/jsx';
 import { Target } from '@/types/config';
 import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
-import { describe, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { MitosisComponent, createTypescriptProject, parseSvelte } from '..';
+
 const getRawFile = async (filePath: string) => {
   const code = await import(`${filePath}?raw`).then((x) => x.default as string);
   return { code, filePath: ['src', '__tests__', filePath].join('/') };
