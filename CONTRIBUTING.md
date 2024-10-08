@@ -50,7 +50,6 @@ PS: don't worry about failing imports in the raw test TSX files. These are not a
 - add your component to the [homepage](/e2e/e2e-app/src/homepage.lite.tsx) with a `<Show when={state.pathToUse.startsWith('/your-component-path')}>`
 - add an integration test in [e2e/e2e-app/tests](/e2e/e2e-app/tests) that makes sure your component works as expected
 - this integration test will run against every server that exists in [e2e/](/e2e/).
-- run `yarn ci:e2e-prep` to install playwright browsers
 - run `yarn ci:build` to build all packages
 - run `yarn ci:e2e` to run the integration tests against all servers
 

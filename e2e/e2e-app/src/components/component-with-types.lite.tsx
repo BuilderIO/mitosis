@@ -1,4 +1,4 @@
-type Props = {
+export type Props = {
   name: string;
 };
 

@@ -1,0 +1,44 @@
+{
+  "name": "@builder.io/e2e-stencil",
+  "description": "Stencil Component Starter",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "collection:main": "dist/collection/index.js",
+  "unpkg": "dist/e2e-stencil/e2e-stencil.esm.js",
+  "exports": {
+    ".": {
+      "import": "./dist/e2e-stencil/e2e-stencil.esm.js",
+      "require": "./dist/e2e-stencil/e2e-stencil.cjs.js"
+    },
+    "./my-component": {
+      "import": "./dist/components/my-component.js",
+      "types": "./dist/components/my-component.d.ts"
+    },
+    "./loader": {
+      "import": "./loader/index.js",
+      "require": "./loader/index.cjs",
+      "types": "./loader/index.d.ts"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ionic-team/stencil-component-starter.git"
+  },
+  "files": [
+    "dist/",
+    "loader/"
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "stencil build",
+    "serve": "stencil build --watch --serve --no-open"
+  },
+  "devDependencies": {
+    "@stencil/core": "^4.7.0",
+    "@types/node": "^16.18.11",
+    "rimraf": "^3.0.2"
+  },
+  "license": "MIT"
+}

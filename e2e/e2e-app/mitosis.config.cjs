@@ -12,6 +12,7 @@ module.exports = {
     'react',
     'reactNative',
     'solid',
+    'stencil',
     'svelte',
     'vue',
     'webcomponent',
@@ -38,6 +39,9 @@ module.exports = {
       },
     },
     react: { transpiler: { format: 'esm', languages: ['ts'] } },
+    stencil: {
+      prefix: 'e2e',
+    },
     solid: { transpiler: { languages: ['ts'] } },
     vue: {
       transpiler: { format: 'esm' },
