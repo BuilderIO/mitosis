@@ -138,7 +138,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
     let css = collectCss(json);
 
     const domRefs = getRefs(json);
-    mapRefs(component, (refName) => `this.${camelCase(refName)}`);
+    mapRefs(json, (refName) => `this.${camelCase(refName)}`);
 
     if (options.plugins) {
       json = runPostJsonPlugins({ json, plugins: options.plugins });
