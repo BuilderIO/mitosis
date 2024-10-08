@@ -5,8 +5,8 @@ export interface Props {
 }
 
 export default function MyBasicRefComponent(props: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement | null>(null);
 
   const state = useStore({
     name: 'PatrickJS',
@@ -14,7 +14,7 @@ export default function MyBasicRefComponent(props: Props) {
 
   function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    inputRef?.focus();
   }
 
   function lowerCaseName() {

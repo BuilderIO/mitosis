@@ -152,14 +152,14 @@ function MyBasicComponent(props) {
 
   return (
     <>
-      <div class=\\"test div-046ccea4\\">
+      <div class=\\"test div-7a6b8f8c\\">
         <input
           value={DEFAULT_VALUES.name || name()}
           onInput={(myEvent) => setName(myEvent.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
-      <style>{\`.div-046ccea4 {
+      <style>{\`.div-7a6b8f8c {
   padding: 10px;
 }\`}</style>
     </>
@@ -228,14 +228,14 @@ function MyBasicComponent(props) {
 
   return (
     <>
-      <div class=\\"test div-046ccea4\\">
+      <div class=\\"test div-7a6b8f8c\\">
         <input
           value={DEFAULT_VALUES.name || name()}
           onInput={(myEvent) => setName(myEvent.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
-      <style>{\`.div-046ccea4 {
+      <style>{\`.div-7a6b8f8c {
   padding: 10px;
 }\`}</style>
     </>
@@ -744,7 +744,7 @@ function MyBasicRefComponent(props) {
 
   function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    inputRef?.focus();
   }
 
   function lowerCaseName() {
@@ -760,7 +760,7 @@ function MyBasicRefComponent(props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-1360a7e4\\"
+              class=\\"input-bd83514c\\"
               ref={inputRef}
               value={name()}
               onBlur={(event) => onBlur()}
@@ -779,7 +779,7 @@ function MyBasicRefComponent(props) {
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
-      <style>{\`.input-1360a7e4 {
+      <style>{\`.input-bd83514c {
   color: red;
 }\`}</style>
     </>
@@ -798,7 +798,7 @@ function MyBasicRefComponent(props) {
 
   function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    inputRef?.focus();
   }
 
   function lowerCaseName() {
@@ -814,7 +814,7 @@ function MyBasicRefComponent(props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-1360a7e4\\"
+              class=\\"input-bd83514c\\"
               ref={inputRef}
               value={name()}
               onBlur={(event) => onBlur()}
@@ -833,7 +833,7 @@ function MyBasicRefComponent(props) {
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
-      <style>{\`.input-1360a7e4 {
+      <style>{\`.input-bd83514c {
   color: red;
 }\`}</style>
     </>
@@ -2560,6 +2560,50 @@ export default Stepper;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > NestedStore 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function NestedStore(props) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_messageId, set_messageId] = createSignal(_id() + \\"-message\\");
+
+  return (
+    <>
+      <div id={_id()}>
+        Test
+        <p id={_messageId()}>Message</p>
+      </div>
+    </>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > NestedStore 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function NestedStore(props) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_messageId, set_messageId] = createSignal(_id() + \\"-message\\");
+
+  return (
+    <>
+      <div id={_id()}>
+        Test
+        <p id={_messageId()}>Message</p>
+      </div>
+    </>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > RawText 1`] = `
 "function RawText(props) {
   return (
@@ -3255,6 +3299,60 @@ exports[`Solid > jsx > Javascript Test > Textarea 2`] = `
 }
 
 export default Textarea;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"import { on, createEffect, createMemo, createSignal } from \\"solid-js\\";
+
+function UseValueAndFnFromStore(props) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_active, set_active] = createSignal(false);
+
+  function _do(id) {
+    set_active(!!id);
+
+    if (props.onChange) {
+      props.onChange(_active());
+    }
+  }
+
+  return (
+    <>
+      <div>Test</div>
+    </>
+  );
+}
+
+export default UseValueAndFnFromStore;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > UseValueAndFnFromStore 2`] = `
+"import { on, createEffect, createMemo, createSignal } from \\"solid-js\\";
+
+function UseValueAndFnFromStore(props) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_active, set_active] = createSignal(false);
+
+  function _do(id) {
+    set_active(!!id);
+
+    if (props.onChange) {
+      props.onChange(_active());
+    }
+  }
+
+  return (
+    <>
+      <div>Test</div>
+    </>
+  );
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 
@@ -6058,6 +6156,52 @@ export default MyComponent;
 "
 `;
 
+exports[`Solid > jsx > Javascript Test > setState 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function SetState(props) {
+  const [n, setN] = createSignal([\\"123\\"]);
+
+  function someFn() {
+    n()[0] = \\"123\\";
+  }
+
+  return (
+    <>
+      <div>
+        <button onClick={(event) => someFn()}>Click me</button>
+      </div>
+    </>
+  );
+}
+
+export default SetState;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > setState 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function SetState(props) {
+  const [n, setN] = createSignal([\\"123\\"]);
+
+  function someFn() {
+    n()[0] = \\"123\\";
+  }
+
+  return (
+    <>
+      <div>
+        <button onClick={(event) => someFn()}>Click me</button>
+      </div>
+    </>
+  );
+}
+
+export default SetState;
+"
+`;
+
 exports[`Solid > jsx > Javascript Test > showExpressions 1`] = `
 "An identifier or keyword cannot immediately follow a numeric literal. (36:34)
   34 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
@@ -7146,14 +7290,14 @@ function MyBasicComponent(props: MyBasicComponentProps) {
 
   return (
     <>
-      <div class=\\"test div-3c5f02b2\\">
+      <div class=\\"test div-7d6ae8f6\\">
         <input
           value={DEFAULT_VALUES.name || name()}
           onInput={(myEvent) => setName(myEvent.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
-      <style>{\`.div-3c5f02b2 {
+      <style>{\`.div-7d6ae8f6 {
   padding: 10px;
 }\`}</style>
     </>
@@ -7226,14 +7370,14 @@ function MyBasicComponent(props: MyBasicComponentProps) {
 
   return (
     <>
-      <div class=\\"test div-3c5f02b2\\">
+      <div class=\\"test div-7d6ae8f6\\">
         <input
           value={DEFAULT_VALUES.name || name()}
           onInput={(myEvent) => setName(myEvent.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
-      <style>{\`.div-3c5f02b2 {
+      <style>{\`.div-7d6ae8f6 {
   padding: 10px;
 }\`}</style>
     </>
@@ -7766,15 +7910,15 @@ function MyBasicRefComponent(props: Props) {
 
   function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    inputRef?.focus();
   }
 
   function lowerCaseName() {
     return name().toLowerCase();
   }
 
-  let inputRef: HTMLInputElement;
-  let inputNoArgRef: HTMLLabelElement;
+  let inputRef: HTMLInputElement | null;
+  let inputNoArgRef: HTMLLabelElement | null;
 
   return (
     <>
@@ -7782,7 +7926,7 @@ function MyBasicRefComponent(props: Props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-1dafdd72\\"
+              class=\\"input-9f1627bc\\"
               ref={inputRef!}
               value={name()}
               onBlur={(event) => onBlur()}
@@ -7801,7 +7945,7 @@ function MyBasicRefComponent(props: Props) {
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
-      <style>{\`.input-1dafdd72 {
+      <style>{\`.input-9f1627bc {
   color: red;
 }\`}</style>
     </>
@@ -7824,15 +7968,15 @@ function MyBasicRefComponent(props: Props) {
 
   function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    inputRef?.focus();
   }
 
   function lowerCaseName() {
     return name().toLowerCase();
   }
 
-  let inputRef: HTMLInputElement;
-  let inputNoArgRef: HTMLLabelElement;
+  let inputRef: HTMLInputElement | null;
+  let inputNoArgRef: HTMLLabelElement | null;
 
   return (
     <>
@@ -7840,7 +7984,7 @@ function MyBasicRefComponent(props: Props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-1dafdd72\\"
+              class=\\"input-9f1627bc\\"
               ref={inputRef!}
               value={name()}
               onBlur={(event) => onBlur()}
@@ -7859,7 +8003,7 @@ function MyBasicRefComponent(props: Props) {
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
-      <style>{\`.input-1dafdd72 {
+      <style>{\`.input-9f1627bc {
   color: red;
 }\`}</style>
     </>
@@ -9848,6 +9992,60 @@ export default Stepper;
 "
 `;
 
+exports[`Solid > jsx > Typescript Test > NestedStore 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+function NestedStore(props: any) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_messageId, set_messageId] = createSignal(_id() + \\"-message\\");
+
+  return (
+    <>
+      <div id={_id()}>
+        Test
+        <p id={_messageId()}>Message</p>
+      </div>
+    </>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > NestedStore 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+function NestedStore(props: any) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_messageId, set_messageId] = createSignal(_id() + \\"-message\\");
+
+  return (
+    <>
+      <div id={_id()}>
+        Test
+        <p id={_messageId()}>Message</p>
+      </div>
+    </>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`Solid > jsx > Typescript Test > RawText 1`] = `
 "export interface RawTextProps {
   attributes?: any;
@@ -10683,6 +10881,78 @@ function Textarea(props: TextareaProps) {
 }
 
 export default Textarea;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"import { on, createEffect, createMemo, createSignal } from \\"solid-js\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+function UseValueAndFnFromStore(props: MyProps) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_active, set_active] = createSignal(false);
+
+  function _do(id?: string) {
+    set_active(!!id);
+
+    if (props.onChange) {
+      props.onChange(_active());
+    }
+  }
+
+  return (
+    <>
+      <div>Test</div>
+    </>
+  );
+}
+
+export default UseValueAndFnFromStore;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > UseValueAndFnFromStore 2`] = `
+"import { on, createEffect, createMemo, createSignal } from \\"solid-js\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+function UseValueAndFnFromStore(props: MyProps) {
+  const [_id, set_id] = createSignal(\\"abc\\");
+
+  const [_active, set_active] = createSignal(false);
+
+  function _do(id?: string) {
+    set_active(!!id);
+
+    if (props.onChange) {
+      props.onChange(_active());
+    }
+  }
+
+  return (
+    <>
+      <div>Test</div>
+    </>
+  );
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 
@@ -13817,6 +14087,52 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > setState 1`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function SetState(props: any) {
+  const [n, setN] = createSignal([\\"123\\"]);
+
+  function someFn() {
+    n()[0] = \\"123\\";
+  }
+
+  return (
+    <>
+      <div>
+        <button onClick={(event) => someFn()}>Click me</button>
+      </div>
+    </>
+  );
+}
+
+export default SetState;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > setState 2`] = `
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function SetState(props: any) {
+  const [n, setN] = createSignal([\\"123\\"]);
+
+  function someFn() {
+    n()[0] = \\"123\\";
+  }
+
+  return (
+    <>
+      <div>
+        <button onClick={(event) => someFn()}>Click me</button>
+      </div>
+    </>
+  );
+}
+
+export default SetState;
 "
 `;
 

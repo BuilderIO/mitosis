@@ -125,11 +125,11 @@ class {
 }
 
 style { 
-  .div-360ae4be {
+  .div-3970f665 {
     padding: 10px;
   }
 }
-<div class=\\"test div-360ae4be\\">
+<div class=\\"test div-3970f665\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
@@ -305,7 +305,7 @@ exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
 "class {
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.focus();
+    this.inputRef?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.state.name.toLowerCase();
@@ -324,14 +324,14 @@ exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
 }
 
 style { 
-  .input-38729636 {
+  .input-d2b8a7d4 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-38729636\\"
+      class=\\"input-d2b8a7d4\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -1063,6 +1063,20 @@ class {
 ></FormInputComponent>"
 `;
 
+exports[`Marko > jsx > Javascript Test > NestedStore 1`] = `
+"class {
+  onCreate() {
+    this.state = { _id: \\"abc\\", _messageId: this.state._id + \\"-message\\" };
+  }
+}
+
+<div id=(state._id)>
+  Test
+
+  <p id=(state._messageId)>Message</p>
+</div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > RawText 1`] = `
 "class {}
 
@@ -1284,6 +1298,30 @@ exports[`Marko > jsx > Javascript Test > Textarea 1`] = `
   value=(input.value)
   defaultValue=(input.defaultValue)
 ></textarea>"
+`;
+
+exports[`Marko > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"class {
+  _do(id) {
+    this.state._active = !!id;
+
+    if (this.input.onChange) {
+      this.input.onChange(this.state._active);
+    }
+  }
+
+  onCreate(input) {
+    this.state = { _id: \\"abc\\", _active: false };
+  }
+
+  onRender() {
+    if (this._do) {
+      this._do(this.state._id);
+    }
+  }
+}
+
+<div>Test</div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > Video 1`] = `
@@ -2209,6 +2247,20 @@ exports[`Marko > jsx > Javascript Test > self-referencing component with childre
 </div>"
 `;
 
+exports[`Marko > jsx > Javascript Test > setState 1`] = `
+"class {
+  someFn() {
+    this.state.n[0] = \\"123\\";
+  }
+
+  onCreate() {
+    this.state = { n: [\\"123\\"] };
+  }
+}
+
+<div><button on-click(event => component.someFn())>Click me</button></div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > showExpressions 1`] = `
 "class {}
 
@@ -2603,11 +2655,11 @@ class {
 }
 
 style { 
-  .div-11706802 {
+  .div-476b44c0 {
     padding: 10px;
   }
 }
-<div class=\\"test div-11706802\\">
+<div class=\\"test div-476b44c0\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
@@ -2783,7 +2835,7 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
 "class {
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.focus();
+    this.inputRef?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.state.name.toLowerCase();
@@ -2802,14 +2854,14 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
 }
 
 style { 
-  .input-77dfc7d6 {
+  .input-9b2529ca {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-77dfc7d6\\"
+      class=\\"input-9b2529ca\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -3552,6 +3604,20 @@ class {
 ></FormInputComponent>"
 `;
 
+exports[`Marko > jsx > Typescript Test > NestedStore 1`] = `
+"class {
+  onCreate() {
+    this.state = { _id: \\"abc\\", _messageId: this.state._id + \\"-message\\" };
+  }
+}
+
+<div id=(state._id)>
+  Test
+
+  <p id=(state._messageId)>Message</p>
+</div>"
+`;
+
 exports[`Marko > jsx > Typescript Test > RawText 1`] = `
 "class {}
 
@@ -3773,6 +3839,30 @@ exports[`Marko > jsx > Typescript Test > Textarea 1`] = `
   value=(input.value)
   defaultValue=(input.defaultValue)
 ></textarea>"
+`;
+
+exports[`Marko > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"class {
+  _do(id?: string) {
+    this.state._active = !!id;
+
+    if (this.input.onChange) {
+      this.input.onChange(this.state._active);
+    }
+  }
+
+  onCreate(input) {
+    this.state = { _id: \\"abc\\", _active: false };
+  }
+
+  onRender() {
+    if (this._do) {
+      this._do(this.state._id);
+    }
+  }
+}
+
+<div>Test</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > Video 1`] = `
@@ -4707,6 +4797,20 @@ exports[`Marko > jsx > Typescript Test > self-referencing component with childre
   <if(input.name === 'Batman')>
     <MyComponent name=\\"Bruce\\"><div>Wayne</div></MyComponent></if>
 </div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > setState 1`] = `
+"class {
+  someFn() {
+    this.state.n[0] = \\"123\\";
+  }
+
+  onCreate() {
+    this.state = { n: [\\"123\\"] };
+  }
+}
+
+<div><button on-click(event => component.someFn())>Click me</button></div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > showExpressions 1`] = `

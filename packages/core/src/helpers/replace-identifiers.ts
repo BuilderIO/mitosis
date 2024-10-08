@@ -26,6 +26,12 @@ type ReplaceArgs = {
   to: ReplaceTo;
 };
 
+export type NodeMap = {
+  from: types.Node;
+  condition?: (path: babel.NodePath<types.Node>) => boolean;
+  to: types.Node;
+};
+
 /**
  * Given a `to` function given by the user, figure out the best argument to provide to the `to` function.
  * This function makes a best guess based on the AST structure it's dealing with.
@@ -182,17 +188,7 @@ const isNewlyGenerated = (node: types.Node) => (node as AllowMeta)?._builder_met
  * Replaces all instances of a Babel AST Node with a new Node within a code string.
  * Uses `generate()` to convert the Node to a string and compare them.
  */
-export const replaceNodes = ({
-  code,
-  nodeMaps,
-}: {
-  code: string;
-  nodeMaps: {
-    from: types.Node;
-    condition?: (path: babel.NodePath<types.Node>) => boolean;
-    to: types.Node;
-  }[];
-}) => {
+export const replaceNodes = ({ code, nodeMaps }: { code: string; nodeMaps: NodeMap[] }) => {
   const searchAndReplace = (path: babel.NodePath<types.Node>) => {
     if (isNewlyGenerated(path.node) || isNewlyGenerated(path.parent)) return;
 
@@ -220,6 +216,9 @@ export const replaceNodes = ({
   };
 
   return babelTransformExpression(code, {
+    ThisExpression(path) {
+      searchAndReplace(path);
+    },
     MemberExpression(path) {
       searchAndReplace(path);
     },

@@ -233,7 +233,7 @@ export const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
       size(component.context.get) && vueImports.push('inject');
       size(
         Object.keys(component.state).filter((key) => component.state[key]?.type === 'property'),
-      ) && vueImports.push('ref');
+      ) + size(component.refs) && vueImports.push('ref');
       size(slotsProps) && vueImports.push('useSlots');
     }
 

@@ -23,9 +23,6 @@ const componentWithContextMultiRoot = getRawFile(
   './data/context/component-with-context-multi-root.raw.tsx',
 );
 
-const expressionState = getRawFile('./data/expression-state.raw.tsx');
-const contentState = getRawFile('./data/context-state.raw.tsx');
-
 const basic = getRawFile('./data/basic.raw.tsx');
 const basicAttribute = getRawFile('./data/basic-attribute.raw.tsx');
 const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw.tsx');
@@ -42,7 +39,6 @@ const nestedStyles = getRawFile('./data/nested-styles.raw.tsx');
 const preserveExportOrLocalStatement = getRawFile(
   './data/basic-preserve-export-or-local-statement.raw.tsx',
 );
-const arrowFunctionInUseStore = getRawFile('./data/arrow-function-in-use-store.raw.tsx');
 const svgComponent = getRawFile('./data/svg.raw.tsx');
 const webComponent = getRawFile('./data/basic-web-component.raw.tsx');
 const propsType = getRawFile('./data/types/component-props-type.raw.tsx');
@@ -124,8 +120,17 @@ const renderContentExample = getRawFile('./data/render-content.raw.tsx');
 const onClickToPressable = getRawFile('./data/react-native/onclick-to-pressable.raw.tsx');
 const inputToTextInputRN = getRawFile('./data/react-native/text-input.raw.tsx');
 
-const StringLiteralStore = getRawFile('./data/string-literal-store.raw.tsx');
-const StringLiteralStoreKebab = getRawFile('./data/string-literal-store-kebab.raw.tsx');
+// State
+const setState = getRawFile('./data/state/set-state.raw.tsx');
+const expressionState = getRawFile('./data/state/expression-state.raw.tsx');
+const contentState = getRawFile('./data/state/context-state.raw.tsx');
+
+// Store
+const arrowFunctionInUseStore = getRawFile('./data/store/arrow-function-in-use-store.raw.tsx');
+const NestedStore = getRawFile('./data/store/nested-store.raw.tsx');
+const UseValueAndFnFromStore = getRawFile('./data/store/use-value-and-fn-from-store.raw.tsx');
+const StringLiteralStore = getRawFile('./data/store/string-literal-store.raw.tsx');
+const StringLiteralStoreKebab = getRawFile('./data/store/string-literal-store-kebab.raw.tsx');
 
 /**
  * Use TestsWithFailFor when you want to write a test that you know will fail
@@ -232,6 +237,7 @@ const BASIC_TESTS: Tests = {
   spreadProps,
   renderContentExample,
   arrowFunctionInUseStore,
+  setState,
   expressionState,
   contentState,
   referencingFunInsideHook,
@@ -241,6 +247,8 @@ const BASIC_TESTS: Tests = {
   useTarget,
   signalsOnUpdate,
   getterState,
+  NestedStore,
+  UseValueAndFnFromStore,
   'string-literal-store': StringLiteralStore,
   'string-literal-store-kebab': {
     file: StringLiteralStoreKebab,

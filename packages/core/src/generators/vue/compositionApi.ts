@@ -52,8 +52,9 @@ export function generateCompositionApiScript(
     functions: false,
     getters: false,
     format: 'variables',
-    valueMapper: (code, _, typeParameter) =>
-      isTs && typeParameter ? `ref<${typeParameter}>(${code})` : `ref(${code})`,
+    valueMapper: (code, _, typeParameter) => {
+      return isTs && typeParameter ? `ref<${typeParameter}>(${code})` : `ref(${code})`;
+    },
     keyPrefix: 'const',
   });
 
@@ -111,7 +112,8 @@ export function generateCompositionApiScript(
     ${Object.keys(component.refs)
       ?.map((key) => {
         if (isTs) {
-          return `const ${key} = ref<${component.refs[key].typeParameter}>()`;
+          const type = component.refs[key].typeParameter ?? 'any';
+          return `const ${key} = ref<${type}>(null)`;
         } else {
           return `const ${key} = ref(null)`;
         }

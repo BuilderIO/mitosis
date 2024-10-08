@@ -181,7 +181,7 @@ const props = defineProps([\\"onMessage\\", \\"onEvent\\", \\"message\\"]);
 const name = ref(\\"PatrickJS\\");
 
 onMounted(() => {
-  props.onMessage(name);
+  props.onMessage(name.value);
   props.onEvent(props.message);
 });
 </script>"
@@ -199,7 +199,7 @@ const props = defineProps([\\"onMessage\\", \\"onEvent\\", \\"message\\"]);
 const name = ref(\\"PatrickJS\\");
 
 onMounted(() => {
-  props.onMessage(name);
+  props.onMessage(name.value);
   props.onEvent(props.message);
 });
 </script>"
@@ -319,7 +319,7 @@ const inputNoArgRef = ref(null);
 
 function onBlur() {
   // Maintain focus
-  inputRef.value.focus();
+  inputRef.value?.focus();
 }
 function lowerCaseName() {
   return name.value.toLowerCase();
@@ -339,11 +339,13 @@ exports[`Vue > jsx > Javascript Test > BasicRefAssignment 1`] = `
 </template>
 
 <script setup>
+import { ref } from \\"vue\\";
+
 const holdValueRef = ref(null);
 
 function handlerClick(event) {
   event.preventDefault();
-  console.log(\\"current value\\", holdValueRef);
+  console.log(\\"current value\\", holdValueRef.value);
   holdValueRef.value = holdValueRef.value + \\"JS\\";
 }
 </script>"
@@ -1034,7 +1036,7 @@ onMounted(() => {
 });
 onUnmounted(() => {
   if (scrollListener.value) {
-    window.removeEventListener(\\"scroll\\", scrollListener);
+    window.removeEventListener(\\"scroll\\", scrollListener.value);
   }
 });
 
@@ -1152,6 +1154,22 @@ import FormInputComponent from \\"./input.raw\\";
 function handleChange(value) {
   console.log(value);
 }
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > NestedStore 1`] = `
+"<template>
+  <div :id=\\"_id\\">
+    Test
+    <p :id=\\"_messageId\\">Message</p>
+  </div>
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const _id = ref(\\"abc\\");
+const _messageId = ref(_id.value + \\"-message\\");
 </script>"
 `;
 
@@ -1432,6 +1450,34 @@ const props = defineProps([
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"<template>
+  <div>Test</div>
+</template>
+
+<script setup>
+import { onUpdated, ref } from \\"vue\\";
+
+const props = defineProps([\\"onChange\\"]);
+const _id = ref(\\"abc\\");
+const _active = ref(false);
+
+onUpdated(() => {
+  if (_do) {
+    _do(_id.value);
+  }
+});
+
+function _do(id) {
+  _active.value = !!id;
+
+  if (props.onChange) {
+    props.onChange(_active.value);
+  }
+}
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > Video 1`] = `
 "<template>
   <video
@@ -1589,7 +1635,7 @@ watch(
     })
       .then((response) => response.json())
       .then((data) => {
-        name.value = data.name;
+        name.value = data.name.value;
       });
     return () => {
       if (!signal.aborted) {
@@ -1936,7 +1982,7 @@ const d = ref(\\"d\\");
 watch(
   () => [a.value, b.value],
   () => {
-    console.log(\\"Runs when a or b changes\\", a, b);
+    console.log(\\"Runs when a or b changes\\", a.value, b.value);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
@@ -1947,7 +1993,7 @@ watch(
 watch(
   () => [c.value, d.value],
   () => {
-    console.log(\\"Runs when c or d changes\\", c, d);
+    console.log(\\"Runs when c or d changes\\", c.value, d.value);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
@@ -2042,7 +2088,7 @@ exports[`Vue > jsx > Javascript Test > onEvent 1`] = `
 </template>
 
 <script setup>
-import { onMounted } from \\"vue\\";
+import { onMounted, ref } from \\"vue\\";
 
 const elem = ref(null);
 
@@ -2090,7 +2136,7 @@ export const defaultValues = {
 const props = defineProps([\\"name\\"]);
 const name = ref(\\"\\");
 
-name.value = defaultValues.name || props.name;
+name.value = defaultValues.name.value || props.name.value;
 console.log(\\"set defaults with props\\");
 </script>"
 `;
@@ -2161,7 +2207,7 @@ const b = ref(\\"b\\");
 watch(
   () => [a.value, b.value, props.size],
   () => {
-    console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
+    console.log(\\"Runs when a, b or size changes\\", a.value, b.value, props.size);
   },
   { immediate: true }
 );
@@ -2611,6 +2657,22 @@ exports[`Vue > jsx > Javascript Test > self-referencing component with children 
 
 <script setup>
 const props = defineProps([\\"name\\", \\"children\\"]);
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > setState 1`] = `
+"<template>
+  <div><button @click=\\"someFn()\\">Click me</button></div>
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const n = ref([\\"123\\"]);
+
+function someFn() {
+  n.value[0] = \\"123\\";
+}
 </script>"
 `;
 
@@ -3089,8 +3151,8 @@ export interface Props {
 const props = defineProps<Props>();
 const name = ref(\\"PatrickJS\\");
 
-const inputRef = ref<HTMLInputElement>();
-const inputNoArgRef = ref<HTMLLabelElement>();
+const inputRef = ref<HTMLInputElement>(null);
+const inputNoArgRef = ref<HTMLLabelElement>(null);
 
 watch(
   () => [inputRef.value, inputNoArgRef.value],
@@ -3249,7 +3311,7 @@ const props = defineProps([\\"onMessage\\", \\"onEvent\\", \\"message\\"]);
 const name = ref(\\"PatrickJS\\");
 
 onMounted(() => {
-  props.onMessage(name);
+  props.onMessage(name.value);
   props.onEvent(props.message);
 });
 </script>"
@@ -3267,7 +3329,7 @@ const props = defineProps([\\"onMessage\\", \\"onEvent\\", \\"message\\"]);
 const name = ref(\\"PatrickJS\\");
 
 onMounted(() => {
-  props.onMessage(name);
+  props.onMessage(name.value);
   props.onEvent(props.message);
 });
 </script>"
@@ -3391,12 +3453,12 @@ export interface Props {
 const props = defineProps<Props>();
 const name = ref(\\"PatrickJS\\");
 
-const inputRef = ref<HTMLInputElement>();
-const inputNoArgRef = ref<HTMLLabelElement>();
+const inputRef = ref<HTMLInputElement | null>(null);
+const inputNoArgRef = ref<HTMLLabelElement | null>(null);
 
 function onBlur() {
   // Maintain focus
-  inputRef.value.focus();
+  inputRef.value?.focus();
 }
 function lowerCaseName() {
   return name.value.toLowerCase();
@@ -3416,15 +3478,17 @@ exports[`Vue > jsx > Typescript Test > BasicRefAssignment 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
 export interface Props {
   showInput: boolean;
 }
 
-const holdValueRef = ref<undefined>();
+const holdValueRef = ref<any>(null);
 
 function handlerClick(event: Event) {
   event.preventDefault();
-  console.log(\\"current value\\", holdValueRef);
+  console.log(\\"current value\\", holdValueRef.value);
   holdValueRef.value = holdValueRef.value + \\"JS\\";
 }
 </script>"
@@ -3460,7 +3524,7 @@ export interface Props {
 
 const count = ref(0);
 
-const prevCount = ref<undefined>();
+const prevCount = ref<any>(null);
 
 watch(
   () => [count.value],
@@ -3661,7 +3725,7 @@ const props = defineProps<CustomCodeProps>();
 const scriptsInserted = ref([]);
 const scriptsRun = ref([]);
 
-const elem = ref<HTMLDivElement>();
+const elem = ref<HTMLDivElement>(null);
 
 onMounted(() => {
   findAndRunScripts();
@@ -3732,7 +3796,7 @@ const props = defineProps<CustomCodeProps>();
 const scriptsInserted = ref([]);
 const scriptsRun = ref([]);
 
-const elem = ref<HTMLDivElement>();
+const elem = ref<HTMLDivElement>(null);
 
 onMounted(() => {
   findAndRunScripts();
@@ -3874,7 +3938,7 @@ const formState = ref(\\"unsubmitted\\");
 const responseData = ref(null);
 const formErrorMessage = ref(\\"\\");
 
-const formRef = ref<HTMLFormElement>();
+const formRef = ref<HTMLFormElement>(null);
 
 const submissionState = computed(() => {
   return (Builder.isEditing && props.previewState) || formState.value;
@@ -4159,7 +4223,7 @@ const scrollListener = ref(null);
 const imageLoaded = ref(false);
 const load = ref(false);
 
-const pictureRef = ref<HTMLElement>();
+const pictureRef = ref<HTMLElement>(null);
 
 onMounted(() => {
   if (useLazyLoading()) {
@@ -4187,7 +4251,7 @@ onMounted(() => {
 });
 onUnmounted(() => {
   if (scrollListener.value) {
-    window.removeEventListener(\\"scroll\\", scrollListener);
+    window.removeEventListener(\\"scroll\\", scrollListener.value);
   }
 });
 
@@ -4318,6 +4382,27 @@ import FormInputComponent from \\"./input.raw\\";
 function handleChange(value: string) {
   console.log(value);
 }
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > NestedStore 1`] = `
+"<template>
+  <div :id=\\"_id\\">
+    Test
+    <p :id=\\"_messageId\\">Message</p>
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+const _id = ref<MyStore[\\"_id\\"]>(\\"abc\\");
+const _messageId = ref<MyStore[\\"_messageId\\"]>(_id.value + \\"-message\\");
 </script>"
 `;
 
@@ -4660,6 +4745,43 @@ const props = defineProps<TextareaProps>();
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"<template>
+  <div>Test</div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { onUpdated, ref } from \\"vue\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+const props = defineProps<MyProps>();
+const _id = ref<MyStore[\\"_id\\"]>(\\"abc\\");
+const _active = ref<MyStore[\\"_active\\"]>(false);
+
+onUpdated(() => {
+  if (_do) {
+    _do(_id.value);
+  }
+});
+
+function _do(id?: string): ReturnType<MyStore[\\"_do\\"]> {
+  _active.value = !!id;
+
+  if (props.onChange) {
+    props.onChange(_active.value);
+  }
+}
+</script>"
+`;
+
 exports[`Vue > jsx > Typescript Test > Video 1`] = `
 "<template>
   <video
@@ -4843,7 +4965,7 @@ watch(
     })
       .then((response) => response.json())
       .then((data) => {
-        name.value = data.name;
+        name.value = data.name.value;
       });
     return () => {
       if (!signal.aborted) {
@@ -5238,7 +5360,7 @@ const d = ref(\\"d\\");
 watch(
   () => [a.value, b.value],
   () => {
-    console.log(\\"Runs when a or b changes\\", a, b);
+    console.log(\\"Runs when a or b changes\\", a.value, b.value);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
@@ -5249,7 +5371,7 @@ watch(
 watch(
   () => [c.value, d.value],
   () => {
-    console.log(\\"Runs when c or d changes\\", c, d);
+    console.log(\\"Runs when c or d changes\\", c.value, d.value);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
@@ -5349,9 +5471,9 @@ exports[`Vue > jsx > Typescript Test > onEvent 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-import { onMounted } from \\"vue\\";
+import { onMounted, ref } from \\"vue\\";
 
-const elem = ref<HTMLDivElement>();
+const elem = ref<HTMLDivElement>(null);
 
 onMounted(() => {
   elem.value.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
@@ -5401,7 +5523,7 @@ type Props = {
 const props = defineProps<Props>();
 const name = ref(\\"\\");
 
-name.value = defaultValues.name || props.name;
+name.value = defaultValues.name.value || props.name.value;
 console.log(\\"set defaults with props\\");
 </script>"
 `;
@@ -5476,7 +5598,7 @@ const b = ref(\\"b\\");
 watch(
   () => [a.value, b.value, props.size],
   () => {
-    console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
+    console.log(\\"Runs when a, b or size changes\\", a.value, b.value, props.size);
   },
   { immediate: true }
 );
@@ -5996,6 +6118,22 @@ exports[`Vue > jsx > Typescript Test > self-referencing component with children 
 
 <script setup lang=\\"ts\\">
 const props = defineProps([\\"name\\", \\"children\\"]);
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > setState 1`] = `
+"<template>
+  <div><button @click=\\"someFn()\\">Click me</button></div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+const n = ref([\\"123\\"]);
+
+function someFn() {
+  n.value[0] = \\"123\\";
+}
 </script>"
 `;
 
@@ -6722,7 +6860,7 @@ const result = ref(null);
 watch(
   () => [a.value, b.value],
   () => {
-    calculateResult(a, b);
+    calculateResult(a.value, b.value);
   },
   { immediate: true }
 );
@@ -7028,7 +7166,7 @@ const result = ref(null);
 watch(
   () => [a.value, b.value],
   () => {
-    calculateResult(a, b);
+    calculateResult(a.value, b.value);
   },
   { immediate: true }
 );
