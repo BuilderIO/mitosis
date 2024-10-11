@@ -1,8 +1,9 @@
 import { parseJsx } from '@/parsers/jsx';
 import { Target } from '@/types/config';
 import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
-import { describe, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { MitosisComponent, createTypescriptProject, parseSvelte } from '..';
+
 const getRawFile = async (filePath: string) => {
   const code = await import(`${filePath}?raw`).then((x) => x.default as string);
   return { code, filePath: ['src', '__tests__', filePath].join('/') };
@@ -85,6 +86,7 @@ const inputParentBlock = getRawFile('./data/blocks/input-parent.raw.tsx');
 const multipleOnUpdate = getRawFile('./data/blocks/multiple-onUpdate.raw.tsx');
 const multipleOnUpdateWithDeps = getRawFile('./data/blocks/multiple-onUpdateWithDeps.raw.tsx');
 const onInit = getRawFile('./data/blocks/onInit.raw.tsx');
+const onInitPlain = getRawFile('./data/blocks/onInit-plain.raw.tsx');
 const onEvent = getRawFile('./data/blocks/onEvent.raw.tsx');
 const onInitonMount = getRawFile('./data/blocks/onInit-onMount.raw.tsx');
 const onMount = getRawFile('./data/blocks/onMount.raw.tsx');
@@ -190,6 +192,7 @@ const BASIC_TESTS: Tests = {
   Columns: columns,
   onUpdate: onUpdate,
   onInit: onInit,
+  onInitPlain,
   onEvent,
   onUpdateWithDeps: onUpdateWithDeps,
   onMount: onMount,
