@@ -381,8 +381,9 @@ const _componentToReact = (
   }
 
   const shouldAddUseClientDirective = checkShouldAddUseClientDirective(json, options);
+
   const shouldInlineOnInitHook =
-    !shouldAddUseClientDirective && options.rsc && !isRSC(json, options);
+    !shouldAddUseClientDirective && options.rsc && isRSC(json, options);
 
   if (allRefs.length || (json.hooks.onInit?.code && !shouldInlineOnInitHook)) {
     reactLibImports.add('useRef');
