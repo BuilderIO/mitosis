@@ -217,6 +217,23 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       userOptions: reactOptions,
     });
 
+    options.plugins.unshift(
+      CODE_PROCESSOR_PLUGIN((codeType, json) => {
+        switch (codeType) {
+          case 'hooks':
+          case 'hooks-deps':
+            return (c) => processHookCode({ str: c, options });
+          case 'types':
+          case 'bindings':
+          case 'state':
+          case 'context-set':
+          case 'properties':
+          case 'dynamic-jsx-elements':
+            return (c) => c;
+        }
+      }),
+    );
+
     if (options.plugins) {
       json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
@@ -454,20 +471,17 @@ const _componentToReact = (
     }
     ${hasStateArgument ? refsString : ''}
     ${getContextString(json, options)}
-    ${json.hooks.init?.code ? processHookCode({ str: json.hooks.init?.code, options }) : ''}
+    ${json.hooks.init?.code || ''}
     ${contextStr || ''}
 
     ${
       json.hooks.onInit?.code
         ? shouldInlineOnInitHook
-          ? processHookCode({ str: json.hooks.onInit.code, options })
+          ? json.hooks.onInit.code
           : `
         const hasInitialized = useRef(false);
         if (!hasInitialized.current) {
-          ${processHookCode({
-            str: json.hooks.onInit.code,
-            options,
-          })}
+          ${json.hooks.onInit.code}
           hasInitialized.current = true;
         }
         `
@@ -491,10 +505,7 @@ const _componentToReact = (
       .map(
         (hook) =>
           `useEffect(() => {
-          ${processHookCode({
-            str: hook.code,
-            options,
-          })}
+          ${hook.code}
         }, [])`,
       )
       .join('\n')}
@@ -503,9 +514,9 @@ const _componentToReact = (
       json.hooks.onUpdate
         ?.map(
           (hook) => `useEffect(() => {
-          ${processHookCode({ str: hook.code, options })}
+          ${hook.code}
         },
-        ${hook.deps ? processHookCode({ str: hook.deps, options }) : ''})`,
+        ${hook.deps || ''})`,
         )
         .join(';') ?? ''
     }
@@ -514,10 +525,7 @@ const _componentToReact = (
       json.hooks.onUnMount?.code
         ? `useEffect(() => {
           return () => {
-            ${processHookCode({
-              str: json.hooks.onUnMount.code,
-              options,
-            })}
+            ${json.hooks.onUnMount.code}
           }
         }, [])`
         : ''
