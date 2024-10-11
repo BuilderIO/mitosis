@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.3
+
+### Patch Changes
+
+- 82c79fd: [React] Fix: Inline `onInit` hook when generating RSC components.
+
 ## 0.5.2
 
 ### Patch Changes
