@@ -289,18 +289,21 @@ const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
   return `${json.name}.defaultProps = {${defaultPropsString}};`;
 };
 
+const isRSC = (json: MitosisComponent, options: ToReactOptions) => {
+  // When using RSC generator, we check `componentType` field in metadata to determine if it's a server component
+  const componentType = json.meta.useMetadata?.rsc?.componentType;
+  if (options.rsc && checkIsDefined(componentType)) {
+    return componentType === 'server';
+  }
+
+  return !checkIfIsClientComponent(json);
+};
 const checkShouldAddUseClientDirective = (json: MitosisComponent, options: ToReactOptions) => {
   if (!options.addUseClientDirectiveIfNeeded) return false;
   if (options.type === 'native') return false;
   if (options.preact) return false;
 
-  // When using RSC generator, we check `componentType` field in metadata to determine if it's a server component
-  const componentType = json.meta.useMetadata?.rsc?.componentType;
-  if (options.rsc && checkIsDefined(componentType)) {
-    return componentType === 'client';
-  }
-
-  return checkIfIsClientComponent(json);
+  return !isRSC(json, options);
 };
 
 const _componentToReact = (
@@ -376,7 +379,12 @@ const _componentToReact = (
   if (hasContext(json) && options.contextType !== 'prop-drill') {
     reactLibImports.add('useContext');
   }
-  if (allRefs.length || json.hooks.onInit?.code) {
+
+  const shouldAddUseClientDirective = checkShouldAddUseClientDirective(json, options);
+  const shouldInlineOnInitHook =
+    !shouldAddUseClientDirective && options.rsc && !isRSC(json, options);
+
+  if (allRefs.length || (json.hooks.onInit?.code && !shouldInlineOnInitHook)) {
     reactLibImports.add('useRef');
   }
   if (!options.preact && hasPropRef) {
@@ -450,7 +458,9 @@ const _componentToReact = (
 
     ${
       json.hooks.onInit?.code
-        ? `
+        ? shouldInlineOnInitHook
+          ? processHookCode({ str: json.hooks.onInit.code, options })
+          : `
         const hasInitialized = useRef(false);
         if (!hasInitialized.current) {
           ${processHookCode({
@@ -529,8 +539,6 @@ const _componentToReact = (
       ${wrap ? closeFrag(options) : ''}
     );
   `;
-
-  const shouldAddUseClientDirective = checkShouldAddUseClientDirective(json, options);
 
   const str = dedent`
   ${shouldAddUseClientDirective ? `'use client';` : ''}
