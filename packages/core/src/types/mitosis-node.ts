@@ -65,6 +65,12 @@ export type ForNode = BaseNode & {
   };
 };
 
+export type ShowNode = BaseNode & {
+  name: 'Show';
+};
+
 export type MitosisNode = BaseNode | ForNode;
 
 export const checkIsForNode = (node: MitosisNode): node is ForNode => node.name === 'For';
+
+export const checkIsShowNode = (node: MitosisNode): node is ShowNode => node.name === 'Show';
