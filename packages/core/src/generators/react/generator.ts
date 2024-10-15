@@ -73,11 +73,7 @@ const getRefsString = (json: MitosisComponent, refs: string[], options: ToReactO
     hasStateArgument = /state\./.test(argument);
     code += `\nconst ${ref} = useRef${
       typeParameter && options.typescript ? `<${typeParameter}>` : ''
-    }(${processBinding({
-      code: argument,
-      options,
-      json,
-    })});`;
+    }(${processBinding({ code: argument, options, json })});`;
   }
 
   return [hasStateArgument, code];
@@ -224,11 +220,16 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
         (plugin): Plugin =>
           () => ({ json: { pre: plugin } }),
       )((codeType, json) => {
+        if (options.stateType !== 'useState') {
+          return (code) => code;
+        }
+
         switch (codeType) {
+          case 'dynamic-jsx-elements':
+            return (code) => code;
           case 'hooks':
           case 'hooks-deps':
           case 'bindings':
-          case 'dynamic-jsx-elements':
             return (code) => {
               const after = processBinding({ code, options, json });
               console.log({ before: code, after });
@@ -237,10 +238,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
             };
           case 'state':
             return (code) => {
-              const newLocal =
-                options.stateType === 'useState'
-                  ? processBinding({ code, options, json })
-                  : processBinding({ code, options, json });
+              const newLocal = processBinding({ code, options, json });
               // console.log({ old: code, new: newLocal });
               return newLocal;
             };
@@ -258,10 +256,6 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       defaults: DEFAULT_OPTIONS,
       userOptions: reactOptions,
     });
-
-    if (options.plugins) {
-      json = runPreJsonPlugins({ json, plugins: options.plugins });
-    }
 
     let str = _componentToReact(json, options);
 
@@ -353,19 +347,25 @@ const _componentToReact = (
   options: ToReactOptions,
   isSubComponent = false,
 ) => {
+  processTagReferences(json, options);
+
+  // const domRefs = getRefs(json);
+  const allRefs = Object.keys(json.refs);
+  mapRefs(json, (refName) => `${refName}.current`);
+  const [hasStateArgument, refsString] = getRefsString(json, allRefs, options);
+
+  if (options.plugins && !isSubComponent) {
+    json = runPreJsonPlugins({ json, plugins: options.plugins });
+  }
+
   processHttpRequests(json);
   handleMissingState(json);
-  processTagReferences(json, options);
   const contextStr = provideContext(json, options);
   const componentHasStyles = hasCss(json);
 
   if (!json.name) {
     json.name = 'MyComponent';
   }
-
-  // const domRefs = getRefs(json);
-  const allRefs = Object.keys(json.refs);
-  mapRefs(json, (refName) => `${refName}.current`);
 
   // Always use state if we are generate Builder react code
   const hasState = options.stateType === 'builder' || checkHasState(json);
@@ -446,8 +446,6 @@ const _componentToReact = (
       (options.stylesType === 'styled-jsx' || options.stylesType === 'style-tag')) ||
     shouldInjectCustomStyles ||
     isRootSpecialNode(json);
-
-  const [hasStateArgument, refsString] = getRefsString(json, allRefs, options);
 
   // NOTE: `collectReactNativeStyles` must run before style generation in the component generation body, as it has
   // side effects that delete styles bindings from the JSON.

@@ -1578,17 +1578,17 @@ function MyBasicForNoTagRefComponent(props) {
 
   const [TagName, setTagName] = useState(() => \\"div\\");
 
-  const [tag, setTag] = useState(() => \\"span\\");
-
   function TagNameGetter() {
     return \\"span\\";
   }
+
+  const [Tag, setTag] = useState(() => \\"span\\");
 
   const TagNameGetterRef = TagNameGetter();
 
   return (
     <TagNameGetterRef>
-      Hello <View>{name}</View>
+      Hello <Tag>{name}</Tag>
       {props.actions?.map((action) => (
         <TagName>
           <View />
@@ -1841,15 +1841,10 @@ function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
-    <Context2.Provider
-      value={{
-        bar: \\"baz\\",
-      }}
-    >
+    <Context2.Provider value={{ bar: \\"baz\\" }}>
       <Context1.Provider
         value={{
           foo: \\"bar\\",
-
           content() {
             return props.content;
           },
@@ -1877,15 +1872,10 @@ function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
-    <Context2.Provider
-      value={{
-        bar: \\"baz\\",
-      }}
-    >
+    <Context2.Provider value={{ bar: \\"baz\\" }}>
       <Context1.Provider
         value={{
           foo: \\"bar\\",
-
           content() {
             return props.content;
           },
@@ -2088,7 +2078,7 @@ function RenderContent(props) {
 
   return (
     <RenderBlock
-      {...state.getRenderContentProps(props.renderContentProps.block, 0)}
+      {...getRenderContentProps(props.renderContentProps.block, 0)}
     />
   );
 }
@@ -2166,7 +2156,7 @@ function MyBasicComponent(props) {
     hello: \\"world\\",
   }));
 
-  return <Input {...state.attrs} {...props} />;
+  return <Input {...attrs} {...props} />;
 }
 
 export default MyBasicComponent;
@@ -2569,7 +2559,7 @@ import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.js\\";
 import RenderComponent from \\"./render-component\\";
 import RenderRepeatedBlock from \\"./render-repeated-block\\";
-import { View } from \\"@tarojs/components\\";
+import \\"@tarojs/components\\";
 
 function RenderBlock(props) {
   function component() {
@@ -2760,13 +2750,14 @@ function RenderBlock(props) {
   const [componentInfo, setComponentInfo] = useState(() => null);
 
   const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
 
   return (
     <>
       {shouldWrap() ? (
         <>
           {isEmptyHtmlElement(tag()) ? (
-            <View {...attributes()} {...actions()} />
+            <TagRef {...attributes()} {...actions()} />
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
             <>
@@ -2780,7 +2771,7 @@ function RenderBlock(props) {
             </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
-            <View {...attributes()} {...actions()}>
+            <TagRef {...attributes()} {...actions()}>
               <RenderComponentTagRef {...renderComponentProps()} />
               {childrenWithoutParentComponent()?.map((child) => (
                 <RenderBlock
@@ -2796,7 +2787,7 @@ function RenderBlock(props) {
                   context={childrenContext()}
                 />
               ))}
-            </View>
+            </TagRef>
           ) : null}
         </>
       ) : (
@@ -2841,7 +2832,6 @@ function RenderContent(props) {
           get content() {
             return 3;
           },
-
           get registeredComponents() {
             return 4;
           },
@@ -5271,17 +5261,17 @@ function MyBasicForNoTagRefComponent(props: any) {
 
   const [TagName, setTagName] = useState(() => \\"div\\");
 
-  const [tag, setTag] = useState(() => \\"span\\");
-
   function TagNameGetter() {
     return \\"span\\";
   }
+
+  const [Tag, setTag] = useState(() => \\"span\\");
 
   const TagNameGetterRef = TagNameGetter();
 
   return (
     <TagNameGetterRef>
-      Hello <View>{name}</View>
+      Hello <Tag>{name}</Tag>
       {props.actions?.map((action) => (
         <TagName>
           <View />
@@ -5557,15 +5547,10 @@ function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   return (
-    <Context2.Provider
-      value={{
-        bar: \\"baz\\",
-      }}
-    >
+    <Context2.Provider value={{ bar: \\"baz\\" }}>
       <Context1.Provider
         value={{
           foo: \\"bar\\",
-
           content() {
             return props.content;
           },
@@ -5598,15 +5583,10 @@ function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   return (
-    <Context2.Provider
-      value={{
-        bar: \\"baz\\",
-      }}
-    >
+    <Context2.Provider value={{ bar: \\"baz\\" }}>
       <Context1.Provider
         value={{
           foo: \\"bar\\",
-
           content() {
             return props.content;
           },
@@ -5845,7 +5825,7 @@ function RenderContent(props: RenderContentProps) {
 
   return (
     <RenderBlock
-      {...state.getRenderContentProps(props.renderContentProps.block, 0)}
+      {...getRenderContentProps(props.renderContentProps.block, 0)}
     />
   );
 }
@@ -5923,7 +5903,7 @@ function MyBasicComponent(props: any) {
     hello: \\"world\\",
   }));
 
-  return <Input {...state.attrs} {...props} />;
+  return <Input {...attrs} {...props} />;
 }
 
 export default MyBasicComponent;
@@ -6394,7 +6374,7 @@ import type { RenderComponentProps } from \\"./render-component\\";
 import RenderComponent from \\"./render-component\\";
 import RenderRepeatedBlock from \\"./render-repeated-block\\";
 import type { RepeatData } from \\"./types.js\\";
-import { View } from \\"@tarojs/components\\";
+import \\"@tarojs/components\\";
 
 function RenderBlock(props: RenderBlockProps) {
   function component() {
@@ -6585,13 +6565,14 @@ function RenderBlock(props: RenderBlockProps) {
   const [componentInfo, setComponentInfo] = useState(() => null);
 
   const RenderComponentTagRef = renderComponentTag();
+  const TagRef = tag();
 
   return (
     <>
       {shouldWrap() ? (
         <>
           {isEmptyHtmlElement(tag()) ? (
-            <View {...attributes()} {...actions()} />
+            <TagRef {...attributes()} {...actions()} />
           ) : null}
           {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
             <>
@@ -6605,7 +6586,7 @@ function RenderBlock(props: RenderBlockProps) {
             </>
           ) : null}
           {!isEmptyHtmlElement(tag()) && !repeatItemData() ? (
-            <View {...attributes()} {...actions()}>
+            <TagRef {...attributes()} {...actions()}>
               <RenderComponentTagRef {...renderComponentProps()} />
               {childrenWithoutParentComponent()?.map((child) => (
                 <RenderBlock
@@ -6621,7 +6602,7 @@ function RenderBlock(props: RenderBlockProps) {
                   context={childrenContext()}
                 />
               ))}
-            </View>
+            </TagRef>
           ) : null}
         </>
       ) : (
@@ -6674,7 +6655,6 @@ function RenderContent(props: Props) {
           get content() {
             return 3;
           },
-
           get registeredComponents() {
             return 4;
           },
@@ -7431,7 +7411,7 @@ exports[`Taro > svelte > Javascript Test > context 1`] = `
 "'>' expected. (37:13)
   35 | return (
   36 |
-> 37 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
+> 37 | <'activeTab'.Provider  value={state.activeTab}><View>{activeTab}</View></'activeTab'.Provider>
      |             ^
   38 |
   39 |
@@ -7841,7 +7821,7 @@ exports[`Taro > svelte > Typescript Test > context 1`] = `
 "'>' expected. (37:13)
   35 | return (
   36 |
-> 37 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
+> 37 | <'activeTab'.Provider  value={state.activeTab}><View>{activeTab}</View></'activeTab'.Provider>
      |             ^
   38 |
   39 |
