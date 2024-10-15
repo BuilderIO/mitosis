@@ -128,7 +128,6 @@ const inputToTextInputRN = getRawFile('./data/react-native/text-input.raw.tsx');
 
 const StringLiteralStore = getRawFile('./data/string-literal-store.raw.tsx');
 const StringLiteralStoreKebab = getRawFile('./data/string-literal-store-kebab.raw.tsx');
-const ref = getRawFile('./data/lit-ref.raw.tsx');
 
 /**
  * Use TestsWithFailFor when you want to write a test that you know will fail
@@ -164,8 +163,6 @@ const REACT_NATIVE_TESTS: Tests = {
   onClickToPressable,
   inputToTextInputRN,
 };
-
-const LIT_REF_TEST: Tests = {};
 
 const BASIC_TESTS: Tests = {
   Basic: basic,
@@ -247,7 +244,6 @@ const BASIC_TESTS: Tests = {
   useTarget,
   signalsOnUpdate,
   getterState,
-  ref,
   'string-literal-store': StringLiteralStore,
   'string-literal-store-kebab': {
     file: StringLiteralStoreKebab,
