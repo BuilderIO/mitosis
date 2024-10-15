@@ -8,14 +8,13 @@ import {
   getStateObjectStringFromComponent,
   stringifyContextValue,
 } from '@/helpers/get-state-object-string';
-import { gettersToFunctions } from '@/helpers/getters-to-functions';
 import { handleMissingState } from '@/helpers/handle-missing-state';
 import { isRootTextNode } from '@/helpers/is-root-text-node';
 import { mapRefs } from '@/helpers/map-refs';
 import { initializeOptions } from '@/helpers/merge-options';
 import { checkIsDefined } from '@/helpers/nullable';
 import { getOnEventHandlerName, processOnEventHooksPlugin } from '@/helpers/on-event';
-import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
+import { CODE_PROCESSOR_PLUGIN, createCodeProcessorPlugin } from '@/helpers/plugins/process-code';
 import { processHttpRequests } from '@/helpers/process-http-requests';
 import { renderPreComponent } from '@/helpers/render-imports';
 import { replaceNodes, replaceStateIdentifier } from '@/helpers/replace-identifiers';
@@ -28,10 +27,12 @@ import { hasCss } from '@/helpers/styles/helpers';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { types } from '@babel/core';
+import { flow } from 'fp-ts/lib/function';
 import hash from 'hash-sum';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
 import {
+  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -41,8 +42,14 @@ import { hasContext } from '../helpers/context';
 import { checkIfIsClientComponent } from '../helpers/rsc';
 import { collectReactNativeStyles } from '../react-native';
 import { blockToReact } from './blocks';
-import { closeFrag, openFrag, processTagReferences, wrapInFragment } from './helpers';
-import { getUseStateCode, processHookCode, updateStateSetters } from './state';
+import {
+  closeFrag,
+  openFrag,
+  processBinding,
+  processTagReferences,
+  wrapInFragment,
+} from './helpers';
+import { getUseStateCode } from './state';
 import { ToReactOptions } from './types';
 
 export const contextPropDrillingKey = '_context';
@@ -66,9 +73,10 @@ const getRefsString = (json: MitosisComponent, refs: string[], options: ToReactO
     hasStateArgument = /state\./.test(argument);
     code += `\nconst ${ref} = useRef${
       typeParameter && options.typescript ? `<${typeParameter}>` : ''
-    }(${processHookCode({
-      str: argument,
+    }(${processBinding({
+      code: argument,
       options,
+      json,
     })});`;
   }
 
@@ -79,7 +87,7 @@ function provideContext(json: MitosisComponent, options: ToReactOptions): string
   if (options.contextType === 'prop-drill') {
     let str = '';
     for (const key in json.context.set) {
-      const { name, ref, value } = json.context.set[key];
+      const { name, value } = json.context.set[key];
       if (value) {
         str += `
           ${contextPropDrillingKey}.${name} = ${stringifyContextValue(value)};
@@ -157,7 +165,7 @@ export const componentToPreact: TranspilerGenerator<Partial<ToReactOptions>> = (
 
 export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
   (reactOptions = {}) =>
-  ({ component, path }) => {
+  ({ component }) => {
     let json = fastClone(component);
 
     const target = reactOptions.preact
@@ -181,14 +189,14 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
         processOnEventHooksPlugin({ setBindings: false }),
         ...(stateType === 'variables'
           ? [
-              CODE_PROCESSOR_PLUGIN((codeType, json) => (code, hookType) => {
+              CODE_PROCESSOR_PLUGIN((codeType, json) => (code, _hookType) => {
                 if (codeType === 'types') return code;
 
                 code = replaceNodes({
                   code,
                   nodeMaps: Object.entries(json.state)
-                    .filter(([key, value]) => value?.type === 'getter')
-                    .map(([key, value]) => {
+                    .filter(([_key, value]) => value?.type === 'getter')
+                    .map(([key, _value]) => {
                       const expr = types.memberExpression(
                         types.identifier('state'),
                         types.identifier(key),
@@ -210,29 +218,46 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       ],
     };
 
+    DEFAULT_OPTIONS.plugins!.unshift(
+      flow(
+        createCodeProcessorPlugin,
+        (plugin): Plugin =>
+          () => ({ json: { pre: plugin } }),
+      )((codeType, json) => {
+        switch (codeType) {
+          case 'hooks':
+          case 'hooks-deps':
+          case 'bindings':
+          case 'dynamic-jsx-elements':
+            return (code) => {
+              const after = processBinding({ code, options, json });
+              console.log({ before: code, after });
+
+              return after;
+            };
+          case 'state':
+            return (code) => {
+              const newLocal =
+                options.stateType === 'useState'
+                  ? processBinding({ code, options, json })
+                  : processBinding({ code, options, json });
+              // console.log({ old: code, new: newLocal });
+              return newLocal;
+            };
+          case 'types':
+          case 'context-set':
+          case 'properties':
+            return (c) => c;
+        }
+      }),
+    );
+
     const options = initializeOptions({
       target,
       component,
       defaults: DEFAULT_OPTIONS,
       userOptions: reactOptions,
     });
-
-    options.plugins.unshift(
-      CODE_PROCESSOR_PLUGIN((codeType, json) => {
-        switch (codeType) {
-          case 'hooks':
-          case 'hooks-deps':
-            return (c) => processHookCode({ str: c, options });
-          case 'types':
-          case 'bindings':
-          case 'state':
-          case 'context-set':
-          case 'properties':
-          case 'dynamic-jsx-elements':
-            return (c) => c;
-        }
-      }),
-    );
 
     if (options.plugins) {
       json = runPreJsonPlugins({ json, plugins: options.plugins });
@@ -270,7 +295,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
   };
 
 // TODO: import target components when they are required
-const getDefaultImport = (json: MitosisComponent, options: ToReactOptions): string => {
+const getDefaultImport = (_json: MitosisComponent, options: ToReactOptions): string => {
   const { preact, type } = options;
   if (preact) {
     return `
@@ -333,10 +358,6 @@ const _componentToReact = (
   processTagReferences(json, options);
   const contextStr = provideContext(json, options);
   const componentHasStyles = hasCss(json);
-  if (options.stateType === 'useState') {
-    gettersToFunctions(json);
-    updateStateSetters(json, options);
-  }
 
   if (!json.name) {
     json.name = 'MyComponent';
@@ -366,6 +387,7 @@ const _componentToReact = (
       : '';
 
   const useStateCode = options.stateType === 'useState' ? getUseStateCode(json, options) : '';
+
   if (options.plugins) {
     json = runPostJsonPlugins({ json, plugins: options.plugins });
   }

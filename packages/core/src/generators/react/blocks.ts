@@ -8,7 +8,6 @@ import { MitosisComponent } from '@/types/mitosis-component';
 import { checkIsForNode, ForNode, MitosisNode } from '@/types/mitosis-node';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { closeFrag, getFragment, openFrag, processBinding, wrapInFragment } from './helpers';
-import { updateStateSettersInCode } from './state';
 import { ToReactOptions } from './types';
 
 const NODE_MAPPERS: {
@@ -55,11 +54,11 @@ const NODE_MAPPERS: {
         return '';
       }
 
-      const children = processBinding('props.children', options);
+      const children = processBinding({ code: 'props.children', options, json: component });
       return `<>{${children} ${hasChildren ? `|| (${renderChildren()})` : ''}}</>`;
     }
 
-    let slotProp = processBinding(slotName as string, options).replace('name=', '');
+    let slotProp = slotName.replace('name=', '');
 
     if (!slotProp.startsWith('props.')) {
       slotProp = `props.${slotProp}`;
@@ -77,10 +76,7 @@ const NODE_MAPPERS: {
     const json = _json as ForNode;
     const wrap = wrapInFragment(json);
     const forArguments = getForArguments(json).join(', ');
-    const expression = `${processBinding(
-      json.bindings.each?.code as string,
-      options,
-    )}?.map((${forArguments}) => (
+    const expression = `${json.bindings.each?.code}?.map((${forArguments}) => (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options, component, wrap))
@@ -106,7 +102,7 @@ const NODE_MAPPERS: {
       (wrapInFragment(json.meta.else as any) || checkIsForNode(json.meta.else as any))
     );
 
-    const expression = `${processBinding(json.bindings.when?.code as string, options)} ? (
+    const expression = `${json.bindings.when?.code} ? (
       ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options, component, wrap))
@@ -187,15 +183,14 @@ export const blockToReact = (
   }
 
   if (json.bindings._text?.code) {
-    const processed = processBinding(json.bindings._text.code, options);
     if (
       options.type === 'native' &&
       !isChildren({ node: json }) &&
       !isSlotProperty(json.bindings._text.code.split('.')[1] || '')
     ) {
-      return `<Text>{${processed}}</Text>`;
+      return `<Text>{${json.bindings._text.code}}</Text>`;
     }
-    return `{${processed}}`;
+    return `{${json.bindings._text.code}}`;
   }
 
   let str = '';
@@ -220,9 +215,8 @@ export const blockToReact = (
 
     // Handle href for TouchableOpacity
     if (json.name === 'TouchableOpacity' && key === 'href') {
-      const hrefValue = processBinding(value, options);
-      if (hrefValue) {
-        const onPress = `() => Linking.openURL(${JSON.stringify(hrefValue)})`;
+      if (value) {
+        const onPress = `() => Linking.openURL(${JSON.stringify(value)})`;
         str += ` onPress={${onPress}} `;
       }
       continue; // Skip further processing for 'href' in TouchableOpacity
@@ -262,23 +256,16 @@ export const blockToReact = (
       continue;
     }
 
-    const useBindingValue = processBinding(value, options);
-
     if (json.name === 'Image' && key === 'src') {
-      let src;
-      const imageSource = processBinding(value, options);
-      if (imageSource) {
-        src = `{ uri: ${imageSource} }`;
-        str += `source={${src}} `;
+      if (value) {
+        str += `source={{ uri: ${value} }} `;
         continue; // Skip further processing for 'src' in Image
       }
     }
     // Handle href for TouchableOpacity
     if (json.name === 'TouchableOpacity' && key === 'href') {
-      const hrefValue = processBinding(value, options);
-      if (hrefValue) {
-        const onPress = `() => Linking.openURL(${hrefValue})`;
-        str += ` onPress={${onPress}} `;
+      if (value) {
+        str += ` onPress={() => Linking.openURL(${value})} `;
         continue; // Skip further processing for 'href' in TouchableOpacity
       }
     }
@@ -292,36 +279,33 @@ export const blockToReact = (
     } else if (key.startsWith('on')) {
       const { arguments: cusArgs = ['event'] } = json.bindings[key]!;
       const eventName = options.type === 'native' ? NATIVE_EVENT_MAPPER[key] || key : key;
-      str += ` ${eventName}={(${cusArgs.join(',')}) => ${updateStateSettersInCode(
-        useBindingValue,
-        options,
-      )} } `;
+      str += ` ${eventName}={(${cusArgs.join(',')}) => ${value} } `;
     } else if (key.startsWith('slot')) {
       // <Component slotProjected={<AnotherComponent />} />
       str += ` ${key}={${value}} `;
     } else if (key === 'class') {
-      str += ` className={${useBindingValue}} `;
+      str += ` className={${value}} `;
     } else if (BINDING_MAPPERS[key]) {
       const mapper = BINDING_MAPPERS[key];
       if (typeof mapper === 'function') {
-        const [newKey, newValue] = mapper(key, useBindingValue, options);
+        const [newKey, newValue] = mapper(key, value, options);
         str += ` ${newKey}={${newValue}} `;
       } else {
-        if (useBindingValue === 'true') {
+        if (value === 'true') {
           str += ` ${BINDING_MAPPERS[key]} `;
         } else {
-          str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
+          str += ` ${BINDING_MAPPERS[key]}={${value}} `;
         }
       }
     } else if (key === 'style' && options.type === 'native' && json.name === 'ScrollView') {
       // React Native's ScrollView has a different prop for styles: `contentContainerStyle`
-      str += ` contentContainerStyle={${useBindingValue}} `;
+      str += ` contentContainerStyle={${value}} `;
     } else {
       if (isValidAttributeName(key)) {
-        if (useBindingValue === 'true') {
+        if (value === 'true') {
           str += ` ${key} `;
         } else {
-          str += ` ${key}={${useBindingValue}} `;
+          str += ` ${key}={${value}} `;
         }
       }
     }
