@@ -1,3 +1,4 @@
+import { MitosisComponent } from '@/types/mitosis-component';
 import { BaseTranspilerOptions } from '@/types/transpiler';
 
 export const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment', 'Slot']);
@@ -10,6 +11,11 @@ export interface ToAngularOptions extends BaseTranspilerOptions {
   importMapper?: Function;
   bootstrapMapper?: Function;
   visuallyIgnoreHostElement?: boolean;
+  experimental?: {
+    injectables?: (variableName: string, variableType: string) => string;
+    inject?: boolean;
+    outputs?: (json: MitosisComponent, variableName: string) => string;
+  };
 }
 
 export const DEFAULT_ANGULAR_OPTIONS: ToAngularOptions = {
@@ -19,7 +25,14 @@ export const DEFAULT_ANGULAR_OPTIONS: ToAngularOptions = {
   visuallyIgnoreHostElement: true,
 };
 
-export interface AngularBlockOptions {
+export type AngularMetadata = {
+  /* Mitosis uses `attr.XXX` as default see https://angular.io/guide/attribute-binding. 
+  If you want to skip some you can use the 'nativeAttributes'. */
+  nativeAttributes?: string[];
+  /* Overwrite default selector for component. Default will be kebab case (MyComponent -> my-component) */
+  selector?: string;
+};
+
+export type AngularBlockOptions = {
   childComponents?: string[];
-  nativeAttributes: string[]; // set by useMetadata (packages/core/src/types/metadata.ts)
-}
+} & AngularMetadata;

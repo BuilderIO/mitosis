@@ -1,5 +1,71 @@
 # Change Log
 
+## 0.5.3
+
+### Patch Changes
+
+- 82c79fd: [React] Fix: Inline `onInit` hook when generating RSC components.
+
+## 0.5.2
+
+### Patch Changes
+
+- dad8e2f: Fix: do not consolidate class and className for Mitosis components
+
+## 0.5.1
+
+### Patch Changes
+
+- dbd5a50: [React-Native] Feature: add `sanitizeReactNative` flag responsible for sanitizing styles. Defaults to `false`.
+
+## 0.5.0
+
+### Minor Changes
+
+- 4171a19: [Stencil] feat: refactor stencil generator to work with stencil v4
+
+  [Stencil,Angular] fix: issue with nested components for frameworks (stencil, angular) with custom elements via [`getChildComponents`](../packages/core/src/helpers/get-child-components.ts)
+
+### Patch Changes
+
+- 7e2c95f: [Angular] fix: issue with angular events not transformed to lower-case
+- d59d328: [Angular, React, Vue] fix: issue with functions inside `useStore` missing ReturnType<...> when using `typescript: true` in config
+
+## 0.4.7
+
+### Patch Changes
+
+- 068efab: [Angular, React, Vue] feat: add typescript support for `useStore`
+
+## 0.4.6
+
+### Patch Changes
+
+- a7fd87f: [All] Fix: Property handle escaped text in JSXString nodes.
+- a7fd87f: [Builder] Feature: Parse and serialize PersonalizedContainer in a JSX/LLM friendly way (like Columns)
+
+## 0.4.5
+
+### Patch Changes
+
+- 428b3ab: chore: update internal structure for generators and add more information for options and metadata
+
+## 0.4.4
+
+### Patch Changes
+
+- ad7e576: [Builder]: fix Text node crash with bindings
+- 52dc749: [Builder]: preserve global CSS when converting from/to Builder JSON.
+
+## 0.4.3
+
+### Patch Changes
+
+- 1bf28ea: Builder: fix: ensure component name suffix
+- 814d171: Angular: Feature: custom template selectors using metadata hook.
+- 531c15c: fix: check string value in `isUpperCase`
+- 84038d5: Angular: Feat: support destructuring of props or state objects with attributes as well as event listeners directly inside an HTML element
+
 ## 0.4.2
 
 ### Patch Changes

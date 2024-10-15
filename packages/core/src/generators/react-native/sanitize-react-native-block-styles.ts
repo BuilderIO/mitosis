@@ -1,3 +1,6 @@
+import { ToReactOptions } from '../react/types';
+import { cleanReactNativeBlockStyles } from './helpers';
+
 const propertiesThatMustBeNumber = new Set(['lineHeight']);
 const displayValues = new Set(['flex', 'none']);
 
@@ -14,11 +17,18 @@ const normalizeNumber = (value: number): number | undefined => {
   }
 };
 
-export const sanitizeReactNativeBlockStyles = (styles: Styles): Styles => {
+export const sanitizeReactNativeBlockStyles = (styles: Styles, options: ToReactOptions): Styles => {
+  if (options.sanitizeReactNative) {
+    return cleanReactNativeBlockStyles(styles);
+  }
   return Object.keys(styles).reduce<Styles>((acc, key): Styles => {
     const propertyValue = styles[key];
 
-    if (key === 'display' && !displayValues.has(propertyValue as string)) {
+    if (
+      typeof propertyValue === 'string' &&
+      key === 'display' &&
+      !displayValues.has(propertyValue)
+    ) {
       console.warn(
         `Style value for key "display" must be "flex" or "none" but had ${propertyValue}`,
       );

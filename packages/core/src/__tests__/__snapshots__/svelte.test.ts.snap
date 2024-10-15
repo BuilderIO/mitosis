@@ -74,7 +74,7 @@ exports[`Svelte > jsx > Javascript Test > Basic 1`] = `
       name = myEvent.target.value;
     }}
   />
-  Hello! I can run in React, Vue, Solid, or Liquid!
+  Hello! I can run in React, Vue, Solid, or Liquid! &gt;
 </div>
 
 <style>
@@ -1532,8 +1532,17 @@ exports[`Svelte > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > class + ClassName + css 1`] = `
-"<div class=\\"test2 test div\\">
-  Hello! I can run in React, Vue, Solid, or Liquid!
+"<script>
+  import MyComp from \\"./my-component.svelte\\";
+</script>
+
+<div>
+  <MyComp class=\\"test\\" className=\\"test2\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </MyComp>
+  <div class=\\"test2 test div\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
 </div>
 
 <style>
@@ -1700,7 +1709,7 @@ exports[`Svelte > jsx > Javascript Test > defaultProps 1`] = `
       type=\\"button\\"
       {...attributes}
       on:click={(event) => {
-        onClick(event);
+        onClick();
       }}>{buttonText}</button
     >
   {/if}
@@ -1962,6 +1971,14 @@ exports[`Svelte > jsx > Javascript Test > onInit 1`] = `
 </script>
 
 <div>Default name defined by parent {name}</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > onInitPlain 1`] = `
+"<script>
+  console.log(\\"onInit\\");
+</script>
+
+<div />"
 `;
 
 exports[`Svelte > jsx > Javascript Test > onMount 1`] = `
@@ -2630,14 +2647,6 @@ exports[`Svelte > jsx > Javascript Test > string-literal-store 1`] = `
 <div>{foo}</div>"
 `;
 
-exports[`Svelte > jsx > Javascript Test > string-literal-store-kebab 1`] = `
-"unknown: Missing semicolon. (1:8)
-
-> 1 | let  foo-bar= 123
-    |         ^
-  2 |"
-`;
-
 exports[`Svelte > jsx > Javascript Test > styleClassAndCss 1`] = `
 "<script>
   function stringifyStyles(stylesObj) {
@@ -2733,6 +2742,33 @@ exports[`Svelte > jsx > Javascript Test > typeDependency 1`] = `
 </script>
 
 <div>{foo}</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > typeExternalStore 1`] = `
+"<script>
+  let _name = \\"test\\";
+</script>
+
+<div>Hello {_name}!</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > typeGetterStore 1`] = `
+"<script>
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+  $: test = () => {
+    return \\"test\\";
+  };
+
+  let name = \\"test\\";
+</script>
+
+<div>Hello {name}!</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > use-style 1`] = `
@@ -2907,7 +2943,7 @@ exports[`Svelte > jsx > Typescript Test > Basic 1`] = `
       name = myEvent.target.value;
     }}
   />
-  Hello! I can run in React, Vue, Solid, or Liquid!
+  Hello! I can run in React, Vue, Solid, or Liquid! &gt;
 </div>
 
 <style>
@@ -4698,10 +4734,16 @@ exports[`Svelte > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 
 exports[`Svelte > jsx > Typescript Test > class + ClassName + css 1`] = `
 "<script lang=\\"ts\\">
+  import MyComp from \\"./my-component.svelte\\";
 </script>
 
-<div class=\\"test2 test div\\">
-  Hello! I can run in React, Vue, Solid, or Liquid!
+<div>
+  <MyComp class=\\"test\\" className=\\"test2\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </MyComp>
+  <div class=\\"test2 test div\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
 </div>
 
 <style>
@@ -4908,7 +4950,7 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
       type=\\"button\\"
       {...attributes}
       on:click={(event) => {
-        onClick(event);
+        onClick();
       }}>{buttonText}</button
     >
   {/if}
@@ -5218,6 +5260,14 @@ exports[`Svelte > jsx > Typescript Test > onInit 1`] = `
 </script>
 
 <div>Default name defined by parent {name}</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > onInitPlain 1`] = `
+"<script lang=\\"ts\\">
+  console.log(\\"onInit\\");
+</script>
+
+<div />"
 `;
 
 exports[`Svelte > jsx > Typescript Test > onMount 1`] = `
@@ -6035,14 +6085,6 @@ exports[`Svelte > jsx > Typescript Test > string-literal-store 1`] = `
 <div>{foo}</div>"
 `;
 
-exports[`Svelte > jsx > Typescript Test > string-literal-store-kebab 1`] = `
-"unknown: Missing semicolon. (1:8)
-
-> 1 | let  foo-bar= 123
-    |         ^
-  2 |"
-`;
-
 exports[`Svelte > jsx > Typescript Test > styleClassAndCss 1`] = `
 "<script lang=\\"ts\\">
   function stringifyStyles(stylesObj) {
@@ -6151,6 +6193,43 @@ exports[`Svelte > jsx > Typescript Test > typeDependency 1`] = `
 </script>
 
 <div>{foo}</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > typeExternalStore 1`] = `
+"<script lang=\\"ts\\">
+  import { FooStore } from \\"./foo-store\\";
+
+  let _name = \\"test\\";
+</script>
+
+<div>Hello {_name}!</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > typeGetterStore 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type GetterStore = {
+    getName: () => string;
+    name: string;
+    get test(): string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+  $: test = () => {
+    return \\"test\\";
+  };
+
+  let name = \\"test\\";
+</script>
+
+<div>Hello {name}!</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > use-style 1`] = `

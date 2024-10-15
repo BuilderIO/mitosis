@@ -89,7 +89,7 @@ function MyBasicComponent(props) {
           value={DEFAULT_VALUES.name || name}
           onChange={(myEvent) => setName(myEvent.target.value)}
         />
-        Hello! I can run in React, Vue, Solid, or Liquid!
+        Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </View>
       <style jsx>{\`
         .view {
@@ -1706,13 +1706,17 @@ export default MyBasicOnUpdateReturnComponent;
 
 exports[`Taro > jsx > Javascript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
+import MyComp from \\"./my-component\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   return (
     <>
-      <View className=\\"view\\">
-        Hello! I can run in React, Vue, Solid, or Liquid!
+      <View>
+        <MyComp>Hello! I can run in React, Vue, Solid, or Liquid!</MyComp>
+        <View className=\\"view\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </View>
       </View>
       <style jsx>{\`
         .view {
@@ -1944,7 +1948,7 @@ function Button(props) {
         <Button
           type=\\"button\\"
           {...props.attributes}
-          onClick={(event) => props.onClick(event)}
+          onClick={(event) => props.onClick()}
         >
           {props.buttonText}
         </Button>
@@ -2326,6 +2330,25 @@ function OnInit(props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > onInitPlain 1`] = `
+"import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
+
+function OnInitPlain(props) {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    console.log(\\"onInit\\");
+    hasInitialized.current = true;
+  }
+
+  return <View />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -3117,17 +3140,6 @@ export default StringLiteralStore;
 "
 `;
 
-exports[`Taro > jsx > Javascript Test > string-literal-store-kebab 1`] = `
-"',' expected. (17:13)
-  15 |
-  16 |   function StringLiteralStore(props) {
-> 17 |   const [foo-bar, setFoo-bar] = useState(() => (123))
-     |             ^
-  18 |
-  19 |
-  20 |"
-`;
-
 exports[`Taro > jsx > Javascript Test > styleClassAndCss 1`] = `
 "import * as React from \\"react\\";
 import { View } from \\"@tarojs/components\\";
@@ -3229,6 +3241,50 @@ function TypeDependency(props) {
 }
 
 export default TypeDependency;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > typeExternalStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function TypeExternalStore(props) {
+  const [_name, set_name] = useState(() => \\"test\\");
+
+  return <View>Hello {_name}! </View>;
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > typeGetterStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function TypeGetterStore(props) {
+  const [name, setName] = useState(() => \\"test\\");
+
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test() {
+    return \\"test\\";
+  }
+
+  return <View>Hello {name}! </View>;
+}
+
+export default TypeGetterStore;
 "
 `;
 
@@ -3464,9 +3520,9 @@ function MyBasicComponent(props: MyBasicComponentProps) {
     return \\"bar\\";
   }
 
-  const [age, setAge] = useState(() => 1);
+  const [age, setAge] = useState<number>(() => 1);
 
-  const [sports, setSports] = useState(() => [\\"\\"]);
+  const [sports, setSports] = useState<Array<string>>(() => [\\"\\"]);
 
   return (
     <>
@@ -3475,7 +3531,7 @@ function MyBasicComponent(props: MyBasicComponentProps) {
           value={DEFAULT_VALUES.name || name}
           onChange={(myEvent) => setName(myEvent.target.value)}
         />
-        Hello! I can run in React, Vue, Solid, or Liquid!
+        Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </View>
       <style jsx>{\`
         .view {
@@ -5355,13 +5411,17 @@ export default MyBasicOnUpdateReturnComponent;
 
 exports[`Taro > jsx > Typescript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
+import MyComp from \\"./my-component\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
   return (
     <>
-      <View className=\\"view\\">
-        Hello! I can run in React, Vue, Solid, or Liquid!
+      <View>
+        <MyComp>Hello! I can run in React, Vue, Solid, or Liquid!</MyComp>
+        <View className=\\"view\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </View>
       </View>
       <style jsx>{\`
         .view {
@@ -5620,7 +5680,7 @@ function Button(props: ButtonProps) {
         <Button
           type=\\"button\\"
           {...props.attributes}
-          onClick={(event) => props.onClick(event)}
+          onClick={(event) => props.onClick()}
         >
           {props.buttonText}
         </Button>
@@ -6037,6 +6097,25 @@ function OnInit(props: Props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > onInitPlain 1`] = `
+"import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
+
+function OnInitPlain(props: any) {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    console.log(\\"onInit\\");
+    hasInitialized.current = true;
+  }
+
+  return <View />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -6938,17 +7017,6 @@ export default StringLiteralStore;
 "
 `;
 
-exports[`Taro > jsx > Typescript Test > string-literal-store-kebab 1`] = `
-"',' expected. (17:13)
-  15 |
-  16 |   function StringLiteralStore(props:any) {
-> 17 |   const [foo-bar, setFoo-bar] = useState(() => (123))
-     |             ^
-  18 |
-  19 |
-  20 |"
-`;
-
 exports[`Taro > jsx > Typescript Test > styleClassAndCss 1`] = `
 "import * as React from \\"react\\";
 import { View } from \\"@tarojs/components\\";
@@ -7057,6 +7125,57 @@ function TypeDependency(props: TypeDependencyProps) {
 }
 
 export default TypeDependency;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > typeExternalStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { FooStore } from \\"./foo-store\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function TypeExternalStore(props: any) {
+  const [_name, set_name] = useState<FooStore[\\"_name\\"]>(() => \\"test\\");
+
+  return <View>Hello {_name}! </View>;
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > typeGetterStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+import { View, Text } from \\"@tarojs/components\\";
+
+function TypeGetterStore(props: any) {
+  const [name, setName] = useState<GetterStore[\\"name\\"]>(() => \\"test\\");
+
+  function getName(): ReturnType<GetterStore[\\"getName\\"]> {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test(): ReturnType<GetterStore[\\"test\\"]> {
+    return \\"test\\";
+  }
+
+  return <View>Hello {name}! </View>;
+}
+
+export default TypeGetterStore;
 "
 `;
 

@@ -1,5 +1,76 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`React Native > Vaild react-native styles 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function MyBasicComponent(props) {
+  const [classState, setClassState] = useState(() => \\"testClassName\\");
+
+  return (
+    <View>
+      <View style={styles.view1}>
+        <Text>Hey world</Text>
+      </View>
+      <View style={styles.view2}>
+        <Text>Flex container</Text>
+      </View>
+      <View style={styles.view3}>
+        <Text>Testing unsupported properties</Text>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  view1: {
+    backgroundColor: \\"#971f1f\\",
+    paddingTop: 20,
+    paddingRight: 20,
+    paddingBottom: 20,
+    paddingLeft: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: \\"blue\\",
+    borderStyle: \\"solid\\",
+    fontSize: 16,
+    fontWeight: \\"bold\\",
+    fontFamily: \\"Arial\\",
+  },
+  view2: {
+    marginTop: 10,
+    marginRight: 15,
+    marginBottom: 10,
+    marginLeft: 15,
+    display: \\"flex\\",
+    flexDirection: \\"column\\",
+    alignItems: \\"center\\",
+    justifyContent: \\"space-between\\",
+    width: \\"100%\\",
+    height: 200,
+    color: \\"green\\",
+    fontSize: 20,
+  },
+  view3: { opacity: \\"0.8\\", transform: \\"scale(1.1)\\" },
+});
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > AdvancedRef 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -110,7 +181,7 @@ function MyBasicComponent(props) {
         value={DEFAULT_VALUES.name || name}
         onChange={(myEvent) => setName(myEvent.target.value)}
       />
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid! &gt;</Text>
     </View>
   );
 }
@@ -2185,11 +2256,17 @@ import {
   Button,
   Linking,
 } from \\"react-native\\";
+import MyComp from \\"./my-component\\";
 
 function MyBasicComponent(props) {
   return (
-    <View style={styles.view1}>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    <View>
+      <MyComp>
+        <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      </MyComp>
+      <View style={styles.view1}>
+        <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      </View>
     </View>
   );
 }
@@ -2504,7 +2581,7 @@ function Button(props) {
         <Button
           type=\\"button\\"
           {...props.attributes}
-          onPress={(event) => props.onClick(event)}
+          onPress={(event) => props.onClick()}
         >
           <Text>{props.buttonText}</Text>
         </Button>
@@ -3118,6 +3195,37 @@ function OnInit(props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > onInitPlain 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useRef } from \\"react\\";
+
+function OnInitPlain(props) {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    console.log(\\"onInit\\");
+    hasInitialized.current = true;
+  }
+
+  return <View />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -4364,17 +4472,6 @@ export default StringLiteralStore;
 "
 `;
 
-exports[`React Native > jsx > Javascript Test > string-literal-store-kebab 1`] = `
-"',' expected. (16:13)
-  14 |
-  15 |   function StringLiteralStore(props) {
-> 16 |   const [foo-bar, setFoo-bar] = useState(() => (123))
-     |             ^
-  17 |
-  18 |
-  19 |"
-`;
-
 exports[`React Native > jsx > Javascript Test > styleClassAndCss 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -4528,6 +4625,84 @@ function TypeDependency(props) {
 }
 
 export default TypeDependency;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > typeExternalStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function TypeExternalStore(props) {
+  const [_name, set_name] = useState(() => \\"test\\");
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{_name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > typeGetterStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function TypeGetterStore(props) {
+  const [name, setName] = useState(() => \\"test\\");
+
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test() {
+    return \\"test\\";
+  }
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeGetterStore;
 "
 `;
 
@@ -4846,9 +5021,9 @@ function MyBasicComponent(props: MyBasicComponentProps) {
     return \\"bar\\";
   }
 
-  const [age, setAge] = useState(() => 1);
+  const [age, setAge] = useState<number>(() => 1);
 
-  const [sports, setSports] = useState(() => [\\"\\"]);
+  const [sports, setSports] = useState<Array<string>>(() => [\\"\\"]);
 
   return (
     <View style={styles.view1}>
@@ -4856,7 +5031,7 @@ function MyBasicComponent(props: MyBasicComponentProps) {
         value={DEFAULT_VALUES.name || name}
         onChange={(myEvent) => setName(myEvent.target.value)}
       />
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid! &gt;</Text>
     </View>
   );
 }
@@ -7178,11 +7353,17 @@ import {
   Button,
   Linking,
 } from \\"react-native\\";
+import MyComp from \\"./my-component\\";
 
 function MyBasicComponent(props: any) {
   return (
-    <View style={styles.view1}>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    <View>
+      <MyComp>
+        <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      </MyComp>
+      <View style={styles.view1}>
+        <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      </View>
     </View>
   );
 }
@@ -7523,7 +7704,7 @@ function Button(props: ButtonProps) {
         <Button
           type=\\"button\\"
           {...props.attributes}
-          onPress={(event) => props.onClick(event)}
+          onPress={(event) => props.onClick()}
         >
           <Text>{props.buttonText}</Text>
         </Button>
@@ -8169,6 +8350,37 @@ function OnInit(props: Props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > onInitPlain 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useRef } from \\"react\\";
+
+function OnInitPlain(props: any) {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    console.log(\\"onInit\\");
+    hasInitialized.current = true;
+  }
+
+  return <View />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -9516,17 +9728,6 @@ export default StringLiteralStore;
 "
 `;
 
-exports[`React Native > jsx > Typescript Test > string-literal-store-kebab 1`] = `
-"',' expected. (16:13)
-  14 |
-  15 |   function StringLiteralStore(props:any) {
-> 16 |   const [foo-bar, setFoo-bar] = useState(() => (123))
-     |             ^
-  17 |
-  18 |
-  19 |"
-`;
-
 exports[`React Native > jsx > Typescript Test > styleClassAndCss 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -9687,6 +9888,91 @@ function TypeDependency(props: TypeDependencyProps) {
 }
 
 export default TypeDependency;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > typeExternalStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+import { FooStore } from \\"./foo-store\\";
+
+function TypeExternalStore(props: any) {
+  const [_name, set_name] = useState<FooStore[\\"_name\\"]>(() => \\"test\\");
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{_name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > typeGetterStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+function TypeGetterStore(props: any) {
+  const [name, setName] = useState<GetterStore[\\"name\\"]>(() => \\"test\\");
+
+  function getName(): ReturnType<GetterStore[\\"getName\\"]> {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test(): ReturnType<GetterStore[\\"test\\"]> {
+    return \\"test\\";
+  }
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeGetterStore;
 "
 `;
 

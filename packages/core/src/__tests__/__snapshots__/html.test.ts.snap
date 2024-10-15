@@ -143,7 +143,7 @@ exports[`Html > jsx > Javascript Test > Basic 1`] = `
 "<div class=\\"test div\\">
   <input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 
-  Hello! I can run in React, Vue, Solid, or Liquid!
+  Hello! I can run in React, Vue, Solid, or Liquid! &gt;
 </div>
 <style>
   .div {
@@ -3610,8 +3610,13 @@ exports[`Html > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 `;
 
 exports[`Html > jsx > Javascript Test > class + ClassName + css 1`] = `
-"<div class=\\"test2 test div\\">
-  Hello! I can run in React, Vue, Solid, or Liquid!
+"<div>
+  <MyComp class=\\"test\\" className=\\"test2\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </MyComp>
+  <div class=\\"test2 test div\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
 </div>
 <style>
   .div {
@@ -3931,7 +3936,7 @@ exports[`Html > jsx > Javascript Test > defaultProps 1`] = `
 
     // Event handler for 'click' event on button-1
     function onButton1Click(event) {
-      props.onClick(event);
+      props.onClick();
     }
 
     // Update with initial state on first load
@@ -4544,6 +4549,11 @@ exports[`Html > jsx > Javascript Test > onInit 1`] = `
     }
   })();
 </script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > onInitPlain 1`] = `
+"<div></div>
 "
 `;
 
@@ -6639,6 +6649,134 @@ exports[`Html > jsx > Javascript Test > typeDependency 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > typeExternalStore 1`] = `
+"<div>
+  Hello
+  <template data-el=\\"div-1\\"><!-- state._name --></template>
+  !
+</div>
+<script>
+  (() => {
+    const state = { _name: \\"test\\" };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state._name);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > typeGetterStore 1`] = `
+"<div>
+  Hello
+  <template data-el=\\"div-1\\"><!-- state.name --></template>
+  !
+</div>
+<script>
+  (() => {
+    const state = {
+      name: \\"test\\",
+      getName() {
+        if (state.name === \\"a\\") {
+          return \\"b\\";
+        }
+
+        return state.name;
+      },
+      get test() {
+        return \\"test\\";
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.name);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > use-style 1`] = `
 "<button type=\\"button\\">Button</button>
 <style>
@@ -6955,7 +7093,7 @@ exports[`Html > jsx > Typescript Test > Basic 1`] = `
 "<div class=\\"test div\\">
   <input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 
-  Hello! I can run in React, Vue, Solid, or Liquid!
+  Hello! I can run in React, Vue, Solid, or Liquid! &gt;
 </div>
 <style>
   .div {
@@ -10422,8 +10560,13 @@ exports[`Html > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 `;
 
 exports[`Html > jsx > Typescript Test > class + ClassName + css 1`] = `
-"<div class=\\"test2 test div\\">
-  Hello! I can run in React, Vue, Solid, or Liquid!
+"<div>
+  <MyComp class=\\"test\\" className=\\"test2\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </MyComp>
+  <div class=\\"test2 test div\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
 </div>
 <style>
   .div {
@@ -10743,7 +10886,7 @@ exports[`Html > jsx > Typescript Test > defaultProps 1`] = `
 
     // Event handler for 'click' event on button-1
     function onButton1Click(event) {
-      props.onClick(event);
+      props.onClick();
     }
 
     // Update with initial state on first load
@@ -11356,6 +11499,11 @@ exports[`Html > jsx > Typescript Test > onInit 1`] = `
     }
   })();
 </script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > onInitPlain 1`] = `
+"<div></div>
 "
 `;
 
@@ -13427,6 +13575,134 @@ exports[`Html > jsx > Typescript Test > typeDependency 1`] = `
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         renderTextNode(el, props.foo);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > typeExternalStore 1`] = `
+"<div>
+  Hello
+  <template data-el=\\"div-1\\"><!-- state._name --></template>
+  !
+</div>
+<script>
+  (() => {
+    const state = { _name: \\"test\\" };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state._name);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > typeGetterStore 1`] = `
+"<div>
+  Hello
+  <template data-el=\\"div-1\\"><!-- state.name --></template>
+  !
+</div>
+<script>
+  (() => {
+    const state = {
+      name: \\"test\\",
+      getName() {
+        if (state.name === \\"a\\") {
+          return \\"b\\";
+        }
+
+        return state.name;
+      },
+      get test() {
+        return \\"test\\";
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.name);
       });
 
       destroyAnyNodes();

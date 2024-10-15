@@ -40,16 +40,17 @@ export const mapRefs = (component: MitosisComponent, mapper: RefMapper): void =>
           const isGet = stateVal.type === 'getter';
           const isSet = Boolean(value.match(SETTER));
           component.state[key] = {
+            ...stateVal,
             code: replaceRefsInString(
               value.replace(/^(get |set )?/, 'function '),
               refs,
               mapper,
             ).replace(/^function /, isGet ? 'get ' : isSet ? 'set ' : ''),
-            type: stateVal.type,
           };
           break;
         case 'function':
           component.state[key] = {
+            ...stateVal,
             code: replaceRefsInString(value, refs, mapper),
             type: 'function',
           };

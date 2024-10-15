@@ -115,7 +115,7 @@ export const stripStateAndPropsRefs = (
     ..._options,
   };
 
-  if (includeProps !== false) {
+  if (includeProps) {
     newCode = replacePropsIdentifier(replaceWith)(newCode);
 
     // TODO: webcomponent edge-case
@@ -123,7 +123,7 @@ export const stripStateAndPropsRefs = (
       newCode = newCode.replace(/el\.this\.props/g, 'el.props');
     }
   }
-  if (includeState !== false) {
+  if (includeState) {
     newCode = replaceStateIdentifier(replaceWith)(newCode);
   }
 

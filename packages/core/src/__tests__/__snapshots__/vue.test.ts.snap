@@ -80,7 +80,7 @@ exports[`Vue > jsx > Javascript Test > Basic 1`] = `
       :value=\\"DEFAULT_VALUES.name || name\\"
       @change=\\"name = $event.target.value\\"
     />
-    Hello! I can run in React, Vue, Solid, or Liquid!
+    Hello! I can run in React, Vue, Solid, or Liquid! &gt;
   </div>
 </template>
 
@@ -1917,16 +1917,24 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > class + ClassName + css 1`] = `
 "<template>
-  <div class=\\"test2 test div\\">
-    Hello! I can run in React, Vue, Solid, or Liquid!
+  <div>
+    <MyComp class=\\"test\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </MyComp>
+    <div class=\\"test2 test div\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
   </div>
 </template>
 
 <script>
 import { defineComponent } from \\"vue\\";
 
+import MyComp from \\"./my-component.vue\\";
+
 export default defineComponent({
   name: \\"my-basic-component\\",
+  components: { MyComp: MyComp },
 });
 </script>
 
@@ -2141,7 +2149,7 @@ exports[`Vue > jsx > Javascript Test > defaultProps 1`] = `
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
+      <button type=\\"button\\" @click=\\"onClick()\\" v-bind=\\"attributes\\">
         {{ buttonText }}
       </button>
     </template>
@@ -2565,6 +2573,24 @@ export default defineComponent({
   created() {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
+  },
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > onInitPlain 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"on-init-plain\\",
+
+  created() {
+    console.log(\\"onInit\\");
   },
 });
 </script>"
@@ -3653,6 +3679,58 @@ export default defineComponent({
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > typeExternalStore 1`] = `
+"<template>
+  <div>Hello {{ _name }}!</div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"type-external-store\\",
+
+  data() {
+    return { _name: \\"test\\" };
+  },
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > typeGetterStore 1`] = `
+"<template>
+  <div>Hello {{ name }}!</div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"type-getter-store\\",
+
+  data() {
+    return { name: \\"test\\" };
+  },
+
+  computed: {
+    test() {
+      return \\"test\\";
+    },
+  },
+
+  methods: {
+    getName() {
+      if (this.name === \\"a\\") {
+        return \\"b\\";
+      }
+
+      return this.name;
+    },
+  },
+});
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > use-style 1`] = `
 "<template>
   <button type=\\"button\\">Button</button>
@@ -3877,7 +3955,7 @@ exports[`Vue > jsx > Typescript Test > Basic 1`] = `
       :value=\\"DEFAULT_VALUES.name || name\\"
       @change=\\"name = $event.target.value\\"
     />
-    Hello! I can run in React, Vue, Solid, or Liquid!
+    Hello! I can run in React, Vue, Solid, or Liquid! &gt;
   </div>
 </template>
 
@@ -5969,16 +6047,24 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > class + ClassName + css 1`] = `
 "<template>
-  <div class=\\"test2 test div\\">
-    Hello! I can run in React, Vue, Solid, or Liquid!
+  <div>
+    <MyComp class=\\"test\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </MyComp>
+    <div class=\\"test2 test div\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
   </div>
 </template>
 
 <script lang=\\"ts\\">
 import { defineComponent } from \\"vue\\";
 
+import MyComp from \\"./my-component.vue\\";
+
 export default defineComponent({
   name: \\"my-basic-component\\",
+  components: { MyComp: MyComp },
 });
 </script>
 
@@ -6208,7 +6294,7 @@ exports[`Vue > jsx > Typescript Test > defaultProps 1`] = `
     </template>
 
     <template v-if=\\"!link\\">
-      <button type=\\"button\\" @click=\\"onClick($event)\\" v-bind=\\"attributes\\">
+      <button type=\\"button\\" @click=\\"onClick()\\" v-bind=\\"attributes\\">
         {{ buttonText }}
       </button>
     </template>
@@ -6674,6 +6760,24 @@ export default defineComponent({
   created() {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
+  },
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > onInitPlain 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"on-init-plain\\",
+
+  created() {
+    console.log(\\"onInit\\");
   },
 });
 </script>"
@@ -7867,6 +7971,66 @@ export default defineComponent({
   name: \\"type-dependency\\",
 
   props: [\\"foo\\"],
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > typeExternalStore 1`] = `
+"<template>
+  <div>Hello {{ _name }}!</div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+import { FooStore } from \\"./foo-store\\";
+
+export default defineComponent({
+  name: \\"type-external-store\\",
+
+  data() {
+    return { _name: \\"test\\" };
+  },
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > typeGetterStore 1`] = `
+"<template>
+  <div>Hello {{ name }}!</div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+export default defineComponent({
+  name: \\"type-getter-store\\",
+
+  data() {
+    return { name: \\"test\\" };
+  },
+
+  computed: {
+    test() {
+      return \\"test\\";
+    },
+  },
+
+  methods: {
+    getName() {
+      if (this.name === \\"a\\") {
+        return \\"b\\";
+      }
+
+      return this.name;
+    },
+  },
 });
 </script>"
 `;

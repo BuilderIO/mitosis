@@ -96,7 +96,7 @@ export default class MyBasicComponent extends LitElement {
     ) =>
       (this.name =
         myEvent.target.value)} /> Hello! I can run in React, Vue, Solid, or
-          Liquid!
+          Liquid! &gt;
         </div>
 
         \`;
@@ -2126,7 +2126,9 @@ export default class MyBasicOnUpdateReturnComponent extends LitElement {
 `;
 
 exports[`Lit > jsx > Javascript Test > class + ClassName + css 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
+"import \\"./my-component.ts\\";
+
+import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
@@ -2141,7 +2143,10 @@ export default class MyBasicComponent extends LitElement {
   padding: 10px;
 }
 </style>
+          <div>
+          <my-comp> Hello! I can run in React, Vue, Solid, or Liquid! </my-comp>
           <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+        </div>
 
         \`;
   }
@@ -2375,7 +2380,7 @@ export default class Button extends LitElement {
           !this.link
             ? html\`<button  type=\\"button\\"  \${spread(
                 props.attributes
-              )}  @click=\${(event) => this.onClick(event)} >\${
+              )}  @click=\${(event) => this.onClick()} >\${
                 this.buttonText
               }</button>\`
             : null
@@ -2835,6 +2840,27 @@ export default class OnInit extends LitElement {
     return html\`
 
           <div>Default name defined by parent \${this.name}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > onInitPlain 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"on-init-plain\\")
+export default class OnInitPlain extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+
+          <div></div>
 
         \`;
   }
@@ -4056,6 +4082,63 @@ export default class TypeDependency extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > typeExternalStore 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"type-external-store\\")
+export default class TypeExternalStore extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() _name = \\"test\\";
+
+  render() {
+    return html\`
+
+          <div>Hello \${this._name} !</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > typeGetterStore 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"type-getter-store\\")
+export default class TypeGetterStore extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() name = \\"test\\";
+
+  getName() {
+    if (this.name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return this.name;
+  }
+  get test() {
+    return \\"test\\";
+  }
+
+  render() {
+    return html\`
+
+          <div>Hello \${this.name} !</div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > use-style 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -4324,7 +4407,7 @@ export default class MyBasicComponent extends LitElement {
     ) =>
       (this.name =
         myEvent.target.value)} /> Hello! I can run in React, Vue, Solid, or
-          Liquid!
+          Liquid! &gt;
         </div>
 
         \`;
@@ -6608,7 +6691,9 @@ export default class MyBasicOnUpdateReturnComponent extends LitElement {
 `;
 
 exports[`Lit > jsx > Typescript Test > class + ClassName + css 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
+"import \\"./my-component.ts\\";
+
+import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
@@ -6623,7 +6708,10 @@ export default class MyBasicComponent extends LitElement {
   padding: 10px;
 }
 </style>
+          <div>
+          <my-comp> Hello! I can run in React, Vue, Solid, or Liquid! </my-comp>
           <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+        </div>
 
         \`;
   }
@@ -6882,7 +6970,7 @@ export default class Button extends LitElement {
           !this.link
             ? html\`<button  type=\\"button\\"  \${spread(
                 props.attributes
-              )}  @click=\${(event) => this.onClick(event)} >\${
+              )}  @click=\${(event) => this.onClick()} >\${
                 this.buttonText
               }</button>\`
             : null
@@ -7374,6 +7462,27 @@ export default class OnInit extends LitElement {
     return html\`
 
           <div>Default name defined by parent \${this.name}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > onInitPlain 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"on-init-plain\\")
+export default class OnInitPlain extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+
+          <div></div>
 
         \`;
   }
@@ -8710,6 +8819,71 @@ export default class TypeDependency extends LitElement {
     return html\`
 
           <div>\${this.foo}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > typeExternalStore 1`] = `
+"import { FooStore } from \\"./foo-store\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"type-external-store\\")
+export default class TypeExternalStore extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() _name = \\"test\\";
+
+  render() {
+    return html\`
+
+          <div>Hello \${this._name} !</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > typeGetterStore 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+@customElement(\\"type-getter-store\\")
+export default class TypeGetterStore extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() name = \\"test\\";
+
+  getName() {
+    if (this.name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return this.name;
+  }
+  get test() {
+    return \\"test\\";
+  }
+
+  render() {
+    return html\`
+
+          <div>Hello \${this.name} !</div>
 
         \`;
   }

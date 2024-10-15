@@ -38,7 +38,7 @@ In `core`, we use vitest snapshots & integeration tests for test coverage. If yo
 
 - copy your fiddle component into a file in `packages/core/src/__tests__/data`. See [packages/core/src/**tests**/data/basic.raw.tsx](/packages/core/src/__tests__/data/basic.raw.tsx) as an example.
 - add that test to the [test generator](/packages/core/src/__tests__/test-generator.ts), most likely in `BASIC_TESTS`.
-- run `yarn nx test:watch` in the `packages/core` directory to run the snapshot tests in watch mode
+- run `yarn g:nx test:watch` in the `packages/core` directory to run the snapshot tests in watch mode
 
 PS: don't worry about failing imports in the raw test TSX files. These are not an issue, since the files are standalone and don't actually belong to a cohesive project.
 
@@ -65,3 +65,19 @@ Before submitting your PR, please make sure to format the codebase and update al
 - format the codebase: from the root, run `yarn fmt:prettier`.
 - update all snapshots (in core & CLI): from the root, run `yarn test:update`. This will run an Nx command that will update all the snapshots in the `core` and `cli` packages. while making sure all required dependencies are built beforehand.
 - add Changeset entry: from the root, run `yarn g:changeset` and follow the CLI instructions.
+
+#### Changeset format
+
+Here's the changeset format we like to follow (this is mostly relvant for the core package):
+
+```
+[GENERATORS_IMPACTED] TYPE: DESCRIPTION
+```
+
+Examples:
+
+```
+[React,Vue,Solid] Bug: Fix style bindings not applying.
+[Angular] Feature: Add support for ngFor bindings.
+[All] Feature: store state types.
+```

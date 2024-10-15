@@ -18,6 +18,7 @@ import customComponentSlotPropertyContent from './data/builder/custom-component-
 import lazyLoadSection from './data/builder/lazy-load-section.json?raw';
 import slotsContent from './data/builder/slots.json?raw';
 import slots2Content from './data/builder/slots2.json?raw';
+import textBindings from './data/builder/text-bindings.json?raw';
 
 const mitosisOptions: ToMitosisOptions = {
   format: 'legacy',
@@ -87,6 +88,18 @@ describe('Builder', () => {
     })({ component });
 
     expect(html).toMatchSnapshot();
+  });
+
+  test('Text with bindings', async () => {
+    const originalBuilder = JSON.parse(textBindings);
+    const component = builderContentToMitosisComponent(originalBuilder);
+    const mitosisJsx = componentToMitosis()({ component });
+
+    expect(component).toMatchSnapshot();
+    expect(mitosisJsx).toMatchSnapshot();
+
+    const backToBuilder = componentToBuilder()({ component });
+    expect(backToBuilder).toMatchSnapshot();
   });
 
   test('Regenerate Image', () => {
@@ -412,6 +425,126 @@ describe('Builder', () => {
       component,
     });
     expect(mitosis).toMatchSnapshot();
+  });
+
+  test('preserve cssCode when converting', () => {
+    const builderJson: BuilderContent = {
+      data: {
+        cssCode: dedent`
+        .foo {
+          background: green;
+        }
+
+        .bar {
+          font-weight: bold;
+        }
+      `,
+        blocks: [],
+      },
+    };
+    const builderToMitosis = builderContentToMitosisComponent(builderJson);
+    expect(builderToMitosis.meta.cssCode).toMatchSnapshot();
+
+    const mitosisToBuilder = componentToBuilder()({ component: builderToMitosis })!;
+    expect(mitosisToBuilder.data!.cssCode).toMatchSnapshot();
+
+    const jsx = componentToMitosis(mitosisOptions)({
+      component: builderToMitosis,
+    });
+    expect(jsx).toMatchSnapshot();
+
+    const jsxToMitosis = parseJsx(jsx);
+    expect(jsxToMitosis.style).toMatchSnapshot();
+  });
+
+  test('Snapshot PersonalizedContainer', () => {
+    const code = dedent`
+      import { PersonalizationContainer, Variant } from "@components";
+
+      export default function MyComponent(props) {
+        return (
+          <PersonalizationContainer>
+            <Variant
+              name="variant1"
+              startDate="2024-01-01"
+              query={{
+                property: "urlPath",
+                operation: "is",
+                value: "/home",
+              }}
+            >
+              <div>Home</div>
+              <div>Div</div>
+            </Variant>
+            <PersonalizationOption
+              name="2"
+              query={[
+                {
+                  property: "gendr",
+                  operation: "is",
+                  value: ["male", "female"],
+                },
+              ]}
+            >
+              <>Male</>
+            </PersonalizationOption>
+            <Variant>
+              <div>Default</div>
+            </Variant>
+            <div>More tree</div>
+
+          </PersonalizationContainer>
+        );
+      }
+    `;
+
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
+    expect(builderJson.data?.blocks?.[0]).toMatchSnapshot();
+
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
+    });
+    expect(mitosis.trim()).toMatchSnapshot();
+  });
+
+  test('Regenerate PersonalizedContainer', () => {
+    const code = dedent`
+      import { PersonalizationContainer, Variant } from "@components";
+
+      export default function MyComponent(props) {
+        return (
+          <PersonalizationContainer>
+            <Variant
+              name="2"
+              startDate="2024-01-01"
+              endDate="2024-01-31"
+              query={[
+                {
+                  property: "gendr",
+                  operation: "is",
+                  value: "male",
+                },
+              ]}
+            >
+              <div>Male</div>
+            </Variant>
+            <Variant default="">
+              <div>Default</div>
+            </Variant>
+          </PersonalizationContainer>
+        );
+      }
+    `;
+
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
+    });
+    expect(mitosis.trim()).toEqual(code.trim());
   });
 });
 

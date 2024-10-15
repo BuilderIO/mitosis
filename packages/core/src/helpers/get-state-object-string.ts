@@ -15,6 +15,7 @@ interface GetStateObjectStringOptions {
   valueMapper?: ValueMapper;
   format?: 'object' | 'class' | 'variables';
   keyPrefix?: string;
+  withType?: boolean;
 }
 
 type RequiredOptions = Required<GetStateObjectStringOptions>;
@@ -26,10 +27,11 @@ const DEFAULT_OPTIONS: RequiredOptions = {
   data: true,
   functions: true,
   getters: true,
+  withType: false,
 };
 
 const convertStateMemberToString =
-  ({ data, format, functions, getters, keyPrefix, valueMapper }: RequiredOptions) =>
+  ({ data, format, functions, getters, keyPrefix, valueMapper, withType }: RequiredOptions) =>
   ([key, state]: [string, StateValue | undefined]): string | undefined => {
     const keyValueDelimiter = format === 'object' ? ':' : '=';
 
@@ -38,9 +40,12 @@ const convertStateMemberToString =
     }
 
     const { code, typeParameter } = state;
+
+    const type = withType && typeParameter ? `:${typeParameter}` : '';
+
     switch (state.type) {
       case 'function': {
-        if (functions === false || typeof code !== 'string') {
+        if (!functions) {
           return undefined;
         }
         return `${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(
@@ -51,23 +56,23 @@ const convertStateMemberToString =
         )}`;
       }
       case 'method': {
-        if (functions === false || typeof code !== 'string') {
+        if (!functions) {
           return undefined;
         }
         return `${keyPrefix} ${valueMapper(code, 'function', typeParameter, key)}`;
       }
       case 'getter': {
-        if (getters === false || typeof code !== 'string') {
+        if (!getters) {
           return undefined;
         }
 
         return `${keyPrefix} ${valueMapper(code, 'getter', typeParameter, key)}`;
       }
       case 'property': {
-        if (data === false) {
+        if (!data) {
           return undefined;
         }
-        return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
+        return `${keyPrefix} ${key}${type}${keyValueDelimiter} ${valueMapper(
           code,
           'data',
           typeParameter,
