@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.4
+
+### Patch Changes
+
+- d13e693: [LIT] Bug: Passing wrong object for transforming ref(Element ref) result in breakage
+
 ## 0.5.3
 
 ### Patch Changes
