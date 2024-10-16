@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.5
+
+### Patch Changes
+
+- 56c6347: [Mitosis] Feature: add `nativeConditionals` and `nativeLoops` for `legacy` mode
+
 ## 0.5.4
 
 ### Patch Changes
