@@ -1,5 +1,19 @@
 # @builder.io/mitosis-cli
 
+## 0.5.5
+
+### Patch Changes
+
+- Updated dependencies [56c6347]
+  - @builder.io/mitosis@0.5.5
+
+## 0.5.4
+
+### Patch Changes
+
+- Updated dependencies [d13e693]
+  - @builder.io/mitosis@0.5.4
+
 ## 0.5.3
 
 ### Patch Changes
