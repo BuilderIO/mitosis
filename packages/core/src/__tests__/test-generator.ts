@@ -426,6 +426,18 @@ const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     ADVANCED_REF,
     ON_UPDATE_RETURN,
   ],
+  mitosis: [
+    BASIC_TESTS,
+    SLOTS_TESTS,
+    SHOW_TESTS,
+    FORWARD_REF_TESTS,
+    MULTI_ON_UPDATE_TESTS,
+    FORM_BLOCK_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
+    FOR_SHOW_TESTS,
+    CONTEXT_TEST,
+  ],
   webcomponent: [
     CONTEXT_TEST,
     BASIC_TESTS,
