@@ -134,6 +134,20 @@ export const blockToMitosis = (
       }
     }
   }
+
+  for (const key in json.slots) {
+    const value = json.slots[key];
+    str += ` ${key}={`;
+    if (value.length > 1) {
+      str += '<>';
+    }
+    str += json.slots[key].map((item) => blockToMitosis(item, options, component)).join('\n');
+    if (value.length > 1) {
+      str += '</>';
+    }
+    str += `}`;
+  }
+
   if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
     return str + ' />';
   }
@@ -144,6 +158,7 @@ export const blockToMitosis = (
     return str;
   }
   str += '>';
+
   if (json.children) {
     str += json.children.map((item) => blockToMitosis(item, options, component, true)).join('\n');
   }

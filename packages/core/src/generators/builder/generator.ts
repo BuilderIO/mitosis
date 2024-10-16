@@ -302,6 +302,10 @@ export const blockToBuilder = (
     }
   }
 
+  for (const key in json.slots) {
+    componentOptions[key] = json.slots[key].map((node) => blockToBuilder(node, options));
+  }
+
   const hasCss = !!bindings.css?.code;
 
   let responsiveStyles: {
