@@ -56,7 +56,6 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
 
     if (el.name.startsWith('state.')) {
       const refState = json.state[processedRefName];
-      console.log('el.name', el.name, processedRefName, refState);
       switch (refState?.type) {
         case 'getter': {
           const refName = upperFirst(processedRefName) + 'Ref';
@@ -71,8 +70,6 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
             };
           }
 
-          console.log({ refName, el });
-
           el.name = refName;
           break;
         }
@@ -83,8 +80,6 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
 
         case 'property':
           const capitalizedName = upperFirst(processedRefName);
-
-          console.log({ capitalizedName, processedRefName });
 
           if (capitalizedName !== processedRefName) {
             el.name = capitalizedName;

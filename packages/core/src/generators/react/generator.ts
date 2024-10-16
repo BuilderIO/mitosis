@@ -225,23 +225,13 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
         }
 
         switch (codeType) {
-          case 'dynamic-jsx-elements':
-            return (code) => code;
           case 'hooks':
           case 'hooks-deps':
           case 'bindings':
-            return (code) => {
-              const after = processBinding({ code, options, json });
-              console.log({ before: code, after });
-
-              return after;
-            };
           case 'state':
-            return (code) => {
-              const newLocal = processBinding({ code, options, json });
-              // console.log({ old: code, new: newLocal });
-              return newLocal;
-            };
+            return (code) => processBinding({ code, options, json });
+
+          case 'dynamic-jsx-elements':
           case 'types':
           case 'context-set':
           case 'properties':
