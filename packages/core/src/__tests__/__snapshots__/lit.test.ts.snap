@@ -22,7 +22,7 @@ export default class MyBasicRefComponent extends LitElement {
 
   onBlur = function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -428,7 +428,7 @@ export default class MyBasicRefComponent extends LitElement {
 
   onBlur = function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -476,8 +476,8 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
 
   handlerClick = function handlerClick(event) {
     event.preventDefault();
-    console.log(\\"current value\\", holdValueRef);
-    holdValueRef = holdValueRef + \\"JS\\";
+    console.log(\\"current value\\", this.holdValueRef);
+    this.holdValueRef = this.holdValueRef + \\"JS\\";
   };
 
   render() {
@@ -517,7 +517,7 @@ export default class MyPreviousComponent extends LitElement {
   @state() count = 0;
 
   updated() {
-    prevCount = this.count;
+    this.prevCount = this.count;
   }
 
   render() {
@@ -527,7 +527,7 @@ export default class MyPreviousComponent extends LitElement {
                 Now:
         \${this.count}
         , before:
-        \${prevCount}</h1>
+        \${this.prevCount}</h1>
         <button  @click=\${(event) =>
           (this.count += 1)} >Increment</button></div>
         \`;
@@ -756,9 +756,9 @@ export default class CustomCode extends LitElement {
 
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem && typeof window !== \\"undefined\\") {
+    if (this.elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem.getElementsByTagName(\\"script\\");
+      const scripts = this.elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -831,9 +831,9 @@ export default class CustomCode extends LitElement {
 
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem && typeof window !== \\"undefined\\") {
+    if (this.elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem.getElementsByTagName(\\"script\\");
+      const scripts = this.elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -1041,8 +1041,8 @@ export default class FormComponent extends LitElement {
         },
       });
 
-      if (formRef) {
-        formRef.dispatchEvent(presubmitEvent);
+      if (this.formRef) {
+        this.formRef.dispatchEvent(presubmitEvent);
 
         if (presubmitEvent.defaultPrevented) {
           return;
@@ -1100,8 +1100,8 @@ export default class FormComponent extends LitElement {
               },
             });
 
-            if (formRef) {
-              formRef.dispatchEvent(submitSuccessEvent);
+            if (this.formRef) {
+              this.formRef.dispatchEvent(submitSuccessEvent);
 
               if (submitSuccessEvent.defaultPrevented) {
                 return;
@@ -1109,19 +1109,19 @@ export default class FormComponent extends LitElement {
               /* TODO: option to turn this on/off? */
 
               if (this.resetFormOnSubmit !== false) {
-                formRef.reset();
+                this.formRef.reset();
               }
             }
             /* TODO: client side route event first that can be preventDefaulted */
 
             if (this.successUrl) {
-              if (formRef) {
+              if (this.formRef) {
                 const event = new CustomEvent(\\"route\\", {
                   detail: {
                     url: this.successUrl,
                   },
                 });
-                formRef.dispatchEvent(event);
+                this.formRef.dispatchEvent(event);
 
                 if (!event.defaultPrevented) {
                   location.href = this.successUrl;
@@ -1139,8 +1139,8 @@ export default class FormComponent extends LitElement {
             },
           });
 
-          if (formRef) {
-            formRef.dispatchEvent(submitErrorEvent);
+          if (this.formRef) {
+            this.formRef.dispatchEvent(submitErrorEvent);
 
             if (submitErrorEvent.defaultPrevented) {
               return;
@@ -1241,8 +1241,8 @@ export default class Image extends LitElement {
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
+        if (this.pictureRef) {
+          const rect = this.pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -2779,7 +2779,7 @@ export default class Embed extends LitElement {
   }
 
   connectedCallback() {
-    elem.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    this.elem.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
   }
 
   render() {
@@ -4267,7 +4267,7 @@ export default class MyBasicRefComponent extends LitElement {
 
   onBlur = function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -4691,7 +4691,7 @@ export default class MyBasicRefComponent extends LitElement {
 
   onBlur = function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -4743,8 +4743,8 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
 
   handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
-    console.log(\\"current value\\", holdValueRef);
-    holdValueRef = holdValueRef + \\"JS\\";
+    console.log(\\"current value\\", this.holdValueRef);
+    this.holdValueRef = this.holdValueRef + \\"JS\\";
   };
 
   render() {
@@ -4788,7 +4788,7 @@ export default class MyPreviousComponent extends LitElement {
   @state() count = 0;
 
   updated() {
-    prevCount = this.count;
+    this.prevCount = this.count;
   }
 
   render() {
@@ -4798,7 +4798,7 @@ export default class MyPreviousComponent extends LitElement {
                 Now:
         \${this.count}
         , before:
-        \${prevCount}</h1>
+        \${this.prevCount}</h1>
         <button  @click=\${(event) =>
           (this.count += 1)} >Increment</button></div>
         \`;
@@ -5067,9 +5067,9 @@ export default class CustomCode extends LitElement {
 
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem && typeof window !== \\"undefined\\") {
+    if (this.elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem.getElementsByTagName(\\"script\\");
+      const scripts = this.elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -5147,9 +5147,9 @@ export default class CustomCode extends LitElement {
 
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem && typeof window !== \\"undefined\\") {
+    if (this.elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem.getElementsByTagName(\\"script\\");
+      const scripts = this.elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -5388,8 +5388,8 @@ export default class FormComponent extends LitElement {
         },
       });
 
-      if (formRef) {
-        formRef.dispatchEvent(presubmitEvent);
+      if (this.formRef) {
+        this.formRef.dispatchEvent(presubmitEvent);
 
         if (presubmitEvent.defaultPrevented) {
           return;
@@ -5447,8 +5447,8 @@ export default class FormComponent extends LitElement {
               },
             });
 
-            if (formRef) {
-              formRef.dispatchEvent(submitSuccessEvent);
+            if (this.formRef) {
+              this.formRef.dispatchEvent(submitSuccessEvent);
 
               if (submitSuccessEvent.defaultPrevented) {
                 return;
@@ -5456,19 +5456,19 @@ export default class FormComponent extends LitElement {
               /* TODO: option to turn this on/off? */
 
               if (this.resetFormOnSubmit !== false) {
-                formRef.reset();
+                this.formRef.reset();
               }
             }
             /* TODO: client side route event first that can be preventDefaulted */
 
             if (this.successUrl) {
-              if (formRef) {
+              if (this.formRef) {
                 const event = new CustomEvent(\\"route\\", {
                   detail: {
                     url: this.successUrl,
                   },
                 });
-                formRef.dispatchEvent(event);
+                this.formRef.dispatchEvent(event);
 
                 if (!event.defaultPrevented) {
                   location.href = this.successUrl;
@@ -5486,8 +5486,8 @@ export default class FormComponent extends LitElement {
             },
           });
 
-          if (formRef) {
-            formRef.dispatchEvent(submitErrorEvent);
+          if (this.formRef) {
+            this.formRef.dispatchEvent(submitErrorEvent);
 
             if (submitErrorEvent.defaultPrevented) {
               return;
@@ -5610,8 +5610,8 @@ export default class Image extends LitElement {
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
+        if (this.pictureRef) {
+          const rect = this.pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -7335,7 +7335,7 @@ export default class Embed extends LitElement {
   }
 
   connectedCallback() {
-    elem.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    this.elem.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
   }
 
   render() {
