@@ -2,4 +2,4 @@
 '@builder.io/mitosis': patch
 ---
 
-add nativeConditionals and nativeLoops for legacy mode
+[Mitosis] Feature: add `nativeConditionals` and `nativeLoops` for `legacy` mode
