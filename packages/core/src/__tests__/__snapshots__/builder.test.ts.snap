@@ -2098,6 +2098,63 @@ alert('hi');",
 }
 `;
 
+exports[`Builder > nodes as props 1`] = `
+"import { Foo, Bar } from \\"@components\\";
+
+export default function MyComponent(props) {
+  return <Foo prop={<Bar hello=\\"world\\" />} />;
+}
+"
+`;
+
+exports[`Builder > nodes as props 2`] = `
+{
+  "data": {
+    "blocks": [
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {
+          "component.options.prop": "<Bar hello=\\"world\\" />",
+        },
+        "children": [],
+        "code": {
+          "actions": {},
+          "bindings": {
+            "component.options.prop": "<Bar hello=\\"world\\" />",
+          },
+        },
+        "component": {
+          "name": "Foo",
+          "options": {
+            "prop": [
+              {
+                "@type": "@builder.io/sdk:Element",
+                "actions": {},
+                "bindings": {},
+                "children": [],
+                "code": {
+                  "actions": {},
+                  "bindings": {},
+                },
+                "component": {
+                  "name": "Bar",
+                  "options": {
+                    "hello": "world",
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    ],
+    "jsCode": "",
+    "tsCode": "",
+  },
+}
+`;
+
 exports[`Builder > slots 1`] = `
 {
   "@type": "@builder.io/mitosis/component",

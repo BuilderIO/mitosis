@@ -574,13 +574,16 @@ describe('Builder', () => {
       },
     };
 
+    const mitosisJson = builderContentToMitosisComponent(content);
+    expect(mitosisJson).toMatchSnapshot();
     const mitosis = componentToMitosis(mitosisOptions)({
-      component: builderContentToMitosisComponent(content),
+      component: mitosisJson,
     });
 
     expect(mitosis).toMatchSnapshot();
 
     const builder = parseJsx(mitosis);
+    expect(builder).toMatchSnapshot();
     const json = componentToBuilder()({ component: builder });
     expect(json).toMatchSnapshot();
     expect(json.data?.blocks?.[0]?.component?.name).toBe('Foo');

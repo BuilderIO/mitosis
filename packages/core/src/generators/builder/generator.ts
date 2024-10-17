@@ -297,7 +297,9 @@ export const blockToBuilder = (
       if (!(parsed instanceof Error)) {
         componentOptions[key] = parsed;
       } else {
-        builderBindings[`component.options.${key}`] = bindings[key]!.code;
+        if (!json.slots?.[key]) {
+          builderBindings[`component.options.${key}`] = bindings[key]!.code;
+        }
       }
     }
   }
@@ -342,7 +344,9 @@ export const blockToBuilder = (
 
   if (thisIsComponent) {
     for (const key in json.bindings) {
-      builderBindings[`component.options.${key}`] = json.bindings[key]!.code;
+      if (!json.slots?.[key]) {
+        builderBindings[`component.options.${key}`] = json.bindings[key]!.code;
+      }
     }
   }
 
