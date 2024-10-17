@@ -5048,10 +5048,14 @@ export const UseTargetComponent = component$((props) => {
     const prefix = \\"q\\";
     return prefix + \\"foo\\";
   });
-  const state = useStore({ lastName: \\"bar\\" });
+  const state = useStore({ foo: \\"bar\\", lastName: \\"bar\\" });
   useVisibleTask$(() => {
+    console.log(state.foo);
+    state.foo = \\"bar\\";
     console.log(\\"qwik\\");
     state.lastName = \\"baz\\";
+    console.log(state.foo);
+    state.foo = \\"baz\\";
   });
 
   return <div>{name.value}</div>;
@@ -8802,10 +8806,14 @@ export const UseTargetComponent = component$((props: any) => {
     const prefix = \\"q\\";
     return prefix + \\"foo\\";
   });
-  const state = useStore<any>({ lastName: \\"bar\\" });
+  const state = useStore<any>({ foo: \\"bar\\", lastName: \\"bar\\" });
   useVisibleTask$(() => {
+    console.log(state.foo);
+    state.foo = \\"bar\\";
     console.log(\\"qwik\\");
     state.lastName = \\"baz\\";
+    console.log(state.foo);
+    state.foo = \\"baz\\";
   });
 
   return <div>{name.value}</div>;
