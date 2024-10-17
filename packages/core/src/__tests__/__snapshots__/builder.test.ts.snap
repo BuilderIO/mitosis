@@ -1951,7 +1951,7 @@ exports[`Builder > Text with bindings 3`] = `
 }
 `;
 
-exports[`Builder > binding 1`] = `
+exports[`Builder > bindings 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
   "children": [
@@ -2036,7 +2036,7 @@ exports[`Builder > binding 1`] = `
 }
 `;
 
-exports[`Builder > binding 2`] = `
+exports[`Builder > bindings 2`] = `
 "import { Button } from \\"@components\\";
 
 export default function MyComponent(props) {
@@ -2311,6 +2311,176 @@ exports[`Builder > extractStateHook 1`] = `
 });
 alert('hi');",
   "state": {},
+}
+`;
+
+exports[`Builder > nodes as props 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [],
+      "meta": {},
+      "name": "Foo",
+      "properties": {
+        "$tagName": undefined,
+      },
+      "scope": {},
+      "slots": {
+        "prop": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {},
+            "children": [],
+            "meta": {},
+            "name": "Bar",
+            "properties": {
+              "hello": "world",
+            },
+            "scope": {},
+            "slots": {},
+          },
+        ],
+      },
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": undefined,
+  "meta": {
+    "useMetadata": {
+      "httpRequests": undefined,
+    },
+  },
+  "name": "MyComponent",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Builder > nodes as props 2`] = `
+"import { Foo, Bar } from \\"@components\\";
+
+export default function MyComponent(props) {
+  return <Foo prop={<Bar hello=\\"world\\" />} />;
+}
+"
+`;
+
+exports[`Builder > nodes as props 3`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "prop": {
+          "code": "<Bar hello=\\"world\\" />",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "Foo",
+      "properties": {},
+      "scope": {},
+      "slots": {
+        "prop": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {},
+            "children": [],
+            "meta": {},
+            "name": "Bar",
+            "properties": {
+              "hello": "world",
+            },
+            "scope": {},
+          },
+        ],
+      },
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [
+    {
+      "importKind": "value",
+      "imports": {
+        "Bar": "Bar",
+        "Foo": "Foo",
+      },
+      "path": "@components",
+    },
+  ],
+  "inputs": [],
+  "meta": {},
+  "name": "MyComponent",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Builder > nodes as props 4`] = `
+{
+  "data": {
+    "blocks": [
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {},
+        "children": [],
+        "code": {
+          "actions": {},
+          "bindings": {},
+        },
+        "component": {
+          "name": "Foo",
+          "options": {
+            "prop": [
+              {
+                "@type": "@builder.io/sdk:Element",
+                "actions": {},
+                "bindings": {},
+                "children": [],
+                "code": {
+                  "actions": {},
+                  "bindings": {},
+                },
+                "component": {
+                  "name": "Bar",
+                  "options": {
+                    "hello": "world",
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    ],
+    "jsCode": "",
+    "tsCode": "",
+  },
 }
 `;
 
