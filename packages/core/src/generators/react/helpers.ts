@@ -1,19 +1,29 @@
+import { updateGettersToFunctionsInCode } from '@/helpers/getters-to-functions';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { MitosisNode } from '@/types/mitosis-node';
 import { upperFirst } from 'lodash';
 import traverse from 'neotraverse/legacy';
-
+import { updateStateSettersInCode } from './state';
 import { ToReactOptions } from './types';
 
-export const processBinding = (str: string, options: ToReactOptions) => {
-  // fix web-component tag transform issue with dashes by not transforming it
-  if (options.stateType !== 'useState') {
-    return str;
-  }
+export const processBinding = ({
+  code,
+  options,
+  json,
+  shouldUpdateGetters = true,
+}: {
+  code: string;
+  options: ToReactOptions;
+  json: MitosisComponent;
+  shouldUpdateGetters?: boolean;
+}) => {
+  const str = updateStateSettersInCode(code, options);
+  const getterKeys = Object.keys(json.state).filter((item) => json.state[item]?.type === 'getter');
+  const value = shouldUpdateGetters ? updateGettersToFunctionsInCode(str, getterKeys) : str;
 
-  return stripStateAndPropsRefs(str, {
+  return stripStateAndPropsRefs(value, {
     includeState: true,
     includeProps: false,
   });
@@ -27,10 +37,6 @@ export function getFragment(type: 'open' | 'close', options: ToReactOptions) {
 }
 export const wrapInFragment = (json: MitosisComponent | MitosisNode) => json.children.length !== 1;
 
-function getRefName(path: string) {
-  return upperFirst(path) + 'Ref';
-}
-
 export function processTagReferences(json: MitosisComponent, options: ToReactOptions) {
   const namesFound = new Set<string>();
 
@@ -39,12 +45,20 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
       return;
     }
 
-    const processedRefName = el.name.includes('-') ? el.name : processBinding(el.name, options);
+    const processedRefName = el.name.includes('-')
+      ? el.name
+      : processBinding({
+          code: el.name,
+          options,
+          json,
+          shouldUpdateGetters: false,
+        });
 
-    if (el.name.includes('state.')) {
-      switch (json.state[processedRefName]?.type) {
-        case 'getter':
-          const refName = getRefName(processedRefName);
+    if (el.name.startsWith('state.')) {
+      const refState = json.state[processedRefName];
+      switch (refState?.type) {
+        case 'getter': {
+          const refName = upperFirst(processedRefName) + 'Ref';
           if (!namesFound.has(el.name)) {
             namesFound.add(el.name);
             json.hooks.init = {
@@ -58,7 +72,7 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
 
           el.name = refName;
           break;
-
+        }
         // NOTE: technically, it should be impossible for the tag to be a method or a function in Mitosis JSX syntax,
         // as that will fail JSX parsing.
         case 'method':
@@ -69,7 +83,7 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
 
           if (capitalizedName !== processedRefName) {
             el.name = capitalizedName;
-            json.state[capitalizedName] = { ...json.state[processedRefName]! };
+            json.state[capitalizedName] = { ...refState! };
 
             delete json.state[processedRefName];
           } else {
