@@ -1856,6 +1856,222 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Builder > Text with bindings 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "<p>Time left: {state.timeLeft} seconds</p>",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": undefined,
+  "meta": {
+    "useMetadata": {
+      "httpRequests": undefined,
+    },
+  },
+  "name": "MyComponent",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Builder > Text with bindings 2`] = `
+"export default function MyComponent(props) {
+  return (
+    <div>
+      <p>Time left: {state.timeLeft} seconds</p>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Builder > Text with bindings 3`] = `
+{
+  "data": {
+    "blocks": [
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {},
+        "children": [
+          {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": {},
+            "component": {
+              "name": "Text",
+              "options": {
+                "text": "<p>Time left: {{state.timeLeft}} seconds</p>",
+              },
+            },
+            "tagName": "span",
+          },
+        ],
+        "code": {
+          "actions": {},
+          "bindings": {},
+        },
+        "properties": {},
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "",
+    "tsCode": "",
+  },
+}
+`;
+
+exports[`Builder > bindings 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "label": {
+          "code": "state.text",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "Button",
+      "properties": {
+        "$tagName": undefined,
+        "label": "hello",
+      },
+      "scope": {},
+      "slots": {},
+    },
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "css": {
+          "code": "{backgroundColor:'rgba(0, 0, 0, 1)',display:'flex',paddingLeft:'72px',paddingRight:'72px',paddingTop:'25px',paddingBottom:'25px',alignItems:'start',gap:'10px',fontFamily:'Poppins, -apple-system, Roboto, Helvetica, sans-serif',fontSize:'16px',color:'rgba(255, 255, 255, 1)',fontWeight:'700',textTransform:'uppercase',justifyContent:'start'}",
+          "type": "single",
+        },
+      },
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "_text": {
+              "code": "state.text",
+              "type": "single",
+            },
+          },
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {},
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {
+        "$name": "Book an Appointment",
+      },
+      "scope": {},
+      "slots": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": [
+    {
+      "defaultValue": "Hello",
+      "name": "text",
+    },
+  ],
+  "meta": {
+    "cssCode": "builder-component { max-width: none !important; }",
+    "useMetadata": {
+      "httpRequests": undefined,
+    },
+  },
+  "name": "MyComponent",
+  "refs": {},
+  "state": {},
+  "style": "builder-component { max-width: none !important; }",
+  "subComponents": [],
+}
+`;
+
+exports[`Builder > bindings 2`] = `
+"import { Button } from \\"@components\\";
+
+export default function MyComponent(props) {
+  useStyle(\`builder-component { max-width: none !important; }\`);
+
+  return (
+    <>
+      <Button label=\\"hello\\" label={state.text} />
+      <div
+        $name=\\"Book an Appointment\\"
+        css={{
+          backgroundColor: \\"rgba(0, 0, 0, 1)\\",
+          display: \\"flex\\",
+          paddingLeft: \\"72px\\",
+          paddingRight: \\"72px\\",
+          paddingTop: \\"25px\\",
+          paddingBottom: \\"25px\\",
+          alignItems: \\"start\\",
+          gap: \\"10px\\",
+          fontFamily: \\"Poppins, -apple-system, Roboto, Helvetica, sans-serif\\",
+          fontSize: \\"16px\\",
+          color: \\"rgba(255, 255, 255, 1)\\",
+          fontWeight: \\"700\\",
+          textTransform: \\"uppercase\\",
+          justifyContent: \\"start\\",
+        }}
+      >
+        {state.text}
+      </div>
+    </>
+  );
+}
+"
+`;
+
 exports[`Builder > booleans 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -2099,6 +2315,61 @@ alert('hi');",
 `;
 
 exports[`Builder > nodes as props 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [],
+      "meta": {},
+      "name": "Foo",
+      "properties": {
+        "$tagName": undefined,
+      },
+      "scope": {},
+      "slots": {
+        "prop": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {},
+            "children": [],
+            "meta": {},
+            "name": "Bar",
+            "properties": {
+              "hello": "world",
+            },
+            "scope": {},
+            "slots": {},
+          },
+        ],
+      },
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": undefined,
+  "meta": {
+    "useMetadata": {
+      "httpRequests": undefined,
+    },
+  },
+  "name": "MyComponent",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Builder > nodes as props 2`] = `
 "import { Foo, Bar } from \\"@components\\";
 
 export default function MyComponent(props) {
@@ -2107,22 +2378,80 @@ export default function MyComponent(props) {
 "
 `;
 
-exports[`Builder > nodes as props 2`] = `
+exports[`Builder > nodes as props 3`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "prop": {
+          "code": "<Bar hello=\\"world\\" />",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "Foo",
+      "properties": {},
+      "scope": {},
+      "slots": {
+        "prop": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {},
+            "children": [],
+            "meta": {},
+            "name": "Bar",
+            "properties": {
+              "hello": "world",
+            },
+            "scope": {},
+          },
+        ],
+      },
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [
+    {
+      "importKind": "value",
+      "imports": {
+        "Bar": "Bar",
+        "Foo": "Foo",
+      },
+      "path": "@components",
+    },
+  ],
+  "inputs": [],
+  "meta": {},
+  "name": "MyComponent",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Builder > nodes as props 4`] = `
 {
   "data": {
     "blocks": [
       {
         "@type": "@builder.io/sdk:Element",
         "actions": {},
-        "bindings": {
-          "component.options.prop": "<Bar hello=\\"world\\" />",
-        },
+        "bindings": {},
         "children": [],
         "code": {
           "actions": {},
-          "bindings": {
-            "component.options.prop": "<Bar hello=\\"world\\" />",
-          },
+          "bindings": {},
         },
         "component": {
           "name": "Foo",
@@ -2153,6 +2482,51 @@ exports[`Builder > nodes as props 2`] = `
     "tsCode": "",
   },
 }
+`;
+
+exports[`Builder > preserve cssCode when converting 1`] = `
+".foo {
+  background: green;
+}
+
+.bar {
+  font-weight: bold;
+}"
+`;
+
+exports[`Builder > preserve cssCode when converting 2`] = `
+".foo {
+  background: green;
+}
+
+.bar {
+  font-weight: bold;
+}"
+`;
+
+exports[`Builder > preserve cssCode when converting 3`] = `
+"export default function MyComponent(props) {
+  useStyle(\`.foo {
+  background: green;
+}
+
+.bar {
+  font-weight: bold;
+}\`);
+
+  return <></>;
+}
+"
+`;
+
+exports[`Builder > preserve cssCode when converting 4`] = `
+".foo {
+  background: green;
+}
+
+.bar {
+  font-weight: bold;
+}"
 `;
 
 exports[`Builder > slots 1`] = `
