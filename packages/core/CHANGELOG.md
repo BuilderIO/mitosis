@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.6
+
+### Patch Changes
+
+- 0aa642a: [All]: Fix: accessing `useState()` getter/setter within `useTarget()`
+
 ## 0.5.5
 
 ### Patch Changes
