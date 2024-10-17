@@ -14869,6 +14869,40 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > fatArrowFunctions 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-container>
+      <button (click)=\\"clickHandler1($event)\\">Button 1</button>
+      <button (click)=\\"clickHandler2($event)\\">Button 2</button>
+    </ng-container>
+  \`,
+})
+export class MyComponent {
+  clickHandler1 = (this.clickHandler1 = (event) => {
+    console.log(\\"do something 1\\");
+  });
+  clickHandler2 = function clickHandler2(event) {
+    console.log(\\"do something 2\\");
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > svelte > Javascript Test > html 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -15518,6 +15552,40 @@ import { Component } from \\"@angular/core\\";
 export default class MyComponent {
   log = function log(msg = \\"hello\\") {
     console.log(msg);
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > fatArrowFunctions 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-container>
+      <button (click)=\\"clickHandler1($event)\\">Button 1</button>
+      <button (click)=\\"clickHandler2($event)\\">Button 2</button>
+    </ng-container>
+  \`,
+})
+export class MyComponent {
+  clickHandler1 = (this.clickHandler1 = (event) => {
+    console.log(\\"do something 1\\");
+  });
+  clickHandler2 = function clickHandler2(event) {
+    console.log(\\"do something 2\\");
   };
 }
 

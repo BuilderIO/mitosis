@@ -5767,6 +5767,26 @@ exports[`Alpine.js > svelte > Javascript Test > eventHandlers 1`] = `
 "
 `;
 
+exports[`Alpine.js > svelte > Javascript Test > fatArrowFunctions 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <button x-on:click=\\"clickHandler1($event)\\">Button 1</button>
+  <button x-on:click=\\"clickHandler2($event)\\">Button 2</button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      clickHandler1: (this.clickHandler1 = (event) => {
+        console.log(\\"do something 1\\");
+      }),
+      clickHandler2: function clickHandler2(event) {
+        console.log(\\"do something 2\\");
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > svelte > Javascript Test > html 1`] = `
 "<div x-data=\\"myComponent()\\" x-bind:innerHTML=\\"html\\"></div>
 <script>
@@ -6084,6 +6104,26 @@ exports[`Alpine.js > svelte > Typescript Test > eventHandlers 1`] = `
     Alpine.data(\\"myComponent\\", () => ({
       log: function log(msg = \\"hello\\") {
         console.log(msg);
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > fatArrowFunctions 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <button x-on:click=\\"clickHandler1($event)\\">Button 1</button>
+  <button x-on:click=\\"clickHandler2($event)\\">Button 2</button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      clickHandler1: (this.clickHandler1 = (event) => {
+        console.log(\\"do something 1\\");
+      }),
+      clickHandler2: function clickHandler2(event) {
+        console.log(\\"do something 2\\");
       },
     }));
   });

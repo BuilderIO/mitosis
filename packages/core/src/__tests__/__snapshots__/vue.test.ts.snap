@@ -8355,6 +8355,32 @@ export default defineComponent({
 </script>"
 `;
 
+exports[`Vue > svelte > Javascript Test > fatArrowFunctions 1`] = `
+"<template>
+  <div>
+    <button @click=\\"clickHandler1($event)\\">Button 1</button>
+    <button @click=\\"clickHandler2($event)\\">Button 2</button>
+  </div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"my-component\\",
+
+  methods: {
+    clickHandler1: (this.clickHandler1 = (event) => {
+      console.log(\\"do something 1\\");
+    }),
+    clickHandler2: function clickHandler2(event) {
+      console.log(\\"do something 2\\");
+    },
+  },
+});
+</script>"
+`;
+
 exports[`Vue > svelte > Javascript Test > html 1`] = `
 "<template>
   <div v-html=\\"html\\"></div>
@@ -8774,6 +8800,32 @@ export default defineComponent({
   methods: {
     log: function log(msg = \\"hello\\") {
       console.log(msg);
+    },
+  },
+});
+</script>"
+`;
+
+exports[`Vue > svelte > Typescript Test > fatArrowFunctions 1`] = `
+"<template>
+  <div>
+    <button @click=\\"clickHandler1($event)\\">Button 1</button>
+    <button @click=\\"clickHandler2($event)\\">Button 2</button>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"my-component\\",
+
+  methods: {
+    clickHandler1: (this.clickHandler1 = (event) => {
+      console.log(\\"do something 1\\");
+    }),
+    clickHandler2: function clickHandler2(event) {
+      console.log(\\"do something 2\\");
     },
   },
 });

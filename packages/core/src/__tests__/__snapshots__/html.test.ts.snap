@@ -14442,6 +14442,94 @@ exports[`Html > svelte > Javascript Test > eventHandlers 1`] = `
 "
 `;
 
+exports[`Html > svelte > Javascript Test > fatArrowFunctions 1`] = `
+"<button data-el=\\"button-1\\">Button 1</button>
+<button data-el=\\"button-2\\">Button 2</button>
+<script>
+        (() => {
+          const state = { clickHandler1 : state.clickHandler1 = event => {
+    console.log(\\"do something 1\\");
+  };
+
+  update(), clickHandler2 : function clickHandler2(event) {
+    console.log(\\"do something 2\\");
+  },};
+
+          let context = null;
+          let nodesToDestroy = [];
+          let pendingUpdate = false;
+
+
+          function destroyAnyNodes() {
+            // destroy current view template refs before rendering again
+            nodesToDestroy.forEach(el => el.remove());
+            nodesToDestroy = [];
+          }
+
+
+          // Function to update data bindings and loops
+          // call update() when you mutate state and need the updates to reflect
+          // in the dom
+          function update() {
+            if (pendingUpdate === true) {
+              return;
+            }
+            pendingUpdate = true;
+
+                document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+
+              ;el.removeEventListener('click', onButton1Click);
+              ;el.addEventListener('click', onButton1Click);
+
+                });
+
+
+
+                document.querySelectorAll(\\"[data-el='button-2']\\").forEach((el) => {
+
+              ;el.removeEventListener('click', onButton2Click);
+              ;el.addEventListener('click', onButton2Click);
+
+                });
+
+
+            destroyAnyNodes();
+
+
+
+            pendingUpdate = false;
+          }
+
+
+            // Event handler for 'click' event on button-1
+            function onButton1Click (event) {
+
+              state.clickHandler1(event)
+            }
+
+            // Event handler for 'click' event on button-2
+            function onButton2Click (event) {
+
+              state.clickHandler2(event)
+            }
+
+
+          // Update with initial state on first load
+          update();
+
+
+
+
+
+
+
+
+
+        })()
+</script>
+"
+`;
+
 exports[`Html > svelte > Javascript Test > html 1`] = `
 "<div data-el=\\"div-1\\"></div>
 <script>
@@ -15468,6 +15556,94 @@ exports[`Html > svelte > Typescript Test > eventHandlers 1`] = `
     // Update with initial state on first load
     update();
   })();
+</script>
+"
+`;
+
+exports[`Html > svelte > Typescript Test > fatArrowFunctions 1`] = `
+"<button data-el=\\"button-1\\">Button 1</button>
+<button data-el=\\"button-2\\">Button 2</button>
+<script>
+        (() => {
+          const state = { clickHandler1 : state.clickHandler1 = event => {
+    console.log(\\"do something 1\\");
+  };
+
+  update(), clickHandler2 : function clickHandler2(event) {
+    console.log(\\"do something 2\\");
+  },};
+
+          let context = null;
+          let nodesToDestroy = [];
+          let pendingUpdate = false;
+
+
+          function destroyAnyNodes() {
+            // destroy current view template refs before rendering again
+            nodesToDestroy.forEach(el => el.remove());
+            nodesToDestroy = [];
+          }
+
+
+          // Function to update data bindings and loops
+          // call update() when you mutate state and need the updates to reflect
+          // in the dom
+          function update() {
+            if (pendingUpdate === true) {
+              return;
+            }
+            pendingUpdate = true;
+
+                document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+
+              ;el.removeEventListener('click', onButton1Click);
+              ;el.addEventListener('click', onButton1Click);
+
+                });
+
+
+
+                document.querySelectorAll(\\"[data-el='button-2']\\").forEach((el) => {
+
+              ;el.removeEventListener('click', onButton2Click);
+              ;el.addEventListener('click', onButton2Click);
+
+                });
+
+
+            destroyAnyNodes();
+
+
+
+            pendingUpdate = false;
+          }
+
+
+            // Event handler for 'click' event on button-1
+            function onButton1Click (event) {
+
+              state.clickHandler1(event)
+            }
+
+            // Event handler for 'click' event on button-2
+            function onButton2Click (event) {
+
+              state.clickHandler2(event)
+            }
+
+
+          // Update with initial state on first load
+          update();
+
+
+
+
+
+
+
+
+
+        })()
 </script>
 "
 `;

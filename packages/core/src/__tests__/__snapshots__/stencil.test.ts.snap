@@ -7716,6 +7716,32 @@ export class MyComponent {
 "
 `;
 
+exports[`Stencil > svelte > Javascript Test > fatArrowFunctions 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  clickHandler1 = (this.clickHandler1 = (event) => {
+    console.log(\\"do something 1\\");
+  });
+  clickHandler2 = function clickHandler2(event) {
+    console.log(\\"do something 2\\");
+  };
+
+  render() {
+    return (
+      <Fragment>
+        <button onClick={(event) => this.clickHandler1(event)}>Button 1</button>
+        <button onClick={(event) => this.clickHandler2(event)}>Button 2</button>
+      </Fragment>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > svelte > Javascript Test > html 1`] = `
 "import { Component, h, Fragment, State } from \\"@stencil/core\\";
 
@@ -8137,6 +8163,32 @@ export class MyComponent {
         <button onClick={() => this.log(event)}>Log</button>
         <button onClick={() => this.log(event)}>Log</button>
       </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > svelte > Typescript Test > fatArrowFunctions 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  clickHandler1 = (this.clickHandler1 = (event) => {
+    console.log(\\"do something 1\\");
+  });
+  clickHandler2 = function clickHandler2(event) {
+    console.log(\\"do something 2\\");
+  };
+
+  render() {
+    return (
+      <Fragment>
+        <button onClick={(event) => this.clickHandler1(event)}>Button 1</button>
+        <button onClick={(event) => this.clickHandler2(event)}>Button 2</button>
+      </Fragment>
     );
   }
 }
