@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.7
+
+### Patch Changes
+
+- 7a099d2: [Builder,Mitosis] Feature: add Slots support.
+
 ## 0.5.6
 
 ### Patch Changes
