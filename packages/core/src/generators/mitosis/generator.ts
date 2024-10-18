@@ -122,6 +122,10 @@ export const blockToMitosis = (
   for (const key in json.bindings) {
     const value = json.bindings[key]?.code as string;
 
+    if (json.slots?.[key]) {
+      continue;
+    }
+
     if (json.bindings[key]?.type === 'spread') {
       str += ` {...(${json.bindings[key]?.code})} `;
     } else if (key.startsWith('on')) {
