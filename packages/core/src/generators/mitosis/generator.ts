@@ -141,7 +141,9 @@ export const blockToMitosis = (
     if (value.length > 1) {
       str += '<>';
     }
-    str += json.slots[key].map((item) => blockToMitosis(item, options, component)).join('\n');
+    str += json.slots[key]
+      .map((item) => blockToMitosis(item, options, component, insideJsx))
+      .join('\n');
     if (value.length > 1) {
       str += '</>';
     }
