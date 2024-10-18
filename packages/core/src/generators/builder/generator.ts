@@ -103,7 +103,6 @@ const componentMappers: {
       'Personalization',
     ];
     block.children!.forEach((item) => {
-      console.log('item', item);
       if (item.component && validFakeNodeNames.includes(item.component?.name)) {
         let query: any;
         if (item.component.options.query) {

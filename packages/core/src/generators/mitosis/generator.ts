@@ -296,7 +296,9 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
           ],
         });
       } catch (err) {
-        console.error('Format error for file:', str, JSON.stringify(json, null, 2));
+        if (process.env.NODE_ENV !== 'test') {
+          console.error('Format error for file:', str, JSON.stringify(json, null, 2));
+        }
         throw err;
       }
     }
