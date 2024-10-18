@@ -103,7 +103,6 @@ const componentMappers: {
       'Personalization',
     ];
     block.children!.forEach((item) => {
-      console.log('item', item);
       if (item.component && validFakeNodeNames.includes(item.component?.name)) {
         let query: any;
         if (item.component.options.query) {
@@ -297,9 +296,15 @@ export const blockToBuilder = (
       if (!(parsed instanceof Error)) {
         componentOptions[key] = parsed;
       } else {
-        builderBindings[`component.options.${key}`] = bindings[key]!.code;
+        if (!json.slots?.[key]) {
+          builderBindings[`component.options.${key}`] = bindings[key]!.code;
+        }
       }
     }
+  }
+
+  for (const key in json.slots) {
+    componentOptions[key] = json.slots[key].map((node) => blockToBuilder(node, options));
   }
 
   const hasCss = !!bindings.css?.code;
@@ -338,7 +343,9 @@ export const blockToBuilder = (
 
   if (thisIsComponent) {
     for (const key in json.bindings) {
-      builderBindings[`component.options.${key}`] = json.bindings[key]!.code;
+      if (!json.slots?.[key]) {
+        builderBindings[`component.options.${key}`] = json.bindings[key]!.code;
+      }
     }
   }
 
