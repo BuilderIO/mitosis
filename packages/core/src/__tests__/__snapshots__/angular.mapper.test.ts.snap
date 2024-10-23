@@ -5827,6 +5827,18 @@ import { Component, Input } from \\"@angular/core\\";
         <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">
+          <div>complete</div>
+        </ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
+        <ng-container *ngIf=\\"conditionC === 'Complete'\\">dff</ng-container>
+        <ng-container *ngIf=\\"!(conditionC === 'Complete')\\">
+          <div>complete else</div>
+        </ng-container>
+      </ng-container>
     </div>
   \`,
   styles: [
@@ -5840,6 +5852,7 @@ import { Component, Input } from \\"@angular/core\\";
 export default class ShowWithOtherValues {
   @Input() conditionA;
   @Input() conditionB;
+  @Input() conditionC;
 }
 
 @NgModule({
@@ -13315,6 +13328,18 @@ interface Props {
         <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">
+          <div>complete</div>
+        </ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
+        <ng-container *ngIf=\\"conditionC === 'Complete'\\">dff</ng-container>
+        <ng-container *ngIf=\\"!(conditionC === 'Complete')\\">
+          <div>complete else</div>
+        </ng-container>
+      </ng-container>
     </div>
   \`,
   styles: [
@@ -13328,6 +13353,7 @@ interface Props {
 export default class ShowWithOtherValues {
   @Input() conditionA!: Props[\\"conditionA\\"];
   @Input() conditionB!: Props[\\"conditionB\\"];
+  @Input() conditionC!: Props[\\"conditionC\\"];
 }
 
 @NgModule({

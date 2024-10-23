@@ -56,24 +56,33 @@ export const blockToMitosis = (
     );
   }
 
-  if (options.nativeConditionals && checkIsShowNode(json)) {
+  if (checkIsShowNode(json)) {
     const when = json.bindings.when?.code;
     const elseCase = json.meta.else as MitosisNode;
-    const needsWrapper = json.children.length !== 1;
+    if (options.nativeConditionals) {
+      const needsWrapper = json.children.length !== 1;
 
-    const renderChildren = `${needsWrapper ? '<>' : ''}
-      ${json.children
-        .map((child) => blockToMitosis(child, options, component, needsWrapper))
-        .join('\n')}
-  ${needsWrapper ? '</>' : ''}`;
+      const renderChildren = `${needsWrapper ? '<>' : ''}
+        ${json.children
+          .map((child) => blockToMitosis(child, options, component, needsWrapper))
+          .join('\n')}
+    ${needsWrapper ? '</>' : ''}`;
 
-    const renderElse =
-      elseCase && isMitosisNode(elseCase)
-        ? blockToMitosis(elseCase, options, component, false)
-        : 'null';
-    return `${insideJsx ? '{' : ''}(${when}) ? ${renderChildren} : ${renderElse}${
-      insideJsx ? '}' : ''
-    }`;
+      const renderElse =
+        elseCase && isMitosisNode(elseCase)
+          ? blockToMitosis(elseCase, options, component, false)
+          : 'null';
+      return `${insideJsx ? '{' : ''}(${when}) ? ${renderChildren} : ${renderElse}${
+        insideJsx ? '}' : ''
+      }`;
+    } else {
+      const elseHandler = elseCase
+        ? ` else={${blockToMitosis(elseCase, options, component, false)}}`
+        : '';
+      return `<Show when={${when}}${elseHandler}>
+  ${json.children.map((child) => blockToMitosis(child, options, component, true)).join('\n')}
+</Show>`;
+    }
   }
 
   if (checkIsForNode(json)) {
@@ -99,11 +108,19 @@ export const blockToMitosis = (
   }
 
   if (json.properties._text) {
-    return json.properties._text as string;
+    if (insideJsx) {
+      return `${json.properties._text}`;
+    } else {
+      return `<>${json.properties._text}</>`;
+    }
   }
 
   if (json.bindings._text?.code) {
-    return `{${json.bindings._text?.code}}`;
+    if (insideJsx) {
+      return `{${json.bindings._text.code}}`;
+    } else {
+      return `${json.bindings._text.code}`;
+    }
   }
 
   let str = '';

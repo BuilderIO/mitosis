@@ -19,6 +19,7 @@ import lazyLoadSection from './data/builder/lazy-load-section.json?raw';
 import slotsContent from './data/builder/slots.json?raw';
 import slots2Content from './data/builder/slots2.json?raw';
 import textBindings from './data/builder/text-bindings.json?raw';
+import show from './data/show/show-expressions.raw.tsx?raw';
 
 const mitosisOptions: ToMitosisOptions = {
   format: 'legacy',
@@ -32,6 +33,16 @@ describe('Builder', () => {
 
   test('Stamped', () => {
     const component = parseJsx(stamped);
+    const builderJson = componentToBuilder()({ component });
+    expect(builderJson).toMatchSnapshot();
+
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
+    expect(mitosis).toMatchSnapshot();
+  });
+
+  test('Show', () => {
+    const component = parseJsx(show);
     const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
 
