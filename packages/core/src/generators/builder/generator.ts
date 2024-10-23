@@ -45,10 +45,7 @@ const mapComponentName = (name: string) => {
 };
 
 const componentMappers: {
-  [key: string]: (
-    node: MitosisNode,
-    options: ToBuilderOptions,
-  ) => BuilderElement | BuilderElement[];
+  [key: string]: (node: MitosisNode, options: ToBuilderOptions) => BuilderElement;
 } = {
   // TODO: add back if this direction (blocks as children not prop) is desired
   ...(!symbolBlocksAsChildren
