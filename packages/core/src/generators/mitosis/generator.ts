@@ -87,7 +87,6 @@ export const blockToMitosis = (
           .join('\n')}
       ${needsWrapper ? '</>' : ''}
       ))${insideJsx ? '}' : ''}`;
-      console.log(a);
       return a;
     }
     return `<For each={${json.bindings.each?.code}}>
