@@ -491,7 +491,7 @@ export const componentToBuilder =
                 el.code.bindings = {};
               }
               el.code.bindings[key] = value;
-              el.bindings[key] = `return ${value}`;
+              el.bindings[key] = ` return ${value}`;
             }
           }
         }
