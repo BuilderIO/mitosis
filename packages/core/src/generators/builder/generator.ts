@@ -185,6 +185,57 @@ const componentMappers: {
     );
   },
   Show(node, options) {
+    const elseCase = node.meta.else as MitosisNode;
+    const children = node.children.filter(filterEmptyTextNodes);
+    const showNode =
+      children.length > 0
+        ? el(
+            {
+              // TODO: the reverse mapping for this
+              component: {
+                name: 'Core:Fragment',
+              },
+              bindings: {
+                show: node.bindings.when?.code as string,
+              },
+              children: children.map((node) => blockToBuilder(node, options)),
+            },
+            options,
+          )
+        : undefined;
+
+    const elseNode =
+      elseCase && filterEmptyTextNodes(elseCase)
+        ? el(
+            {
+              // TODO: the reverse mapping for this
+              component: {
+                name: 'Core:Fragment',
+              },
+              bindings: {
+                hide: node.bindings.when?.code as string,
+              },
+              children: [blockToBuilder(elseCase, options)],
+            },
+            options,
+          )
+        : undefined;
+
+    if (elseNode && showNode) {
+      return el(
+        {
+          component: {
+            name: 'Core:Fragment',
+          },
+          children: [showNode, elseNode],
+        },
+        options,
+      );
+    } else if (showNode) {
+      return showNode;
+    } else if (elseNode) {
+      return elseNode;
+    }
     return el(
       {
         // TODO: the reverse mapping for this
@@ -194,9 +245,7 @@ const componentMappers: {
         bindings: {
           show: node.bindings.when?.code as string,
         },
-        children: node.children
-          .filter(filterEmptyTextNodes)
-          .map((node) => blockToBuilder(node, options)),
+        children: [],
       },
       options,
     );

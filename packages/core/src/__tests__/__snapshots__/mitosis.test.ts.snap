@@ -2422,14 +2422,55 @@ export default function MyComponent(props) {
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > showExpressions 1`] = `
-"An identifier or keyword cannot immediately follow a numeric literal. (63:6)
-  61 |  : ContentF}
-  62 | {(props.conditionA === 'Default') ?
-> 63 |     4mb
-     |      ^
-  64 |  : (props.conditionB === 'Complete') ?
-  65 |     20mb
-  66 |  : 9mb}"
+"import { Show } from \\"@components\\";
+
+export default function ShowWithOtherValues(props) {
+  return (
+    <div>
+      {props.conditionA ? <>Content0</> : <>ContentA</>}
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <></> : <>ContentA</>}
+      {props.conditionA ? <>ContentB</> : undefined}
+      {props.conditionA ? undefined : <>ContentB</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <></> : <>ContentC</>}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <></> : <>ContentD</>}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>hello</> : <>ContentE</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+      {props.conditionA ? <>123</> : <>ContentF</>}
+      {props.conditionA === \\"Default\\" ? (
+        <>4mb</>
+      ) : props.conditionB === \\"Complete\\" ? (
+        <>20mb</>
+      ) : (
+        <>9mb</>
+      )}
+      {props.conditionA === \\"Default\\" ? (
+        props.conditionB === \\"Complete\\" ? (
+          <>20mb</>
+        ) : (
+          <>9mb</>
+        )
+      ) : (
+        <>4mb</>
+      )}
+      {props.conditionA === \\"Default\\" ? (
+        props.conditionB === \\"Complete\\" ? (
+          <div>complete</div>
+        ) : (
+          <>9mb</>
+        )
+      ) : props.conditionC === \\"Complete\\" ? (
+        <>dff</>
+      ) : (
+        <div>complete else</div>
+      )}
+    </div>
+  );
+}
+"
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > showWithFor 1`] = `
@@ -2451,12 +2492,12 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 export default function ShowWithOtherValues(props) {
   return (
     <div>
-      {props.conditionA ? ContentA : null}
-      {props.conditionA ? ContentB : { undefined }}
-      {props.conditionA ? ContentC : null}
-      {props.conditionA ? ContentD : null}
-      {props.conditionA ? ContentE : hello}
-      {props.conditionA ? ContentF : 123}
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <>ContentB</> : undefined}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
     </div>
   );
 }
@@ -2467,7 +2508,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Show } from \\"@components\\";
 
 export default function ShowRootText(props) {
-  return props.conditionA ? ContentA : <div>else-condition-A</div>;
+  return props.conditionA ? <>ContentA</> : <div>else-condition-A</div>;
 }
 "
 `;
@@ -5521,14 +5562,59 @@ export default function MyComponent(props) {
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > showExpressions 1`] = `
-"An identifier or keyword cannot immediately follow a numeric literal. (66:6)
-  64 |  : ContentF}
-  65 | {(props.conditionA === 'Default') ?
-> 66 |     4mb
-     |      ^
-  67 |  : (props.conditionB === 'Complete') ?
-  68 |     20mb
-  69 |  : 9mb}"
+"import { Show } from \\"@components\\";
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+export default function ShowWithOtherValues(props) {
+  return (
+    <div>
+      {props.conditionA ? <>Content0</> : <>ContentA</>}
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <></> : <>ContentA</>}
+      {props.conditionA ? <>ContentB</> : undefined}
+      {props.conditionA ? undefined : <>ContentB</>}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <></> : <>ContentC</>}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <></> : <>ContentD</>}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>hello</> : <>ContentE</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
+      {props.conditionA ? <>123</> : <>ContentF</>}
+      {props.conditionA === \\"Default\\" ? (
+        <>4mb</>
+      ) : props.conditionB === \\"Complete\\" ? (
+        <>20mb</>
+      ) : (
+        <>9mb</>
+      )}
+      {props.conditionA === \\"Default\\" ? (
+        props.conditionB === \\"Complete\\" ? (
+          <>20mb</>
+        ) : (
+          <>9mb</>
+        )
+      ) : (
+        <>4mb</>
+      )}
+      {props.conditionA === \\"Default\\" ? (
+        props.conditionB === \\"Complete\\" ? (
+          <div>complete</div>
+        ) : (
+          <>9mb</>
+        )
+      ) : props.conditionC === \\"Complete\\" ? (
+        <>dff</>
+      ) : (
+        <div>complete else</div>
+      )}
+    </div>
+  );
+}
+"
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > showWithFor 1`] = `
@@ -5557,12 +5643,12 @@ interface Props {
 export default function ShowWithOtherValues(props) {
   return (
     <div>
-      {props.conditionA ? ContentA : null}
-      {props.conditionA ? ContentB : { undefined }}
-      {props.conditionA ? ContentC : null}
-      {props.conditionA ? ContentD : null}
-      {props.conditionA ? ContentE : hello}
-      {props.conditionA ? ContentF : 123}
+      {props.conditionA ? <>ContentA</> : null}
+      {props.conditionA ? <>ContentB</> : undefined}
+      {props.conditionA ? <>ContentC</> : null}
+      {props.conditionA ? <>ContentD</> : null}
+      {props.conditionA ? <>ContentE</> : <>hello</>}
+      {props.conditionA ? <>ContentF</> : <>123</>}
     </div>
   );
 }
@@ -5576,7 +5662,7 @@ interface Props {
 }
 
 export default function ShowRootText(props) {
-  return props.conditionA ? ContentA : <div>else-condition-A</div>;
+  return props.conditionA ? <>ContentA</> : <div>else-condition-A</div>;
 }
 "
 `;
@@ -8392,8 +8478,8 @@ exports[`Mitosis, format: legacy > jsx > Javascript Test > nestedShow 1`] = `
 
 export default function NestedShow(props) {
   return (
-    <Show when={props.conditionA}>
-      <Show when={!props.conditionB}>
+    <Show when={props.conditionA} else={<div>else-condition-A</div>}>
+      <Show when={!props.conditionB} else={<div>else-condition-B</div>}>
         <div>if condition A and condition B</div>
       </Show>
     </Show>
@@ -8832,7 +8918,10 @@ export default function RenderBlock(props) {
   });
 
   return (
-    <Show when={state.shouldWrap}>
+    <Show
+      when={state.shouldWrap}
+      else={<state.renderComponentTag {...state.renderComponentProps} />}
+    >
       <Show when={isEmptyHtmlElement(state.tag)}>
         <state.tag {...state.attributes} {...state.actions} />
       </Show>
@@ -8939,7 +9028,7 @@ exports[`Mitosis, format: legacy > jsx > Javascript Test > rootShow 1`] = `
 
 export default function RenderStyles(props) {
   return (
-    <Show when={props.foo === \\"bar\\"}>
+    <Show when={props.foo === \\"bar\\"} else={<div>Foo</div>}>
       <div>Bar</div>
     </Show>
   );
@@ -8990,22 +9079,62 @@ exports[`Mitosis, format: legacy > jsx > Javascript Test > showExpressions 1`] =
 export default function ShowWithOtherValues(props) {
   return (
     <div>
-      <Show when={props.conditionA}>Content0</Show>
+      <Show when={props.conditionA} else={<>ContentA</>}>
+        Content0
+      </Show>
       <Show when={props.conditionA}>ContentA</Show>
-      <Show when={props.conditionA} />
-      <Show when={props.conditionA}>ContentB</Show>
-      <Show when={props.conditionA}>{undefined}</Show>
+      <Show when={props.conditionA} else={<>ContentA</>}></Show>
+      <Show when={props.conditionA} else={undefined}>
+        ContentB
+      </Show>
+      <Show when={props.conditionA} else={<>ContentB</>}>
+        {undefined}
+      </Show>
       <Show when={props.conditionA}>ContentC</Show>
-      <Show when={props.conditionA} />
+      <Show when={props.conditionA} else={<>ContentC</>}></Show>
       <Show when={props.conditionA}>ContentD</Show>
-      <Show when={props.conditionA} />
-      <Show when={props.conditionA}>ContentE</Show>
-      <Show when={props.conditionA}>hello</Show>
-      <Show when={props.conditionA}>ContentF</Show>
-      <Show when={props.conditionA}>123</Show>
-      <Show when={props.conditionA === \\"Default\\"}>4mb</Show>
-      <Show when={props.conditionA === \\"Default\\"}>
-        <Show when={props.conditionB === \\"Complete\\"}>20mb</Show>
+      <Show when={props.conditionA} else={<>ContentD</>}></Show>
+      <Show when={props.conditionA} else={<>hello</>}>
+        ContentE
+      </Show>
+      <Show when={props.conditionA} else={<>ContentE</>}>
+        hello
+      </Show>
+      <Show when={props.conditionA} else={<>123</>}>
+        ContentF
+      </Show>
+      <Show when={props.conditionA} else={<>ContentF</>}>
+        123
+      </Show>
+      <Show
+        when={props.conditionA === \\"Default\\"}
+        else={
+          <Show when={props.conditionB === \\"Complete\\"} else={<>9mb</>}>
+            20mb
+          </Show>
+        }
+      >
+        4mb
+      </Show>
+      <Show when={props.conditionA === \\"Default\\"} else={<>4mb</>}>
+        <Show when={props.conditionB === \\"Complete\\"} else={<>9mb</>}>
+          20mb
+        </Show>
+      </Show>
+      <Show
+        when={props.conditionA === \\"Default\\"}
+        else={
+          <Show
+            when={props.conditionC === \\"Complete\\"}
+            else={<div>complete else</div>}
+          >
+            dff
+          </Show>
+        }
+      >
+        <Show when={props.conditionB === \\"Complete\\"} else={<>9mb</>}>
+          <div>complete</div>
+        </Show>
       </Show>
     </div>
   );
@@ -9018,7 +9147,7 @@ exports[`Mitosis, format: legacy > jsx > Javascript Test > showWithFor 1`] = `
 
 export default function NestedShow(props) {
   return (
-    <Show when={props.conditionA}>
+    <Show when={props.conditionA} else={<div>else-condition-A</div>}>
       <For each={props.items}>{(item, idx) => <div key={idx}>{item}</div>}</For>
     </Show>
   );
@@ -9033,11 +9162,17 @@ export default function ShowWithOtherValues(props) {
   return (
     <div>
       <Show when={props.conditionA}>ContentA</Show>
-      <Show when={props.conditionA}>ContentB</Show>
+      <Show when={props.conditionA} else={undefined}>
+        ContentB
+      </Show>
       <Show when={props.conditionA}>ContentC</Show>
       <Show when={props.conditionA}>ContentD</Show>
-      <Show when={props.conditionA}>ContentE</Show>
-      <Show when={props.conditionA}>ContentF</Show>
+      <Show when={props.conditionA} else={<>hello</>}>
+        ContentE
+      </Show>
+      <Show when={props.conditionA} else={<>123</>}>
+        ContentF
+      </Show>
     </div>
   );
 }
@@ -9048,7 +9183,11 @@ exports[`Mitosis, format: legacy > jsx > Javascript Test > showWithRootText 1`] 
 "import { Show } from \\"@builder.io/mitosis\\";
 
 export default function ShowRootText(props) {
-  return <Show when={props.conditionA}>ContentA</Show>;
+  return (
+    <Show when={props.conditionA} else={<div>else-condition-A</div>}>
+      ContentA
+    </Show>
+  );
 }
 "
 `;
@@ -11460,8 +11599,8 @@ interface Props {
 
 export default function NestedShow(props) {
   return (
-    <Show when={props.conditionA}>
-      <Show when={!props.conditionB}>
+    <Show when={props.conditionA} else={<div>else-condition-A</div>}>
+      <Show when={!props.conditionB} else={<div>else-condition-B</div>}>
         <div>if condition A and condition B</div>
       </Show>
     </Show>
@@ -11958,7 +12097,10 @@ export default function RenderBlock(props) {
   });
 
   return (
-    <Show when={state.shouldWrap}>
+    <Show
+      when={state.shouldWrap}
+      else={<state.renderComponentTag {...state.renderComponentProps} />}
+    >
       <Show when={isEmptyHtmlElement(state.tag)}>
         <state.tag {...state.attributes} {...state.actions} />
       </Show>
@@ -12082,7 +12224,7 @@ export interface RenderStylesProps {
 
 export default function RenderStyles(props) {
   return (
-    <Show when={props.foo === \\"bar\\"}>
+    <Show when={props.foo === \\"bar\\"} else={<div>Foo</div>}>
       <div>Bar</div>
     </Show>
   );
@@ -12138,22 +12280,62 @@ interface Props {
 export default function ShowWithOtherValues(props) {
   return (
     <div>
-      <Show when={props.conditionA}>Content0</Show>
+      <Show when={props.conditionA} else={<>ContentA</>}>
+        Content0
+      </Show>
       <Show when={props.conditionA}>ContentA</Show>
-      <Show when={props.conditionA} />
-      <Show when={props.conditionA}>ContentB</Show>
-      <Show when={props.conditionA}>{undefined}</Show>
+      <Show when={props.conditionA} else={<>ContentA</>}></Show>
+      <Show when={props.conditionA} else={undefined}>
+        ContentB
+      </Show>
+      <Show when={props.conditionA} else={<>ContentB</>}>
+        {undefined}
+      </Show>
       <Show when={props.conditionA}>ContentC</Show>
-      <Show when={props.conditionA} />
+      <Show when={props.conditionA} else={<>ContentC</>}></Show>
       <Show when={props.conditionA}>ContentD</Show>
-      <Show when={props.conditionA} />
-      <Show when={props.conditionA}>ContentE</Show>
-      <Show when={props.conditionA}>hello</Show>
-      <Show when={props.conditionA}>ContentF</Show>
-      <Show when={props.conditionA}>123</Show>
-      <Show when={props.conditionA === \\"Default\\"}>4mb</Show>
-      <Show when={props.conditionA === \\"Default\\"}>
-        <Show when={props.conditionB === \\"Complete\\"}>20mb</Show>
+      <Show when={props.conditionA} else={<>ContentD</>}></Show>
+      <Show when={props.conditionA} else={<>hello</>}>
+        ContentE
+      </Show>
+      <Show when={props.conditionA} else={<>ContentE</>}>
+        hello
+      </Show>
+      <Show when={props.conditionA} else={<>123</>}>
+        ContentF
+      </Show>
+      <Show when={props.conditionA} else={<>ContentF</>}>
+        123
+      </Show>
+      <Show
+        when={props.conditionA === \\"Default\\"}
+        else={
+          <Show when={props.conditionB === \\"Complete\\"} else={<>9mb</>}>
+            20mb
+          </Show>
+        }
+      >
+        4mb
+      </Show>
+      <Show when={props.conditionA === \\"Default\\"} else={<>4mb</>}>
+        <Show when={props.conditionB === \\"Complete\\"} else={<>9mb</>}>
+          20mb
+        </Show>
+      </Show>
+      <Show
+        when={props.conditionA === \\"Default\\"}
+        else={
+          <Show
+            when={props.conditionC === \\"Complete\\"}
+            else={<div>complete else</div>}
+          >
+            dff
+          </Show>
+        }
+      >
+        <Show when={props.conditionB === \\"Complete\\"} else={<>9mb</>}>
+          <div>complete</div>
+        </Show>
       </Show>
     </div>
   );
@@ -12171,7 +12353,7 @@ interface Props {
 
 export default function NestedShow(props) {
   return (
-    <Show when={props.conditionA}>
+    <Show when={props.conditionA} else={<div>else-condition-A</div>}>
       <For each={props.items}>{(item, idx) => <div key={idx}>{item}</div>}</For>
     </Show>
   );
@@ -12190,11 +12372,17 @@ export default function ShowWithOtherValues(props) {
   return (
     <div>
       <Show when={props.conditionA}>ContentA</Show>
-      <Show when={props.conditionA}>ContentB</Show>
+      <Show when={props.conditionA} else={undefined}>
+        ContentB
+      </Show>
       <Show when={props.conditionA}>ContentC</Show>
       <Show when={props.conditionA}>ContentD</Show>
-      <Show when={props.conditionA}>ContentE</Show>
-      <Show when={props.conditionA}>ContentF</Show>
+      <Show when={props.conditionA} else={<>hello</>}>
+        ContentE
+      </Show>
+      <Show when={props.conditionA} else={<>123</>}>
+        ContentF
+      </Show>
     </div>
   );
 }
@@ -12209,7 +12397,11 @@ interface Props {
 }
 
 export default function ShowRootText(props) {
-  return <Show when={props.conditionA}>ContentA</Show>;
+  return (
+    <Show when={props.conditionA} else={<div>else-condition-A</div>}>
+      ContentA
+    </Show>
+  );
 }
 "
 `;
@@ -12687,7 +12879,10 @@ export default function MyComponent(props) {
   });
 
   return (
-    <Show when={state.show}>
+    <Show
+      when={state.show}
+      else={<button onClick={(event) => state.toggle(event)}> Show </button>}
+    >
       <button onClick={(event) => state.toggle(event)}> Hide </button>
     </Show>
   );
@@ -13021,7 +13216,10 @@ export default function MyComponent(props) {
   });
 
   return (
-    <Show when={state.show}>
+    <Show
+      when={state.show}
+      else={<button onClick={(event) => state.toggle(event)}> Show </button>}
+    >
       <button onClick={(event) => state.toggle(event)}> Hide </button>
     </Show>
   );
@@ -16129,6 +16327,13 @@ function ShowWithOtherValues(props) {
         <>{props.conditionB === \\"Complete\\" ? <>20mb</> : <>9mb</>}</>
       ) : (
         <>4mb</>
+      )}
+      {props.conditionA === \\"Default\\" ? (
+        <>{props.conditionB === \\"Complete\\" ? <div>complete</div> : <>9mb</>}</>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <>dff</>
+      ) : (
+        <div>complete else</div>
       )}
     </div>
   );
@@ -19531,6 +19736,13 @@ function ShowWithOtherValues(props) {
         <>{props.conditionB === \\"Complete\\" ? <>20mb</> : <>9mb</>}</>
       ) : (
         <>4mb</>
+      )}
+      {props.conditionA === \\"Default\\" ? (
+        <>{props.conditionB === \\"Complete\\" ? <div>complete</div> : <>9mb</>}</>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <>dff</>
+      ) : (
+        <div>complete else</div>
       )}
     </div>
   );

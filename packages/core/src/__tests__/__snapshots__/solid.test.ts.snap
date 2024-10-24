@@ -6089,25 +6089,149 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > showExpressions 1`] = `
-"An identifier or keyword cannot immediately follow a numeric literal. (36:34)
-  34 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
-  35 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
-> 36 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
-     |                                  ^
-  37 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
-  38 |
-  39 |"
+"import { Show } from \\"solid-js\\";
+
+function ShowWithOtherValues(props) {
+  return (
+    <>
+      <div>
+        <Show fallback={<>ContentA</>} when={props.conditionA}>
+          Content0
+        </Show>
+        <Show when={props.conditionA}>ContentA</Show>
+        <Show fallback={<>ContentA</>} when={props.conditionA}></Show>
+        <Show fallback={undefined} when={props.conditionA}>
+          ContentB
+        </Show>
+        <Show fallback={<>ContentB</>} when={props.conditionA}>
+          {undefined}
+        </Show>
+        <Show when={props.conditionA}>ContentC</Show>
+        <Show fallback={<>ContentC</>} when={props.conditionA}></Show>
+        <Show when={props.conditionA}>ContentD</Show>
+        <Show fallback={<>ContentD</>} when={props.conditionA}></Show>
+        <Show fallback={<>hello</>} when={props.conditionA}>
+          ContentE
+        </Show>
+        <Show fallback={<>ContentE</>} when={props.conditionA}>
+          hello
+        </Show>
+        <Show fallback={<>123</>} when={props.conditionA}>
+          ContentF
+        </Show>
+        <Show fallback={<>ContentF</>} when={props.conditionA}>
+          123
+        </Show>
+        <Show
+          fallback={
+            <Show fallback={<>9mb</>} when={props.conditionB === \\"Complete\\"}>
+              20mb
+            </Show>
+          }
+          when={props.conditionA === \\"Default\\"}
+        >
+          4mb
+        </Show>
+        <Show fallback={<>4mb</>} when={props.conditionA === \\"Default\\"}>
+          <Show fallback={<>9mb</>} when={props.conditionB === \\"Complete\\"}>
+            20mb
+          </Show>
+        </Show>
+        <Show
+          fallback={
+            <Show
+              fallback={<div>complete else</div>}
+              when={props.conditionC === \\"Complete\\"}
+            >
+              dff
+            </Show>
+          }
+          when={props.conditionA === \\"Default\\"}
+        >
+          <Show fallback={<>9mb</>} when={props.conditionB === \\"Complete\\"}>
+            <div>complete</div>
+          </Show>
+        </Show>
+      </div>
+    </>
+  );
+}
+
+export default ShowWithOtherValues;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > showExpressions 2`] = `
-"An identifier or keyword cannot immediately follow a numeric literal. (36:34)
-  34 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
-  35 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
-> 36 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
-     |                                  ^
-  37 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
-  38 |
-  39 |"
+"import { Show } from \\"solid-js\\";
+
+function ShowWithOtherValues(props) {
+  return (
+    <>
+      <div>
+        <Show fallback={<>ContentA</>} when={props.conditionA}>
+          Content0
+        </Show>
+        <Show when={props.conditionA}>ContentA</Show>
+        <Show fallback={<>ContentA</>} when={props.conditionA}></Show>
+        <Show fallback={undefined} when={props.conditionA}>
+          ContentB
+        </Show>
+        <Show fallback={<>ContentB</>} when={props.conditionA}>
+          {undefined}
+        </Show>
+        <Show when={props.conditionA}>ContentC</Show>
+        <Show fallback={<>ContentC</>} when={props.conditionA}></Show>
+        <Show when={props.conditionA}>ContentD</Show>
+        <Show fallback={<>ContentD</>} when={props.conditionA}></Show>
+        <Show fallback={<>hello</>} when={props.conditionA}>
+          ContentE
+        </Show>
+        <Show fallback={<>ContentE</>} when={props.conditionA}>
+          hello
+        </Show>
+        <Show fallback={<>123</>} when={props.conditionA}>
+          ContentF
+        </Show>
+        <Show fallback={<>ContentF</>} when={props.conditionA}>
+          123
+        </Show>
+        <Show
+          fallback={
+            <Show fallback={<>9mb</>} when={props.conditionB === \\"Complete\\"}>
+              20mb
+            </Show>
+          }
+          when={props.conditionA === \\"Default\\"}
+        >
+          4mb
+        </Show>
+        <Show fallback={<>4mb</>} when={props.conditionA === \\"Default\\"}>
+          <Show fallback={<>9mb</>} when={props.conditionB === \\"Complete\\"}>
+            20mb
+          </Show>
+        </Show>
+        <Show
+          fallback={
+            <Show
+              fallback={<div>complete else</div>}
+              when={props.conditionC === \\"Complete\\"}
+            >
+              dff
+            </Show>
+          }
+          when={props.conditionA === \\"Default\\"}
+        >
+          <Show fallback={<>9mb</>} when={props.conditionB === \\"Complete\\"}>
+            <div>complete</div>
+          </Show>
+        </Show>
+      </div>
+    </>
+  );
+}
+
+export default ShowWithOtherValues;
+"
 `;
 
 exports[`Solid > jsx > Javascript Test > showWithFor 1`] = `
@@ -6162,15 +6286,15 @@ function ShowWithOtherValues(props) {
     <>
       <div>
         <Show when={props.conditionA}>ContentA</Show>
-        <Show fallback={{ undefined }} when={props.conditionA}>
+        <Show fallback={undefined} when={props.conditionA}>
           ContentB
         </Show>
         <Show when={props.conditionA}>ContentC</Show>
         <Show when={props.conditionA}>ContentD</Show>
-        <Show fallback={hello} when={props.conditionA}>
+        <Show fallback={<>hello</>} when={props.conditionA}>
           ContentE
         </Show>
-        <Show fallback={123} when={props.conditionA}>
+        <Show fallback={<>123</>} when={props.conditionA}>
           ContentF
         </Show>
       </div>
@@ -6190,15 +6314,15 @@ function ShowWithOtherValues(props) {
     <>
       <div>
         <Show when={props.conditionA}>ContentA</Show>
-        <Show fallback={{ undefined }} when={props.conditionA}>
+        <Show fallback={undefined} when={props.conditionA}>
           ContentB
         </Show>
         <Show when={props.conditionA}>ContentC</Show>
         <Show when={props.conditionA}>ContentD</Show>
-        <Show fallback={hello} when={props.conditionA}>
+        <Show fallback={<>hello</>} when={props.conditionA}>
           ContentE
         </Show>
-        <Show fallback={123} when={props.conditionA}>
+        <Show fallback={<>123</>} when={props.conditionA}>
           ContentF
         </Show>
       </div>
@@ -13891,25 +14015,159 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > showExpressions 1`] = `
-"An identifier or keyword cannot immediately follow a numeric literal. (39:34)
-  37 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
-  38 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
-> 39 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
-     |                                  ^
-  40 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
-  41 |
-  42 |"
+"import { Show } from \\"solid-js\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+function ShowWithOtherValues(props: Props) {
+  return (
+    <>
+      <div>
+        <Show fallback={<>ContentA</>} when={props.conditionA}>
+          Content0
+        </Show>
+        <Show when={props.conditionA}>ContentA</Show>
+        <Show fallback={<>ContentA</>} when={props.conditionA}></Show>
+        <Show fallback={undefined} when={props.conditionA}>
+          ContentB
+        </Show>
+        <Show fallback={<>ContentB</>} when={props.conditionA}>
+          {undefined}
+        </Show>
+        <Show when={props.conditionA}>ContentC</Show>
+        <Show fallback={<>ContentC</>} when={props.conditionA}></Show>
+        <Show when={props.conditionA}>ContentD</Show>
+        <Show fallback={<>ContentD</>} when={props.conditionA}></Show>
+        <Show fallback={<>hello</>} when={props.conditionA}>
+          ContentE
+        </Show>
+        <Show fallback={<>ContentE</>} when={props.conditionA}>
+          hello
+        </Show>
+        <Show fallback={<>123</>} when={props.conditionA}>
+          ContentF
+        </Show>
+        <Show fallback={<>ContentF</>} when={props.conditionA}>
+          123
+        </Show>
+        <Show
+          fallback={
+            <Show fallback={<>9mb</>} when={props.conditionB === \\"Complete\\"}>
+              20mb
+            </Show>
+          }
+          when={props.conditionA === \\"Default\\"}
+        >
+          4mb
+        </Show>
+        <Show fallback={<>4mb</>} when={props.conditionA === \\"Default\\"}>
+          <Show fallback={<>9mb</>} when={props.conditionB === \\"Complete\\"}>
+            20mb
+          </Show>
+        </Show>
+        <Show
+          fallback={
+            <Show
+              fallback={<div>complete else</div>}
+              when={props.conditionC === \\"Complete\\"}
+            >
+              dff
+            </Show>
+          }
+          when={props.conditionA === \\"Default\\"}
+        >
+          <Show fallback={<>9mb</>} when={props.conditionB === \\"Complete\\"}>
+            <div>complete</div>
+          </Show>
+        </Show>
+      </div>
+    </>
+  );
+}
+
+export default ShowWithOtherValues;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > showExpressions 2`] = `
-"An identifier or keyword cannot immediately follow a numeric literal. (39:34)
-  37 | <Show fallback={123} when={props.conditionA} >ContentF</Show>
-  38 | <Show fallback={ContentF} when={props.conditionA} >123</Show>
-> 39 | <Show fallback={<Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show>} when={props.conditionA === 'Default'} >4mb</Show>
-     |                                  ^
-  40 | <Show fallback={4mb} when={props.conditionA === 'Default'} ><Show fallback={9mb} when={props.conditionB === 'Complete'} >20mb</Show></Show></div>
-  41 |
-  42 |"
+"import { Show } from \\"solid-js\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+function ShowWithOtherValues(props: Props) {
+  return (
+    <>
+      <div>
+        <Show fallback={<>ContentA</>} when={props.conditionA}>
+          Content0
+        </Show>
+        <Show when={props.conditionA}>ContentA</Show>
+        <Show fallback={<>ContentA</>} when={props.conditionA}></Show>
+        <Show fallback={undefined} when={props.conditionA}>
+          ContentB
+        </Show>
+        <Show fallback={<>ContentB</>} when={props.conditionA}>
+          {undefined}
+        </Show>
+        <Show when={props.conditionA}>ContentC</Show>
+        <Show fallback={<>ContentC</>} when={props.conditionA}></Show>
+        <Show when={props.conditionA}>ContentD</Show>
+        <Show fallback={<>ContentD</>} when={props.conditionA}></Show>
+        <Show fallback={<>hello</>} when={props.conditionA}>
+          ContentE
+        </Show>
+        <Show fallback={<>ContentE</>} when={props.conditionA}>
+          hello
+        </Show>
+        <Show fallback={<>123</>} when={props.conditionA}>
+          ContentF
+        </Show>
+        <Show fallback={<>ContentF</>} when={props.conditionA}>
+          123
+        </Show>
+        <Show
+          fallback={
+            <Show fallback={<>9mb</>} when={props.conditionB === \\"Complete\\"}>
+              20mb
+            </Show>
+          }
+          when={props.conditionA === \\"Default\\"}
+        >
+          4mb
+        </Show>
+        <Show fallback={<>4mb</>} when={props.conditionA === \\"Default\\"}>
+          <Show fallback={<>9mb</>} when={props.conditionB === \\"Complete\\"}>
+            20mb
+          </Show>
+        </Show>
+        <Show
+          fallback={
+            <Show
+              fallback={<div>complete else</div>}
+              when={props.conditionC === \\"Complete\\"}
+            >
+              dff
+            </Show>
+          }
+          when={props.conditionA === \\"Default\\"}
+        >
+          <Show fallback={<>9mb</>} when={props.conditionB === \\"Complete\\"}>
+            <div>complete</div>
+          </Show>
+        </Show>
+      </div>
+    </>
+  );
+}
+
+export default ShowWithOtherValues;
+"
 `;
 
 exports[`Solid > jsx > Typescript Test > showWithFor 1`] = `
@@ -13978,15 +14236,15 @@ function ShowWithOtherValues(props: Props) {
     <>
       <div>
         <Show when={props.conditionA}>ContentA</Show>
-        <Show fallback={{ undefined }} when={props.conditionA}>
+        <Show fallback={undefined} when={props.conditionA}>
           ContentB
         </Show>
         <Show when={props.conditionA}>ContentC</Show>
         <Show when={props.conditionA}>ContentD</Show>
-        <Show fallback={hello} when={props.conditionA}>
+        <Show fallback={<>hello</>} when={props.conditionA}>
           ContentE
         </Show>
-        <Show fallback={123} when={props.conditionA}>
+        <Show fallback={<>123</>} when={props.conditionA}>
           ContentF
         </Show>
       </div>
@@ -14010,15 +14268,15 @@ function ShowWithOtherValues(props: Props) {
     <>
       <div>
         <Show when={props.conditionA}>ContentA</Show>
-        <Show fallback={{ undefined }} when={props.conditionA}>
+        <Show fallback={undefined} when={props.conditionA}>
           ContentB
         </Show>
         <Show when={props.conditionA}>ContentC</Show>
         <Show when={props.conditionA}>ContentD</Show>
-        <Show fallback={hello} when={props.conditionA}>
+        <Show fallback={<>hello</>} when={props.conditionA}>
           ContentE
         </Show>
-        <Show fallback={123} when={props.conditionA}>
+        <Show fallback={<>123</>} when={props.conditionA}>
           ContentF
         </Show>
       </div>
