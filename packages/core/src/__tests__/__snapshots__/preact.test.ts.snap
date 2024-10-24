@@ -3000,6 +3000,19 @@ function ShowWithOtherValues(props) {
       ) : (
         <Fragment>4mb</Fragment>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <Fragment>
+          {props.conditionB === \\"Complete\\" ? (
+            <div>complete</div>
+          ) : (
+            <Fragment>9mb</Fragment>
+          )}
+        </Fragment>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <Fragment>dff</Fragment>
+      ) : (
+        <div>complete else</div>
+      )}
     </div>
   );
 }
@@ -3405,7 +3418,12 @@ function UseTargetComponent(props) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return <div>{name()}</div>;
 }
@@ -6849,6 +6867,19 @@ function ShowWithOtherValues(props: Props) {
       ) : (
         <Fragment>4mb</Fragment>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <Fragment>
+          {props.conditionB === \\"Complete\\" ? (
+            <div>complete</div>
+          ) : (
+            <Fragment>9mb</Fragment>
+          )}
+        </Fragment>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <Fragment>dff</Fragment>
+      ) : (
+        <div>complete else</div>
+      )}
     </div>
   );
 }
@@ -7290,7 +7321,12 @@ function UseTargetComponent(props: any) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return <div>{name()}</div>;
 }

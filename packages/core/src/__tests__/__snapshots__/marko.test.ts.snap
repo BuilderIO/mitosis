@@ -2252,6 +2252,12 @@ exports[`Marko > jsx > Javascript Test > showExpressions 1`] = `
     <if(input.conditionB === 'Complete')> 20mb</if>
     <else>9mb</else></if>
   <else>4mb</else>
+  <if(input.conditionA === 'Default')>
+    <if(input.conditionB === 'Complete')> <div>complete</div></if>
+    <else>9mb</else></if>
+  <else
+    ><if(input.conditionC === 'Complete')> dff</if>
+    <else><div>complete else</div></else></else>
 </div>"
 `;
 
@@ -2509,10 +2515,13 @@ exports[`Marko > jsx > Javascript Test > useTarget 1`] = `
   }
 
   onCreate() {
-    this.state = { lastName: \\"bar\\" };
+    this.state = { lastName: \\"bar\\", foo: \\"bar\\" };
   }
 
-  onMount() {}
+  onMount() {
+    console.log(this.state.foo);
+    this.state.foo = \\"bar\\";
+  }
 }
 
 <div>\${component.name}</div>"
@@ -4758,6 +4767,12 @@ exports[`Marko > jsx > Typescript Test > showExpressions 1`] = `
     <if(input.conditionB === 'Complete')> 20mb</if>
     <else>9mb</else></if>
   <else>4mb</else>
+  <if(input.conditionA === 'Default')>
+    <if(input.conditionB === 'Complete')> <div>complete</div></if>
+    <else>9mb</else></if>
+  <else
+    ><if(input.conditionC === 'Complete')> dff</if>
+    <else><div>complete else</div></else></else>
 </div>"
 `;
 
@@ -5017,10 +5032,13 @@ exports[`Marko > jsx > Typescript Test > useTarget 1`] = `
   }
 
   onCreate() {
-    this.state = { lastName: \\"bar\\" };
+    this.state = { lastName: \\"bar\\", foo: \\"bar\\" };
   }
 
-  onMount() {}
+  onMount() {
+    console.log(this.state.foo);
+    this.state.foo = \\"bar\\";
+  }
 }
 
 <div>\${component.name}</div>"

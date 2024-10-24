@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.5.8
+
+### Patch Changes
+
+- 8d823a1: [Builder] Fix: support Show.else property
+
+## 0.5.7
+
+### Patch Changes
+
+- 7a099d2: [Builder,Mitosis] Feature: add Slots support.
+
+## 0.5.6
+
+### Patch Changes
+
+- 0aa642a: [All]: Fix: accessing `useState()` getter/setter within `useTarget()`
+
 ## 0.5.5
 
 ### Patch Changes

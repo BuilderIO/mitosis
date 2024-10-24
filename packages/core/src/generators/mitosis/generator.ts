@@ -56,24 +56,33 @@ export const blockToMitosis = (
     );
   }
 
-  if (options.nativeConditionals && checkIsShowNode(json)) {
+  if (checkIsShowNode(json)) {
     const when = json.bindings.when?.code;
     const elseCase = json.meta.else as MitosisNode;
-    const needsWrapper = json.children.length !== 1;
+    if (options.nativeConditionals) {
+      const needsWrapper = json.children.length !== 1;
 
-    const renderChildren = `${needsWrapper ? '<>' : ''}
-      ${json.children
-        .map((child) => blockToMitosis(child, options, component, needsWrapper))
-        .join('\n')}
-  ${needsWrapper ? '</>' : ''}`;
+      const renderChildren = `${needsWrapper ? '<>' : ''}
+        ${json.children
+          .map((child) => blockToMitosis(child, options, component, needsWrapper))
+          .join('\n')}
+    ${needsWrapper ? '</>' : ''}`;
 
-    const renderElse =
-      elseCase && isMitosisNode(elseCase)
-        ? blockToMitosis(elseCase, options, component, false)
-        : 'null';
-    return `${insideJsx ? '{' : ''}(${when}) ? ${renderChildren} : ${renderElse}${
-      insideJsx ? '}' : ''
-    }`;
+      const renderElse =
+        elseCase && isMitosisNode(elseCase)
+          ? blockToMitosis(elseCase, options, component, false)
+          : 'null';
+      return `${insideJsx ? '{' : ''}(${when}) ? ${renderChildren} : ${renderElse}${
+        insideJsx ? '}' : ''
+      }`;
+    } else {
+      const elseHandler = elseCase
+        ? ` else={${blockToMitosis(elseCase, options, component, false)}}`
+        : '';
+      return `<Show when={${when}}${elseHandler}>
+  ${json.children.map((child) => blockToMitosis(child, options, component, true)).join('\n')}
+</Show>`;
+    }
   }
 
   if (checkIsForNode(json)) {
@@ -87,7 +96,6 @@ export const blockToMitosis = (
           .join('\n')}
       ${needsWrapper ? '</>' : ''}
       ))${insideJsx ? '}' : ''}`;
-      console.log(a);
       return a;
     }
     return `<For each={${json.bindings.each?.code}}>
@@ -99,11 +107,19 @@ export const blockToMitosis = (
   }
 
   if (json.properties._text) {
-    return json.properties._text as string;
+    if (insideJsx) {
+      return `${json.properties._text}`;
+    } else {
+      return `<>${json.properties._text}</>`;
+    }
   }
 
   if (json.bindings._text?.code) {
-    return `{${json.bindings._text?.code}}`;
+    if (insideJsx) {
+      return `{${json.bindings._text.code}}`;
+    } else {
+      return `${json.bindings._text.code}`;
+    }
   }
 
   let str = '';
@@ -122,6 +138,10 @@ export const blockToMitosis = (
   for (const key in json.bindings) {
     const value = json.bindings[key]?.code as string;
 
+    if (json.slots?.[key]) {
+      continue;
+    }
+
     if (json.bindings[key]?.type === 'spread') {
       str += ` {...(${json.bindings[key]?.code})} `;
     } else if (key.startsWith('on')) {
@@ -134,6 +154,22 @@ export const blockToMitosis = (
       }
     }
   }
+
+  for (const key in json.slots) {
+    const value = json.slots[key];
+    str += ` ${key}={`;
+    if (value.length > 1) {
+      str += '<>';
+    }
+    str += json.slots[key]
+      .map((item) => blockToMitosis(item, options, component, insideJsx))
+      .join('\n');
+    if (value.length > 1) {
+      str += '</>';
+    }
+    str += `}`;
+  }
+
   if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
     return str + ' />';
   }
@@ -144,6 +180,7 @@ export const blockToMitosis = (
     return str;
   }
   str += '>';
+
   if (json.children) {
     str += json.children.map((item) => blockToMitosis(item, options, component, true)).join('\n');
   }
@@ -279,7 +316,9 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
           ],
         });
       } catch (err) {
-        console.error('Format error for file:', str, JSON.stringify(json, null, 2));
+        if (process.env.NODE_ENV !== 'test') {
+          console.error('Format error for file:', str, JSON.stringify(json, null, 2));
+        }
         throw err;
       }
     }

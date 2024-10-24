@@ -28,6 +28,18 @@ export default function ShowWithOtherValues(props: Props) {
 
       {props.conditionA === 'Default' ? '4mb' : props.conditionB === 'Complete' ? '20mb' : '9mb'}
       {props.conditionA === 'Default' ? (props.conditionB === 'Complete' ? '20mb' : '9mb') : '4mb'}
+
+      {props.conditionA === 'Default' ? (
+        props.conditionB === 'Complete' ? (
+          <div>complete</div>
+        ) : (
+          '9mb'
+        )
+      ) : props.conditionC === 'Complete' ? (
+        'dff'
+      ) : (
+        <div>complete else</div>
+      )}
     </div>
   );
 }

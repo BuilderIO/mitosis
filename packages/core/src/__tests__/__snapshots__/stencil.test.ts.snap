@@ -3505,13 +3505,17 @@ exports[`Stencil > jsx > Javascript Test > useTarget 1`] = `
 })
 export class UseTargetComponent {
   @State() lastName = \\"bar\\";
+  @State() foo = \\"bar\\";
 
   get name() {
     const prefix = \\"st\\";
     return prefix + \\"foo\\";
   }
 
-  componentDidLoad() {}
+  componentDidLoad() {
+    console.log(this.foo);
+    this.foo = \\"bar\\";
+  }
 
   render() {
     return <div>{this.name}</div>;
@@ -7474,13 +7478,17 @@ exports[`Stencil > jsx > Typescript Test > useTarget 1`] = `
 })
 export class UseTargetComponent {
   @State() lastName = \\"bar\\";
+  @State() foo = \\"bar\\";
 
   get name() {
     const prefix = \\"st\\";
     return prefix + \\"foo\\";
   }
 
-  componentDidLoad() {}
+  componentDidLoad() {
+    console.log(this.foo);
+    this.foo = \\"bar\\";
+  }
 
   render() {
     return <div>{this.name}</div>;

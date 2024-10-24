@@ -103,7 +103,6 @@ const componentMappers: {
       'Personalization',
     ];
     block.children!.forEach((item) => {
-      console.log('item', item);
       if (item.component && validFakeNodeNames.includes(item.component?.name)) {
         let query: any;
         if (item.component.options.query) {
@@ -186,6 +185,57 @@ const componentMappers: {
     );
   },
   Show(node, options) {
+    const elseCase = node.meta.else as MitosisNode;
+    const children = node.children.filter(filterEmptyTextNodes);
+    const showNode =
+      children.length > 0
+        ? el(
+            {
+              // TODO: the reverse mapping for this
+              component: {
+                name: 'Core:Fragment',
+              },
+              bindings: {
+                show: node.bindings.when?.code as string,
+              },
+              children: children.map((node) => blockToBuilder(node, options)),
+            },
+            options,
+          )
+        : undefined;
+
+    const elseNode =
+      elseCase && filterEmptyTextNodes(elseCase)
+        ? el(
+            {
+              // TODO: the reverse mapping for this
+              component: {
+                name: 'Core:Fragment',
+              },
+              bindings: {
+                hide: node.bindings.when?.code as string,
+              },
+              children: [blockToBuilder(elseCase, options)],
+            },
+            options,
+          )
+        : undefined;
+
+    if (elseNode && showNode) {
+      return el(
+        {
+          component: {
+            name: 'Core:Fragment',
+          },
+          children: [showNode, elseNode],
+        },
+        options,
+      );
+    } else if (showNode) {
+      return showNode;
+    } else if (elseNode) {
+      return elseNode;
+    }
     return el(
       {
         // TODO: the reverse mapping for this
@@ -195,9 +245,7 @@ const componentMappers: {
         bindings: {
           show: node.bindings.when?.code as string,
         },
-        children: node.children
-          .filter(filterEmptyTextNodes)
-          .map((node) => blockToBuilder(node, options)),
+        children: [],
       },
       options,
     );
@@ -297,9 +345,15 @@ export const blockToBuilder = (
       if (!(parsed instanceof Error)) {
         componentOptions[key] = parsed;
       } else {
-        builderBindings[`component.options.${key}`] = bindings[key]!.code;
+        if (!json.slots?.[key]) {
+          builderBindings[`component.options.${key}`] = bindings[key]!.code;
+        }
       }
     }
+  }
+
+  for (const key in json.slots) {
+    componentOptions[key] = json.slots[key].map((node) => blockToBuilder(node, options));
   }
 
   const hasCss = !!bindings.css?.code;
@@ -338,7 +392,9 @@ export const blockToBuilder = (
 
   if (thisIsComponent) {
     for (const key in json.bindings) {
-      builderBindings[`component.options.${key}`] = json.bindings[key]!.code;
+      if (!json.slots?.[key]) {
+        builderBindings[`component.options.${key}`] = json.bindings[key]!.code;
+      }
     }
   }
 
@@ -424,6 +480,20 @@ export const componentToBuilder =
         const value = subComponentMap[el.component?.name!];
         if (value) {
           set(el, 'component.options.symbol.content', value);
+        }
+        if (el.bindings) {
+          for (const [key, value] of Object.entries(el.bindings)) {
+            if (value.match(/\n|;/)) {
+              if (!el.code) {
+                el.code = {};
+              }
+              if (!el.code.bindings) {
+                el.code.bindings = {};
+              }
+              el.code.bindings[key] = value;
+              el.bindings[key] = ` return ${value}`;
+            }
+          }
         }
       }
     });

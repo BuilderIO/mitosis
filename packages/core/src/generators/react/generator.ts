@@ -268,7 +268,9 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
           // Remove spaces between imports
           .replace(/;\n\nimport\s/g, ';\nimport ');
       } catch (err) {
-        console.error('Format error for file:', str);
+        if (process.env.NODE_ENV !== 'test') {
+          console.error('Format error for file:', str);
+        }
         throw err;
       }
     }

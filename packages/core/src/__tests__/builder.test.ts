@@ -19,6 +19,7 @@ import lazyLoadSection from './data/builder/lazy-load-section.json?raw';
 import slotsContent from './data/builder/slots.json?raw';
 import slots2Content from './data/builder/slots2.json?raw';
 import textBindings from './data/builder/text-bindings.json?raw';
+import show from './data/show/show-expressions.raw.tsx?raw';
 
 const mitosisOptions: ToMitosisOptions = {
   format: 'legacy',
@@ -32,6 +33,16 @@ describe('Builder', () => {
 
   test('Stamped', () => {
     const component = parseJsx(stamped);
+    const builderJson = componentToBuilder()({ component });
+    expect(builderJson).toMatchSnapshot();
+
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
+    expect(mitosis).toMatchSnapshot();
+  });
+
+  test('Show', () => {
+    const component = parseJsx(show);
     const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
 
@@ -285,6 +296,9 @@ describe('Builder', () => {
             image="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F52dcecf48f9c48cc8ddd8f81fec63236"
             buttonLink="https://example.com"
             buttonText="Click"
+            multiBinding={{
+              hello: state.message,
+            }}
             height={400}
             css={{
               display: "flex",
@@ -418,7 +432,7 @@ describe('Builder', () => {
     expect(out).toMatchSnapshot();
   });
 
-  test('binding', () => {
+  test('bindings', () => {
     const component = builderContentToMitosisComponent(bindingJson as any as BuilderContent);
     expect(component).toMatchSnapshot();
     const mitosis = componentToMitosis(mitosisOptions)({
@@ -545,6 +559,51 @@ describe('Builder', () => {
       component: backToMitosis,
     });
     expect(mitosis.trim()).toEqual(code.trim());
+  });
+
+  test('nodes as props', () => {
+    const content = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            component: {
+              name: 'Foo',
+              options: {
+                prop: [
+                  {
+                    '@type': '@builder.io/sdk:Element' as const,
+                    component: {
+                      name: 'Bar',
+                      options: {
+                        hello: 'world',
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    const mitosisJson = builderContentToMitosisComponent(content);
+    expect(mitosisJson).toMatchSnapshot();
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: mitosisJson,
+    });
+
+    expect(mitosis).toMatchSnapshot();
+
+    const builder = parseJsx(mitosis);
+    expect(builder).toMatchSnapshot();
+    const json = componentToBuilder()({ component: builder });
+    expect(json).toMatchSnapshot();
+    expect(json.data?.blocks?.[0]?.component?.name).toBe('Foo');
+    expect(json.data?.blocks?.[0]?.component?.options?.prop?.[0]?.component?.options.hello).toBe(
+      'world',
+    );
   });
 });
 

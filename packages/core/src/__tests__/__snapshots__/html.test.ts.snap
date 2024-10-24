@@ -5689,6 +5689,9 @@ exports[`Html > jsx > Javascript Test > showExpressions 1`] = `
   <template data-el=\\"show-15\\">
     <template data-el=\\"show-16\\">20mb</template>
   </template>
+  <template data-el=\\"show-17\\">
+    <template data-el=\\"show-18\\"><div>complete</div></template>
+  </template>
 </div>
 <script>
   (() => {
@@ -5823,6 +5826,20 @@ exports[`Html > jsx > Javascript Test > showExpressions 1`] = `
       });
 
       document.querySelectorAll(\\"[data-el='show-16']\\").forEach((el) => {
+        const whenCondition = props.conditionB === \\"Complete\\";
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-17']\\").forEach((el) => {
+        const whenCondition = props.conditionA === \\"Default\\";
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-18']\\").forEach((el) => {
         const whenCondition = props.conditionB === \\"Complete\\";
         if (whenCondition) {
           showContent(el);
@@ -6831,6 +6848,7 @@ exports[`Html > jsx > Javascript Test > useTarget 1`] = `
         return prefix + \\"foo\\";
       },
       lastName: \\"bar\\",
+      foo: \\"bar\\",
     };
 
     let context = null;
@@ -6865,6 +6883,9 @@ exports[`Html > jsx > Javascript Test > useTarget 1`] = `
     update();
 
     // onMount
+    console.log(state.foo);
+    state.foo = \\"bar\\";
+    update();
 
     // Helper text DOM nodes
     function renderTextNode(el, text) {
@@ -12642,6 +12663,9 @@ exports[`Html > jsx > Typescript Test > showExpressions 1`] = `
   <template data-el=\\"show-15\\">
     <template data-el=\\"show-16\\">20mb</template>
   </template>
+  <template data-el=\\"show-17\\">
+    <template data-el=\\"show-18\\"><div>complete</div></template>
+  </template>
 </div>
 <script>
   (() => {
@@ -12776,6 +12800,20 @@ exports[`Html > jsx > Typescript Test > showExpressions 1`] = `
       });
 
       document.querySelectorAll(\\"[data-el='show-16']\\").forEach((el) => {
+        const whenCondition = props.conditionB === \\"Complete\\";
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-17']\\").forEach((el) => {
+        const whenCondition = props.conditionA === \\"Default\\";
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-18']\\").forEach((el) => {
         const whenCondition = props.conditionB === \\"Complete\\";
         if (whenCondition) {
           showContent(el);
@@ -13784,6 +13822,7 @@ exports[`Html > jsx > Typescript Test > useTarget 1`] = `
         return prefix + \\"foo\\";
       },
       lastName: \\"bar\\",
+      foo: \\"bar\\",
     };
 
     let context = null;
@@ -13818,6 +13857,9 @@ exports[`Html > jsx > Typescript Test > useTarget 1`] = `
     update();
 
     // onMount
+    console.log(state.foo);
+    state.foo = \\"bar\\";
+    update();
 
     // Helper text DOM nodes
     function renderTextNode(el, text) {

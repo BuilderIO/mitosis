@@ -242,7 +242,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
       return (${addWrapper ? '<>' : ''}
         ${json.children
           .filter(filterEmptyTextNodes)
-          .map((item) => blockToSolid({ component, json: item, options }))
+          .map((item) => blockToSolid(item, component, options, addWrapper))
           .join('\n')}
         ${
           options.stylesType === 'style-tag' && css && css.trim().length > 4

@@ -2980,6 +2980,15 @@ function ShowWithOtherValues(props) {
       ) : (
         <>4mb</>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <>
+          {props.conditionB === \\"Complete\\" ? <View>complete</View> : <>9mb</>}
+        </>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <>dff</>
+      ) : (
+        <View>complete else</View>
+      )}
     </View>
   );
 }
@@ -3369,7 +3378,12 @@ function UseTargetComponent(props) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return <View>{name()}</View>;
 }
@@ -6822,6 +6836,15 @@ function ShowWithOtherValues(props: Props) {
       ) : (
         <>4mb</>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <>
+          {props.conditionB === \\"Complete\\" ? <View>complete</View> : <>9mb</>}
+        </>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <>dff</>
+      ) : (
+        <View>complete else</View>
+      )}
     </View>
   );
 }
@@ -7250,7 +7273,12 @@ function UseTargetComponent(props: any) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return <View>{name()}</View>;
 }
