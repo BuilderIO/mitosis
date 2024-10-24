@@ -296,6 +296,9 @@ describe('Builder', () => {
             image="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F52dcecf48f9c48cc8ddd8f81fec63236"
             buttonLink="https://example.com"
             buttonText="Click"
+            multiBinding={{
+              hello: state.message,
+            }}
             height={400}
             css={{
               display: "flex",

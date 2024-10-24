@@ -481,6 +481,20 @@ export const componentToBuilder =
         if (value) {
           set(el, 'component.options.symbol.content', value);
         }
+        if (el.bindings) {
+          for (const [key, value] of Object.entries(el.bindings)) {
+            if (value.match(/\n|;/)) {
+              if (!el.code) {
+                el.code = {};
+              }
+              if (!el.code.bindings) {
+                el.code.bindings = {};
+              }
+              el.code.bindings[key] = value;
+              el.bindings[key] = `return ${value}`;
+            }
+          }
+        }
       }
     });
 
