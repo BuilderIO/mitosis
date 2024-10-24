@@ -96,7 +96,6 @@ export const blockToMitosis = (
           .join('\n')}
       ${needsWrapper ? '</>' : ''}
       ))${insideJsx ? '}' : ''}`;
-      console.log(a);
       return a;
     }
     return `<For each={${json.bindings.each?.code}}>
@@ -139,6 +138,10 @@ export const blockToMitosis = (
   for (const key in json.bindings) {
     const value = json.bindings[key]?.code as string;
 
+    if (json.slots?.[key]) {
+      continue;
+    }
+
     if (json.bindings[key]?.type === 'spread') {
       str += ` {...(${json.bindings[key]?.code})} `;
     } else if (key.startsWith('on')) {
@@ -151,6 +154,22 @@ export const blockToMitosis = (
       }
     }
   }
+
+  for (const key in json.slots) {
+    const value = json.slots[key];
+    str += ` ${key}={`;
+    if (value.length > 1) {
+      str += '<>';
+    }
+    str += json.slots[key]
+      .map((item) => blockToMitosis(item, options, component, insideJsx))
+      .join('\n');
+    if (value.length > 1) {
+      str += '</>';
+    }
+    str += `}`;
+  }
+
   if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
     return str + ' />';
   }
@@ -161,6 +180,7 @@ export const blockToMitosis = (
     return str;
   }
   str += '>';
+
   if (json.children) {
     str += json.children.map((item) => blockToMitosis(item, options, component, true)).join('\n');
   }
@@ -296,7 +316,9 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
           ],
         });
       } catch (err) {
-        console.error('Format error for file:', str, JSON.stringify(json, null, 2));
+        if (process.env.NODE_ENV !== 'test') {
+          console.error('Format error for file:', str, JSON.stringify(json, null, 2));
+        }
         throw err;
       }
     }

@@ -429,7 +429,7 @@ describe('Builder', () => {
     expect(out).toMatchSnapshot();
   });
 
-  test('binding', () => {
+  test('bindings', () => {
     const component = builderContentToMitosisComponent(bindingJson as any as BuilderContent);
     expect(component).toMatchSnapshot();
     const mitosis = componentToMitosis(mitosisOptions)({
@@ -556,6 +556,51 @@ describe('Builder', () => {
       component: backToMitosis,
     });
     expect(mitosis.trim()).toEqual(code.trim());
+  });
+
+  test('nodes as props', () => {
+    const content = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            component: {
+              name: 'Foo',
+              options: {
+                prop: [
+                  {
+                    '@type': '@builder.io/sdk:Element' as const,
+                    component: {
+                      name: 'Bar',
+                      options: {
+                        hello: 'world',
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    const mitosisJson = builderContentToMitosisComponent(content);
+    expect(mitosisJson).toMatchSnapshot();
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: mitosisJson,
+    });
+
+    expect(mitosis).toMatchSnapshot();
+
+    const builder = parseJsx(mitosis);
+    expect(builder).toMatchSnapshot();
+    const json = componentToBuilder()({ component: builder });
+    expect(json).toMatchSnapshot();
+    expect(json.data?.blocks?.[0]?.component?.name).toBe('Foo');
+    expect(json.data?.blocks?.[0]?.component?.options?.prop?.[0]?.component?.options.hello).toBe(
+      'world',
+    );
   });
 });
 

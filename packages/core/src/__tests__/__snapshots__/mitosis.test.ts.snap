@@ -2749,10 +2749,13 @@ export default function UseTargetComponent(props) {
       return prefix + \\"foo\\";
     },
     lastName: \\"bar\\",
+    foo: \\"bar\\",
   });
 
   onMount(() => {
-    \\"USE_TARGET_BLOCK_2\\";
+    console.log(state.foo);
+    state.foo = \\"bar\\";
+    (\\"USE_TARGET_BLOCK_2\\");
   });
 
   return <div>{state.name}</div>;
@@ -5925,10 +5928,13 @@ export default function UseTargetComponent(props) {
       return prefix + \\"foo\\";
     },
     lastName: \\"bar\\",
+    foo: \\"bar\\",
   });
 
   onMount(() => {
-    \\"USE_TARGET_BLOCK_2\\";
+    console.log(state.foo);
+    state.foo = \\"bar\\";
+    (\\"USE_TARGET_BLOCK_2\\");
   });
 
   return <div>{state.name}</div>;
@@ -9422,10 +9428,13 @@ export default function UseTargetComponent(props) {
       return prefix + \\"foo\\";
     },
     lastName: \\"bar\\",
+    foo: \\"bar\\",
   });
 
   onMount(() => {
-    \\"USE_TARGET_BLOCK_2\\";
+    console.log(state.foo);
+    state.foo = \\"bar\\";
+    (\\"USE_TARGET_BLOCK_2\\");
   });
 
   return <div>{state.name}</div>;
@@ -12658,10 +12667,13 @@ export default function UseTargetComponent(props) {
       return prefix + \\"foo\\";
     },
     lastName: \\"bar\\",
+    foo: \\"bar\\",
   });
 
   onMount(() => {
-    \\"USE_TARGET_BLOCK_2\\";
+    console.log(state.foo);
+    state.foo = \\"bar\\";
+    (\\"USE_TARGET_BLOCK_2\\");
   });
 
   return <div>{state.name}</div>;
@@ -16688,9 +16700,15 @@ function UseTargetComponent(props) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
   useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
     console.log(\\"react\\");
     setLastName(\\"baz\\");
+    console.log(foo);
+    setFoo(\\"baz\\");
   }, []);
 
   return <div>{name()}</div>;
@@ -20094,9 +20112,15 @@ function UseTargetComponent(props) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
   useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
     console.log(\\"react\\");
     setLastName(\\"baz\\");
+    console.log(foo);
+    setFoo(\\"baz\\");
   }, []);
 
   return <div>{name()}</div>;
