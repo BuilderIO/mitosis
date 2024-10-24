@@ -440,7 +440,7 @@ export function usePrevious(value) {
 function MyPreviousComponent(props) {
   const state = useLocalObservable(() => ({ count: 0 }));
 
-  const prevCount = useRef(state.count);
+  const prevCount = useRef(count);
 
   useEffect(() => {
     prevCount.current = state.count;
@@ -1632,22 +1632,24 @@ function MyBasicForNoTagRefComponent(props) {
   const state = useLocalObservable(() => ({
     name: \\"VincentW\\",
     TagName: \\"div\\",
-    tag: \\"span\\",
     get TagNameGetter() {
       return \\"span\\";
     },
+    Tag: \\"span\\",
   }));
 
+  const TagNameGetterRef = state.TagNameGetter;
+
   return (
-    <state.TagNameGetter>
-      Hello <state.tag>{state.name}</state.tag>
+    <TagNameGetterRef>
+      Hello <Tag>{state.name}</Tag>
       {props.actions?.map((action) => (
-        <state.TagName>
+        <TagName>
           <action.icon />
           <span>{action.text}</span>
-        </state.TagName>
+        </TagName>
       ))}
-    </state.TagNameGetter>
+    </TagNameGetterRef>
   );
 }
 
@@ -1903,15 +1905,10 @@ function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
-    <Context2.Provider
-      value={{
-        bar: \\"baz\\",
-      }}
-    >
+    <Context2.Provider value={{ bar: \\"baz\\" }}>
       <Context1.Provider
         value={{
           foo: \\"bar\\",
-
           content() {
             return props.content;
           },
@@ -1939,15 +1936,10 @@ function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
-    <Context2.Provider
-      value={{
-        bar: \\"baz\\",
-      }}
-    >
+    <Context2.Provider value={{ bar: \\"baz\\" }}>
       <Context1.Provider
         value={{
           foo: \\"bar\\",
-
           content() {
             return props.content;
           },
@@ -2821,12 +2813,15 @@ function RenderBlock(props) {
     componentInfo: null,
   }));
 
+  const RenderComponentTagRef = state.renderComponentTag;
+  const TagRef = state.tag;
+
   return (
     <>
       {state.shouldWrap ? (
         <>
           {isEmptyHtmlElement(state.tag) ? (
-            <state.tag {...state.attributes} {...state.actions} />
+            <TagRef {...state.attributes} {...state.actions} />
           ) : null}
           {!isEmptyHtmlElement(state.tag) && state.repeatItemData ? (
             <>
@@ -2840,8 +2835,8 @@ function RenderBlock(props) {
             </>
           ) : null}
           {!isEmptyHtmlElement(state.tag) && !state.repeatItemData ? (
-            <state.tag {...state.attributes} {...state.actions}>
-              <state.renderComponentTag {...state.renderComponentProps} />
+            <TagRef {...state.attributes} {...state.actions}>
+              <RenderComponentTagRef {...state.renderComponentProps} />
               {state.childrenWithoutParentComponent?.map((child) => (
                 <RenderBlock
                   key={\\"render-block-\\" + child.id}
@@ -2856,12 +2851,12 @@ function RenderBlock(props) {
                   context={state.childrenContext}
                 />
               ))}
-            </state.tag>
+            </TagRef>
           ) : null}
         </>
       ) : (
         <>
-          <state.renderComponentTag {...state.renderComponentProps} />
+          <RenderComponentTagRef {...state.renderComponentProps} />
         </>
       )}
     </>
@@ -2901,7 +2896,6 @@ function RenderContent(props) {
           get content() {
             return 3;
           },
-
           get registeredComponents() {
             return 4;
           },
@@ -3974,7 +3968,7 @@ export function usePrevious<T>(value: T) {
 function MyPreviousComponent(props: Props) {
   const state = useLocalObservable(() => ({ count: 0 }));
 
-  const prevCount = useRef(state.count);
+  const prevCount = useRef(count);
 
   useEffect(() => {
     prevCount.current = state.count;
@@ -5373,22 +5367,24 @@ function MyBasicForNoTagRefComponent(props: any) {
   const state = useLocalObservable(() => ({
     name: \\"VincentW\\",
     TagName: \\"div\\",
-    tag: \\"span\\",
     get TagNameGetter() {
       return \\"span\\";
     },
+    Tag: \\"span\\",
   }));
 
+  const TagNameGetterRef = state.TagNameGetter;
+
   return (
-    <state.TagNameGetter>
-      Hello <state.tag>{state.name}</state.tag>
+    <TagNameGetterRef>
+      Hello <Tag>{state.name}</Tag>
       {props.actions?.map((action) => (
-        <state.TagName>
+        <TagName>
           <action.icon />
           <span>{action.text}</span>
-        </state.TagName>
+        </TagName>
       ))}
-    </state.TagNameGetter>
+    </TagNameGetterRef>
   );
 }
 
@@ -5662,15 +5658,10 @@ function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   return (
-    <Context2.Provider
-      value={{
-        bar: \\"baz\\",
-      }}
-    >
+    <Context2.Provider value={{ bar: \\"baz\\" }}>
       <Context1.Provider
         value={{
           foo: \\"bar\\",
-
           content() {
             return props.content;
           },
@@ -5703,15 +5694,10 @@ function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   return (
-    <Context2.Provider
-      value={{
-        bar: \\"baz\\",
-      }}
-    >
+    <Context2.Provider value={{ bar: \\"baz\\" }}>
       <Context1.Provider
         value={{
           foo: \\"bar\\",
-
           content() {
             return props.content;
           },
@@ -6676,12 +6662,15 @@ function RenderBlock(props: RenderBlockProps) {
     componentInfo: null,
   }));
 
+  const RenderComponentTagRef = state.renderComponentTag;
+  const TagRef = state.tag;
+
   return (
     <>
       {state.shouldWrap ? (
         <>
           {isEmptyHtmlElement(state.tag) ? (
-            <state.tag {...state.attributes} {...state.actions} />
+            <TagRef {...state.attributes} {...state.actions} />
           ) : null}
           {!isEmptyHtmlElement(state.tag) && state.repeatItemData ? (
             <>
@@ -6695,8 +6684,8 @@ function RenderBlock(props: RenderBlockProps) {
             </>
           ) : null}
           {!isEmptyHtmlElement(state.tag) && !state.repeatItemData ? (
-            <state.tag {...state.attributes} {...state.actions}>
-              <state.renderComponentTag {...state.renderComponentProps} />
+            <TagRef {...state.attributes} {...state.actions}>
+              <RenderComponentTagRef {...state.renderComponentProps} />
               {state.childrenWithoutParentComponent?.map((child) => (
                 <RenderBlock
                   key={\\"render-block-\\" + child.id}
@@ -6711,12 +6700,12 @@ function RenderBlock(props: RenderBlockProps) {
                   context={state.childrenContext}
                 />
               ))}
-            </state.tag>
+            </TagRef>
           ) : null}
         </>
       ) : (
         <>
-          <state.renderComponentTag {...state.renderComponentProps} />
+          <RenderComponentTagRef {...state.renderComponentProps} />
         </>
       )}
     </>
@@ -6764,7 +6753,6 @@ function RenderContent(props: Props) {
           get content() {
             return 3;
           },
-
           get registeredComponents() {
             return 4;
           },
