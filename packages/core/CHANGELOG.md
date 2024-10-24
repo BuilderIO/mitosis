@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.9
+
+### Patch Changes
+
+- 8c2be87: Fix multi line bindings from Mitosis to Builder
+
 ## 0.5.8
 
 ### Patch Changes
