@@ -424,7 +424,7 @@ export function usePrevious(value) {
 function MyPreviousComponent(props) {
   const state = useMutable({ count: 0 });
 
-  const prevCount = useRef(count);
+  const prevCount = useRef(state.count);
 
   useEffect(() => {
     prevCount.current = state.count;
@@ -1590,24 +1590,22 @@ function MyBasicForNoTagRefComponent(props) {
   const state = useMutable({
     name: \\"VincentW\\",
     TagName: \\"div\\",
+    tag: \\"span\\",
     get TagNameGetter() {
       return \\"span\\";
     },
-    Tag: \\"span\\",
   });
 
-  const TagNameGetterRef = state.TagNameGetter;
-
   return (
-    <TagNameGetterRef>
-      Hello <Tag>{state.name}</Tag>
+    <state.TagNameGetter>
+      Hello <state.tag>{state.name}</state.tag>
       {props.actions?.map((action) => (
-        <TagName>
+        <state.TagName>
           <action.icon />
           <span>{action.text}</span>
-        </TagName>
+        </state.TagName>
       ))}
-    </TagNameGetterRef>
+    </state.TagNameGetter>
   );
 }
 
@@ -2730,15 +2728,12 @@ function RenderBlock(props) {
     componentInfo: null,
   });
 
-  const RenderComponentTagRef = state.renderComponentTag;
-  const TagRef = state.tag;
-
   return (
     <>
       {state.shouldWrap ? (
         <>
           {isEmptyHtmlElement(state.tag) ? (
-            <TagRef {...state.attributes} {...state.actions} />
+            <state.tag {...state.attributes} {...state.actions} />
           ) : null}
           {!isEmptyHtmlElement(state.tag) && state.repeatItemData ? (
             <>
@@ -2752,8 +2747,8 @@ function RenderBlock(props) {
             </>
           ) : null}
           {!isEmptyHtmlElement(state.tag) && !state.repeatItemData ? (
-            <TagRef {...state.attributes} {...state.actions}>
-              <RenderComponentTagRef {...state.renderComponentProps} />
+            <state.tag {...state.attributes} {...state.actions}>
+              <state.renderComponentTag {...state.renderComponentProps} />
               {state.childrenWithoutParentComponent?.map((child) => (
                 <RenderBlock
                   key={\\"render-block-\\" + child.id}
@@ -2768,12 +2763,12 @@ function RenderBlock(props) {
                   context={state.childrenContext}
                 />
               ))}
-            </TagRef>
+            </state.tag>
           ) : null}
         </>
       ) : (
         <>
-          <RenderComponentTagRef {...state.renderComponentProps} />
+          <state.renderComponentTag {...state.renderComponentProps} />
         </>
       )}
     </>
@@ -3841,7 +3836,7 @@ export function usePrevious<T>(value: T) {
 function MyPreviousComponent(props: Props) {
   const state = useMutable({ count: 0 });
 
-  const prevCount = useRef(count);
+  const prevCount = useRef(state.count);
 
   useEffect(() => {
     prevCount.current = state.count;
@@ -5214,24 +5209,22 @@ function MyBasicForNoTagRefComponent(props: any) {
   const state = useMutable({
     name: \\"VincentW\\",
     TagName: \\"div\\",
+    tag: \\"span\\",
     get TagNameGetter() {
       return \\"span\\";
     },
-    Tag: \\"span\\",
   });
 
-  const TagNameGetterRef = state.TagNameGetter;
-
   return (
-    <TagNameGetterRef>
-      Hello <Tag>{state.name}</Tag>
+    <state.TagNameGetter>
+      Hello <state.tag>{state.name}</state.tag>
       {props.actions?.map((action) => (
-        <TagName>
+        <state.TagName>
           <action.icon />
           <span>{action.text}</span>
-        </TagName>
+        </state.TagName>
       ))}
-    </TagNameGetterRef>
+    </state.TagNameGetter>
   );
 }
 
@@ -6468,15 +6461,12 @@ function RenderBlock(props: RenderBlockProps) {
     componentInfo: null,
   });
 
-  const RenderComponentTagRef = state.renderComponentTag;
-  const TagRef = state.tag;
-
   return (
     <>
       {state.shouldWrap ? (
         <>
           {isEmptyHtmlElement(state.tag) ? (
-            <TagRef {...state.attributes} {...state.actions} />
+            <state.tag {...state.attributes} {...state.actions} />
           ) : null}
           {!isEmptyHtmlElement(state.tag) && state.repeatItemData ? (
             <>
@@ -6490,8 +6480,8 @@ function RenderBlock(props: RenderBlockProps) {
             </>
           ) : null}
           {!isEmptyHtmlElement(state.tag) && !state.repeatItemData ? (
-            <TagRef {...state.attributes} {...state.actions}>
-              <RenderComponentTagRef {...state.renderComponentProps} />
+            <state.tag {...state.attributes} {...state.actions}>
+              <state.renderComponentTag {...state.renderComponentProps} />
               {state.childrenWithoutParentComponent?.map((child) => (
                 <RenderBlock
                   key={\\"render-block-\\" + child.id}
@@ -6506,12 +6496,12 @@ function RenderBlock(props: RenderBlockProps) {
                   context={state.childrenContext}
                 />
               ))}
-            </TagRef>
+            </state.tag>
           ) : null}
         </>
       ) : (
         <>
-          <RenderComponentTagRef {...state.renderComponentProps} />
+          <state.renderComponentTag {...state.renderComponentProps} />
         </>
       )}
     </>

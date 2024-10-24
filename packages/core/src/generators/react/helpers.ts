@@ -23,6 +23,10 @@ export const processBinding = ({
   const getterKeys = Object.keys(json.state).filter((item) => json.state[item]?.type === 'getter');
   const value = shouldUpdateGetters ? updateGettersToFunctionsInCode(str, getterKeys) : str;
 
+  if (options.stateType !== 'useState' && options.stateType !== 'variables') {
+    return value;
+  }
+
   return stripStateAndPropsRefs(value, {
     includeState: true,
     includeProps: false,
