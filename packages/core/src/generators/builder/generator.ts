@@ -214,7 +214,7 @@ const componentMappers: {
                 name: 'Core:Fragment',
               },
               bindings: {
-                show: `!(${node.bindings.when?.code as string})`,
+                hide: node.bindings.when?.code as string,
               },
               children: [blockToBuilder(elseCase, options)],
             },
