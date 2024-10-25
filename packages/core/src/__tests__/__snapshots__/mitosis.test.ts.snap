@@ -21,7 +21,7 @@ export default function MyBasicRefComponent(props) {
   const inputRef = useRef(null);
   const inputNoArgRef = useRef(null);
 
-  return (
+  return [
     <div>
       {props.showInput ? (
         <Fragment>
@@ -46,8 +46,8 @@ export default function MyBasicRefComponent(props) {
       Hello
       {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
       Component!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -69,7 +69,7 @@ export default function MyBasicComponent(props) {
     sports: [\\"\\"],
   });
 
-  return (
+  return [
     <div
       class=\\"test\\"
       css={{
@@ -81,8 +81,8 @@ export default function MyBasicComponent(props) {
         onChange={(event) => (state.name = myEvent.target.value)}
       />
       Hello! I can run in React, Vue, Solid, or Liquid! &gt;
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -94,7 +94,7 @@ import { For, Show } from \\"@components\\";
 export default function MyBasicForShowComponent(props) {
   const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
 
-  return (
+  return [
     <div>
       {state.names.map((person, index) =>
         person === state.name ? (
@@ -111,8 +111,8 @@ export default function MyBasicForShowComponent(props) {
           </>
         ) : null
       )}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -136,13 +136,13 @@ export default function MyBasicComponent(props) {
     console.log(bye);
   });
 
-  return (
+  return [
     <div>
       {myService.method(\\"hello\\") + state.name}
       Hello! I can run in React, Vue, Solid, or Liquid!
       <input onChange={(event) => state.onChange} />
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -157,12 +157,12 @@ export default function MyBasicOnMountUpdateComponent(props) {
     state.name = \\"PatrickJS onMount\\" + props.bye;
   });
 
-  return (
+  return [
     <div>
       Hello
       {state.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -178,7 +178,7 @@ export default function MyBasicOutputsComponent(props) {
     props.onEvent(props.message);
   });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -199,14 +199,14 @@ export default function MyBasicOutputsComponent(props) {
     props.onEvent(props.message);
   });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > BasicAttribute 1`] = `
 "export default function MyComponent(props) {
-  return <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />;
+  return [<input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />];
 }
 "
 `;
@@ -217,7 +217,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
 export default function MyBooleanAttribute(props) {
-  return (
+  return [
     <div>
       {props.children ? (
         <>
@@ -228,8 +228,8 @@ export default function MyBooleanAttribute(props) {
       <MyBooleanAttributeComponent toggle={true} />
       <MyBooleanAttributeComponent toggle={true} />
       <MyBooleanAttributeComponent list={null} />
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -244,14 +244,14 @@ import MyBasicComponent from \\"./basic.raw\\";
 export default function MyBasicChildComponent(props) {
   const state = useStore({ name: \\"Steve\\", dev: \\"PatrickJS\\" });
 
-  return (
+  return [
     <div>
       <MyBasicComponent id={state.dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={state.name} bye={state.dev} />
       </div>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -267,7 +267,7 @@ export default function MyBasicForComponent(props) {
     console.log(\\"onMount code\\");
   });
 
-  return (
+  return [
     <div>
       {state.names.map((person, index) => (
         <Fragment>
@@ -282,8 +282,8 @@ export default function MyBasicForComponent(props) {
           Liquid!
         </Fragment>
       ))}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -309,7 +309,7 @@ export default function MyBasicRefComponent(props) {
   const inputRef = useRef(null);
   const inputNoArgRef = useRef(null);
 
-  return (
+  return [
     <div>
       {props.showInput ? (
         <Fragment>
@@ -334,8 +334,8 @@ export default function MyBasicRefComponent(props) {
       Hello
       {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
       Component!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -348,7 +348,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Show } from \\"@components\\";
 
 export default function Button(props) {
-  return (
+  return [
     <div>
       {props.link ? (
         <a
@@ -364,8 +364,8 @@ export default function Button(props) {
           {props.text}
         </button>
       ) : null}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -395,7 +395,7 @@ export default function Column(props) {
     },
   });
 
-  return (
+  return [
     <div
       class=\\"builder-columns\\"
       css={{
@@ -422,8 +422,8 @@ export default function Column(props) {
           {index}
         </div>
       ))}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -432,7 +432,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Slot } from \\"@components\\";
 
 export default function ContentSlotCode(props) {
-  return (
+  return [
     <div>
       <Slot name={props.slotTesting} />
       <div>
@@ -441,8 +441,8 @@ export default function ContentSlotCode(props) {
       <div>
         <Slot />
       </div>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -463,23 +463,25 @@ export default function ContentSlotJsxCode(props) {
     },
   });
 
-  return props.slotReference ? (
-    <div
-      name={props.slotContent ? \\"name1\\" : \\"name2\\"}
-      title={props.slotContent ? \\"title1\\" : \\"title2\\"}
-      {...props.attributes}
-      onClick={(event) => state.show()}
-      class={state.cls}
-    >
-      {state.showContent && props.slotContent ? (
-        <Slot name=\\"content\\">{props.content}</Slot>
-      ) : null}
-      <div>
-        <hr />
+  return [
+    props.slotReference ? (
+      <div
+        name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+        title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+        {...props.attributes}
+        onClick={(event) => state.show()}
+        class={state.cls}
+      >
+        {state.showContent && props.slotContent ? (
+          <Slot name=\\"content\\">{props.content}</Slot>
+        ) : null}
+        <div>
+          <hr />
+        </div>
+        <div>{props.children}</div>
       </div>
-      <div>{props.children}</div>
-    </div>
-  ) : null;
+    ) : null,
+  ];
 }
 "
 `;
@@ -541,15 +543,15 @@ export default function CustomCode(props) {
     state.findAndRunScripts();
   });
 
-  return (
+  return [
     <div
       ref={elem}
       class={
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
       innerHTML={props.code}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -611,15 +613,15 @@ export default function CustomCode(props) {
     state.findAndRunScripts();
   });
 
-  return (
+  return [
     <div
       ref={elem}
       class={
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
       innerHTML={props.code}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -863,7 +865,7 @@ export default function FormComponent(props) {
   const formRef = useRef(null);
   const formRef = useRef(null);
 
-  return (
+  return [
     <form
       validate={props.validate}
       ref={formRef}
@@ -905,8 +907,8 @@ export default function FormComponent(props) {
           blocks={props.successMessage}
         />
       ) : null}
-    </form>
-  );
+    </form>,
+  ];
 }
 "
 `;
@@ -969,7 +971,7 @@ export default function Image(props) {
     }
   });
 
-  return (
+  return [
     <div>
       <picture ref={pictureRef}>
         {!state.useLazyLoading() || state.load ? (
@@ -992,8 +994,8 @@ export default function Image(props) {
         <source srcset={props.srcset} />
       </picture>
       {props.children}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1008,15 +1010,15 @@ export default function ImgStateComponent(props) {
     images: [\\"http://example.com/qwik.png\\"],
   });
 
-  return (
+  return [
     <div>
       {state.images.map((item, itemIndex) => (
         <Fragment>
           <img class=\\"custom-class\\" src={item} key={itemIndex} />
         </Fragment>
       ))}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1025,7 +1027,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Builder } from \\"@builder.io/sdk\\";
 
 export default function ImgComponent(props) {
-  return (
+  return [
     <img
       style={{
         objectFit: props.backgroundSize || \\"cover\\",
@@ -1035,8 +1037,8 @@ export default function ImgComponent(props) {
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
       src={props.imgSrc}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -1045,7 +1047,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Builder } from \\"@builder.io/sdk\\";
 
 export default function FormInputComponent(props) {
-  return (
+  return [
     <input
       {...props.attributes}
       key={
@@ -1060,8 +1062,8 @@ export default function FormInputComponent(props) {
       defaultValue={props.defaultValue}
       required={props.required}
       onChange={(event) => props.onChange?.(event.target.value)}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -1079,32 +1081,32 @@ export default function Stepper(props) {
     },
   });
 
-  return (
+  return [
     <FormInputComponent
       name=\\"kingzez\\"
       type=\\"text\\"
       onChange={(event) => state.handleChange(value)}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > RawText 1`] = `
 "export default function RawText(props) {
-  return (
+  return [
     <span
       class={props.attributes?.class || props.attributes?.className}
       innerHTML={props.text || \\"\\"}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > Section 1`] = `
 "export default function SectionComponent(props) {
-  return (
+  return [
     <section
       {...props.attributes}
       style={
@@ -1116,8 +1118,8 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
       }
     >
       {props.children}
-    </section>
-  );
+    </section>,
+  ];
 }
 "
 `;
@@ -1129,18 +1131,20 @@ import { Show, For } from \\"@components\\";
 export default function SectionStateComponent(props) {
   const state = useStore({ max: 42, items: [42] });
 
-  return state.max
-    ? state.items.map((item, index) => (
-        <section
-          {...props.attributes}
-          style={{
-            maxWidth: item + state.max,
-          }}
-        >
-          {props.children}
-        </section>
-      ))
-    : null;
+  return [
+    state.max
+      ? state.items.map((item, index) => (
+          <section
+            {...props.attributes}
+            style={{
+              maxWidth: item + state.max,
+            }}
+          >
+            {props.children}
+          </section>
+        ))
+      : null,
+  ];
 }
 "
 `;
@@ -1151,7 +1155,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default function SelectComponent(props) {
-  return (
+  return [
     <select
       {...props.attributes}
       value={props.value}
@@ -1168,8 +1172,8 @@ export default function SelectComponent(props) {
           {option.name || option.value}
         </option>
       ))}
-    </select>
-  );
+    </select>,
+  ];
 }
 "
 `;
@@ -1178,13 +1182,13 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Slot } from \\"@components\\";
 
 export default function SlotCode(props) {
-  return (
+  return [
     <div>
       <Slot>
         <div class=\\"default-slot\\">Default content</div>
       </Slot>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1195,13 +1199,13 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default function SlotCode(props) {
-  return (
+  return [
     <div>
       <ContentSlotCode>
         <Slot testing={<div>Hello</div>} />
       </ContentSlotCode>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1212,11 +1216,11 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default function SlotCode(props) {
-  return (
+  return [
     <div>
       <ContentSlotCode slotTesting={<div>Hello</div>} />
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1225,14 +1229,14 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Slot } from \\"@components\\";
 
 export default function SlotCode(props) {
-  return (
+  return [
     <div>
       <Slot name=\\"myAwesomeSlot\\" />
       <Slot name=\\"top\\" />
       <Slot name=\\"left\\">Default left</Slot>
       <Slot>Default Child</Slot>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1268,7 +1272,7 @@ export default function SmileReviews(props) {
       });
   });
 
-  return (
+  return [
     <div data-user={state.name}>
       <button onClick={(event) => (state.showReviewPrompt = true)}>
         Write a review
@@ -1333,19 +1337,19 @@ export default function SmileReviews(props) {
           </div>
         </div>
       ))}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > Submit 1`] = `
 "export default function SubmitButton(props) {
-  return (
+  return [
     <button type=\\"submit\\" {...props.attributes}>
       {props.text}
-    </button>
-  );
+    </button>,
+  ];
 }
 "
 `;
@@ -1358,7 +1362,7 @@ import { Builder } from \\"@builder.io/sdk\\";
 export default function Text(props) {
   const state = useStore({ name: \\"Decadef20\\" });
 
-  return (
+  return [
     <div
       contentEditable={allowEditingText || undefined}
       data-name={{
@@ -1370,30 +1374,30 @@ export default function Text(props) {
         state.name ||
         '<p class=\\"text-lg\\">my name</p>'
       }
-    />
-  );
+    />,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > Textarea 1`] = `
 "export default function Textarea(props) {
-  return (
+  return [
     <textarea
       {...props.attributes}
       placeholder={props.placeholder}
       name={props.name}
       value={props.value}
       defaultValue={props.defaultValue}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > Video 1`] = `
 "export default function Video(props) {
-  return (
+  return [
     <video
       preload=\\"none\\"
       {...props.attributes}
@@ -1413,8 +1417,8 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
       muted={props.muted}
       controls={props.controls}
       loop={props.loop}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -1433,12 +1437,12 @@ export default function MyComponent(props) {
     },
   });
 
-  return (
+  return [
     <div>
       Hello
       {state.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1457,7 +1461,7 @@ export default function MyBasicForNoTagRefComponent(props) {
     },
   });
 
-  return (
+  return [
     <state.TagNameGetter>
       Hello
       <state.tag>{state.name}</state.tag>
@@ -1467,8 +1471,8 @@ export default function MyBasicForNoTagRefComponent(props) {
           <span>{action.text}</span>
         </state.TagName>
       ))}
-    </state.TagNameGetter>
-  );
+    </state.TagNameGetter>,
+  ];
 }
 "
 `;
@@ -1501,12 +1505,12 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 export default function MyBasicOnUpdateReturnComponent(props) {
   const state = useStore({ name: \\"PatrickJS\\" });
 
-  return (
+  return [
     <div>
       Hello!
       {state.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1517,7 +1521,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 import MyComp from \\"./my-component.js\\";
 
 export default function MyBasicComponent(props) {
-  return (
+  return [
     <div>
       <MyComp class=\\"test\\" className=\\"test2\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
@@ -1530,15 +1534,15 @@ export default function MyBasicComponent(props) {
       >
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > class + css 1`] = `
 "export default function MyBasicComponent(props) {
-  return (
+  return [
     <div
       class=\\"test\\"
       css={{
@@ -1546,15 +1550,15 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
       }}
     >
       Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > className + css 1`] = `
 "export default function MyBasicComponent(props) {
-  return (
+  return [
     <div
       class=\\"test\\"
       css={{
@@ -1562,8 +1566,8 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
       }}
     >
       Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1574,12 +1578,12 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 export default function ClassNameCode(props) {
   const state = useStore({ bindings: \\"a binding\\" });
 
-  return (
+  return [
     <div>
       <div class=\\"no binding\\">Without Binding</div>
       <div class={state.bindings}>With binding</div>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1595,7 +1599,7 @@ export default function MyBasicComponent(props) {
     },
   });
 
-  return (
+  return [
     <div
       class={state.classState}
       css={{
@@ -1604,8 +1608,8 @@ export default function MyBasicComponent(props) {
       style={state.styleState}
     >
       Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1617,11 +1621,11 @@ import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
 export default function ComponentWithContext(props) {
-  return (
+  return [
     <Fragment>
       <Fragment>{foo.value}</Fragment>
-    </Fragment>
-  );
+    </Fragment>,
+  ];
 }
 "
 `;
@@ -1633,12 +1637,12 @@ import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
 export default function ComponentWithContext(props) {
-  return (
+  return [
     <Fragment>
       <Fragment>{foo.value}</Fragment>
       <div>other</div>
-    </Fragment>
-  );
+    </Fragment>,
+  ];
 }
 "
 `;
@@ -1647,7 +1651,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import BuilderContext from \\"@dummy/context.js\\";
 
 export default function RenderContent(props) {
-  return <div>setting context</div>;
+  return [<div>setting context</div>];
 }
 "
 `;
@@ -1656,7 +1660,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Show } from \\"@components\\";
 
 export default function Button(props) {
-  return (
+  return [
     <div>
       {props.link ? (
         <a
@@ -1676,8 +1680,8 @@ export default function Button(props) {
           {props.buttonText}
         </button>
       ) : null}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1686,7 +1690,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Show } from \\"@components\\";
 
 export default function Button(props) {
-  return (
+  return [
     <div>
       {props.link ? (
         <a
@@ -1706,8 +1710,8 @@ export default function Button(props) {
           {props.text}
         </button>
       ) : null}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1718,13 +1722,13 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 };
 
 export default function ComponentWithTypes(props) {
-  return (
+  return [
     <div>
       {\\" \\"}
       Hello
       {props.name || DEFAULT_VALUES.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1739,7 +1743,7 @@ export default function MyComponent(props) {
       : null,
   });
 
-  return <div>{state.refToUse}</div>;
+  return [<div>{state.refToUse}</div>];
 }
 "
 `;
@@ -1760,13 +1764,13 @@ export default function Button(props) {
     },
   });
 
-  return (
+  return [
     <div>
       <p>{state.foo2}</p>
       <p>{state.bar}</p>
       <p>{state.baz(1)}</p>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1787,18 +1791,18 @@ export default function RenderContent(props) {
     },
   });
 
-  return (
+  return [
     <RenderBlock
       {...state.getRenderContentProps(props.renderContentProps.block, 0)}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > multipleOnUpdate 1`] = `
 "export default function MultipleOnUpdate(props) {
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -1809,7 +1813,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 export default function MultipleOnUpdateWithDeps(props) {
   const state = useStore({ a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -1824,7 +1828,7 @@ export default function MyBasicComponent(props) {
     },
   });
 
-  return <input {...state.attrs} {...props} />;
+  return [<input {...state.attrs} {...props} />];
 }
 "
 `;
@@ -1833,22 +1837,24 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Show } from \\"@components\\";
 
 export default function NestedShow(props) {
-  return props.conditionA ? (
-    !props.conditionB ? (
-      <div>if condition A and condition B</div>
+  return [
+    props.conditionA ? (
+      !props.conditionB ? (
+        <div>if condition A and condition B</div>
+      ) : (
+        <div>else-condition-B</div>
+      )
     ) : (
-      <div>else-condition-B</div>
-    )
-  ) : (
-    <div>else-condition-A</div>
-  );
+      <div>else-condition-A</div>
+    ),
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > nestedStyles 1`] = `
 "export default function NestedStyles(props) {
-  return (
+  return [
     <div
       css={{
         display: \\"flex\\",
@@ -1875,8 +1881,8 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
       }}
     >
       Hello world
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1898,11 +1904,11 @@ export default function Embed(props) {
     elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
   });
 
-  return (
+  return [
     <div class=\\"builder-embed\\" ref={elem}>
       <div>Test</div>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -1913,7 +1919,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
     console.log(\\"onMount\\");
   });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -1928,19 +1934,19 @@ export const defaultValues = {
 export default function OnInit(props) {
   const state = useStore({ name: \\"\\" });
 
-  return (
+  return [
     <div>
       Default name defined by parent
       {state.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > onInitPlain 1`] = `
 "export default function OnInitPlain(props) {
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -1955,7 +1961,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
     console.log(\\"Runs on unMount\\");
   });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -1972,14 +1978,14 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
       console.log(\\"SSR runs on Mount\\");
     });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > onUpdate 1`] = `
 "export default function OnUpdate(props) {
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -1990,7 +1996,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 export default function OnUpdateWithDeps(props) {
   const state = useStore({ a: \\"a\\", b: \\"b\\" });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -2003,19 +2009,19 @@ export const bar = () => {};
 export function run(value) {}
 
 export default function MyBasicComponent(props) {
-  return <div />;
+  return [<div />];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > preserveTyping 1`] = `
 "export default function MyBasicComponent(props) {
-  return (
+  return [
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2026,37 +2032,37 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 export default function MyBasicComponent(props) {
   const state = useStore({ name: \\"Decadef20\\" });
 
-  return (
+  return [
     <div>
       {props.children}
       {props.type}
       Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > propsInterface 1`] = `
 "export default function MyBasicComponent(props) {
-  return (
+  return [
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > propsType 1`] = `
 "export default function MyBasicComponent(props) {
-  return (
+  return [
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2075,7 +2081,7 @@ export default function OnUpdate(props) {
     },
   });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -2281,43 +2287,45 @@ export default function RenderBlock(props) {
     },
   });
 
-  return state.shouldWrap ? (
-    <>
-      {isEmptyHtmlElement(state.tag) ? (
-        <state.tag {...state.attributes} {...state.actions} />
-      ) : null}
-      {!isEmptyHtmlElement(state.tag) && state.repeatItemData
-        ? state.repeatItemData.map((data, index) => (
-            <RenderRepeatedBlock
-              key={index}
-              repeatContext={data.context}
-              block={data.block}
-            />
-          ))
-        : null}
-      {!isEmptyHtmlElement(state.tag) && !state.repeatItemData ? (
-        <state.tag {...state.attributes} {...state.actions}>
-          <state.renderComponentTag {...state.renderComponentProps} />
-          {state.childrenWithoutParentComponent.map((child, index) => (
-            <RenderBlock
-              key={\\"render-block-\\" + child.id}
-              block={child}
-              context={state.childrenContext}
-            />
-          ))}
-          {state.childrenWithoutParentComponent.map((child, index) => (
-            <BlockStyles
-              key={\\"block-style-\\" + child.id}
-              block={child}
-              context={state.childrenContext}
-            />
-          ))}
-        </state.tag>
-      ) : null}
-    </>
-  ) : (
-    <state.renderComponentTag {...state.renderComponentProps} />
-  );
+  return [
+    state.shouldWrap ? (
+      <>
+        {isEmptyHtmlElement(state.tag) ? (
+          <state.tag {...state.attributes} {...state.actions} />
+        ) : null}
+        {!isEmptyHtmlElement(state.tag) && state.repeatItemData
+          ? state.repeatItemData.map((data, index) => (
+              <RenderRepeatedBlock
+                key={index}
+                repeatContext={data.context}
+                block={data.block}
+              />
+            ))
+          : null}
+        {!isEmptyHtmlElement(state.tag) && !state.repeatItemData ? (
+          <state.tag {...state.attributes} {...state.actions}>
+            <state.renderComponentTag {...state.renderComponentProps} />
+            {state.childrenWithoutParentComponent.map((child, index) => (
+              <RenderBlock
+                key={\\"render-block-\\" + child.id}
+                block={child}
+                context={state.childrenContext}
+              />
+            ))}
+            {state.childrenWithoutParentComponent.map((child, index) => (
+              <BlockStyles
+                key={\\"block-style-\\" + child.id}
+                block={child}
+                context={state.childrenContext}
+              />
+            ))}
+          </state.tag>
+        ) : null}
+      </>
+    ) : (
+      <state.renderComponentTag {...state.renderComponentProps} />
+    ),
+  ];
 }
 "
 `;
@@ -2338,7 +2346,7 @@ export default function RenderContent(props) {
     sendComponentsToVisualEditor(props.customComponents);
   });
 
-  return (
+  return [
     <div
       css={{
         display: \\"flex\\",
@@ -2347,8 +2355,8 @@ export default function RenderContent(props) {
       onClick={(event) => trackClick(props.content.id)}
     >
       <RenderBlocks blocks={props.content.blocks} />
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2357,7 +2365,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Fragment, Show } from \\"@components\\";
 
 export default function Button(props) {
-  return (
+  return [
     <Fragment>
       {props.link ? (
         <a
@@ -2373,8 +2381,8 @@ export default function Button(props) {
           {props.text}
         </button>
       ) : null}
-    </Fragment>
-  );
+    </Fragment>,
+  ];
 }
 "
 `;
@@ -2383,7 +2391,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Show } from \\"@components\\";
 
 export default function RenderStyles(props) {
-  return props.foo === \\"bar\\" ? <div>Bar</div> : <div>Foo</div>;
+  return [props.foo === \\"bar\\" ? <div>Bar</div> : <div>Foo</div>];
 }
 "
 `;
@@ -2392,12 +2400,12 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Show, MyComponent } from \\"@components\\";
 
 export default function MyComponent(props) {
-  return (
+  return [
     <div>
       {props.name}
       {props.name === \\"Batman\\" ? <MyComponent name=\\"Bruce Wayne\\" /> : null}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2406,7 +2414,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Show, MyComponent } from \\"@components\\";
 
 export default function MyComponent(props) {
-  return (
+  return [
     <div>
       {props.name}
       {props.children}
@@ -2415,8 +2423,8 @@ export default function MyComponent(props) {
           <div>Wayne</div>
         </MyComponent>
       ) : null}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2425,7 +2433,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Show } from \\"@components\\";
 
 export default function ShowWithOtherValues(props) {
-  return (
+  return [
     <div>
       {props.conditionA ? <>Content0</> : <>ContentA</>}
       {props.conditionA ? <>ContentA</> : null}
@@ -2467,8 +2475,8 @@ export default function ShowWithOtherValues(props) {
       ) : (
         <div>complete else</div>
       )}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2477,11 +2485,13 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Show, For } from \\"@components\\";
 
 export default function NestedShow(props) {
-  return props.conditionA ? (
-    props.items.map((item, idx) => <div key={idx}>{item}</div>)
-  ) : (
-    <div>else-condition-A</div>
-  );
+  return [
+    props.conditionA ? (
+      props.items.map((item, idx) => <div key={idx}>{item}</div>)
+    ) : (
+      <div>else-condition-A</div>
+    ),
+  ];
 }
 "
 `;
@@ -2490,7 +2500,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Show } from \\"@components\\";
 
 export default function ShowWithOtherValues(props) {
-  return (
+  return [
     <div>
       {props.conditionA ? <>ContentA</> : null}
       {props.conditionA ? <>ContentB</> : undefined}
@@ -2498,8 +2508,8 @@ export default function ShowWithOtherValues(props) {
       {props.conditionA ? <>ContentD</> : null}
       {props.conditionA ? <>ContentE</> : <>hello</>}
       {props.conditionA ? <>ContentF</> : <>123</>}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2508,14 +2518,14 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { Show } from \\"@components\\";
 
 export default function ShowRootText(props) {
-  return props.conditionA ? <>ContentA</> : <div>else-condition-A</div>;
+  return [props.conditionA ? <>ContentA</> : <div>else-condition-A</div>];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > signalsOnUpdate 1`] = `
 "export default function MyBasicComponent(props) {
-  return (
+  return [
     <div
       class=\\"test\\"
       css={{
@@ -2524,29 +2534,29 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
     >
       {props.id}
       {props.foo.value.bar.baz}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > spreadAttrs 1`] = `
 "export default function MyBasicComponent(props) {
-  return <input {...attrs} />;
+  return [<input {...attrs} />];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > spreadNestedProps 1`] = `
 "export default function MyBasicComponent(props) {
-  return <input {...props.nested} />;
+  return [<input {...props.nested} />];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > spreadProps 1`] = `
 "export default function MyBasicComponent(props) {
-  return <input {...props} />;
+  return [<input {...props} />];
 }
 "
 `;
@@ -2557,14 +2567,14 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 export default function StringLiteralStore(props) {
   const state = useStore({ foo: 123 });
 
-  return <div>{state.foo}</div>;
+  return [<div>{state.foo}</div>];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > styleClassAndCss 1`] = `
 "export default function MyComponent(props) {
-  return (
+  return [
     <div
       class=\\"builder-column\\"
       style={{
@@ -2575,15 +2585,15 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
         flexDirection: \\"column\\",
         alignItems: \\"stretch\\",
       }}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > stylePropClassAndCss 1`] = `
 "export default function StylePropClassAndCss(props) {
-  return (
+  return [
     <div
       class=\\"USE_TARGET_BLOCK_1\\"
       style={props.attributes.style}
@@ -2592,8 +2602,8 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
         flexDirection: \\"column\\",
         alignItems: \\"stretch\\",
       }}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -2604,14 +2614,14 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 import Foo from \\"./foo-sub-component.js\\";
 
 export default function SubComponent(props) {
-  return <Foo />;
+  return [<Foo />];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > svgComponent 1`] = `
 "export default function SvgComponent(props) {
-  return (
+  return [
     <svg
       fill=\\"none\\"
       role=\\"img\\"
@@ -2626,15 +2636,15 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
         </filter>
       </defs>
-    </svg>
-  );
+    </svg>,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > typeDependency 1`] = `
 "export default function TypeDependency(props) {
-  return <div>{props.foo}</div>;
+  return [<div>{props.foo}</div>];
 }
 "
 `;
@@ -2645,12 +2655,12 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 export default function TypeExternalStore(props) {
   const state = useStore({ _name: \\"test\\" });
 
-  return (
+  return [
     <div>
       Hello
       {state._name}!{\\" \\"}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2673,12 +2683,12 @@ export default function TypeGetterStore(props) {
     },
   });
 
-  return (
+  return [
     <div>
       Hello
       {state.name}!{\\" \\"}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2694,7 +2704,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
         }
     \`);
 
-  return <button type=\\"button\\">Button</button>;
+  return [<button type=\\"button\\">Button</button>];
 }
 "
 `;
@@ -2708,7 +2718,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
         }
     \`);
 
-  return (
+  return [
     <button
       type=\\"button\\"
       css={{
@@ -2717,8 +2727,8 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
       }}
     >
       Button
-    </button>
-  );
+    </button>,
+  ];
 }
 "
 `;
@@ -2734,7 +2744,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
   }
 \`);
 
-  return <button type=\\"button\\">Button</button>;
+  return [<button type=\\"button\\">Button</button>];
 }
 "
 `;
@@ -2758,7 +2768,7 @@ export default function UseTargetComponent(props) {
     (\\"USE_TARGET_BLOCK_2\\");
   });
 
-  return <div>{state.name}</div>;
+  return [<div>{state.name}</div>];
 }
 "
 `;
@@ -2767,13 +2777,13 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "import { register } from \\"swiper/element/bundle\\";
 
 export default function MyBasicWebComponent(props) {
-  return (
+  return [
     <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
       <swiper-slide>Slide 1</swiper-slide>
       <swiper-slide>Slide 2</swiper-slide>
       <swiper-slide>Slide 3</swiper-slide>
-    </swiper-container>
-  );
+    </swiper-container>,
+  ];
 }
 "
 `;
@@ -2784,12 +2794,12 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Remove 
 export default function MyBasicComponent(props) {
   const state = useStore({ name: \\"PatrickJS\\" });
 
-  return (
+  return [
     <div>
       Hello
       {state.name}! I can run in React, Qwik, Vue, Solid, or Liquid!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2818,7 +2828,7 @@ export default function MyBasicRefComponent(props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const inputNoArgRef = useRef<HTMLLabelElement>(null);
 
-  return (
+  return [
     <div>
       {props.showInput ? (
         <Fragment>
@@ -2843,8 +2853,8 @@ export default function MyBasicRefComponent(props) {
       Hello
       {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
       Component!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2870,7 +2880,7 @@ export default function MyBasicComponent(props) {
     sports: [\\"\\"],
   });
 
-  return (
+  return [
     <div
       class=\\"test\\"
       css={{
@@ -2882,8 +2892,8 @@ export default function MyBasicComponent(props) {
         onChange={(event) => (state.name = myEvent.target.value)}
       />
       Hello! I can run in React, Vue, Solid, or Liquid! &gt;
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2895,7 +2905,7 @@ import { For, Show } from \\"@components\\";
 export default function MyBasicForShowComponent(props) {
   const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
 
-  return (
+  return [
     <div>
       {state.names.map((person, index) =>
         person === state.name ? (
@@ -2912,8 +2922,8 @@ export default function MyBasicForShowComponent(props) {
           </>
         ) : null
       )}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2937,13 +2947,13 @@ export default function MyBasicComponent(props) {
     console.log(bye);
   });
 
-  return (
+  return [
     <div>
       {myService.method(\\"hello\\") + state.name}
       Hello! I can run in React, Vue, Solid, or Liquid!
       <input onChange={(event) => state.onChange} />
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2963,12 +2973,12 @@ export default function MyBasicOnMountUpdateComponent(props) {
     state.name = \\"PatrickJS onMount\\" + props.bye;
   });
 
-  return (
+  return [
     <div>
       Hello
       {state.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -2984,7 +2994,7 @@ export default function MyBasicOutputsComponent(props) {
     props.onEvent(props.message);
   });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -3005,14 +3015,14 @@ export default function MyBasicOutputsComponent(props) {
     props.onEvent(props.message);
   });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > BasicAttribute 1`] = `
 "export default function MyComponent(props) {
-  return <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />;
+  return [<input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />];
 }
 "
 `;
@@ -3027,7 +3037,7 @@ type Props = {
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
 export default function MyBooleanAttribute(props) {
-  return (
+  return [
     <div>
       {props.children ? (
         <>
@@ -3038,8 +3048,8 @@ export default function MyBooleanAttribute(props) {
       <MyBooleanAttributeComponent toggle={true} />
       <MyBooleanAttributeComponent toggle={true} />
       <MyBooleanAttributeComponent list={null} />
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -3054,14 +3064,14 @@ import MyBasicComponent from \\"./basic.raw\\";
 export default function MyBasicChildComponent(props) {
   const state = useStore({ name: \\"Steve\\", dev: \\"PatrickJS\\" });
 
-  return (
+  return [
     <div>
       <MyBasicComponent id={state.dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={state.name} bye={state.dev} />
       </div>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -3077,7 +3087,7 @@ export default function MyBasicForComponent(props) {
     console.log(\\"onMount code\\");
   });
 
-  return (
+  return [
     <div>
       {state.names.map((person, index) => (
         <Fragment>
@@ -3092,8 +3102,8 @@ export default function MyBasicForComponent(props) {
           Liquid!
         </Fragment>
       ))}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -3122,7 +3132,7 @@ export default function MyBasicRefComponent(props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const inputNoArgRef = useRef<HTMLLabelElement>(null);
 
-  return (
+  return [
     <div>
       {props.showInput ? (
         <Fragment>
@@ -3147,8 +3157,8 @@ export default function MyBasicRefComponent(props) {
       Hello
       {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
       Component!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -3167,7 +3177,7 @@ export interface ButtonProps {
 }
 
 export default function Button(props) {
-  return (
+  return [
     <div>
       {props.link ? (
         <a
@@ -3183,8 +3193,8 @@ export default function Button(props) {
           {props.text}
         </button>
       ) : null}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -3228,7 +3238,7 @@ export default function Column(props) {
     },
   });
 
-  return (
+  return [
     <div
       class=\\"builder-columns\\"
       css={{
@@ -3255,8 +3265,8 @@ export default function Column(props) {
           {index}
         </div>
       ))}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -3271,7 +3281,7 @@ type Props = {
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
 export default function ContentSlotCode(props) {
-  return (
+  return [
     <div>
       <Slot name={props.slotTesting} />
       <div>
@@ -3280,8 +3290,8 @@ export default function ContentSlotCode(props) {
       <div>
         <Slot />
       </div>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -3307,23 +3317,25 @@ export default function ContentSlotJsxCode(props) {
     },
   });
 
-  return props.slotReference ? (
-    <div
-      name={props.slotContent ? \\"name1\\" : \\"name2\\"}
-      title={props.slotContent ? \\"title1\\" : \\"title2\\"}
-      {...props.attributes}
-      onClick={(event) => state.show()}
-      class={state.cls}
-    >
-      {state.showContent && props.slotContent ? (
-        <Slot name=\\"content\\">{props.content}</Slot>
-      ) : null}
-      <div>
-        <hr />
+  return [
+    props.slotReference ? (
+      <div
+        name={props.slotContent ? \\"name1\\" : \\"name2\\"}
+        title={props.slotContent ? \\"title1\\" : \\"title2\\"}
+        {...props.attributes}
+        onClick={(event) => state.show()}
+        class={state.cls}
+      >
+        {state.showContent && props.slotContent ? (
+          <Slot name=\\"content\\">{props.content}</Slot>
+        ) : null}
+        <div>
+          <hr />
+        </div>
+        <div>{props.children}</div>
       </div>
-      <div>{props.children}</div>
-    </div>
-  ) : null;
+    ) : null,
+  ];
 }
 "
 `;
@@ -3390,15 +3402,15 @@ export default function CustomCode(props) {
     state.findAndRunScripts();
   });
 
-  return (
+  return [
     <div
       ref={elem}
       class={
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
       innerHTML={props.code}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -3465,15 +3477,15 @@ export default function CustomCode(props) {
     state.findAndRunScripts();
   });
 
-  return (
+  return [
     <div
       ref={elem}
       class={
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
       innerHTML={props.code}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -3747,7 +3759,7 @@ export default function FormComponent(props) {
   const formRef = useRef<HTMLFormElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  return (
+  return [
     <form
       validate={props.validate}
       ref={formRef}
@@ -3789,8 +3801,8 @@ export default function FormComponent(props) {
           blocks={props.successMessage!}
         />
       ) : null}
-    </form>
-  );
+    </form>,
+  ];
 }
 "
 `;
@@ -3871,7 +3883,7 @@ export default function Image(props) {
     }
   });
 
-  return (
+  return [
     <div>
       <picture ref={pictureRef}>
         {!state.useLazyLoading() || state.load ? (
@@ -3894,8 +3906,8 @@ export default function Image(props) {
         <source srcset={props.srcset} />
       </picture>
       {props.children}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -3910,15 +3922,15 @@ export default function ImgStateComponent(props) {
     images: [\\"http://example.com/qwik.png\\"],
   });
 
-  return (
+  return [
     <div>
       {state.images.map((item, itemIndex) => (
         <Fragment>
           <img class=\\"custom-class\\" src={item} key={itemIndex} />
         </Fragment>
       ))}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -3944,7 +3956,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default function ImgComponent(props) {
-  return (
+  return [
     <img
       style={{
         objectFit: props.backgroundSize || \\"cover\\",
@@ -3954,8 +3966,8 @@ export default function ImgComponent(props) {
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
       src={props.imgSrc}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -3975,7 +3987,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default function FormInputComponent(props) {
-  return (
+  return [
     <input
       {...props.attributes}
       key={
@@ -3990,8 +4002,8 @@ export default function FormInputComponent(props) {
       defaultValue={props.defaultValue}
       required={props.required}
       onChange={(event) => props.onChange?.(event.target.value)}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -4009,13 +4021,13 @@ export default function Stepper(props) {
     },
   });
 
-  return (
+  return [
     <FormInputComponent
       name=\\"kingzez\\"
       type=\\"text\\"
       onChange={(event) => state.handleChange(value)}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -4027,12 +4039,12 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 }
 
 export default function RawText(props) {
-  return (
+  return [
     <span
       class={props.attributes?.class || props.attributes?.className}
       innerHTML={props.text || \\"\\"}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -4045,7 +4057,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 }
 
 export default function SectionComponent(props) {
-  return (
+  return [
     <section
       {...props.attributes}
       style={
@@ -4057,8 +4069,8 @@ export default function SectionComponent(props) {
       }
     >
       {props.children}
-    </section>
-  );
+    </section>,
+  ];
 }
 "
 `;
@@ -4075,18 +4087,20 @@ export interface SectionProps {
 export default function SectionStateComponent(props) {
   const state = useStore({ max: 42, items: [42] });
 
-  return state.max
-    ? state.items.map((item, index) => (
-        <section
-          {...props.attributes}
-          style={{
-            maxWidth: item + state.max,
-          }}
-        >
-          {props.children}
-        </section>
-      ))
-    : null;
+  return [
+    state.max
+      ? state.items.map((item, index) => (
+          <section
+            {...props.attributes}
+            style={{
+              maxWidth: item + state.max,
+            }}
+          >
+            {props.children}
+          </section>
+        ))
+      : null,
+  ];
 }
 "
 `;
@@ -4107,7 +4121,7 @@ export interface FormSelectProps {
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default function SelectComponent(props) {
-  return (
+  return [
     <select
       {...props.attributes}
       value={props.value}
@@ -4124,8 +4138,8 @@ export default function SelectComponent(props) {
           {option.name || option.value}
         </option>
       ))}
-    </select>
-  );
+    </select>,
+  ];
 }
 "
 `;
@@ -4137,13 +4151,13 @@ type Props = {
 };
 
 export default function SlotCode(props) {
-  return (
+  return [
     <div>
       <Slot>
         <div class=\\"default-slot\\">Default content</div>
       </Slot>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4157,13 +4171,13 @@ type Props = {
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default function SlotCode(props) {
-  return (
+  return [
     <div>
       <ContentSlotCode>
         <Slot testing={<div>Hello</div>} />
       </ContentSlotCode>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4177,11 +4191,11 @@ type Props = {
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default function SlotCode(props) {
-  return (
+  return [
     <div>
       <ContentSlotCode slotTesting={<div>Hello</div>} />
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4193,14 +4207,14 @@ type Props = {
 };
 
 export default function SlotCode(props) {
-  return (
+  return [
     <div>
       <Slot name=\\"myAwesomeSlot\\" />
       <Slot name=\\"top\\" />
       <Slot name=\\"left\\">Default left</Slot>
       <Slot>Default Child</Slot>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4240,7 +4254,7 @@ export default function SmileReviews(props) {
       });
   });
 
-  return (
+  return [
     <div data-user={state.name}>
       <button onClick={(event) => (state.showReviewPrompt = true)}>
         Write a review
@@ -4305,8 +4319,8 @@ export default function SmileReviews(props) {
           </div>
         </div>
       ))}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4318,11 +4332,11 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 }
 
 export default function SubmitButton(props) {
-  return (
+  return [
     <button type=\\"submit\\" {...props.attributes}>
       {props.text}
-    </button>
-  );
+    </button>,
+  ];
 }
 "
 `;
@@ -4343,7 +4357,7 @@ import { Builder } from \\"@builder.io/sdk\\";
 export default function Text(props) {
   const state = useStore({ name: \\"Decadef20\\" });
 
-  return (
+  return [
     <div
       contentEditable={allowEditingText || undefined}
       data-name={{
@@ -4355,8 +4369,8 @@ export default function Text(props) {
         state.name ||
         '<p class=\\"text-lg\\">my name</p>'
       }
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -4371,15 +4385,15 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 }
 
 export default function Textarea(props) {
-  return (
+  return [
     <textarea
       {...props.attributes}
       placeholder={props.placeholder}
       name={props.name}
       value={props.value}
       defaultValue={props.defaultValue}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -4412,7 +4426,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 }
 
 export default function Video(props) {
-  return (
+  return [
     <video
       preload=\\"none\\"
       {...props.attributes}
@@ -4432,8 +4446,8 @@ export default function Video(props) {
       muted={props.muted}
       controls={props.controls}
       loop={props.loop}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -4452,12 +4466,12 @@ export default function MyComponent(props) {
     },
   });
 
-  return (
+  return [
     <div>
       Hello
       {state.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4476,7 +4490,7 @@ export default function MyBasicForNoTagRefComponent(props) {
     },
   });
 
-  return (
+  return [
     <state.TagNameGetter>
       Hello
       <state.tag>{state.name}</state.tag>
@@ -4486,8 +4500,8 @@ export default function MyBasicForNoTagRefComponent(props) {
           <span>{action.text}</span>
         </state.TagName>
       ))}
-    </state.TagNameGetter>
-  );
+    </state.TagNameGetter>,
+  ];
 }
 "
 `;
@@ -4520,12 +4534,12 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 export default function MyBasicOnUpdateReturnComponent(props) {
   const state = useStore({ name: \\"PatrickJS\\" });
 
-  return (
+  return [
     <div>
       Hello!
       {state.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4536,7 +4550,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 import MyComp from \\"./my-component.js\\";
 
 export default function MyBasicComponent(props) {
-  return (
+  return [
     <div>
       <MyComp class=\\"test\\" className=\\"test2\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
@@ -4549,15 +4563,15 @@ export default function MyBasicComponent(props) {
       >
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > class + css 1`] = `
 "export default function MyBasicComponent(props) {
-  return (
+  return [
     <div
       class=\\"test\\"
       css={{
@@ -4565,15 +4579,15 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
       }}
     >
       Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > className + css 1`] = `
 "export default function MyBasicComponent(props) {
-  return (
+  return [
     <div
       class=\\"test\\"
       css={{
@@ -4581,8 +4595,8 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
       }}
     >
       Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4600,12 +4614,12 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
 export default function ClassNameCode(props) {
   const state = useStore({ bindings: \\"a binding\\" });
 
-  return (
+  return [
     <div>
       <div class=\\"no binding\\">Without Binding</div>
       <div class={state.bindings}>With binding</div>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4621,7 +4635,7 @@ export default function MyBasicComponent(props) {
     },
   });
 
-  return (
+  return [
     <div
       class={state.classState}
       css={{
@@ -4630,8 +4644,8 @@ export default function MyBasicComponent(props) {
       style={state.styleState}
     >
       Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4646,11 +4660,11 @@ import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
 export default function ComponentWithContext(props) {
-  return (
+  return [
     <Fragment>
       <Fragment>{foo.value}</Fragment>
-    </Fragment>
-  );
+    </Fragment>,
+  ];
 }
 "
 `;
@@ -4665,12 +4679,12 @@ import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
 export default function ComponentWithContext(props) {
-  return (
+  return [
     <Fragment>
       <Fragment>{foo.value}</Fragment>
       <div>other</div>
-    </Fragment>
-  );
+    </Fragment>,
+  ];
 }
 "
 `;
@@ -4679,7 +4693,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 "import BuilderContext from \\"@dummy/context.js\\";
 
 export default function RenderContent(props) {
-  return <div>setting context</div>;
+  return [<div>setting context</div>];
 }
 "
 `;
@@ -4697,7 +4711,7 @@ export interface ButtonProps {
 }
 
 export default function Button(props) {
-  return (
+  return [
     <div>
       {props.link ? (
         <a
@@ -4717,8 +4731,8 @@ export default function Button(props) {
           {props.buttonText}
         </button>
       ) : null}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4734,7 +4748,7 @@ export interface ButtonProps {
 }
 
 export default function Button(props) {
-  return (
+  return [
     <div>
       {props.link ? (
         <a
@@ -4754,8 +4768,8 @@ export default function Button(props) {
           {props.text}
         </button>
       ) : null}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4770,13 +4784,13 @@ const DEFAULT_VALUES: Props = {
 };
 
 export default function ComponentWithTypes(props) {
-  return (
+  return [
     <div>
       {\\" \\"}
       Hello
       {props.name || DEFAULT_VALUES.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4791,7 +4805,7 @@ export default function MyComponent(props) {
       : null,
   });
 
-  return <div>{state.refToUse}</div>;
+  return [<div>{state.refToUse}</div>];
 }
 "
 `;
@@ -4816,13 +4830,13 @@ export default function Button(props) {
     },
   });
 
-  return (
+  return [
     <div>
       <p>{state.foo2}</p>
       <p>{state.bar}</p>
       <p>{state.baz(1)}</p>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4849,18 +4863,18 @@ export default function RenderContent(props) {
     },
   });
 
-  return (
+  return [
     <RenderBlock
       {...state.getRenderContentProps(props.renderContentProps.block, 0)}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > multipleOnUpdate 1`] = `
 "export default function MultipleOnUpdate(props) {
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -4871,7 +4885,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 export default function MultipleOnUpdateWithDeps(props) {
   const state = useStore({ a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -4886,7 +4900,7 @@ export default function MyBasicComponent(props) {
     },
   });
 
-  return <input {...state.attrs} {...props} />;
+  return [<input {...state.attrs} {...props} />];
 }
 "
 `;
@@ -4899,22 +4913,24 @@ interface Props {
 }
 
 export default function NestedShow(props) {
-  return props.conditionA ? (
-    !props.conditionB ? (
-      <div>if condition A and condition B</div>
+  return [
+    props.conditionA ? (
+      !props.conditionB ? (
+        <div>if condition A and condition B</div>
+      ) : (
+        <div>else-condition-B</div>
+      )
     ) : (
-      <div>else-condition-B</div>
-    )
-  ) : (
-    <div>else-condition-A</div>
-  );
+      <div>else-condition-A</div>
+    ),
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > nestedStyles 1`] = `
 "export default function NestedStyles(props) {
-  return (
+  return [
     <div
       css={{
         display: \\"flex\\",
@@ -4941,8 +4957,8 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
       }}
     >
       Hello world
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4964,11 +4980,11 @@ export default function Embed(props) {
     elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
   });
 
-  return (
+  return [
     <div class=\\"builder-embed\\" ref={elem}>
       <div>Test</div>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -4979,7 +4995,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
     console.log(\\"onMount\\");
   });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -4998,19 +5014,19 @@ export const defaultValues = {
 export default function OnInit(props) {
   const state = useStore({ name: \\"\\" });
 
-  return (
+  return [
     <div>
       Default name defined by parent
       {state.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > onInitPlain 1`] = `
 "export default function OnInitPlain(props) {
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -5025,7 +5041,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
     console.log(\\"Runs on unMount\\");
   });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -5042,14 +5058,14 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
       console.log(\\"SSR runs on Mount\\");
     });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > onUpdate 1`] = `
 "export default function OnUpdate(props) {
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -5064,7 +5080,7 @@ type Props = {
 export default function OnUpdateWithDeps(props) {
   const state = useStore({ a: \\"a\\", b: \\"b\\" });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -5087,7 +5103,7 @@ export const bar = () => {};
 export function run<T>(value: T) {}
 
 export default function MyBasicComponent(props) {
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -5107,12 +5123,12 @@ export interface MyBasicComponentProps {
 }
 
 export default function MyBasicComponent(props) {
-  return (
+  return [
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -5128,13 +5144,13 @@ type Props = {
 export default function MyBasicComponent(props) {
   const state = useStore({ name: \\"Decadef20\\" });
 
-  return (
+  return [
     <div>
       {props.children}
       {props.type}
       Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -5146,12 +5162,12 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 }
 
 export default function MyBasicComponent(props) {
-  return (
+  return [
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -5163,12 +5179,12 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 };
 
 export default function MyBasicComponent(props) {
-  return (
+  return [
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -5187,7 +5203,7 @@ export default function OnUpdate(props) {
     },
   });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -5405,43 +5421,45 @@ export default function RenderBlock(props) {
     },
   });
 
-  return state.shouldWrap ? (
-    <>
-      {isEmptyHtmlElement(state.tag) ? (
-        <state.tag {...state.attributes} {...state.actions} />
-      ) : null}
-      {!isEmptyHtmlElement(state.tag) && state.repeatItemData
-        ? state.repeatItemData.map((data, index) => (
-            <RenderRepeatedBlock
-              key={index}
-              repeatContext={data.context}
-              block={data.block}
-            />
-          ))
-        : null}
-      {!isEmptyHtmlElement(state.tag) && !state.repeatItemData ? (
-        <state.tag {...state.attributes} {...state.actions}>
-          <state.renderComponentTag {...state.renderComponentProps} />
-          {state.childrenWithoutParentComponent.map((child, index) => (
-            <RenderBlock
-              key={\\"render-block-\\" + child.id}
-              block={child}
-              context={state.childrenContext}
-            />
-          ))}
-          {state.childrenWithoutParentComponent.map((child, index) => (
-            <BlockStyles
-              key={\\"block-style-\\" + child.id}
-              block={child}
-              context={state.childrenContext}
-            />
-          ))}
-        </state.tag>
-      ) : null}
-    </>
-  ) : (
-    <state.renderComponentTag {...state.renderComponentProps} />
-  );
+  return [
+    state.shouldWrap ? (
+      <>
+        {isEmptyHtmlElement(state.tag) ? (
+          <state.tag {...state.attributes} {...state.actions} />
+        ) : null}
+        {!isEmptyHtmlElement(state.tag) && state.repeatItemData
+          ? state.repeatItemData.map((data, index) => (
+              <RenderRepeatedBlock
+                key={index}
+                repeatContext={data.context}
+                block={data.block}
+              />
+            ))
+          : null}
+        {!isEmptyHtmlElement(state.tag) && !state.repeatItemData ? (
+          <state.tag {...state.attributes} {...state.actions}>
+            <state.renderComponentTag {...state.renderComponentProps} />
+            {state.childrenWithoutParentComponent.map((child, index) => (
+              <RenderBlock
+                key={\\"render-block-\\" + child.id}
+                block={child}
+                context={state.childrenContext}
+              />
+            ))}
+            {state.childrenWithoutParentComponent.map((child, index) => (
+              <BlockStyles
+                key={\\"block-style-\\" + child.id}
+                block={child}
+                context={state.childrenContext}
+              />
+            ))}
+          </state.tag>
+        ) : null}
+      </>
+    ) : (
+      <state.renderComponentTag {...state.renderComponentProps} />
+    ),
+  ];
 }
 "
 `;
@@ -5469,7 +5487,7 @@ export default function RenderContent(props) {
     sendComponentsToVisualEditor(props.customComponents);
   });
 
-  return (
+  return [
     <div
       css={{
         display: \\"flex\\",
@@ -5478,8 +5496,8 @@ export default function RenderContent(props) {
       onClick={(event) => trackClick(props.content.id)}
     >
       <RenderBlocks blocks={props.content.blocks} />
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -5494,7 +5512,7 @@ export interface ButtonProps {
 }
 
 export default function Button(props) {
-  return (
+  return [
     <Fragment>
       {props.link ? (
         <a
@@ -5510,8 +5528,8 @@ export default function Button(props) {
           {props.text}
         </button>
       ) : null}
-    </Fragment>
-  );
+    </Fragment>,
+  ];
 }
 "
 `;
@@ -5523,7 +5541,7 @@ export interface RenderStylesProps {
 }
 
 export default function RenderStyles(props) {
-  return props.foo === \\"bar\\" ? <div>Bar</div> : <div>Foo</div>;
+  return [props.foo === \\"bar\\" ? <div>Bar</div> : <div>Foo</div>];
 }
 "
 `;
@@ -5532,12 +5550,12 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 "import { Show, MyComponent } from \\"@components\\";
 
 export default function MyComponent(props) {
-  return (
+  return [
     <div>
       {props.name}
       {props.name === \\"Batman\\" ? <MyComponent name=\\"Bruce Wayne\\" /> : null}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -5546,7 +5564,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 "import { Show, MyComponent } from \\"@components\\";
 
 export default function MyComponent(props) {
-  return (
+  return [
     <div>
       {props.name}
       {props.children}
@@ -5555,8 +5573,8 @@ export default function MyComponent(props) {
           <div>Wayne</div>
         </MyComponent>
       ) : null}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -5569,7 +5587,7 @@ interface Props {
 }
 
 export default function ShowWithOtherValues(props) {
-  return (
+  return [
     <div>
       {props.conditionA ? <>Content0</> : <>ContentA</>}
       {props.conditionA ? <>ContentA</> : null}
@@ -5611,8 +5629,8 @@ export default function ShowWithOtherValues(props) {
       ) : (
         <div>complete else</div>
       )}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -5625,11 +5643,13 @@ interface Props {
 }
 
 export default function NestedShow(props) {
-  return props.conditionA ? (
-    props.items.map((item, idx) => <div key={idx}>{item}</div>)
-  ) : (
-    <div>else-condition-A</div>
-  );
+  return [
+    props.conditionA ? (
+      props.items.map((item, idx) => <div key={idx}>{item}</div>)
+    ) : (
+      <div>else-condition-A</div>
+    ),
+  ];
 }
 "
 `;
@@ -5641,7 +5661,7 @@ interface Props {
 }
 
 export default function ShowWithOtherValues(props) {
-  return (
+  return [
     <div>
       {props.conditionA ? <>ContentA</> : null}
       {props.conditionA ? <>ContentB</> : undefined}
@@ -5649,8 +5669,8 @@ export default function ShowWithOtherValues(props) {
       {props.conditionA ? <>ContentD</> : null}
       {props.conditionA ? <>ContentE</> : <>hello</>}
       {props.conditionA ? <>ContentF</> : <>123</>}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -5662,7 +5682,7 @@ interface Props {
 }
 
 export default function ShowRootText(props) {
-  return props.conditionA ? <>ContentA</> : <div>else-condition-A</div>;
+  return [props.conditionA ? <>ContentA</> : <div>else-condition-A</div>];
 }
 "
 `;
@@ -5678,7 +5698,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 };
 
 export default function MyBasicComponent(props) {
-  return (
+  return [
     <div
       class=\\"test\\"
       css={{
@@ -5687,29 +5707,29 @@ export default function MyBasicComponent(props) {
     >
       {props.id}
       {props.foo.value.bar.baz}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > spreadAttrs 1`] = `
 "export default function MyBasicComponent(props) {
-  return <input {...attrs} />;
+  return [<input {...attrs} />];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > spreadNestedProps 1`] = `
 "export default function MyBasicComponent(props) {
-  return <input {...props.nested} />;
+  return [<input {...props.nested} />];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > spreadProps 1`] = `
 "export default function MyBasicComponent(props) {
-  return <input {...props} />;
+  return [<input {...props} />];
 }
 "
 `;
@@ -5720,14 +5740,14 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 export default function StringLiteralStore(props) {
   const state = useStore({ foo: 123 });
 
-  return <div>{state.foo}</div>;
+  return [<div>{state.foo}</div>];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > styleClassAndCss 1`] = `
 "export default function MyComponent(props) {
-  return (
+  return [
     <div
       class=\\"builder-column\\"
       style={{
@@ -5738,15 +5758,15 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
         flexDirection: \\"column\\",
         alignItems: \\"stretch\\",
       }}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > stylePropClassAndCss 1`] = `
 "export default function StylePropClassAndCss(props) {
-  return (
+  return [
     <div
       class=\\"USE_TARGET_BLOCK_1\\"
       style={props.attributes.style}
@@ -5755,8 +5775,8 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
         flexDirection: \\"column\\",
         alignItems: \\"stretch\\",
       }}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -5767,14 +5787,14 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 import Foo from \\"./foo-sub-component.js\\";
 
 export default function SubComponent(props) {
-  return <Foo />;
+  return [<Foo />];
 }
 "
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > svgComponent 1`] = `
 "export default function SvgComponent(props) {
-  return (
+  return [
     <svg
       fill=\\"none\\"
       role=\\"img\\"
@@ -5789,8 +5809,8 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
           <feGaussianBlur result=\\"effect1_foregroundBlur\\" stdDeviation={7} />
         </filter>
       </defs>
-    </svg>
-  );
+    </svg>,
+  ];
 }
 "
 `;
@@ -5805,7 +5825,7 @@ import type { Foo } from \\"./foo-type\\";
 import type { Foo as Foo2 } from \\"./type-export.js\\";
 
 export default function TypeDependency(props) {
-  return <div>{props.foo}</div>;
+  return [<div>{props.foo}</div>];
 }
 "
 `;
@@ -5818,12 +5838,12 @@ import { FooStore } from \\"./foo-store\\";
 export default function TypeExternalStore(props) {
   const state = useStore({ _name: \\"test\\" });
 
-  return (
+  return [
     <div>
       Hello
       {state._name}!{\\" \\"}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -5852,12 +5872,12 @@ export default function TypeGetterStore(props) {
     },
   });
 
-  return (
+  return [
     <div>
       Hello
       {state.name}!{\\" \\"}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -5873,7 +5893,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
         }
     \`);
 
-  return <button type=\\"button\\">Button</button>;
+  return [<button type=\\"button\\">Button</button>];
 }
 "
 `;
@@ -5887,7 +5907,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
         }
     \`);
 
-  return (
+  return [
     <button
       type=\\"button\\"
       css={{
@@ -5896,8 +5916,8 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
       }}
     >
       Button
-    </button>
-  );
+    </button>,
+  ];
 }
 "
 `;
@@ -5913,7 +5933,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
   }
 \`);
 
-  return <button type=\\"button\\">Button</button>;
+  return [<button type=\\"button\\">Button</button>];
 }
 "
 `;
@@ -5937,7 +5957,7 @@ export default function UseTargetComponent(props) {
     (\\"USE_TARGET_BLOCK_2\\");
   });
 
-  return <div>{state.name}</div>;
+  return [<div>{state.name}</div>];
 }
 "
 `;
@@ -5946,13 +5966,13 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 "import { register } from \\"swiper/element/bundle\\";
 
 export default function MyBasicWebComponent(props) {
-  return (
+  return [
     <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
       <swiper-slide>Slide 1</swiper-slide>
       <swiper-slide>Slide 2</swiper-slide>
       <swiper-slide>Slide 3</swiper-slide>
-    </swiper-container>
-  );
+    </swiper-container>,
+  ];
 }
 "
 `;
@@ -5963,15 +5983,15 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Java
 export default function MyComponent(props) {
   const state = useStore({ name: \\"Steve\\" });
 
-  return (
+  return [
     <div>
       <input
         onChange={(event) => (state.name = event.target.value)}
         value={state.name}
       />
       Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -5982,7 +6002,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Java
 export default function MyComponent(props) {
   const state = useStore({ tortilla: \\"Plain\\", fillings: [] });
 
-  return (
+  return [
     <div>
       <input
         type=\\"radio\\"
@@ -6036,8 +6056,8 @@ export default function MyComponent(props) {
         Fillings:
         {state.fillings}
       </p>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -6048,7 +6068,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Java
 export default function MyComponent(props) {
   const state = useStore({ value: \\"hello\\" });
 
-  return <input value={state.value} />;
+  return [<input value={state.value} />];
 }
 "
 `;
@@ -6059,13 +6079,13 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Java
 export default function MyComponent(props) {
   const state = useStore({ focus: true });
 
-  return (
+  return [
     <input
       class={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
         state.focus ? \\"focus\\" : \\"\\"
       }\`}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -6076,7 +6096,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Java
 export default function MyComponent(props) {
   const state = useStore({ activeTab: 0 });
 
-  return <div>{state.activeTab}</div>;
+  return [<div>{state.activeTab}</div>];
 }
 "
 `;
@@ -6088,13 +6108,13 @@ import { For } from \\"@components\\";
 export default function MyComponent(props) {
   const state = useStore({ numbers: [\\"one\\", \\"two\\", \\"three\\"] });
 
-  return (
+  return [
     <ul>
       {state.numbers.map((num, index) => (
         <li>{num}</li>
       ))}
-    </ul>
-  );
+    </ul>,
+  ];
 }
 "
 `;
@@ -6109,13 +6129,13 @@ export default function MyComponent(props) {
     },
   });
 
-  return (
+  return [
     <div>
       <button onClick={(event) => state.log(\\"hi\\")}>Log</button>
       <button onClick={(event) => state.log(event)}>Log</button>
       <button onClick={(event) => state.log(event)}>Log</button>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -6126,7 +6146,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Java
 export default function MyComponent(props) {
   const state = useStore({ html: \\"<b>bold</b>\\" });
 
-  return <div innerHTML={state.html} />;
+  return [<div innerHTML={state.html} />];
 }
 "
 `;
@@ -6143,11 +6163,13 @@ export default function MyComponent(props) {
     },
   });
 
-  return state.show ? (
-    <button onClick={(event) => state.toggle(event)}> Hide </button>
-  ) : (
-    <button onClick={(event) => state.toggle(event)}> Show </button>
-  );
+  return [
+    state.show ? (
+      <button onClick={(event) => state.toggle(event)}> Hide </button>
+    ) : (
+      <button onClick={(event) => state.toggle(event)}> Show </button>
+    ),
+  ];
 }
 "
 `;
@@ -6161,13 +6183,13 @@ import Button from \\"./Button.js\\";
 export default function MyComponent(props) {
   const state = useStore({ disabled: false });
 
-  return (
+  return [
     <div>
       <Button type=\\"button\\" disabled={state.disabled}>
         <Slot />
       </Button>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -6182,7 +6204,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Java
     console.log(\\"onDestroy\\");
   });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -6198,13 +6220,13 @@ export default function MyComponent(props) {
     },
   });
 
-  return (
+  return [
     <div>
       <input value={state.name} />
       Lowercase:
       {state.lowercaseName}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -6222,7 +6244,7 @@ export default function MyComponent(props) {
     },
   });
 
-  return (
+  return [
     <div>
       <input
         type=\\"number\\"
@@ -6236,8 +6258,8 @@ export default function MyComponent(props) {
       />
       Result:
       {state.result}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -6246,14 +6268,14 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Java
 "import { Slot } from \\"@components\\";
 
 export default function MyComponent(props) {
-  return (
+  return [
     <div>
       <Slot>default</Slot>
       <Slot name=\\"Test\\">
         <div>default</div>
       </Slot>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -6271,7 +6293,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Java
   }
 \`);
 
-  return <input class=\\"form-input\\" />;
+  return [<input class=\\"form-input\\" />];
 }
 "
 `;
@@ -6282,15 +6304,15 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Java
 export default function MyComponent(props) {
   const state = useStore({ a: 5, b: 12 });
 
-  return (
+  return [
     <div>
       normal:
       {state.a + state.b}
       <br />
       conditional
       {state.a > 2 ? \\"hello\\" : \\"bye\\"}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -6301,15 +6323,15 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Type
 export default function MyComponent(props) {
   const state = useStore({ name: \\"Steve\\" });
 
-  return (
+  return [
     <div>
       <input
         onChange={(event) => (state.name = event.target.value)}
         value={state.name}
       />
       Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -6320,7 +6342,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Type
 export default function MyComponent(props) {
   const state = useStore({ tortilla: \\"Plain\\", fillings: [] });
 
-  return (
+  return [
     <div>
       <input
         type=\\"radio\\"
@@ -6374,8 +6396,8 @@ export default function MyComponent(props) {
         Fillings:
         {state.fillings}
       </p>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -6386,7 +6408,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Type
 export default function MyComponent(props) {
   const state = useStore({ value: \\"hello\\" });
 
-  return <input value={state.value} />;
+  return [<input value={state.value} />];
 }
 "
 `;
@@ -6397,13 +6419,13 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Type
 export default function MyComponent(props) {
   const state = useStore({ focus: true });
 
-  return (
+  return [
     <input
       class={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
         state.focus ? \\"focus\\" : \\"\\"
       }\`}
-    />
-  );
+    />,
+  ];
 }
 "
 `;
@@ -6414,7 +6436,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Type
 export default function MyComponent(props) {
   const state = useStore({ activeTab: 0 });
 
-  return <div>{state.activeTab}</div>;
+  return [<div>{state.activeTab}</div>];
 }
 "
 `;
@@ -6426,13 +6448,13 @@ import { For } from \\"@components\\";
 export default function MyComponent(props) {
   const state = useStore({ numbers: [\\"one\\", \\"two\\", \\"three\\"] });
 
-  return (
+  return [
     <ul>
       {state.numbers.map((num, index) => (
         <li>{num}</li>
       ))}
-    </ul>
-  );
+    </ul>,
+  ];
 }
 "
 `;
@@ -6447,13 +6469,13 @@ export default function MyComponent(props) {
     },
   });
 
-  return (
+  return [
     <div>
       <button onClick={(event) => state.log(\\"hi\\")}>Log</button>
       <button onClick={(event) => state.log(event)}>Log</button>
       <button onClick={(event) => state.log(event)}>Log</button>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -6464,7 +6486,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Type
 export default function MyComponent(props) {
   const state = useStore({ html: \\"<b>bold</b>\\" });
 
-  return <div innerHTML={state.html} />;
+  return [<div innerHTML={state.html} />];
 }
 "
 `;
@@ -6481,11 +6503,13 @@ export default function MyComponent(props) {
     },
   });
 
-  return state.show ? (
-    <button onClick={(event) => state.toggle(event)}> Hide </button>
-  ) : (
-    <button onClick={(event) => state.toggle(event)}> Show </button>
-  );
+  return [
+    state.show ? (
+      <button onClick={(event) => state.toggle(event)}> Hide </button>
+    ) : (
+      <button onClick={(event) => state.toggle(event)}> Show </button>
+    ),
+  ];
 }
 "
 `;
@@ -6499,13 +6523,13 @@ import Button from \\"./Button.js\\";
 export default function MyComponent(props) {
   const state = useStore({ disabled: false });
 
-  return (
+  return [
     <div>
       <Button type=\\"button\\" disabled={state.disabled}>
         <Slot />
       </Button>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -6520,7 +6544,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Type
     console.log(\\"onDestroy\\");
   });
 
-  return <div />;
+  return [<div />];
 }
 "
 `;
@@ -6536,13 +6560,13 @@ export default function MyComponent(props) {
     },
   });
 
-  return (
+  return [
     <div>
       <input value={state.name} />
       Lowercase:
       {state.lowercaseName}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -6560,7 +6584,7 @@ export default function MyComponent(props) {
     },
   });
 
-  return (
+  return [
     <div>
       <input
         type=\\"number\\"
@@ -6574,8 +6598,8 @@ export default function MyComponent(props) {
       />
       Result:
       {state.result}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -6584,14 +6608,14 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Type
 "import { Slot } from \\"@components\\";
 
 export default function MyComponent(props) {
-  return (
+  return [
     <div>
       <Slot>default</Slot>
       <Slot name=\\"Test\\">
         <div>default</div>
       </Slot>
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
@@ -6609,7 +6633,7 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Type
   }
 \`);
 
-  return <input class=\\"form-input\\" />;
+  return [<input class=\\"form-input\\" />];
 }
 "
 `;
@@ -6620,15 +6644,15 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > svelte > Type
 export default function MyComponent(props) {
   const state = useStore({ a: 5, b: 12 });
 
-  return (
+  return [
     <div>
       normal:
       {state.a + state.b}
       <br />
       conditional
       {state.a > 2 ? \\"hello\\" : \\"bye\\"}
-    </div>
-  );
+    </div>,
+  ];
 }
 "
 `;
