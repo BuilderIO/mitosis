@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.10
+
+### Patch Changes
+
+- 499b4b7: [Mitosis] feat: add returnArray option
+
 ## 0.5.9
 
 ### Patch Changes
