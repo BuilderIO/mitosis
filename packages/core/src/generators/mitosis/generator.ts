@@ -295,11 +295,11 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
 
       ${json.style ? `useStyle(\`${json.style}\`)` : ''}
 
-      return (${addWrapper ? '<>' : ''}
+      return ${options.returnArray ? '[' : '('}${addWrapper ? '<>' : ''}
         ${json.children
           .map((item) => blockToMitosis(item, options, component, addWrapper))
           .join('\n')}
-        ${addWrapper ? '</>' : ''})
+        ${addWrapper ? '</>' : ''}${options.returnArray ? ']' : ')'}
     }
 
   `;
