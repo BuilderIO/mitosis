@@ -9,6 +9,22 @@ import { transformAttributeName } from './helpers';
 
 const { types } = babel;
 
+const getBodyExpression = (node: babel.types.Node) => {
+  if (types.isArrowFunctionExpression(node) || types.isFunctionExpression(node)) {
+    const callback = node.body;
+    if (callback.type === 'BlockStatement') {
+      for (const statement of callback.body) {
+        if (statement.type === 'ReturnStatement') {
+          return statement.argument;
+        }
+      }
+    } else {
+      return callback;
+    }
+  }
+  return undefined;
+};
+
 const getForArguments = (params: any[]): ForNode['scope'] => {
   const [forName, indexName, collectionName] = params
     .filter((param): param is babel.types.Identifier => types.isIdentifier(param))
@@ -57,8 +73,11 @@ export const jsxElementToJson = (
       node.callee.object.name === 'Array';
     if (isMap) {
       const callback = node.arguments[0];
-      if (types.isArrowFunctionExpression(callback)) {
-        const forArguments = getForArguments(callback.params);
+      const bodyExpression = getBodyExpression(callback);
+      if (bodyExpression) {
+        const forArguments = getForArguments(
+          (callback as babel.types.ArrowFunctionExpression | babel.types.FunctionExpression).params,
+        );
         return createMitosisNode({
           name: 'For',
           bindings: {
@@ -69,15 +88,18 @@ export const jsxElementToJson = (
             }),
           },
           scope: forArguments,
-          children: [jsxElementToJson(callback.body as any)!],
+          children: [jsxElementToJson(bodyExpression)!],
         });
       }
     } else if (isArrayFrom) {
       // Array.from
       const each = node.arguments[0];
       const callback = node.arguments[1];
-      if (types.isArrowFunctionExpression(callback)) {
-        const forArguments = getForArguments(callback.params);
+      const bodyExpression = getBodyExpression(callback);
+      if (bodyExpression) {
+        const forArguments = getForArguments(
+          (callback as babel.types.ArrowFunctionExpression | babel.types.FunctionExpression).params,
+        );
 
         return createMitosisNode({
           name: 'For',
@@ -95,7 +117,7 @@ export const jsxElementToJson = (
             }),
           },
           scope: forArguments,
-          children: [jsxElementToJson(callback.body as any)!],
+          children: [jsxElementToJson(bodyExpression)!],
         });
       }
     }

@@ -27,6 +27,26 @@ import { Component } from \\"@angular/core\\";
       <ng-container *ngFor=\\"let _ of node_0_For\\">
         <p>{{index}}</p>
       </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as index\\">
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as index\\"
+      >
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as index\\">
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as index\\"
+      >
+        <span>{{person}} {{index}}</span>
+      </ng-container>
     </main>
   \`,
   styles: [
@@ -911,7 +931,7 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"column\\",
   template: \`
     <div class=\\"builder-columns div\\">
-      <ng-container *ngFor=\\"let column of columns\\">
+      <ng-container *ngFor=\\"let column of columns; index as index\\">
         <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
       </ng-container>
     </div>
@@ -1353,7 +1373,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; trackBy: trackByBlock0\\"
+          *ngFor=\\"let block of builderBlock?.children; index as index; trackBy: trackByBlock0\\"
         >
           <builder-block-component
             [block]=\\"block\\"
@@ -2403,7 +2423,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.name]=\\"name\\"
       #elRef0
     >
-      <ng-container *ngFor=\\"let option of options\\">
+      <ng-container *ngFor=\\"let option of options; index as index\\">
         <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
@@ -2646,7 +2666,9 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         ></textarea>
         <button class=\\"button\\" (click)=\\"node_0_button($event)\\">Submit</button>
       </ng-container>
-      <ng-container *ngFor=\\"let review of reviews; trackBy: trackByReview0\\">
+      <ng-container
+        *ngFor=\\"let review of reviews; index as index; trackBy: trackByReview0\\"
+      >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
@@ -5384,7 +5406,7 @@ import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
       </ng-container>
       <ng-container *ngIf=\\"node_1_Show\\">
         <ng-container
-          *ngFor=\\"let data of repeatItemData; trackBy: trackByData0\\"
+          *ngFor=\\"let data of repeatItemData; index as index; trackBy: trackByData0\\"
         >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
@@ -7271,6 +7293,26 @@ import { Component, SimpleChanges } from \\"@angular/core\\";
       <ng-container *ngFor=\\"let _ of node_0_For\\">
         <p>{{index}}</p>
       </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as index\\">
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as index\\"
+      >
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as index\\">
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as index\\"
+      >
+        <span>{{person}} {{index}}</span>
+      </ng-container>
     </main>
   \`,
   styles: [
@@ -8220,7 +8262,7 @@ export interface ColumnProps {
   selector: \\"column\\",
   template: \`
     <div class=\\"builder-columns div\\">
-      <ng-container *ngFor=\\"let column of columns\\">
+      <ng-container *ngFor=\\"let column of columns; index as index\\">
         <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
       </ng-container>
     </div>
@@ -8722,7 +8764,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; trackBy: trackByBlock0\\"
+          *ngFor=\\"let block of builderBlock?.children; index as index; trackBy: trackByBlock0\\"
         >
           <builder-block-component
             [block]=\\"block\\"
@@ -9865,7 +9907,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.name]=\\"name\\"
       #elRef0
     >
-      <ng-container *ngFor=\\"let option of options\\">
+      <ng-container *ngFor=\\"let option of options; index as index\\">
         <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
@@ -10129,7 +10171,9 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         ></textarea>
         <button class=\\"button\\" (click)=\\"node_0_button($event)\\">Submit</button>
       </ng-container>
-      <ng-container *ngFor=\\"let review of reviews; trackBy: trackByReview0\\">
+      <ng-container
+        *ngFor=\\"let review of reviews; index as index; trackBy: trackByReview0\\"
+      >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
@@ -13053,7 +13097,7 @@ import type { RepeatData } from \\"./types.js\\";
       </ng-container>
       <ng-container *ngIf=\\"node_1_Show\\">
         <ng-container
-          *ngFor=\\"let data of repeatItemData; trackBy: trackByData0\\"
+          *ngFor=\\"let data of repeatItemData; index as index; trackBy: trackByData0\\"
         >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"

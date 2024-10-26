@@ -362,11 +362,11 @@ export const blockToAngular = ({
       };
 
       str += `<ng-container *ngFor="let ${forName ?? '_'} of ${json.bindings.each?.code}${
-        indexName && indexName !== 'index' ? `; index as ${indexName}` : ''
+        indexName ? `; index as ${indexName}` : ''
       }; trackBy: ${trackByFnName}">`;
     } else {
       str += `<ng-container *ngFor="let ${forName ?? '_'} of ${json.bindings.each?.code}${
-        indexName && indexName !== 'index' ? `; index as ${indexName}` : ''
+        indexName ? `; index as ${indexName}` : ''
       }">`;
     }
     str += json.children

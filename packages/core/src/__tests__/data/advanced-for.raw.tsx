@@ -25,6 +25,39 @@ export default function MyBasicForShowComponent() {
       {Array.from({ length: 10 }, () => (
         <p>{index}</p>
       ))}
+      {state.names?.map((person, index) => {
+        console.log(person);
+        return (
+          <span>
+            {person} {index}
+          </span>
+        );
+      })}
+      {Array.from({ length: 10 }, (person, index) => {
+        console.log(person);
+        return (
+          <span>
+            {person} {index}
+          </span>
+        );
+      })}
+
+      {state.names?.map(function (person, index) {
+        console.log(person);
+        return (
+          <span>
+            {person} {index}
+          </span>
+        );
+      })}
+      {Array.from({ length: 10 }, function (person, index) {
+        console.log(person);
+        return (
+          <span>
+            {person} {index}
+          </span>
+        );
+      })}
     </main>
   );
 }
