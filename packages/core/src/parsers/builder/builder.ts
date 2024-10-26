@@ -574,6 +574,7 @@ export const builderElementToMitosisNode = (
         },
         scope: {
           forName: block.repeat?.itemName || 'item',
+          indexName: block.repeat?.indexName,
         },
         meta: getMetaFromBlock(block, options),
         children:

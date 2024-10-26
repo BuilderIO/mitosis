@@ -8,6 +8,7 @@ import { parseJsx } from '../parsers/jsx';
 import { compileAwayBuilderComponents } from '../plugins/compile-away-builder-components';
 
 import { BuilderContent } from '@builder.io/sdk';
+import advancedFor from './data/advanced-for.raw.tsx?raw';
 import columns from './data/blocks/columns.raw.tsx?raw';
 import customCode from './data/blocks/custom-code.raw.tsx?raw';
 import embed from './data/blocks/embed.raw.tsx?raw';
@@ -43,6 +44,16 @@ describe('Builder', () => {
 
   test('Show', () => {
     const component = parseJsx(show);
+    const builderJson = componentToBuilder()({ component });
+    expect(builderJson).toMatchSnapshot();
+
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
+    expect(mitosis).toMatchSnapshot();
+  });
+
+  test('Advanced For', () => {
+    const component = parseJsx(advancedFor);
     const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
 
