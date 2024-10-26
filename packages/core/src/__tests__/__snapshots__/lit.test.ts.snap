@@ -1,5 +1,46 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Lit > jsx > Javascript Test > Advanced 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-for-show-component\\")
+export default class MyBasicForShowComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() name = \\"PatrickJS\\";
+  @state() names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  render() {
+    return html\`
+
+          <main>
+          \${this.names?.map(
+            (person, i) => html\`
+      <div>\${i} : \${person}</div>
+      \`
+          )} \${this.names?.map((person, index) => html\`<span>\${person}</span>\`)}
+          \${this.names?.map((_, index) => html\`<br />\`)} \${Array.from({
+      length: 10,
+    })?.map(
+      (_, ee) => html\`
+      <pre>\${ee}</pre>
+      \`
+    )} \${Array.from({ length: 10 })?.map(
+      (_, index) => html\`
+      <p>\${index}</p>
+      \`
+    )}
+        </main>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > AdvancedRef 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -1320,7 +1361,7 @@ export default class ImgStateComponent extends LitElement {
 
           <div>
           \${this.images?.map(
-            (item, index) => html\`<my-fragment
+            (item, itemIndex) => html\`<my-fragment
         ><img .src=\\"\${item}\\" .key=\\"\${itemIndex}\\" /></my-fragment
       >\`
           )}
@@ -3689,7 +3730,7 @@ export default class NestedShow extends LitElement {
           \${
             this.conditionA
               ? html\`\${this.items?.map(
-                  (item, index) => html\`
+                  (item, idx) => html\`
         <div .key=\\"\${idx}\\">\${item}</div>
         \`
                 )}\`
@@ -4255,6 +4296,47 @@ export default class MyBasicComponent extends LitElement {
     return html\`
 
           <div>Hello \${this.name} ! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > Advanced 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-for-show-component\\")
+export default class MyBasicForShowComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() name = \\"PatrickJS\\";
+  @state() names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  render() {
+    return html\`
+
+          <main>
+          \${this.names?.map(
+            (person, i) => html\`
+      <div>\${i} : \${person}</div>
+      \`
+          )} \${this.names?.map((person, index) => html\`<span>\${person}</span>\`)}
+          \${this.names?.map((_, index) => html\`<br />\`)} \${Array.from({
+      length: 10,
+    })?.map(
+      (_, ee) => html\`
+      <pre>\${ee}</pre>
+      \`
+    )} \${Array.from({ length: 10 })?.map(
+      (_, index) => html\`
+      <p>\${index}</p>
+      \`
+    )}
+        </main>
 
         \`;
   }
@@ -5710,7 +5792,7 @@ export default class ImgStateComponent extends LitElement {
 
           <div>
           \${this.images?.map(
-            (item, index) => html\`<my-fragment
+            (item, itemIndex) => html\`<my-fragment
         ><img .src=\\"\${item}\\" .key=\\"\${itemIndex}\\" /></my-fragment
       >\`
           )}
@@ -8354,7 +8436,7 @@ export default class NestedShow extends LitElement {
           \${
             this.conditionA
               ? html\`\${this.items?.map(
-                  (item, index) => html\`
+                  (item, idx) => html\`
         <div .key=\\"\${idx}\\">\${item}</div>
         \`
                 )}\`

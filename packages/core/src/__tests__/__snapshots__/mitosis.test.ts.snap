@@ -1,5 +1,41 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > Advanced 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+import { For } from \\"@components\\";
+
+export default function MyBasicForShowComponent(props) {
+  const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
+
+  return [
+    <main>
+      {state.names.map((person, i) => (
+        <div>
+          {i}:{person}
+        </div>
+      ))}
+      {state.names.map((person, index) => (
+        <span>{person}</span>
+      ))}
+      {state.names.map((_, index) => (
+        <br />
+      ))}
+      {Array.from({
+        length: 10,
+      }).map((_, ee) => (
+        <pre>{ee}</pre>
+      ))}
+      {Array.from({
+        length: 10,
+      }).map((_, index) => (
+        <p>{index}</p>
+      ))}
+    </main>,
+  ];
+}
+"
+`;
+
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > AdvancedRef 1`] = `
 "import { useStore, useRef } from \\"@builder.io/mitosis\\";
 import { Show, Fragment } from \\"@components\\";
@@ -2799,6 +2835,42 @@ export default function MyBasicComponent(props) {
       Hello
       {state.name}! I can run in React, Qwik, Vue, Solid, or Liquid!
     </div>,
+  ];
+}
+"
+`;
+
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > Advanced 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+import { For } from \\"@components\\";
+
+export default function MyBasicForShowComponent(props) {
+  const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
+
+  return [
+    <main>
+      {state.names.map((person, i) => (
+        <div>
+          {i}:{person}
+        </div>
+      ))}
+      {state.names.map((person, index) => (
+        <span>{person}</span>
+      ))}
+      {state.names.map((_, index) => (
+        <br />
+      ))}
+      {Array.from({
+        length: 10,
+      }).map((_, ee) => (
+        <pre>{ee}</pre>
+      ))}
+      {Array.from({
+        length: 10,
+      }).map((_, index) => (
+        <p>{index}</p>
+      ))}
+    </main>,
   ];
 }
 "
@@ -6657,6 +6729,43 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Mitosis, format: legacy > jsx > Javascript Test > Advanced 1`] = `
+"import { useStore, For } from \\"@builder.io/mitosis\\";
+
+export default function MyBasicForShowComponent(props) {
+  const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
+
+  return (
+    <main>
+      <For each={state.names}>
+        {(person, i) => (
+          <div>
+            {i}:{person}
+          </div>
+        )}
+      </For>
+      <For each={state.names}>{(person, index) => <span>{person}</span>}</For>
+      <For each={state.names}>{(_, index) => <br />}</For>
+      <For
+        each={Array.from({
+          length: 10,
+        })}
+      >
+        {(_, ee) => <pre>{ee}</pre>}
+      </For>
+      <For
+        each={Array.from({
+          length: 10,
+        })}
+      >
+        {(_, index) => <p>{index}</p>}
+      </For>
+    </main>
+  );
+}
+"
+`;
+
 exports[`Mitosis, format: legacy > jsx > Javascript Test > AdvancedRef 1`] = `
 "import { useStore, useRef, Show } from \\"@builder.io/mitosis\\";
 import { Fragment } from \\"@components\\";
@@ -9492,6 +9601,43 @@ export default function MyBasicComponent(props) {
       Hello
       {state.name}! I can run in React, Qwik, Vue, Solid, or Liquid!
     </div>
+  );
+}
+"
+`;
+
+exports[`Mitosis, format: legacy > jsx > Typescript Test > Advanced 1`] = `
+"import { useStore, For } from \\"@builder.io/mitosis\\";
+
+export default function MyBasicForShowComponent(props) {
+  const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
+
+  return (
+    <main>
+      <For each={state.names}>
+        {(person, i) => (
+          <div>
+            {i}:{person}
+          </div>
+        )}
+      </For>
+      <For each={state.names}>{(person, index) => <span>{person}</span>}</For>
+      <For each={state.names}>{(_, index) => <br />}</For>
+      <For
+        each={Array.from({
+          length: 10,
+        })}
+      >
+        {(_, ee) => <pre>{ee}</pre>}
+      </For>
+      <For
+        each={Array.from({
+          length: 10,
+        })}
+      >
+        {(_, index) => <p>{index}</p>}
+      </For>
+    </main>
   );
 }
 "
@@ -13394,6 +13540,47 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Mitosis, format: react > jsx > Javascript Test > Advanced 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyBasicForShowComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
+
+  return (
+    <main>
+      {names?.map((person, i) => (
+        <div>
+          {i}: {person}
+        </div>
+      ))}
+      {names?.map((person) => (
+        <span>{person}</span>
+      ))}
+      {names?.map((item) => (
+        <br />
+      ))}
+      {Array.from({
+        length: 10,
+      })?.map((_, ee) => (
+        <pre>{ee}</pre>
+      ))}
+      {Array.from({
+        length: 10,
+      })?.map((item) => (
+        <p>{index}</p>
+      ))}
+    </main>
+  );
+}
+
+export default MyBasicForShowComponent;
+"
+`;
+
 exports[`Mitosis, format: react > jsx > Javascript Test > AdvancedRef 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -16781,6 +16968,47 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Mitosis, format: react > jsx > Typescript Test > Advanced 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function MyBasicForShowComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
+
+  return (
+    <main>
+      {names?.map((person, i) => (
+        <div>
+          {i}: {person}
+        </div>
+      ))}
+      {names?.map((person) => (
+        <span>{person}</span>
+      ))}
+      {names?.map((item) => (
+        <br />
+      ))}
+      {Array.from({
+        length: 10,
+      })?.map((_, ee) => (
+        <pre>{ee}</pre>
+      ))}
+      {Array.from({
+        length: 10,
+      })?.map((item) => (
+        <p>{index}</p>
+      ))}
+    </main>
+  );
+}
+
+export default MyBasicForShowComponent;
 "
 `;
 

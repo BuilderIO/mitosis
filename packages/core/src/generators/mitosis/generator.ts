@@ -89,7 +89,7 @@ export const blockToMitosis = (
     const needsWrapper = json.children.length !== 1;
     if (options.nativeLoops) {
       const a = `${insideJsx ? '{' : ''}(${json.bindings.each?.code}).map(
-      (${json.scope.forName}, ${json.scope.indexName || 'index'}) => (
+      (${json.scope.forName || '_'}, ${json.scope.indexName || 'index'}) => (
       ${needsWrapper ? '<>' : ''}
         ${json.children
           .map((child) => blockToMitosis(child, options, component, needsWrapper))
@@ -99,7 +99,7 @@ export const blockToMitosis = (
       return a;
     }
     return `<For each={${json.bindings.each?.code}}>
-    {(${json.scope.forName}, ${json.scope.indexName || 'index'}) =>
+    {(${json.scope.forName || '_'}, ${json.scope.indexName || 'index'}) =>
       ${needsWrapper ? '<>' : ''}
         ${json.children.map((child) => blockToMitosis(child, options, component, needsWrapper))}}
       ${needsWrapper ? '</>' : ''}
