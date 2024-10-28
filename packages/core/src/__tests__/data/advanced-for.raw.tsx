@@ -33,20 +33,20 @@ export default function MyBasicForShowComponent() {
           </span>
         );
       })}
-      {Array.from({ length: 10 }, (person, index) => {
+      {Array.from({ length: 10 }, (person, count) => {
         console.log(person);
         return (
           <span>
-            {person} {index}
+            {person} {count}
           </span>
         );
       })}
 
-      {state.names?.map(function (person, index) {
+      {state.names?.map(function (person, i) {
         console.log(person);
         return (
           <span>
-            {person} {index}
+            {person} {i}
           </span>
         );
       })}

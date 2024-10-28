@@ -20,7 +20,7 @@ exports[`Builder > Advanced For 1`] = `
                   {
                     "@type": "@builder.io/sdk:Element",
                     "bindings": {
-                      "component.options.text": "i",
+                      "component.options.text": "state.$index",
                     },
                     "component": {
                       "name": "Text",
@@ -64,7 +64,6 @@ exports[`Builder > Advanced For 1`] = `
             },
             "repeat": {
               "collection": "state.names",
-              "indexName": "i",
               "itemName": "person",
             },
           },
@@ -138,7 +137,7 @@ exports[`Builder > Advanced For 1`] = `
                   {
                     "@type": "@builder.io/sdk:Element",
                     "bindings": {
-                      "component.options.text": "ee",
+                      "component.options.text": "state.$index",
                     },
                     "component": {
                       "name": "Text",
@@ -162,7 +161,6 @@ exports[`Builder > Advanced For 1`] = `
               "collection": "Array.from({
   length: 10
 })",
-              "indexName": "ee",
               "itemName": "_",
             },
           },
@@ -247,7 +245,6 @@ exports[`Builder > Advanced For 1`] = `
             },
             "repeat": {
               "collection": "state.names",
-              "indexName": "index",
               "itemName": "person",
             },
           },
@@ -297,7 +294,6 @@ exports[`Builder > Advanced For 1`] = `
               "collection": "Array.from({
   length: 10
 })",
-              "indexName": "index",
               "itemName": "person",
             },
           },
@@ -345,7 +341,6 @@ exports[`Builder > Advanced For 1`] = `
             },
             "repeat": {
               "collection": "state.names",
-              "indexName": "index",
               "itemName": "person",
             },
           },
@@ -395,7 +390,6 @@ exports[`Builder > Advanced For 1`] = `
               "collection": "Array.from({
   length: 10
 })",
-              "indexName": "index",
               "itemName": "person",
             },
           },
@@ -425,9 +419,9 @@ export default function MyComponent(props) {
   return (
     <main>
       <For each={state.names}>
-        {(person, i) => (
+        {(person, index) => (
           <div>
-            <span>{i}</span>
+            <span>{index}</span>
             <span>: </span>
             <span>{person}</span>
           </div>
@@ -440,7 +434,7 @@ export default function MyComponent(props) {
           length: 10,
         })}
       >
-        {(_, ee) => <pre>{ee}</pre>}
+        {(_, index) => <pre>{index}</pre>}
       </For>
       <For
         each={Array.from({
@@ -555,7 +549,6 @@ exports[`Builder > Columns 1`] = `
             },
             "repeat": {
               "collection": "props.columns",
-              "indexName": "index",
               "itemName": "column",
             },
           },
@@ -3216,7 +3209,6 @@ exports[`Builder > Stamped 1`] = `
             },
             "repeat": {
               "collection": "state.reviews",
-              "indexName": "index",
               "itemName": "review",
             },
           },

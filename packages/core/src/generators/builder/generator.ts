@@ -142,17 +142,20 @@ const componentMappers: {
     return block;
   },
   For(_node, options) {
+    const node = _node as any as ForNode;
+
     // rename `index` var to `state.$index`
+    const target = node.scope.indexName || 'index';
     const replaceIndex = (node: MitosisNode) => {
       traverse(node).forEach(function (thing) {
         if (isMitosisNode(thing)) {
           for (const [key, value] of Object.entries(thing.bindings)) {
-            if (value?.code.includes('index')) {
+            if (value?.code.includes(target)) {
               thing.bindings[key]!.code = replaceNodes({
                 code: value.code,
                 nodeMaps: [
                   {
-                    from: types.identifier('index'),
+                    from: types.identifier(target),
                     to: types.memberExpression(
                       types.identifier('state'),
                       types.identifier('$index'),
@@ -167,7 +170,6 @@ const componentMappers: {
       return node;
     };
 
-    const node = _node as any as ForNode;
     return el(
       {
         component: {
@@ -176,7 +178,6 @@ const componentMappers: {
         repeat: {
           collection: node.bindings.each?.code as string,
           itemName: node.scope.forName,
-          indexName: node.scope.indexName,
         },
         children: node.children
           .filter(filterEmptyTextNodes)
