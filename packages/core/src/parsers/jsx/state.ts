@@ -180,6 +180,16 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
         type: 'function',
       };
     } else if (isArrowFunctionExpression(item.value)) {
+      /**
+       * Arrow functions are normally converted to object methods to work around
+       * limitations with arrow functions in state in frameworks such as Svelte.
+       * However, this conversion does not work for async arrow functions due to
+       * how we handle parsing in `handleErrorOrExpression` for parsing
+       * expressions. That code does not detect async functions in order to apply
+       * its parsing workarounds. Even if it did, it does not consider async code
+       * when prefixing with "function". This would result in "function async foo()"
+       * which is not a valid function expression definition.
+       */
       if (item.value.async) {
         const func = functionExpression(
           item.key as Identifier,
