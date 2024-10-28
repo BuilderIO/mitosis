@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.12
+
+### Patch Changes
+
+- 5e2cf3c: respect async with anonymous arrow function in state
+
 ## 0.5.11
 
 ### Patch Changes
