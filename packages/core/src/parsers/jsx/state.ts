@@ -8,14 +8,17 @@ import {
   StateValue,
   TargetBlockDefinition,
 } from '@/types/mitosis-component';
-import * as babel from '@babel/core';
 import { NodePath } from '@babel/core';
 import {
+  BlockStatement,
+  Expression,
+  Identifier,
   Node,
   ObjectExpression,
   ObjectMethod,
   ObjectProperty,
   assignmentExpression,
+  functionExpression,
   identifier,
   isArrowFunctionExpression,
   isDeclaration,
@@ -33,6 +36,7 @@ import {
   isTSInterfaceBody,
   isTSType,
   memberExpression,
+  objectMethod,
 } from '@babel/types';
 import { MitosisNode } from '@builder.io/mitosis';
 import { pipe } from 'fp-ts/lib/function';
@@ -176,15 +180,34 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
         type: 'function',
       };
     } else if (isArrowFunctionExpression(item.value)) {
-      const code = parseCode(item.value);
-      const res = babel.transform(code, {
-        plugins: ['@babel/plugin-transform-arrow-functions'],
-      })!;
+      if (item.value.async) {
+        const func = functionExpression(
+          item.key as Identifier,
+          item.value.params,
+          item.value.body as BlockStatement,
+          false,
+          true,
+        );
 
-      return {
-        code: res.code ?? code,
-        type: 'function',
-      };
+        return {
+          code: parseCode(func).trim(),
+          type: 'function',
+        };
+      } else {
+        const n = objectMethod(
+          'method',
+          item.key as Expression,
+          item.value.params,
+          item.value.body as BlockStatement,
+        );
+
+        const code = parseCode(n).trim();
+
+        return {
+          code: code,
+          type: 'method',
+        };
+      }
     } else {
       // Remove typescript types, e.g. from
       // { foo: ('string' as SomeType) }
