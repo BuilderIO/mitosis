@@ -190,6 +190,7 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
        * when prefixing with "function". This would result in "function async foo()"
        * which is not a valid function expression definition.
        */
+      // TODO ENG-7256 Find a way to do this without diverging code path
       if (item.value.async) {
         const func = functionExpression(
           item.key as Identifier,
@@ -235,6 +236,7 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
       };
     }
   } else if (isObjectMethod(item)) {
+    // TODO ENG-7256 Find a way to do this without diverging code path
     if (item.async) {
       const func = functionExpression(
         item.key as Identifier,
