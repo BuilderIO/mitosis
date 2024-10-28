@@ -8,6 +8,9 @@ export default function StringLiteralStore() {
     namedFunction: async function namedFunction() {
       return Promise.resolve();
     },
+    async fetchUsers() {
+      return Promise.resolve();
+    },
   });
 
   return <div></div>;
