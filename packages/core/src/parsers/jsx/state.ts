@@ -235,6 +235,21 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
       };
     }
   } else if (isObjectMethod(item)) {
+    if (item.async) {
+      const func = functionExpression(
+        item.key as Identifier,
+        item.params,
+        item.body as BlockStatement,
+        false,
+        true,
+      );
+
+      return {
+        code: parseCode(func).trim(),
+        type: 'function',
+      };
+    }
+
     const n = parseCode({ ...item, returnType: null }).trim();
 
     const isGetter = item.kind === 'get';
