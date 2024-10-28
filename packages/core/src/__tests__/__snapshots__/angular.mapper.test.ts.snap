@@ -1,5 +1,81 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > Advanced 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-show-component\\",
+  template: \`
+    <main>
+      <ng-container *ngFor=\\"let person of names; index as i\\">
+        <div>{{i}} : {{person}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names\\">
+        <span>{{person}}</span>
+      </ng-container>
+      <ng-container *ngFor=\\"let _ of names\\"><br /></ng-container>
+      <ng-container
+        *ngFor=\\"let _ of Array.from({
+          length: 10
+        }); index as ee\\"
+      >
+        <pre>{{ee}}</pre>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let _ of Array.from({
+          length: 10
+        })\\"
+      >
+        <p>{{index}}</p>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as index\\">
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as count\\"
+      >
+        <span>{{person}} {{count}}</span>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as i\\">
+        <span>{{person}} {{i}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as index\\"
+      >
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+    </main>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicForShowComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+}
+
+@NgModule({
+  declarations: [MyBasicForShowComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForShowComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyBasicForShowComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > AdvancedRef 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -838,7 +914,7 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"column\\",
   template: \`
     <div class=\\"builder-columns div\\">
-      <ng-container *ngFor=\\"let column of columns; let index = index\\">
+      <ng-container *ngFor=\\"let column of columns; index as index\\">
         <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
       </ng-container>
     </div>
@@ -1271,7 +1347,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
+          *ngFor=\\"let block of builderBlock?.children; index as index; trackBy: trackByBlock0\\"
         >
           <builder-block-component
             [block]=\\"block\\"
@@ -1745,7 +1821,7 @@ import { Component } from \\"@angular/core\\";
   selector: \\"img-state-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
+      <ng-container *ngFor=\\"let item of images; index as itemIndex\\">
         <ng-container>
           <img class=\\"custom-class\\" [attr.src]=\\"item\\" />
         </ng-container>
@@ -2293,7 +2369,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.name]=\\"name\\"
       #elRef0
     >
-      <ng-container *ngFor=\\"let option of options; let index = index\\">
+      <ng-container *ngFor=\\"let option of options; index as index\\">
         <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
@@ -2550,7 +2626,7 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         </button>
       </ng-container>
       <ng-container
-        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
+        *ngFor=\\"let review of reviews; index as index; trackBy: trackByReview0\\"
       >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
@@ -5241,7 +5317,7 @@ import RenderRepeatedBlockModule from \\"./render-repeated-block.lite/angular\\"
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
         <ng-container
-          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
+          *ngFor=\\"let data of repeatItemData; index as index; trackBy: trackByData0\\"
         >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
@@ -5876,7 +5952,7 @@ import { Component, Input } from \\"@angular/core\\";
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
       <ng-container
-        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
+        *ngFor=\\"let item of items; index as idx; trackBy: trackByItem0\\"
       >
         <div>{{item}}</div>
       </ng-container>
@@ -7078,6 +7154,82 @@ export class MyBasicComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > Advanced 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-show-component\\",
+  template: \`
+    <main>
+      <ng-container *ngFor=\\"let person of names; index as i\\">
+        <div>{{i}} : {{person}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names\\">
+        <span>{{person}}</span>
+      </ng-container>
+      <ng-container *ngFor=\\"let _ of names\\"><br /></ng-container>
+      <ng-container
+        *ngFor=\\"let _ of Array.from({
+          length: 10
+        }); index as ee\\"
+      >
+        <pre>{{ee}}</pre>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let _ of Array.from({
+          length: 10
+        })\\"
+      >
+        <p>{{index}}</p>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as index\\">
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as count\\"
+      >
+        <span>{{person}} {{count}}</span>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as i\\">
+        <span>{{person}} {{i}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as index\\"
+      >
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+    </main>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicForShowComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+}
+
+@NgModule({
+  declarations: [MyBasicForShowComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForShowComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyBasicForShowComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > AdvancedRef 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7975,7 +8127,7 @@ export interface ColumnProps {
   selector: \\"column\\",
   template: \`
     <div class=\\"builder-columns div\\">
-      <ng-container *ngFor=\\"let column of columns; let index = index\\">
+      <ng-container *ngFor=\\"let column of columns; index as index\\">
         <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
       </ng-container>
     </div>
@@ -8456,7 +8608,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
+          *ngFor=\\"let block of builderBlock?.children; index as index; trackBy: trackByBlock0\\"
         >
           <builder-block-component
             [block]=\\"block\\"
@@ -8956,7 +9108,7 @@ import { Component } from \\"@angular/core\\";
   selector: \\"img-state-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
+      <ng-container *ngFor=\\"let item of images; index as itemIndex\\">
         <ng-container>
           <img class=\\"custom-class\\" [attr.src]=\\"item\\" />
         </ng-container>
@@ -9565,7 +9717,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.name]=\\"name\\"
       #elRef0
     >
-      <ng-container *ngFor=\\"let option of options; let index = index\\">
+      <ng-container *ngFor=\\"let option of options; index as index\\">
         <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
@@ -9843,7 +9995,7 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         </button>
       </ng-container>
       <ng-container
-        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
+        *ngFor=\\"let review of reviews; index as index; trackBy: trackByReview0\\"
       >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
@@ -12720,7 +12872,7 @@ import { RepeatData } from \\"./types.js\\";
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
         <ng-container
-          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
+          *ngFor=\\"let data of repeatItemData; index as index; trackBy: trackByData0\\"
         >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
@@ -13385,7 +13537,7 @@ interface Props {
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
       <ng-container
-        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
+        *ngFor=\\"let item of items; index as idx; trackBy: trackByItem0\\"
       >
         <div>{{item}}</div>
       </ng-container>

@@ -12,6 +12,8 @@ const getRawFile = async (filePath: string) => {
 type RawFile = ReturnType<typeof getRawFile>;
 
 const getterState = getRawFile('./data/blocks/getter-state.raw.tsx');
+const advancedFor = getRawFile('./data/advanced-for.raw.tsx');
+
 const basicForShow = getRawFile('./data/basic-for-show.raw.tsx');
 const basicBooleanAttribute = getRawFile('./data/basic-boolean-attribute.raw.tsx');
 const basicOnMountUpdate = getRawFile('./data/basic-onMount-update.raw.tsx');
@@ -290,6 +292,7 @@ const FORM_BLOCK_TESTS: Tests = {
 const FOR_SHOW_TESTS: Tests = {
   Section: sectionState,
   Basic: basicForShow,
+  Advanced: advancedFor,
 };
 
 const FORWARD_REF_TESTS: Tests = {
