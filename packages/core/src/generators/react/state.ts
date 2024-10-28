@@ -48,6 +48,7 @@ const processStateValue = (options: ToReactOptions) => {
     if (type === 'getter') {
       result = pipe(value, replaceGetterWithFunction, mapValue);
     } else if (type === 'function') {
+      console.log('YAY', value);
       result = mapValue(value);
     } else if (type === 'method') {
       result = pipe(value, prefixWithFunction, mapValue);

@@ -4877,12 +4877,22 @@ export default MyBasicComponent;
 `;
 
 exports[`qwik > jsx > Javascript Test > store-async-function 1`] = `
-"unknown: Missing semicolon. (1:13)
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
-[0m[31m[1m>[22m[39m[90m 1 |[39m [36mlet[39m _ [33m=[39m ction arrowFunction(props[33m,[39mstate[33m,[39m) {[0m
-[0m [90m   |[39m              [31m[1m^[22m[39m[0m
-[0m [90m 2 |[39m   [36mreturn[39m [33mPromise[39m[33m.[39mresolve()[33m;[39m[0m
-[0m [90m 3 |[39m }[0m"
+export const arrowFunction = async function arrowFunction() {
+  return Promise.resolve();
+};
+export const namedFunction = async function namedFunction() {
+  return Promise.resolve();
+};
+export const StringLiteralStore = component$((props) => {
+  const state = {};
+
+  return <div></div>;
+});
+
+export default StringLiteralStore;
+"
 `;
 
 exports[`qwik > jsx > Javascript Test > string-literal-store 1`] = `
@@ -8715,28 +8725,22 @@ export default MyBasicComponent;
 `;
 
 exports[`qwik > jsx > Typescript Test > store-async-function 1`] = `
-"SyntaxError: ',' expected. (3:20)
-  1 | import{Fragment,component$,h}from\\"@builder.io/qwik\\";
-  2 |
-> 3 | export const ction arrowFunction=function ction arrowFunction(props,state,) {
-    |                    ^
-  4 |   return Promise.resolve();
-  5 | };export const ction namedFunction=function ction namedFunction(props,state,) {
-  6 |   return Promise.resolve();
-========================================================================
-import{Fragment,component$,h}from\\"@builder.io/qwik\\";
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
-export const ction arrowFunction=function ction arrowFunction(props,state,) {
+export const arrowFunction = async function arrowFunction() {
   return Promise.resolve();
-};export const ction namedFunction=function ction namedFunction(props,state,) {
+};
+export const namedFunction = async function namedFunction() {
   return Promise.resolve();
-};export const StringLiteralStore=component$((props:any)=>{const state: any = {};
+};
+export const StringLiteralStore = component$((props: any) => {
+  const state: any = {};
 
-return (<div></div>)});
+  return <div></div>;
+});
 
 export default StringLiteralStore;
-
-========================================================================"
+"
 `;
 
 exports[`qwik > jsx > Typescript Test > string-literal-store 1`] = `
