@@ -183,6 +183,9 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
         item.key as Expression,
         item.value.params,
         item.value.body as BlockStatement,
+        undefined,
+        undefined,
+        item.value.async,
       );
       const code = parseCode(n).trim();
       return {
