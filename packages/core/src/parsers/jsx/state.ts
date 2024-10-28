@@ -204,21 +204,20 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
           code: parseCode(func).trim(),
           type: 'function',
         };
-      } else {
-        const n = objectMethod(
-          'method',
-          item.key as Expression,
-          item.value.params,
-          item.value.body as BlockStatement,
-        );
-
-        const code = parseCode(n).trim();
-
-        return {
-          code: code,
-          type: 'method',
-        };
       }
+      const n = objectMethod(
+        'method',
+        item.key as Expression,
+        item.value.params,
+        item.value.body as BlockStatement,
+      );
+
+      const code = parseCode(n).trim();
+
+      return {
+        code: code,
+        type: 'method',
+      };
     } else {
       // Remove typescript types, e.g. from
       // { foo: ('string' as SomeType) }
