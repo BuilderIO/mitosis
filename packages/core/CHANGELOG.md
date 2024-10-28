@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.11
+
+### Patch Changes
+
+- db9dbf9: [All] fix: parsers/generate for loops
+
 ## 0.5.10
 
 ### Patch Changes
