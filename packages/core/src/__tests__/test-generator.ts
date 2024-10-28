@@ -130,6 +130,7 @@ const inputToTextInputRN = getRawFile('./data/react-native/text-input.raw.tsx');
 
 const StringLiteralStore = getRawFile('./data/string-literal-store.raw.tsx');
 const StringLiteralStoreKebab = getRawFile('./data/string-literal-store-kebab.raw.tsx');
+const StoreAsyncFunction = getRawFile('./data/store-async.raw.tsx');
 
 /**
  * Use TestsWithFailFor when you want to write a test that you know will fail
@@ -246,6 +247,7 @@ const BASIC_TESTS: Tests = {
   useTarget,
   signalsOnUpdate,
   getterState,
+  'store-async-function': StoreAsyncFunction,
   'string-literal-store': StringLiteralStore,
   'string-literal-store-kebab': {
     file: StringLiteralStoreKebab,
