@@ -145,8 +145,9 @@ export const blockToMitosis = (
     if (json.bindings[key]?.type === 'spread') {
       str += ` {...(${json.bindings[key]?.code})} `;
     } else if (key.startsWith('on')) {
-      const asyncKeyword = json.bindings[key]?.async ? 'async ' : '';
-      str += ` ${key}={${asyncKeyword}event => ${value.replace(/\s*;$/, '')}} `;
+      const { arguments: cusArgs = ['event'], async } = json.bindings[key]!;
+      const asyncKeyword = async ? 'async ' : '';
+      str += ` ${key}={${asyncKeyword}(${cusArgs.join(',')}) => ${value.replace(/\s*;$/, '')}} `;
     } else {
       if (!isValidAttributeName(key)) {
         console.warn('Skipping invalid attribute name:', key);
