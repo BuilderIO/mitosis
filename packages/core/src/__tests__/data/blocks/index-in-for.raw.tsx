@@ -25,6 +25,7 @@ export default function MyComponent(props) {
                 state.todos[index].completed = !state.todos[0].completed;
               }}
               onChange={(event) => {
+                console.log('this is todo item: ', index);
                 const index = state.todos.findIndex((t) => t.id === todo.id);
                 state.todos[index].completed = event.target.checked;
               }}
