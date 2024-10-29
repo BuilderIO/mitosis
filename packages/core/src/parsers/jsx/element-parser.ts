@@ -290,6 +290,7 @@ export const jsxElementToJson = (
 
           memo.bindings[key] = createSingleBinding({
             code: generate(expression.body, { compact: true }).code,
+            async: expression.async === true ? true : undefined,
             arguments: args.length ? args : undefined,
           });
         } else if (types.isJSXElement(expression)) {

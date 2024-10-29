@@ -216,7 +216,7 @@ const stringifyBinding =
       return '';
     }
 
-    const { code, arguments: cusArgs = ['event'], type } = binding;
+    const { code, arguments: cusArgs = ['event'], type, async } = binding;
     const isValidHtmlTag = VALID_HTML_TAGS.includes(node.name) || node.name === 'svelte:element';
 
     if (type === 'spread') {
@@ -229,10 +229,11 @@ const stringifyBinding =
 
       const valueWithoutBlock = removeSurroundingBlock(code);
 
-      if (valueWithoutBlock === key) {
+      if (valueWithoutBlock === key && !async) {
         return ` on:${event}={${valueWithoutBlock}} `;
       } else {
-        return ` on:${event}="{${cusArgs.join(',')} => {${valueWithoutBlock}}}" `;
+        const asyncKeyword = async ? 'async ' : '';
+        return ` on:${event}="{${asyncKeyword}(${cusArgs.join(',')}) => {${valueWithoutBlock}}}" `;
       }
     } else if (key.startsWith('on')) {
       // handle on[custom event] props

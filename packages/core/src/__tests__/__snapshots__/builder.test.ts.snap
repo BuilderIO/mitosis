@@ -3011,10 +3011,8 @@ exports[`Builder > Stamped 1`] = `
               {
                 "@type": "@builder.io/sdk:Element",
                 "actions": {
-                  "click": "
-  event.preventDefault();
-  state.showReviewPrompt = false;
-",
+                  "click": "event.preventDefault();
+state.showReviewPrompt = false",
                 },
                 "bindings": {},
                 "children": [
@@ -3034,10 +3032,8 @@ exports[`Builder > Stamped 1`] = `
                 ],
                 "code": {
                   "actions": {
-                    "click": "
-  event.preventDefault();
-  state.showReviewPrompt = false;
-",
+                    "click": "event.preventDefault();
+state.showReviewPrompt = false",
                   },
                   "bindings": {},
                 },
@@ -3467,6 +3463,97 @@ exports[`Builder > Text with bindings 3`] = `
     "tsCode": "",
   },
 }
+`;
+
+exports[`Builder > async bindings 1`] = `
+{
+  "data": {
+    "blocks": [
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {},
+        "children": [
+          {
+            "@type": "@builder.io/sdk:Element",
+            "actions": {
+              "click": "(async () => await state.handlerClick(event))()",
+            },
+            "bindings": {},
+            "children": [
+              {
+                "@type": "@builder.io/sdk:Element",
+                "bindings": {},
+                "component": {
+                  "name": "Text",
+                  "options": {
+                    "text": "Click",
+                  },
+                },
+                "tagName": "span",
+              },
+            ],
+            "code": {
+              "actions": {
+                "click": "(async () => await state.handlerClick(event))()",
+              },
+              "bindings": {},
+            },
+            "properties": {},
+            "tagName": "button",
+          },
+        ],
+        "code": {
+          "actions": {},
+          "bindings": {},
+        },
+        "properties": {},
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "Object.assign(state, {
+  handlerClick: function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef);
+    holdValueRef = holdValueRef + \\"JS\\";
+  },
+});
+",
+    "tsCode": "useStore({
+  handlerClick: function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef);
+    holdValueRef = holdValueRef + \\"JS\\";
+  },
+});
+",
+  },
+}
+`;
+
+exports[`Builder > async bindings 2`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export default function MyComponent(props) {
+  const state = useStore({
+    handlerClick: function handlerClick(event) {
+      event.preventDefault();
+      console.log(\\"current value\\", holdValueRef);
+      holdValueRef = holdValueRef + \\"JS\\";
+    },
+  });
+
+  return (
+    <div>
+      <button
+        onClick={(event) => (async () => await state.handlerClick(event))()}
+      >
+        Click
+      </button>
+    </div>
+  );
+}
+"
 `;
 
 exports[`Builder > bindings 1`] = `

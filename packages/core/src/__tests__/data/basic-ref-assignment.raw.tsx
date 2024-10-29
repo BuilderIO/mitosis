@@ -15,7 +15,7 @@ export default function MyBasicRefAssignmentComponent(props: Props) {
 
   return (
     <div>
-      <button onClick={(evt) => handlerClick(evt)}>Click</button>
+      <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
     </div>
   );
 }

@@ -290,9 +290,10 @@ export const blockToReact = (
     if (json.bindings[key]?.type === 'spread') {
       str += ` {...(${value})} `;
     } else if (key.startsWith('on')) {
+      const asyncKeyword = json.bindings[key]?.async ? 'async ' : '';
       const { arguments: cusArgs = ['event'] } = json.bindings[key]!;
       const eventName = options.type === 'native' ? NATIVE_EVENT_MAPPER[key] || key : key;
-      str += ` ${eventName}={(${cusArgs.join(',')}) => ${updateStateSettersInCode(
+      str += ` ${eventName}={${asyncKeyword}(${cusArgs.join(',')}) => ${updateStateSettersInCode(
         useBindingValue,
         options,
       )} } `;

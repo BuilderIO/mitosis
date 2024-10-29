@@ -1,3 +1,4 @@
+import { BuilderContent } from '@builder.io/sdk';
 import { componentToReact, ToMitosisOptions } from '..';
 import { componentToBuilder } from '../generators/builder';
 import { componentToHtml } from '../generators/html';
@@ -6,9 +7,8 @@ import { dedent } from '../helpers/dedent';
 import { builderContentToMitosisComponent, extractStateHook } from '../parsers/builder';
 import { parseJsx } from '../parsers/jsx';
 import { compileAwayBuilderComponents } from '../plugins/compile-away-builder-components';
-
-import { BuilderContent } from '@builder.io/sdk';
 import advancedFor from './data/advanced-for.raw.tsx?raw';
+import asyncBindings from './data/basic-ref-assignment.raw.tsx?raw';
 import columns from './data/blocks/columns.raw.tsx?raw';
 import customCode from './data/blocks/custom-code.raw.tsx?raw';
 import embed from './data/blocks/embed.raw.tsx?raw';
@@ -64,6 +64,16 @@ describe('Builder', () => {
 
   test('CustomCode', () => {
     const component = parseJsx(customCode);
+    const builderJson = componentToBuilder()({ component });
+    expect(builderJson).toMatchSnapshot();
+
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
+    expect(mitosis).toMatchSnapshot();
+  });
+
+  test('async bindings', () => {
+    const component = parseJsx(asyncBindings);
     const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
 
