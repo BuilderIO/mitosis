@@ -222,12 +222,7 @@ const stringifyBinding =
     if (type === 'spread') {
       const spreadValue = key === 'props' ? '$$props' : code;
       return ` {...${spreadValue}} `;
-    } else if (
-      key.startsWith('on') &&
-      isValidHtmlTag &&
-      binding.type === 'single' &&
-      binding.bindingType === 'function'
-    ) {
+    } else if (key.startsWith('on') && isValidHtmlTag) {
       const { async } = binding;
       // handle html native on[event] props
       const event = key.replace('on', '').toLowerCase();
