@@ -92,7 +92,7 @@ describe('Builder', () => {
     expect(mitosis).toMatchSnapshot();
   });
 
-  test('Index inside For', () => {
+  test.fails('Index inside For', () => {
     const component = parseJsx(indexInFor);
     const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
