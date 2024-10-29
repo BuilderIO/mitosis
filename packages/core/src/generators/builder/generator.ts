@@ -175,10 +175,8 @@ const componentMappers: {
 
               babelTraverse(programNode, {
                 Program(path) {
-                  if (path.scope.hasBinding(target)) {
-                    console.log('has binding');
-                    return;
-                  }
+                  if (path.scope.hasBinding(target)) return;
+
                   const x = {
                     id: types.identifier(target),
                     init: types.identifier('PLACEHOLDER'),
