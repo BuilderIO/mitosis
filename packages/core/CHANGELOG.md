@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.13
+
+### Patch Changes
+
+- c7d2f8c: [All] fix: support async event handlers
+
 ## 0.5.12
 
 ### Patch Changes
