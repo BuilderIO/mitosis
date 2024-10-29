@@ -1336,6 +1336,476 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Builder > Index inside For 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "each": {
+              "bindingType": "expression",
+              "code": "state.todos",
+              "type": "single",
+            },
+          },
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [
+                {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": {
+                    "each": {
+                      "bindingType": "expression",
+                      "code": "state.todos",
+                      "type": "single",
+                    },
+                  },
+                  "children": [
+                    {
+                      "@type": "@builder.io/mitosis/node",
+                      "bindings": {
+                        "checked": {
+                          "bindingType": "expression",
+                          "code": "todo.completed",
+                          "type": "single",
+                        },
+                        "foo": {
+                          "bindingType": "expression",
+                          "code": "{
+  bar: 1
+}",
+                          "type": "single",
+                        },
+                        "onChange": {
+                          "arguments": [
+                            "event",
+                          ],
+                          "bindingType": "function",
+                          "code": "{
+  console.log('this is todo item: ', index);
+  const index = state.todos.findIndex(t => t.id === todo.id);
+  state.todos[index].completed = event.target.checked;
+}",
+                          "type": "single",
+                        },
+                        "onClick": {
+                          "arguments": [
+                            "event",
+                          ],
+                          "bindingType": "function",
+                          "code": "{
+  console.log('clicked', event);
+  state.todos[index].completed = !state.todos[0].completed;
+}",
+                          "type": "single",
+                        },
+                        "onX": {
+                          "bindingType": "function",
+                          "code": "{
+  console.log('onX');
+}",
+                          "type": "single",
+                        },
+                      },
+                      "children": [],
+                      "meta": {},
+                      "name": "input",
+                      "properties": {
+                        "type": "checkbox",
+                      },
+                      "scope": {},
+                    },
+                  ],
+                  "meta": {},
+                  "name": "For",
+                  "properties": {},
+                  "scope": {
+                    "forName": "todo",
+                    "indexName": "index",
+                  },
+                },
+              ],
+              "meta": {},
+              "name": "div",
+              "properties": {},
+              "scope": {},
+            },
+          ],
+          "meta": {},
+          "name": "For",
+          "properties": {},
+          "scope": {
+            "forName": "todo",
+          },
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "MyComponent",
+  "refs": {},
+  "state": {
+    "todos": {
+      "code": "[{
+  id: 1,
+  completed: false
+}, {
+  id: 2,
+  completed: false
+}]",
+      "propertyType": "normal",
+      "type": "property",
+    },
+  },
+  "subComponents": [],
+}
+`;
+
+exports[`Builder > Index inside For 2`] = `
+{
+  "data": {
+    "blocks": [
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {},
+        "children": [
+          {
+            "@type": "@builder.io/sdk:Element",
+            "children": [
+              {
+                "@type": "@builder.io/sdk:Element",
+                "actions": {},
+                "bindings": {},
+                "children": [
+                  {
+                    "@type": "@builder.io/sdk:Element",
+                    "children": [
+                      {
+                        "@type": "@builder.io/sdk:Element",
+                        "actions": {
+                          "change": "console.log('this is todo item: ', state.$index);
+const index = state.todos.findIndex(t => t.id === todo.id);
+state.todos[index].completed = event.target.checked;",
+                          "click": "console.log('clicked', event);
+state.todos[state.$index].completed = !state.todos[0].completed;",
+                          "x": "console.log('onX');",
+                        },
+                        "bindings": {
+                          "checked": "todo.completed",
+                          "foo": " return {
+  bar: 1
+}",
+                        },
+                        "children": [],
+                        "code": {
+                          "actions": {
+                            "change": "console.log('this is todo item: ', state.$index);
+const index = state.todos.findIndex(t => t.id === todo.id);
+state.todos[index].completed = event.target.checked;",
+                            "click": "console.log('clicked', event);
+state.todos[state.$index].completed = !state.todos[0].completed;",
+                            "x": "console.log('onX');",
+                          },
+                          "bindings": {
+                            "foo": "{
+  bar: 1
+}",
+                          },
+                        },
+                        "properties": {
+                          "type": "checkbox",
+                        },
+                        "tagName": "input",
+                      },
+                    ],
+                    "component": {
+                      "name": "Core:Fragment",
+                    },
+                    "repeat": {
+                      "collection": "state.todos",
+                      "itemName": "todo",
+                    },
+                  },
+                ],
+                "code": {
+                  "actions": {},
+                  "bindings": {},
+                },
+                "properties": {},
+                "tagName": "div",
+              },
+            ],
+            "component": {
+              "name": "Core:Fragment",
+            },
+            "repeat": {
+              "collection": "state.todos",
+              "itemName": "todo",
+            },
+          },
+        ],
+        "code": {
+          "actions": {},
+          "bindings": {},
+        },
+        "properties": {},
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "Object.assign(state, {
+  todos: [
+    {
+      id: 1,
+      completed: false,
+    },
+    {
+      id: 2,
+      completed: false,
+    },
+  ],
+});
+",
+    "tsCode": "useStore({
+  todos: [
+    {
+      id: 1,
+      completed: false,
+    },
+    {
+      id: 2,
+      completed: false,
+    },
+  ],
+});
+",
+  },
+}
+`;
+
+exports[`Builder > Index inside For 3`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "each": {
+              "bindingType": "expression",
+              "code": "state.todos",
+              "type": "single",
+            },
+          },
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [
+                {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": {
+                    "each": {
+                      "bindingType": "expression",
+                      "code": "state.todos",
+                      "type": "single",
+                    },
+                  },
+                  "children": [
+                    {
+                      "@type": "@builder.io/mitosis/node",
+                      "bindings": {
+                        "checked": {
+                          "bindingType": "expression",
+                          "code": "todo.completed",
+                          "type": "single",
+                        },
+                        "foo": {
+                          "bindingType": "expression",
+                          "code": "{
+  bar: 1
+}",
+                          "type": "single",
+                        },
+                        "onChange": {
+                          "async": undefined,
+                          "bindingType": "expression",
+                          "code": "{ console.log('this is todo item: ', state.$index);
+const index = state.todos.findIndex(t => t.id === todo.id);
+state.todos[index].completed = event.target.checked; }",
+                          "type": "single",
+                        },
+                        "onClick": {
+                          "async": undefined,
+                          "bindingType": "expression",
+                          "code": "{ console.log('clicked', event);
+state.todos[state.$index].completed = !state.todos[0].completed; }",
+                          "type": "single",
+                        },
+                        "onX": {
+                          "async": undefined,
+                          "bindingType": "expression",
+                          "code": "{ console.log('onX'); }",
+                          "type": "single",
+                        },
+                      },
+                      "children": [],
+                      "meta": {},
+                      "name": "input",
+                      "properties": {
+                        "type": "checkbox",
+                      },
+                      "scope": {},
+                      "slots": {},
+                    },
+                  ],
+                  "meta": {},
+                  "name": "For",
+                  "properties": {},
+                  "scope": {
+                    "forName": "todo",
+                  },
+                },
+              ],
+              "meta": {},
+              "name": "div",
+              "properties": {},
+              "scope": {},
+              "slots": {},
+            },
+          ],
+          "meta": {},
+          "name": "For",
+          "properties": {},
+          "scope": {
+            "forName": "todo",
+          },
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+      "slots": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": undefined,
+  "meta": {
+    "useMetadata": {
+      "httpRequests": undefined,
+    },
+  },
+  "name": "MyComponent",
+  "refs": {},
+  "state": {
+    "todos": {
+      "code": "[{
+  id: 1,
+  completed: false
+}, {
+  id: 2,
+  completed: false
+}]",
+      "propertyType": "normal",
+      "type": "property",
+    },
+  },
+  "subComponents": [],
+}
+`;
+
+exports[`Builder > Index inside For 4`] = `
+"import { useStore, For } from \\"@builder.io/mitosis\\";
+
+export default function MyComponent(props) {
+  const state = useStore({
+    todos: [
+      {
+        id: 1,
+        completed: false,
+      },
+      {
+        id: 2,
+        completed: false,
+      },
+    ],
+  });
+
+  return (
+    <div>
+      <For each={state.todos}>
+        {(todo, index) => (
+          <div>
+            <For each={state.todos}>
+              {(todo, index) => (
+                <input
+                  type=\\"checkbox\\"
+                  checked={todo.completed}
+                  foo={{
+                    bar: 1,
+                  }}
+                  onX={(event) => {
+                    console.log(\\"onX\\");
+                  }}
+                  onClick={(event) => {
+                    console.log(\\"clicked\\", event);
+                    state.todos[state.$index].completed =
+                      !state.todos[0].completed;
+                  }}
+                  onChange={(event) => {
+                    console.log(\\"this is todo item: \\", state.$index);
+                    const index = state.todos.findIndex(
+                      (t) => t.id === todo.id
+                    );
+                    state.todos[index].completed = event.target.checked;
+                  }}
+                />
+              )}
+            </For>
+          </div>
+        )}
+      </For>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Builder > No srcset for SVG 1`] = `
 "<img
   loading=\\"lazy\\"
@@ -1394,6 +1864,7 @@ exports[`Builder > Regenerate custom Hero 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "css": {
+          "bindingType": "expression",
           "code": "{
   display: \\"flex\\",
   flexDirection: \\"column\\",
@@ -1406,10 +1877,12 @@ exports[`Builder > Regenerate custom Hero 1`] = `
           "type": "single",
         },
         "height": {
+          "bindingType": "expression",
           "code": "400",
           "type": "single",
         },
         "multiBinding": {
+          "bindingType": "expression",
           "code": "{
   hello: state.message
 }",
@@ -1515,14 +1988,17 @@ exports[`Builder > Regenerate custom Hero 3`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "css": {
+          "bindingType": "expression",
           "code": "{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"column\\",\\"alignItems\\":\\"stretch\\",\\"position\\":\\"relative\\",\\"flexShrink\\":\\"0\\",\\"boxSizing\\":\\"border-box\\",\\"marginTop\\":\\"200px\\"}",
           "type": "single",
         },
         "height": {
+          "bindingType": "expression",
           "code": "400",
           "type": "single",
         },
         "multiBinding": {
+          "bindingType": "expression",
           "code": "{
   hello: state.message
 }",
@@ -3562,6 +4038,7 @@ exports[`Builder > bindings 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "label": {
+          "bindingType": "expression",
           "code": "state.text",
           "type": "single",
         },
@@ -3580,6 +4057,7 @@ exports[`Builder > bindings 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "css": {
+          "bindingType": "expression",
           "code": "{backgroundColor:'rgba(0, 0, 0, 1)',display:'flex',paddingLeft:'72px',paddingRight:'72px',paddingTop:'25px',paddingBottom:'25px',alignItems:'start',gap:'10px',fontFamily:'Poppins, -apple-system, Roboto, Helvetica, sans-serif',fontSize:'16px',color:'rgba(255, 255, 255, 1)',fontWeight:'700',textTransform:'uppercase',justifyContent:'start'}",
           "type": "single",
         },
@@ -3589,6 +4067,7 @@ exports[`Builder > bindings 1`] = `
           "@type": "@builder.io/mitosis/node",
           "bindings": {
             "_text": {
+              "bindingType": "expression",
               "code": "state.text",
               "type": "single",
             },
@@ -3683,6 +4162,7 @@ exports[`Builder > booleans 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "focused": {
+          "bindingType": "expression",
           "code": "true",
           "type": "single",
         },
@@ -3751,6 +4231,7 @@ exports[`Builder > customComponentSlotProperty 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "css": {
+          "bindingType": "expression",
           "code": "{\\"position\\":\\"relative\\",\\"width\\":\\"100%\\",\\"@media (max-width: 991px)\\":{\\"maxWidth\\":\\"100%\\"}}",
           "type": "single",
         },
@@ -3768,6 +4249,7 @@ exports[`Builder > customComponentSlotProperty 1`] = `
             "@type": "@builder.io/mitosis/node",
             "bindings": {
               "css": {
+                "bindingType": "expression",
                 "code": "{\\"alignItems\\":\\"flex-start\\",\\"alignSelf\\":\\"stretch\\",\\"display\\":\\"flex\\",\\"flexBasis\\":\\"0%\\",\\"flexDirection\\":\\"column\\",\\"justifyContent\\":\\"center\\"}",
                 "type": "single",
               },
@@ -3785,6 +4267,7 @@ exports[`Builder > customComponentSlotProperty 1`] = `
             "@type": "@builder.io/mitosis/node",
             "bindings": {
               "css": {
+                "bindingType": "expression",
                 "code": "{\\"alignItems\\":\\"flex-start\\",\\"alignSelf\\":\\"stretch\\",\\"display\\":\\"flex\\",\\"flexBasis\\":\\"0%\\",\\"flexDirection\\":\\"column\\",\\"justifyContent\\":\\"center\\"}",
                 "type": "single",
               },
@@ -3800,6 +4283,7 @@ exports[`Builder > customComponentSlotProperty 1`] = `
             "@type": "@builder.io/mitosis/node",
             "bindings": {
               "css": {
+                "bindingType": "expression",
                 "code": "{\\"alignItems\\":\\"flex-start\\",\\"alignSelf\\":\\"stretch\\",\\"display\\":\\"flex\\",\\"flexBasis\\":\\"0%\\",\\"flexDirection\\":\\"column\\",\\"justifyContent\\":\\"center\\"}",
                 "type": "single",
               },
@@ -3817,6 +4301,7 @@ exports[`Builder > customComponentSlotProperty 1`] = `
             "@type": "@builder.io/mitosis/node",
             "bindings": {
               "css": {
+                "bindingType": "expression",
                 "code": "{\\"alignItems\\":\\"flex-start\\",\\"alignSelf\\":\\"stretch\\",\\"display\\":\\"flex\\",\\"flexBasis\\":\\"0%\\",\\"flexDirection\\":\\"column\\",\\"justifyContent\\":\\"center\\"}",
                 "type": "single",
               },
@@ -3989,6 +4474,7 @@ exports[`Builder > nodes as props 3`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "prop": {
+          "bindingType": "expression",
           "code": "<Bar hello=\\"world\\" />",
           "type": "single",
         },
@@ -4140,6 +4626,7 @@ exports[`Builder > slots 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "css": {
+          "bindingType": "expression",
           "code": "{\\"width\\":\\"100%\\",\\"@media (max-width: 991px)\\":{\\"maxWidth\\":\\"100%\\"}}",
           "type": "single",
         },
@@ -4229,10 +4716,12 @@ exports[`Builder > slots2 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "css": {
+          "bindingType": "expression",
           "code": "{\\"fontStyle\\":\\"italic\\"}",
           "type": "single",
         },
         "disabled": {
+          "bindingType": "expression",
           "code": "false",
           "type": "single",
         },

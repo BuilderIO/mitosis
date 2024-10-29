@@ -1,12 +1,14 @@
+import { componentToBuilder } from '@/generators/builder';
+import { componentToHtml } from '@/generators/html';
+import { componentToMitosis } from '@/generators/mitosis';
+import { ToMitosisOptions } from '@/generators/mitosis/types';
+import { componentToReact } from '@/generators/react';
+import { dedent } from '@/helpers/dedent';
+import { builderContentToMitosisComponent, extractStateHook } from '@/parsers/builder';
+import { parseJsx } from '@/parsers/jsx';
+import { compileAwayBuilderComponents } from '@/plugins/compile-away-builder-components';
 import { BuilderContent } from '@builder.io/sdk';
-import { componentToReact, ToMitosisOptions } from '..';
-import { componentToBuilder } from '../generators/builder';
-import { componentToHtml } from '../generators/html';
-import { componentToMitosis } from '../generators/mitosis';
-import { dedent } from '../helpers/dedent';
-import { builderContentToMitosisComponent, extractStateHook } from '../parsers/builder';
-import { parseJsx } from '../parsers/jsx';
-import { compileAwayBuilderComponents } from '../plugins/compile-away-builder-components';
+
 import advancedFor from './data/advanced-for.raw.tsx?raw';
 import asyncBindings from './data/basic-ref-assignment.raw.tsx?raw';
 import columns from './data/blocks/columns.raw.tsx?raw';
@@ -22,6 +24,7 @@ import slotsContent from './data/builder/slots.json?raw';
 import slots2Content from './data/builder/slots2.json?raw';
 import textBindings from './data/builder/text-bindings.json?raw';
 import show from './data/show/show-expressions.raw.tsx?raw';
+
 const mitosisOptions: ToMitosisOptions = {
   format: 'legacy',
 };
@@ -92,7 +95,7 @@ describe('Builder', () => {
     expect(mitosis).toMatchSnapshot();
   });
 
-  test.fails('Index inside For', () => {
+  test('Index inside For', () => {
     const component = parseJsx(indexInFor);
     const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);

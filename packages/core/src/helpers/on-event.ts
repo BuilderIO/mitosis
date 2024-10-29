@@ -1,4 +1,5 @@
 import { MitosisComponent, MitosisNode, OnEventHook, Plugin } from '..';
+import { createSingleBinding } from './bindings';
 import { capitalize } from './capitalize';
 import { traverseNodes } from './traverse-nodes';
 
@@ -46,11 +47,11 @@ export const processOnEventHooksPlugin =
             };
 
             if (setBindings) {
-              node.bindings[handlerName] = {
+              node.bindings[handlerName] = createSingleBinding({
                 code: `state.${fnName}(${hook.eventArgName})`,
                 arguments: [hook.eventArgName],
-                type: 'single',
-              };
+                bindingType: 'expression',
+              });
             }
           });
         });

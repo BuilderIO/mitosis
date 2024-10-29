@@ -1,4 +1,5 @@
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '@/constants/html_tags';
+import { createSingleBinding } from '@/helpers/bindings';
 import { dedent } from '@/helpers/dedent';
 import { fastClone } from '@/helpers/fast-clone';
 import { getChildComponents } from '@/helpers/get-child-components';
@@ -453,10 +454,10 @@ export const blockToAngular = ({
           const spreadRefIndex = root.meta._spreadRefIndex || 0;
           refName = `elRef${spreadRefIndex}`;
           root.meta._spreadRefIndex = (spreadRefIndex as number) + 1;
-          json.bindings['spreadRef'] = { code: refName, type: 'single' };
+          json.bindings['spreadRef'] = createSingleBinding({ code: refName });
           root.refs[refName] = { argument: '' };
         }
-        json.bindings['spreadRef'] = { code: refName, type: 'single' };
+        json.bindings['spreadRef'] = createSingleBinding({ code: refName });
         root.refs[refName] = { argument: '' };
         root.meta.onViewInit = (root.meta.onViewInit || { code: '' }) as BaseHook;
         let spreadCode = '';
@@ -678,7 +679,7 @@ const handleProperties = (json: MitosisComponent, item: MitosisNode, index: numb
     }
     const newBindingName = generateNewBindingName(index, item.name);
     json.state[newBindingName] = { code: '`' + `${item.properties[key]}` + '`', type: 'property' };
-    item.bindings[key] = { code: `state.${newBindingName}`, type: 'single' };
+    item.bindings[key] = createSingleBinding({ code: `state.${newBindingName}` });
     delete item.properties[key];
     index++;
   }

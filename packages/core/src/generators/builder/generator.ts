@@ -8,6 +8,7 @@ import { hasProps } from '@/helpers/has-props';
 import { isComponent } from '@/helpers/is-component';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { isUpperCase } from '@/helpers/is-upper-case';
+import { parseCode } from '@/helpers/parsers';
 import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { replaceNodes } from '@/helpers/replace-identifiers';
 import { checkHasState } from '@/helpers/state';
@@ -17,6 +18,7 @@ import { ForNode, MitosisNode } from '@/types/mitosis-node';
 import { MitosisStyles } from '@/types/mitosis-styles';
 import { TranspilerArgs } from '@/types/transpiler';
 import { types } from '@babel/core';
+import generate from '@babel/generator';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { attempt, mapValues, omit, omitBy, set } from 'lodash';
@@ -93,7 +95,6 @@ const componentMappers: {
   },
   PersonalizationContainer(node, options) {
     const block = blockToBuilder(node, options, { skipMapper: true });
-    // console.log('block', node);
     const variants: any[] = [];
     let defaultVariant: BuilderElement[] = [];
     const validFakeNodeNames = [
@@ -148,22 +149,90 @@ const componentMappers: {
     const target = node.scope.indexName || 'index';
     const replaceIndex = (node: MitosisNode) => {
       traverse(node).forEach(function (thing) {
-        if (isMitosisNode(thing)) {
-          for (const [key, value] of Object.entries(thing.bindings)) {
-            if (value?.code.includes(target)) {
-              thing.bindings[key]!.code = replaceNodes({
-                code: value.code,
-                nodeMaps: [
-                  {
-                    from: types.identifier(target),
-                    to: types.memberExpression(
-                      types.identifier('state'),
-                      types.identifier('$index'),
-                    ),
-                  },
-                ],
+        if (!isMitosisNode(thing)) return;
+        for (const [key, value] of Object.entries(thing.bindings)) {
+          if (!value) continue;
+
+          if (value.type === 'single' && value.bindingType === 'function') {
+            const code = value.code;
+            const processedLines: string[] = [];
+            let stopProcessing = false;
+
+            const newLocal = parseCode(code);
+
+            const lines =
+              newLocal.length === 1 && newLocal[0].type === 'BlockStatement'
+                ? newLocal[0].body
+                : newLocal;
+
+            const appendSemicolonIfNeeded = (code: string) =>
+              code.endsWith(';') ? code : code + ';';
+
+            for (const line of lines) {
+              const generatedLine = appendSemicolonIfNeeded(generate(line).code);
+              if (stopProcessing) {
+                processedLines.push(generatedLine);
+                continue;
+              }
+
+              /**
+               * Check if this statement re-declares our `target` variable, i.e.
+               * if there is a variable in this function shadowing the `target` variable.
+               */
+              let hasTargetDeclaration = false;
+              types.traverse(line, {
+                enter(path) {
+                  if (hasTargetDeclaration) {
+                    return;
+                  }
+
+                  if (
+                    types.isVariableDeclarator(path) &&
+                    types.isIdentifier(path.id) &&
+                    path.id.name === target
+                  ) {
+                    hasTargetDeclaration = true;
+                  }
+                },
               });
+
+              if (hasTargetDeclaration) {
+                stopProcessing = true;
+                processedLines.push(generatedLine);
+              } else {
+                // Replace identifiers in this statement
+                processedLines.push(
+                  appendSemicolonIfNeeded(
+                    replaceNodes({
+                      code: generatedLine,
+                      nodeMaps: [
+                        {
+                          from: types.identifier(target),
+                          to: types.memberExpression(
+                            types.identifier('state'),
+                            types.identifier('$index'),
+                          ),
+                        },
+                      ],
+                    }),
+                  ),
+                );
+              }
             }
+
+            thing.bindings[key]!.code = '{' + processedLines.join('\n') + '}';
+          } else {
+            if (!value.code.includes(target)) continue;
+
+            thing.bindings[key]!.code = replaceNodes({
+              code: value.code,
+              nodeMaps: [
+                {
+                  from: types.identifier(target),
+                  to: types.memberExpression(types.identifier('state'), types.identifier('$index')),
+                },
+              ],
+            });
           }
         }
       });

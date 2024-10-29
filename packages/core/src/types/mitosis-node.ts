@@ -1,20 +1,38 @@
 import { JSONObject } from './json';
 
 export type SpreadType = 'normal' | 'event-handlers';
+export type BindingType = 'function' | 'expression';
 
 type BindingProperties =
   | {
       type: 'spread';
       spreadType: SpreadType;
+      /**
+       * TODO: remove these once we've cleaned up the code that uses them.
+       * they don't need to be here since they only exist for functions
+       */
+      async?: boolean;
+      arguments?: string[];
     }
   | {
       type: 'single';
+      bindingType: Extract<BindingType, 'function'>;
+      async?: boolean;
+      arguments?: string[];
+    }
+  | {
+      type: 'single';
+      bindingType: Extract<BindingType, 'expression'>;
+      /**
+       * TODO: remove these once we've cleaned up the code that uses them.
+       * they don't need to be here since they only exist for functions
+       */
+      async?: boolean;
+      arguments?: string[];
     };
 
 export type Binding = {
   code: string;
-  async?: boolean;
-  arguments?: string[];
 } & BindingProperties;
 
 export type BaseNode = {

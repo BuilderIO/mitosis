@@ -384,15 +384,13 @@ const componentMappers: {
         });
         const queryOptions = variant.query as any[];
         if (Array.isArray(queryOptions)) {
-          variantNode.bindings.query = {
-            type: 'single',
+          variantNode.bindings.query = createSingleBinding({
             code: JSON.stringify(queryOptions.map((q) => omit(q, '@type'))),
-          };
+          });
         } else if (queryOptions) {
-          variantNode.bindings.query = {
-            type: 'single',
+          variantNode.bindings.query = createSingleBinding({
             code: JSON.stringify(omit(queryOptions, '@type')),
-          };
+          });
         }
         return variantNode;
       }) || [];

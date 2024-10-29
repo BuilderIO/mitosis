@@ -131,6 +131,10 @@ export const babelTransformExpression = <VisitorContextType = any>(
     return '';
   }
 
+  if (code.includes('state.$index')) {
+    // throw new Error('state.$index is not supported');
+  }
+
   const isGetter = code.trim().startsWith('get ');
 
   return pipe(
