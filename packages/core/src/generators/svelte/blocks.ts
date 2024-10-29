@@ -216,13 +216,14 @@ const stringifyBinding =
       return '';
     }
 
-    const { code, arguments: cusArgs = ['event'], type, async } = binding;
+    const { code, arguments: cusArgs = ['event'], type } = binding;
     const isValidHtmlTag = VALID_HTML_TAGS.includes(node.name) || node.name === 'svelte:element';
 
     if (type === 'spread') {
       const spreadValue = key === 'props' ? '$$props' : code;
       return ` {...${spreadValue}} `;
     } else if (key.startsWith('on') && isValidHtmlTag) {
+      const { async } = binding;
       // handle html native on[event] props
       const event = key.replace('on', '').toLowerCase();
       // TODO: handle quotes in event handler values

@@ -6,6 +6,7 @@ import {
 import { Targets } from '../../targets';
 import { TargetBlockDefinition } from '../../types/mitosis-component';
 import { Plugin } from '../../types/plugins';
+import { createSingleBinding } from '../bindings';
 import { createCodeProcessorPlugin } from './process-code';
 
 const getBlockForTarget = ({
@@ -32,10 +33,7 @@ export const processTargetBlocks = (target: Targets): Plugin => {
         const property = node?.properties[key];
         if (!matches || !property) return code;
 
-        node.bindings[key] = {
-          code: '"' + property + '"',
-          type: 'single',
-        };
+        node.bindings[key] = createSingleBinding({ code: `"${property}"` });
 
         return () => {
           delete node.properties[key];

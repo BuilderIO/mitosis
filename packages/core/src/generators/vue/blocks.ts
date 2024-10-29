@@ -1,3 +1,4 @@
+import { createSingleBinding } from '@/helpers/bindings';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import isChildren from '@/helpers/is-children';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
@@ -131,7 +132,7 @@ const stringifyBinding =
 
       if (key.startsWith('on') && isValidHtmlTag) {
         // handle html native on[event] props
-        const { arguments: cusArgs = ['event'], async } = value!;
+        const { arguments: cusArgs = ['event'], async } = value;
         let event = key.replace('on', '').toLowerCase();
         const isAssignmentExpression = useValue.includes('=');
 
@@ -222,7 +223,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   if (SPECIAL_HTML_TAGS.includes(node.name)) {
     // Vue doesn't allow style/script tags in templates, but does support them through dynamic components.
-    node.bindings.is = { code: `'${node.name}'`, type: 'single' };
+    node.bindings.is = createSingleBinding({ code: `'${node.name}'` });
     node.name = 'component';
   }
 
