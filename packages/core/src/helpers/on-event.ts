@@ -50,7 +50,7 @@ export const processOnEventHooksPlugin =
               node.bindings[handlerName] = createSingleBinding({
                 code: `state.${fnName}(${hook.eventArgName})`,
                 arguments: [hook.eventArgName],
-                bindingType: 'expression',
+                bindingType: 'function',
               });
             }
           });
