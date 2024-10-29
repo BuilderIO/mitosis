@@ -79,7 +79,7 @@ const getActionBindingsFromBlock = (
   const actionKeys = Object.keys(actions);
   if (actionKeys.length) {
     for (const key of actionKeys) {
-      const value = actions[key];
+      let value = actions[key];
       // Skip empty values
       if (!value.trim()) {
         continue;
@@ -90,7 +90,16 @@ const getActionBindingsFromBlock = (
         continue;
       }
       const useKey = `on${upperFirst(key)}`;
-      bindings[useKey] = createSingleBinding({ code: `${wrapBindingIfNeeded(value, options)}` });
+      const asyncPrefix = `(async () =>`;
+      const asyncSuffix = ')()';
+      const isAsync = value.startsWith(asyncPrefix) && value.endsWith(asyncSuffix);
+      if (isAsync) {
+        value = value.slice(asyncPrefix.length, -asyncSuffix.length);
+      }
+      bindings[useKey] = createSingleBinding({
+        code: `${wrapBindingIfNeeded(value, options)}`,
+        async: isAsync ? true : undefined,
+      });
     }
   }
 

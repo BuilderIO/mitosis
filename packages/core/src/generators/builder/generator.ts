@@ -327,8 +327,19 @@ export const blockToBuilder = (
     const eventBindingKeyRegex = /^on([A-Z])/;
     const firstCharMatchForEventBindingKey = key.match(eventBindingKeyRegex)?.[1];
     if (firstCharMatchForEventBindingKey) {
+      let actionBody = bindings[key]?.async
+        ? `(async () => ${bindings[key]?.code as string})()`
+        : removeSurroundingBlock(bindings[key]?.code as string);
+
+      const eventIdentifier = bindings[key]?.arguments?.[0];
+      if (typeof eventIdentifier === 'string' && eventIdentifier !== 'event') {
+        actionBody = replaceNodes({
+          code: actionBody,
+          nodeMaps: [{ from: types.identifier(eventIdentifier), to: types.identifier('event') }],
+        });
+      }
       actions[key.replace(eventBindingKeyRegex, firstCharMatchForEventBindingKey.toLowerCase())] =
-        removeSurroundingBlock(bindings[key]?.code as string);
+        actionBody;
       delete bindings[key];
     }
   }

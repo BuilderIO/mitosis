@@ -13,6 +13,7 @@ type BindingProperties =
 
 export type Binding = {
   code: string;
+  async?: boolean;
   arguments?: string[];
 } & BindingProperties;
 

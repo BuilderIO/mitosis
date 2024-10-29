@@ -85,7 +85,8 @@ export const blockToSolid = (
       str += ` {...(${code})} `;
     } else if (key.startsWith('on')) {
       const useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
-      str += ` ${useKey}={(${cusArg.join(',')}) => ${code}} `;
+      const asyncKeyword = json.bindings[key]?.async ? 'async ' : '';
+      str += ` ${useKey}={${asyncKeyword}(${cusArg.join(',')}) => ${code}} `;
     } else if (key === 'ref' && options.typescript) {
       str += ` ${key}={${code}!} `;
     } else {
