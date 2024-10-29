@@ -130,12 +130,7 @@ const stringifyBinding =
       // TODO: proper babel transform to replace. Util for this
       const useValue = value?.code || '';
 
-      if (
-        key.startsWith('on') &&
-        isValidHtmlTag &&
-        value.type === 'single' &&
-        value.bindingType === 'function'
-      ) {
+      if (key.startsWith('on') && isValidHtmlTag) {
         // handle html native on[event] props
         const { arguments: cusArgs = ['event'], async } = value;
         let event = key.replace('on', '').toLowerCase();
