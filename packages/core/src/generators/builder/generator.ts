@@ -8,7 +8,7 @@ import { hasProps } from '@/helpers/has-props';
 import { isComponent } from '@/helpers/is-component';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { isUpperCase } from '@/helpers/is-upper-case';
-import { parseCode } from '@/helpers/parsers';
+import { parseCodeToAst } from '@/helpers/parsers';
 import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { replaceNodes } from '@/helpers/replace-identifiers';
 import { checkHasState } from '@/helpers/state';
@@ -17,7 +17,7 @@ import { hashCodeAsString } from '@/symbols/symbol-processor';
 import { ForNode, MitosisNode } from '@/types/mitosis-node';
 import { MitosisStyles } from '@/types/mitosis-styles';
 import { TranspilerArgs } from '@/types/transpiler';
-import { types } from '@babel/core';
+import { traverse as babelTraverse, types } from '@babel/core';
 import generate from '@babel/generator';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
@@ -168,57 +168,34 @@ const componentMappers: {
           if (value.type === 'single' && value.bindingType === 'function') {
             try {
               const code = value.code;
-              const processedLines: string[] = [];
-              let stopProcessing = false;
 
-              const newLocal = parseCode(code);
+              const programNode = parseCodeToAst(code);
 
-              const lines =
-                newLocal.length === 1 && newLocal[0].type === 'BlockStatement'
-                  ? newLocal[0].body
-                  : newLocal;
+              if (!programNode) continue;
 
-              const appendSemicolonIfNeeded = (code: string) =>
-                code.endsWith(';') ? code : code + ';';
+              babelTraverse(programNode, {
+                Program(path) {
+                  if (path.scope.hasBinding(target)) {
+                    console.log('has binding');
+                    return;
+                  }
+                  const x = {
+                    id: types.identifier(target),
+                    init: types.identifier('PLACEHOLDER'),
+                  };
+                  path.scope.push(x);
+                  path.scope.rename(target, 'state.$index');
+                  path.traverse({
+                    VariableDeclaration(p) {
+                      if (p.node.declarations.length === 1 && p.node.declarations[0].id === x.id) {
+                        p.remove();
+                      }
+                    },
+                  });
+                },
+              });
 
-              for (const line of lines) {
-                const generatedLine = appendSemicolonIfNeeded(generate(line).code);
-                if (stopProcessing) {
-                  processedLines.push(generatedLine);
-                  continue;
-                }
-
-                /**
-                 * Check if this statement re-declares our `target` variable, i.e.
-                 * if there is a variable in this function shadowing the `target` variable.
-                 */
-                let hasTargetDeclaration = false;
-                types.traverse(line, {
-                  enter(path) {
-                    if (hasTargetDeclaration) {
-                      return;
-                    }
-
-                    if (
-                      types.isVariableDeclarator(path) &&
-                      types.isIdentifier(path.id) &&
-                      path.id.name === target
-                    ) {
-                      hasTargetDeclaration = true;
-                    }
-                  },
-                });
-
-                if (hasTargetDeclaration) {
-                  stopProcessing = true;
-                  processedLines.push(generatedLine);
-                } else {
-                  // Replace identifiers in this statement
-                  processedLines.push(appendSemicolonIfNeeded(replaceIndexNode(generatedLine)));
-                }
-              }
-
-              thing.bindings[key]!.code = '{' + processedLines.join('\n') + '}';
+              thing.bindings[key]!.code = generate(programNode).code;
             } catch (error) {
               console.error(
                 'Error processing function binding. Falling back to simple replacement.',

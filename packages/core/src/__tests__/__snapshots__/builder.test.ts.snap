@@ -1364,7 +1364,7 @@ export default function MyComponent(props) {
                   type=\\"checkbox\\"
                   checked={todo.completed}
                   foo={{
-                    bar: 1,
+                    bar: 1 + state.$index,
                   }}
                   onX={(event) => {
                     console.log(\\"onX\\");
@@ -1375,7 +1375,6 @@ export default function MyComponent(props) {
                       !state.todos[0].completed;
                   }}
                   onChange={(event) => {
-                    console.log(\\"this is todo item: \\", state.$index);
                     const index = state.todos.findIndex(
                       (t) => t.id === todo.id
                     );

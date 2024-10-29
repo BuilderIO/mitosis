@@ -4,20 +4,19 @@ import decorators from '@babel/plugin-syntax-decorators';
 import tsPlugin from '@babel/plugin-syntax-typescript';
 import tsPreset from '@babel/preset-typescript';
 
-export function parseCode(code: string) {
-  const ast = babel.parse(code, {
+export function parseCodeToAst(code: string) {
+  return babel.parse(code, {
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
     plugins: [
       [tsPlugin, { isTSX: true }],
       [decorators, { legacy: true }],
     ],
   });
-  const body = babel.types.isFile(ast)
-    ? ast.program.body
-    : babel.types.isProgram(ast)
-    ? ast.body
-    : [];
-  return body;
+}
+
+export function parseCode(code: string) {
+  const ast = parseCodeToAst(code);
+  return babel.types.isFile(ast) ? ast.program.body : babel.types.isProgram(ast) ? ast.body : [];
 }
 
 export const isCodeBodyExpression = (body: babel.types.Statement[]) =>
