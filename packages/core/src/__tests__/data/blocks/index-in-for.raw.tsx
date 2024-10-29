@@ -10,7 +10,7 @@ export default function MyComponent(props) {
     <div>
       {todos.map((todo) => (
         <div>
-          {state.todos.map((todo, index) => (
+          {state.todos.map((todo) => (
             <input
               type="checkbox"
               checked={todo.completed}
