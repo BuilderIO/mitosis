@@ -447,7 +447,8 @@ const _componentToReact = (
               keyPrefix: 'const',
               valueMapper: (code, type, _, key) => {
                 if (type === 'getter') return `${key} = function ${code.replace('get ', '')}`;
-                if (type === 'function') return `${key} = function ${code}`;
+                if (type === 'function')
+                  return code.startsWith('async') ? code : `${key} = function ${code}`;
                 return code;
               },
             })

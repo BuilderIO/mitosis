@@ -12,11 +12,13 @@ import { NodePath } from '@babel/core';
 import {
   BlockStatement,
   Expression,
+  Identifier,
   Node,
   ObjectExpression,
   ObjectMethod,
   ObjectProperty,
   assignmentExpression,
+  functionExpression,
   identifier,
   isArrowFunctionExpression,
   isDeclaration,
@@ -178,13 +180,40 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
         type: 'function',
       };
     } else if (isArrowFunctionExpression(item.value)) {
+      /**
+       * Arrow functions are normally converted to object methods to work around
+       * limitations with arrow functions in state in frameworks such as Svelte.
+       * However, this conversion does not work for async arrow functions due to
+       * how we handle parsing in `handleErrorOrExpression` for parsing
+       * expressions. That code does not detect async functions in order to apply
+       * its parsing workarounds. Even if it did, it does not consider async code
+       * when prefixing with "function". This would result in "function async foo()"
+       * which is not a valid function expression definition.
+       */
+      // TODO ENG-7256 Find a way to do this without diverging code path
+      if (item.value.async) {
+        const func = functionExpression(
+          item.key as Identifier,
+          item.value.params,
+          item.value.body as BlockStatement,
+          false,
+          true,
+        );
+
+        return {
+          code: parseCode(func).trim(),
+          type: 'function',
+        };
+      }
       const n = objectMethod(
         'method',
         item.key as Expression,
         item.value.params,
         item.value.body as BlockStatement,
       );
+
       const code = parseCode(n).trim();
+
       return {
         code: code,
         type: 'method',
@@ -206,6 +235,22 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
       };
     }
   } else if (isObjectMethod(item)) {
+    // TODO ENG-7256 Find a way to do this without diverging code path
+    if (item.async) {
+      const func = functionExpression(
+        item.key as Identifier,
+        item.params,
+        item.body as BlockStatement,
+        false,
+        true,
+      );
+
+      return {
+        code: parseCode(func).trim(),
+        type: 'function',
+      };
+    }
+
     const n = parseCode({ ...item, returnType: null }).trim();
 
     const isGetter = item.kind === 'get';
