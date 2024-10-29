@@ -13,6 +13,7 @@ import columns from './data/blocks/columns.raw.tsx?raw';
 import customCode from './data/blocks/custom-code.raw.tsx?raw';
 import embed from './data/blocks/embed.raw.tsx?raw';
 import image from './data/blocks/image.raw.tsx?raw';
+import indexInFor from './data/blocks/index-in-for.raw.tsx?raw';
 import stamped from './data/blocks/stamped-io.raw.tsx?raw';
 import booleanContent from './data/builder/boolean.json?raw';
 import customComponentSlotPropertyContent from './data/builder/custom-component-slot-property.json?raw';
@@ -21,7 +22,6 @@ import slotsContent from './data/builder/slots.json?raw';
 import slots2Content from './data/builder/slots2.json?raw';
 import textBindings from './data/builder/text-bindings.json?raw';
 import show from './data/show/show-expressions.raw.tsx?raw';
-
 const mitosisOptions: ToMitosisOptions = {
   format: 'legacy',
 };
@@ -87,6 +87,14 @@ describe('Builder', () => {
     const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
 
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
+    expect(mitosis).toMatchSnapshot();
+  });
+
+  test.fails('Index inside For', () => {
+    const component = parseJsx(indexInFor);
+    const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
     const mitosis = componentToMitosis()({ component: backToMitosis });
     expect(mitosis).toMatchSnapshot();
