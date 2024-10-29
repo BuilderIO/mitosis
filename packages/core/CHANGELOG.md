@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.14
+
+### Patch Changes
+
+- 39af4d6: [Builder] Fix: do not rename vars within For that are shadowing the loop's index
+
 ## 0.5.13
 
 ### Patch Changes
