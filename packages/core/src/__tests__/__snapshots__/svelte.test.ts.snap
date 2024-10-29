@@ -181,7 +181,7 @@ exports[`Svelte > jsx > Javascript Test > Basic Context 1`] = `
 <div>
   {myService.method(\\"hello\\") + name}
   Hello! I can run in React, Vue, Solid, or Liquid!
-  <input {onChange} />
+  <input on:change={onChange} />
 </div>"
 `;
 
@@ -3131,7 +3131,7 @@ exports[`Svelte > jsx > Typescript Test > Basic Context 1`] = `
 <div>
   {myService.method(\\"hello\\") + name}
   Hello! I can run in React, Vue, Solid, or Liquid!
-  <input {onChange} />
+  <input on:change={onChange} />
 </div>"
 `;
 
@@ -6503,37 +6503,51 @@ exports[`Svelte > svelte > Javascript Test > bindGroup 1`] = `
     type=\\"radio\\"
     value=\\"Plain\\"
     checked={tortilla === \\"Plain\\"}
-    onChange={(event) => (tortilla = event.target.value)}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
   /><input
     type=\\"radio\\"
     value=\\"Whole wheat\\"
     checked={tortilla === \\"Whole wheat\\"}
-    onChange={(event) => (tortilla = event.target.value)}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
   /><input
     type=\\"radio\\"
     value=\\"Spinach\\"
     checked={tortilla === \\"Spinach\\"}
-    onChange={(event) => (tortilla = event.target.value)}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
   /><br /><br /><input
     type=\\"checkbox\\"
     value=\\"Rice\\"
     checked={fillings === \\"Rice\\"}
-    onChange={(event) => (fillings = event.target.value)}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
   /><input
     type=\\"checkbox\\"
     value=\\"Beans\\"
     checked={fillings === \\"Beans\\"}
-    onChange={(event) => (fillings = event.target.value)}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
   /><input
     type=\\"checkbox\\"
     value=\\"Cheese\\"
     checked={fillings === \\"Cheese\\"}
-    onChange={(event) => (fillings = event.target.value)}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
   /><input
     type=\\"checkbox\\"
     value=\\"Guac (extra)\\"
     checked={fillings === \\"Guac (extra)\\"}
-    onChange={(event) => (fillings = event.target.value)}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
   />
   <p>Tortilla: {tortilla}</p>
   <p>Fillings: {fillings}</p>
@@ -6594,9 +6608,19 @@ exports[`Svelte > svelte > Javascript Test > eventHandlers 1`] = `
 </script>
 
 <div>
-  <button onClick={(a) => log(\\"hi\\")}>Log</button><button
-    onClick={(event) => log(event)}>Log</button
-  ><button onClick={(event) => log(event)}>Log</button>
+  <button
+    on:click={(a) => {
+      log(\\"hi\\");
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  >
 </div>"
 `;
 
@@ -6618,9 +6642,21 @@ exports[`Svelte > svelte > Javascript Test > ifElse 1`] = `
 </script>
 
 {#if show}
-  <button onClick={(event) => toggle(event)}> Hide </button>
+  <button
+    on:click={(event) => {
+      toggle(event);
+    }}
+  >
+    Hide
+  </button>
 {:else}
-  <button onClick={(event) => toggle(event)}> Show </button>
+  <button
+    on:click={(event) => {
+      toggle(event);
+    }}
+  >
+    Show
+  </button>
 {/if}"
 `;
 
@@ -6745,37 +6781,51 @@ exports[`Svelte > svelte > Typescript Test > bindGroup 1`] = `
     type=\\"radio\\"
     value=\\"Plain\\"
     checked={tortilla === \\"Plain\\"}
-    onChange={(event) => (tortilla = event.target.value)}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
   /><input
     type=\\"radio\\"
     value=\\"Whole wheat\\"
     checked={tortilla === \\"Whole wheat\\"}
-    onChange={(event) => (tortilla = event.target.value)}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
   /><input
     type=\\"radio\\"
     value=\\"Spinach\\"
     checked={tortilla === \\"Spinach\\"}
-    onChange={(event) => (tortilla = event.target.value)}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
   /><br /><br /><input
     type=\\"checkbox\\"
     value=\\"Rice\\"
     checked={fillings === \\"Rice\\"}
-    onChange={(event) => (fillings = event.target.value)}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
   /><input
     type=\\"checkbox\\"
     value=\\"Beans\\"
     checked={fillings === \\"Beans\\"}
-    onChange={(event) => (fillings = event.target.value)}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
   /><input
     type=\\"checkbox\\"
     value=\\"Cheese\\"
     checked={fillings === \\"Cheese\\"}
-    onChange={(event) => (fillings = event.target.value)}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
   /><input
     type=\\"checkbox\\"
     value=\\"Guac (extra)\\"
     checked={fillings === \\"Guac (extra)\\"}
-    onChange={(event) => (fillings = event.target.value)}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
   />
   <p>Tortilla: {tortilla}</p>
   <p>Fillings: {fillings}</p>
@@ -6836,9 +6886,19 @@ exports[`Svelte > svelte > Typescript Test > eventHandlers 1`] = `
 </script>
 
 <div>
-  <button onClick={(a) => log(\\"hi\\")}>Log</button><button
-    onClick={(event) => log(event)}>Log</button
-  ><button onClick={(event) => log(event)}>Log</button>
+  <button
+    on:click={(a) => {
+      log(\\"hi\\");
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  >
 </div>"
 `;
 
@@ -6860,9 +6920,21 @@ exports[`Svelte > svelte > Typescript Test > ifElse 1`] = `
 </script>
 
 {#if show}
-  <button onClick={(event) => toggle(event)}> Hide </button>
+  <button
+    on:click={(event) => {
+      toggle(event);
+    }}
+  >
+    Hide
+  </button>
 {:else}
-  <button onClick={(event) => toggle(event)}> Show </button>
+  <button
+    on:click={(event) => {
+      toggle(event);
+    }}
+  >
+    Show
+  </button>
 {/if}"
 `;
 
