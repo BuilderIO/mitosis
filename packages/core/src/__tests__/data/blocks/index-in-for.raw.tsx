@@ -14,8 +14,10 @@ export default function MyComponent(props) {
             <input
               type="checkbox"
               checked={todo.completed}
+              key={todo.id + '-' + index}
+              value={index}
               foo={{
-                bar: 1,
+                bar: 1 + index,
               }}
               onX={() => {
                 console.log('onX');
