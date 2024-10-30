@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.15
+
+### Patch Changes
+
+- a0ad5ab: [Builder]: Fix: use scope.rename to rename identifiers in For loop
+
 ## 0.5.14
 
 ### Patch Changes
