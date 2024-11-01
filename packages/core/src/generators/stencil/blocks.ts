@@ -96,7 +96,8 @@ export const blockToStencil = (
       str += ` ref={(el) => ${code.startsWith('this.') ? code : `this.${code}`} = el} `;
     } else if (isEvent(key)) {
       const useKey = key === 'onChange' && blockName === 'input' ? 'onInput' : key;
-      str += ` ${useKey}={(${cusArgs.join(',')}) => ${code}} `;
+      const asyncKeyword = json.bindings[key]?.async ? 'async ' : '';
+      str += ` ${useKey}={${asyncKeyword}(${cusArgs.join(',')}) => ${code}} `;
     } else {
       str += ` ${key}={${code}} `;
     }

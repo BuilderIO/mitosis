@@ -94,8 +94,12 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
       str += ` ref="${code}" `;
     } else if (key.startsWith('on')) {
       let useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
+      const asyncKeyword = json.bindings[key]?.async ? 'async ' : '';
       useKey = '@' + useKey.substring(2).toLowerCase();
-      str += ` ${useKey}=\${${cusArgs.join(',')} => ${processBinding(code as string)}} `;
+
+      str += ` ${useKey}=\${${asyncKeyword}(${cusArgs.join(',')}) => ${processBinding(
+        code as string,
+      )}} `;
     } else {
       const value = processBinding(code as string);
       // If they key includes a '-' it's an attribute, not a property
@@ -193,7 +197,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
         });
       } catch (err) {
         // If can't format HTML (this can happen with lit given it is tagged template strings),
-        // at least remove excess space
+        // at least remove excess fspace
         html = html.replace(/\n{3,}/g, '\n\n');
       }
     }

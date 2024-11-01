@@ -1,18 +1,21 @@
-import { componentToReact, ToMitosisOptions } from '..';
-import { componentToBuilder } from '../generators/builder';
-import { componentToHtml } from '../generators/html';
-import { componentToMitosis } from '../generators/mitosis';
-import { dedent } from '../helpers/dedent';
-import { builderContentToMitosisComponent, extractStateHook } from '../parsers/builder';
-import { parseJsx } from '../parsers/jsx';
-import { compileAwayBuilderComponents } from '../plugins/compile-away-builder-components';
-
+import { componentToBuilder } from '@/generators/builder';
+import { componentToHtml } from '@/generators/html';
+import { componentToMitosis } from '@/generators/mitosis';
+import { ToMitosisOptions } from '@/generators/mitosis/types';
+import { componentToReact } from '@/generators/react';
+import { dedent } from '@/helpers/dedent';
+import { builderContentToMitosisComponent, extractStateHook } from '@/parsers/builder';
+import { parseJsx } from '@/parsers/jsx';
+import { compileAwayBuilderComponents } from '@/plugins/compile-away-builder-components';
 import { BuilderContent } from '@builder.io/sdk';
+
 import advancedFor from './data/advanced-for.raw.tsx?raw';
+import asyncBindings from './data/basic-ref-assignment.raw.tsx?raw';
 import columns from './data/blocks/columns.raw.tsx?raw';
 import customCode from './data/blocks/custom-code.raw.tsx?raw';
 import embed from './data/blocks/embed.raw.tsx?raw';
 import image from './data/blocks/image.raw.tsx?raw';
+import indexInFor from './data/blocks/index-in-for.raw.tsx?raw';
 import stamped from './data/blocks/stamped-io.raw.tsx?raw';
 import booleanContent from './data/builder/boolean.json?raw';
 import customComponentSlotPropertyContent from './data/builder/custom-component-slot-property.json?raw';
@@ -72,11 +75,29 @@ describe('Builder', () => {
     expect(mitosis).toMatchSnapshot();
   });
 
+  test('async bindings', () => {
+    const component = parseJsx(asyncBindings);
+    const builderJson = componentToBuilder()({ component });
+    expect(builderJson).toMatchSnapshot();
+
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
+    expect(mitosis).toMatchSnapshot();
+  });
+
   test('Embed', () => {
     const component = parseJsx(embed);
     const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
 
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
+    expect(mitosis).toMatchSnapshot();
+  });
+
+  test('Index inside For', () => {
+    const component = parseJsx(indexInFor);
+    const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
     const mitosis = componentToMitosis()({ component: backToMitosis });
     expect(mitosis).toMatchSnapshot();

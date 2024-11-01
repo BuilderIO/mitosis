@@ -434,12 +434,13 @@ const blockToHtml = (
         const codeContent: string = removeSurroundingBlock(
           updateReferencesInCode(useValue, options, blockOptions),
         );
+        const asyncKeyword = json.bindings[key]?.async ? 'async ' : '';
         options.js += `
           // Event handler for '${event}' event on ${elId}
           ${
             options.format === 'class'
-              ? `this.${fnName} = (${cusArg.join(',')}) => {`
-              : `function ${fnName} (${cusArg.join(',')}) {`
+              ? `this.${fnName} = ${asyncKeyword}(${cusArg.join(',')}) => {`
+              : `${asyncKeyword}function ${fnName} (${cusArg.join(',')}) {`
           }
               ${addScopeVars(
                 scopeVars,
@@ -658,7 +659,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
           !hasChangeListeners
             ? ''
             : `
-        
+
         // Function to update data bindings and loops
         // call update() when you mutate state and need the updates to reflect
         // in the dom
@@ -693,7 +694,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
                     options,
                   );
                   return code + '\n';
-                }, '')} 
+                }, '')}
                 `
           }
 
@@ -730,7 +731,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
               ${updateReferencesInCode(
                 addUpdateAfterSetInCode(stringifySingleScopeOnMount(json), options),
                 options,
-              )} 
+              )}
               `
         }
 
@@ -743,8 +744,8 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
             // grabs the content of a node that is between <template> tags
             // iterates through child nodes to register all content including text elements
             // attaches the content after the template
-  
-  
+
+
             const elementFragment = el.content.cloneNode(true);
             const children = Array.from(elementFragment.childNodes)
             children.forEach(child => {
@@ -758,7 +759,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
             });
             el.after(elementFragment);
           }
-  
+
         `
         }
         ${
@@ -992,9 +993,9 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
       })}
       /**
        * Usage:
-       * 
+       *
        *  <${kebabName}></${kebabName}>
-       * 
+       *
        */
       class ${ComponentName} extends ${
       options?.experimental?.classExtends
@@ -1200,8 +1201,8 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
             // grabs the content of a node that is between <template> tags
             // iterates through child nodes to register all content including text elements
             // attaches the content after the template
-  
-  
+
+
             const elementFragment = el.content.cloneNode(true);
             const children = Array.from(elementFragment.childNodes)
             children.forEach(child => {
@@ -1281,7 +1282,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
                 `;
               }
               return code + '\n';
-            }, '')} 
+            }, '')}
             `
           }
         }
@@ -1378,7 +1379,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
                   ? `
               ${options?.experimental?.generateQuerySelectorAll(key, code)}
               `
-                  : `              
+                  : `
               this._root.querySelectorAll("[data-el='${key}']").forEach((el) => {
                 ${code}
               })

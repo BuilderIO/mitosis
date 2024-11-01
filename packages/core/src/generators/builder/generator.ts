@@ -8,6 +8,7 @@ import { hasProps } from '@/helpers/has-props';
 import { isComponent } from '@/helpers/is-component';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { isUpperCase } from '@/helpers/is-upper-case';
+import { parseCodeToAst } from '@/helpers/parsers';
 import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { replaceNodes } from '@/helpers/replace-identifiers';
 import { checkHasState } from '@/helpers/state';
@@ -16,7 +17,8 @@ import { hashCodeAsString } from '@/symbols/symbol-processor';
 import { ForNode, MitosisNode } from '@/types/mitosis-node';
 import { MitosisStyles } from '@/types/mitosis-styles';
 import { TranspilerArgs } from '@/types/transpiler';
-import { types } from '@babel/core';
+import { traverse as babelTraverse, types } from '@babel/core';
+import generate from '@babel/generator';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { attempt, mapValues, omit, omitBy, set } from 'lodash';
@@ -93,7 +95,6 @@ const componentMappers: {
   },
   PersonalizationContainer(node, options) {
     const block = blockToBuilder(node, options, { skipMapper: true });
-    // console.log('block', node);
     const variants: any[] = [];
     let defaultVariant: BuilderElement[] = [];
     const validFakeNodeNames = [
@@ -144,26 +145,64 @@ const componentMappers: {
   For(_node, options) {
     const node = _node as any as ForNode;
 
+    const replaceIndexNode = (str: string) =>
+      replaceNodes({
+        code: str,
+        nodeMaps: [
+          {
+            from: types.identifier(target),
+            to: types.memberExpression(types.identifier('state'), types.identifier('$index')),
+          },
+        ],
+      });
+
     // rename `index` var to `state.$index`
     const target = node.scope.indexName || 'index';
     const replaceIndex = (node: MitosisNode) => {
       traverse(node).forEach(function (thing) {
-        if (isMitosisNode(thing)) {
-          for (const [key, value] of Object.entries(thing.bindings)) {
-            if (value?.code.includes(target)) {
-              thing.bindings[key]!.code = replaceNodes({
-                code: value.code,
-                nodeMaps: [
-                  {
-                    from: types.identifier(target),
-                    to: types.memberExpression(
-                      types.identifier('state'),
-                      types.identifier('$index'),
-                    ),
-                  },
-                ],
+        if (!isMitosisNode(thing)) return;
+        for (const [key, value] of Object.entries(thing.bindings)) {
+          if (!value) continue;
+          if (!value.code.includes(target)) continue;
+
+          if (value.type === 'single' && value.bindingType === 'function') {
+            try {
+              const code = value.code;
+
+              const programNode = parseCodeToAst(code);
+
+              if (!programNode) continue;
+
+              babelTraverse(programNode, {
+                Program(path) {
+                  if (path.scope.hasBinding(target)) return;
+
+                  const x = {
+                    id: types.identifier(target),
+                    init: types.identifier('PLACEHOLDER'),
+                  };
+                  path.scope.push(x);
+                  path.scope.rename(target, 'state.$index');
+                  path.traverse({
+                    VariableDeclaration(p) {
+                      if (p.node.declarations.length === 1 && p.node.declarations[0].id === x.id) {
+                        p.remove();
+                      }
+                    },
+                  });
+                },
               });
+
+              thing.bindings[key]!.code = generate(programNode).code;
+            } catch (error) {
+              console.error(
+                'Error processing function binding. Falling back to simple replacement.',
+                error,
+              );
+              thing.bindings[key]!.code = replaceIndexNode(value.code);
             }
+          } else {
+            thing.bindings[key]!.code = replaceIndexNode(value.code);
           }
         }
       });
@@ -327,8 +366,19 @@ export const blockToBuilder = (
     const eventBindingKeyRegex = /^on([A-Z])/;
     const firstCharMatchForEventBindingKey = key.match(eventBindingKeyRegex)?.[1];
     if (firstCharMatchForEventBindingKey) {
+      let actionBody = bindings[key]?.async
+        ? `(async () => ${bindings[key]?.code as string})()`
+        : removeSurroundingBlock(bindings[key]?.code as string);
+
+      const eventIdentifier = bindings[key]?.arguments?.[0];
+      if (typeof eventIdentifier === 'string' && eventIdentifier !== 'event') {
+        actionBody = replaceNodes({
+          code: actionBody,
+          nodeMaps: [{ from: types.identifier(eventIdentifier), to: types.identifier('event') }],
+        });
+      }
       actions[key.replace(eventBindingKeyRegex, firstCharMatchForEventBindingKey.toLowerCase())] =
-        removeSurroundingBlock(bindings[key]?.code as string);
+        actionBody;
       delete bindings[key];
     }
   }

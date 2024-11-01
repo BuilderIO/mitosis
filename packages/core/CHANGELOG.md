@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.5.15
+
+### Patch Changes
+
+- a0ad5ab: [Builder]: Fix: use scope.rename to rename identifiers in For loop
+
+## 0.5.14
+
+### Patch Changes
+
+- 39af4d6: [Builder] Fix: do not rename vars within For that are shadowing the loop's index
+
+## 0.5.13
+
+### Patch Changes
+
+- c7d2f8c: [All] fix: support async event handlers
+
 ## 0.5.12
 
 ### Patch Changes

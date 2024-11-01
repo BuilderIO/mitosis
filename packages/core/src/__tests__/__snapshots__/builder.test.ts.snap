@@ -1336,6 +1336,65 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Builder > Index inside For 1`] = `
+"import { useStore, For } from \\"@builder.io/mitosis\\";
+
+export default function MyComponent(props) {
+  const state = useStore({
+    todos: [
+      {
+        id: 1,
+        completed: false,
+      },
+      {
+        id: 2,
+        completed: false,
+      },
+    ],
+  });
+
+  return (
+    <div>
+      <For each={state.todos}>
+        {(todo, index) => (
+          <div>
+            <For each={state.todos}>
+              {(todo, index) => (
+                <input
+                  type=\\"checkbox\\"
+                  checked={todo.completed}
+                  key={todo.id + \\"-\\" + index}
+                  value={index}
+                  foo={{
+                    bar: 1 + state.$index,
+                  }}
+                  onX={(event) => {
+                    console.log(\\"onX\\");
+                  }}
+                  onClick={(event) => {
+                    console.log(\\"clicked\\", event);
+                    state.todos[state.$index].completed =
+                      !state.todos[0].completed;
+                  }}
+                  onChange={(event) => {
+                    console.log(\\"this is todo item: \\", index);
+                    const index = state.todos.findIndex(
+                      (t) => t.id === todo.id
+                    );
+                    state.todos[index].completed = event.target.checked;
+                  }}
+                />
+              )}
+            </For>
+          </div>
+        )}
+      </For>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Builder > No srcset for SVG 1`] = `
 "<img
   loading=\\"lazy\\"
@@ -1394,6 +1453,7 @@ exports[`Builder > Regenerate custom Hero 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "css": {
+          "bindingType": "expression",
           "code": "{
   display: \\"flex\\",
   flexDirection: \\"column\\",
@@ -1406,10 +1466,12 @@ exports[`Builder > Regenerate custom Hero 1`] = `
           "type": "single",
         },
         "height": {
+          "bindingType": "expression",
           "code": "400",
           "type": "single",
         },
         "multiBinding": {
+          "bindingType": "expression",
           "code": "{
   hello: state.message
 }",
@@ -1515,14 +1577,17 @@ exports[`Builder > Regenerate custom Hero 3`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "css": {
+          "bindingType": "expression",
           "code": "{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"column\\",\\"alignItems\\":\\"stretch\\",\\"position\\":\\"relative\\",\\"flexShrink\\":\\"0\\",\\"boxSizing\\":\\"border-box\\",\\"marginTop\\":\\"200px\\"}",
           "type": "single",
         },
         "height": {
+          "bindingType": "expression",
           "code": "400",
           "type": "single",
         },
         "multiBinding": {
+          "bindingType": "expression",
           "code": "{
   hello: state.message
 }",
@@ -3011,10 +3076,8 @@ exports[`Builder > Stamped 1`] = `
               {
                 "@type": "@builder.io/sdk:Element",
                 "actions": {
-                  "click": "
-  event.preventDefault();
-  state.showReviewPrompt = false;
-",
+                  "click": "event.preventDefault();
+state.showReviewPrompt = false",
                 },
                 "bindings": {},
                 "children": [
@@ -3034,10 +3097,8 @@ exports[`Builder > Stamped 1`] = `
                 ],
                 "code": {
                   "actions": {
-                    "click": "
-  event.preventDefault();
-  state.showReviewPrompt = false;
-",
+                    "click": "event.preventDefault();
+state.showReviewPrompt = false",
                   },
                   "bindings": {},
                 },
@@ -3469,6 +3530,95 @@ exports[`Builder > Text with bindings 3`] = `
 }
 `;
 
+exports[`Builder > async bindings 1`] = `
+{
+  "data": {
+    "blocks": [
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {},
+        "children": [
+          {
+            "@type": "@builder.io/sdk:Element",
+            "actions": {
+              "click": "(async () => await state.handlerClick(event))()",
+            },
+            "bindings": {},
+            "children": [
+              {
+                "@type": "@builder.io/sdk:Element",
+                "bindings": {},
+                "component": {
+                  "name": "Text",
+                  "options": {
+                    "text": "Click",
+                  },
+                },
+                "tagName": "span",
+              },
+            ],
+            "code": {
+              "actions": {
+                "click": "(async () => await state.handlerClick(event))()",
+              },
+              "bindings": {},
+            },
+            "properties": {},
+            "tagName": "button",
+          },
+        ],
+        "code": {
+          "actions": {},
+          "bindings": {},
+        },
+        "properties": {},
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "Object.assign(state, {
+  handlerClick: function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef);
+    holdValueRef = holdValueRef + \\"JS\\";
+  },
+});
+",
+    "tsCode": "useStore({
+  handlerClick: function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef);
+    holdValueRef = holdValueRef + \\"JS\\";
+  },
+});
+",
+  },
+}
+`;
+
+exports[`Builder > async bindings 2`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export default function MyComponent(props) {
+  const state = useStore({
+    handlerClick: function handlerClick(event) {
+      event.preventDefault();
+      console.log(\\"current value\\", holdValueRef);
+      holdValueRef = holdValueRef + \\"JS\\";
+    },
+  });
+
+  return (
+    <div>
+      <button onClick={async (event) => await state.handlerClick(event)}>
+        Click
+      </button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Builder > bindings 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -3477,6 +3627,7 @@ exports[`Builder > bindings 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "label": {
+          "bindingType": "expression",
           "code": "state.text",
           "type": "single",
         },
@@ -3495,6 +3646,7 @@ exports[`Builder > bindings 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "css": {
+          "bindingType": "expression",
           "code": "{backgroundColor:'rgba(0, 0, 0, 1)',display:'flex',paddingLeft:'72px',paddingRight:'72px',paddingTop:'25px',paddingBottom:'25px',alignItems:'start',gap:'10px',fontFamily:'Poppins, -apple-system, Roboto, Helvetica, sans-serif',fontSize:'16px',color:'rgba(255, 255, 255, 1)',fontWeight:'700',textTransform:'uppercase',justifyContent:'start'}",
           "type": "single",
         },
@@ -3504,6 +3656,7 @@ exports[`Builder > bindings 1`] = `
           "@type": "@builder.io/mitosis/node",
           "bindings": {
             "_text": {
+              "bindingType": "expression",
               "code": "state.text",
               "type": "single",
             },
@@ -3598,6 +3751,7 @@ exports[`Builder > booleans 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "focused": {
+          "bindingType": "expression",
           "code": "true",
           "type": "single",
         },
@@ -3666,6 +3820,7 @@ exports[`Builder > customComponentSlotProperty 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "css": {
+          "bindingType": "expression",
           "code": "{\\"position\\":\\"relative\\",\\"width\\":\\"100%\\",\\"@media (max-width: 991px)\\":{\\"maxWidth\\":\\"100%\\"}}",
           "type": "single",
         },
@@ -3683,6 +3838,7 @@ exports[`Builder > customComponentSlotProperty 1`] = `
             "@type": "@builder.io/mitosis/node",
             "bindings": {
               "css": {
+                "bindingType": "expression",
                 "code": "{\\"alignItems\\":\\"flex-start\\",\\"alignSelf\\":\\"stretch\\",\\"display\\":\\"flex\\",\\"flexBasis\\":\\"0%\\",\\"flexDirection\\":\\"column\\",\\"justifyContent\\":\\"center\\"}",
                 "type": "single",
               },
@@ -3700,6 +3856,7 @@ exports[`Builder > customComponentSlotProperty 1`] = `
             "@type": "@builder.io/mitosis/node",
             "bindings": {
               "css": {
+                "bindingType": "expression",
                 "code": "{\\"alignItems\\":\\"flex-start\\",\\"alignSelf\\":\\"stretch\\",\\"display\\":\\"flex\\",\\"flexBasis\\":\\"0%\\",\\"flexDirection\\":\\"column\\",\\"justifyContent\\":\\"center\\"}",
                 "type": "single",
               },
@@ -3715,6 +3872,7 @@ exports[`Builder > customComponentSlotProperty 1`] = `
             "@type": "@builder.io/mitosis/node",
             "bindings": {
               "css": {
+                "bindingType": "expression",
                 "code": "{\\"alignItems\\":\\"flex-start\\",\\"alignSelf\\":\\"stretch\\",\\"display\\":\\"flex\\",\\"flexBasis\\":\\"0%\\",\\"flexDirection\\":\\"column\\",\\"justifyContent\\":\\"center\\"}",
                 "type": "single",
               },
@@ -3732,6 +3890,7 @@ exports[`Builder > customComponentSlotProperty 1`] = `
             "@type": "@builder.io/mitosis/node",
             "bindings": {
               "css": {
+                "bindingType": "expression",
                 "code": "{\\"alignItems\\":\\"flex-start\\",\\"alignSelf\\":\\"stretch\\",\\"display\\":\\"flex\\",\\"flexBasis\\":\\"0%\\",\\"flexDirection\\":\\"column\\",\\"justifyContent\\":\\"center\\"}",
                 "type": "single",
               },
@@ -3904,6 +4063,7 @@ exports[`Builder > nodes as props 3`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "prop": {
+          "bindingType": "expression",
           "code": "<Bar hello=\\"world\\" />",
           "type": "single",
         },
@@ -4055,6 +4215,7 @@ exports[`Builder > slots 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "css": {
+          "bindingType": "expression",
           "code": "{\\"width\\":\\"100%\\",\\"@media (max-width: 991px)\\":{\\"maxWidth\\":\\"100%\\"}}",
           "type": "single",
         },
@@ -4144,10 +4305,12 @@ exports[`Builder > slots2 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "css": {
+          "bindingType": "expression",
           "code": "{\\"fontStyle\\":\\"italic\\"}",
           "type": "single",
         },
         "disabled": {
+          "bindingType": "expression",
           "code": "false",
           "type": "single",
         },

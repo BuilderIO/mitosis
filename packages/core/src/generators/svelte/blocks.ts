@@ -223,16 +223,18 @@ const stringifyBinding =
       const spreadValue = key === 'props' ? '$$props' : code;
       return ` {...${spreadValue}} `;
     } else if (key.startsWith('on') && isValidHtmlTag) {
+      const { async } = binding;
       // handle html native on[event] props
       const event = key.replace('on', '').toLowerCase();
       // TODO: handle quotes in event handler values
 
       const valueWithoutBlock = removeSurroundingBlock(code);
 
-      if (valueWithoutBlock === key) {
+      if (valueWithoutBlock === key && !async) {
         return ` on:${event}={${valueWithoutBlock}} `;
       } else {
-        return ` on:${event}="{${cusArgs.join(',')} => {${valueWithoutBlock}}}" `;
+        const asyncKeyword = async ? 'async ' : '';
+        return ` on:${event}="{${asyncKeyword}(${cusArgs.join(',')}) => {${valueWithoutBlock}}}" `;
       }
     } else if (key.startsWith('on')) {
       // handle on[custom event] props
