@@ -638,11 +638,13 @@ describe('Builder', () => {
     );
   });
 
-  test.fails('do not transform scoped variable to match state var', () => {
+  test.only('do not transform scoped variable to match state var', () => {
     const content = {
       data: {
-        tsCode: 'useStore({\n  errors: {},\n  foo() {\n    const errors = {};\n  }\n});',
-        jsCode: 'Object.assign(state, {\n  errors: {},\n foo() {\n    const errors = {};\n  }\n});',
+        tsCode:
+          'useStore({\n  errors: {},\n  foo() {\n    const errors = {}; console.log(errors); }\n});',
+        jsCode:
+          'Object.assign(state, {\n  errors: {},\n foo() {\n    const errors = {}; console.log(errors); }\n});',
         blocks: [],
       },
     };
@@ -657,6 +659,36 @@ describe('Builder', () => {
         "foo": {
           "code": "foo() {
         const state.errors = {};
+        console.log(state.errors);
+      }",
+          "type": "method",
+        },
+      }
+    `);
+  });
+
+  test.only('do not transform destructured variable to match state', () => {
+    const content = {
+      data: {
+        tsCode: 'useStore({\n  errors: {},\n foo() {\n const { errors } = someFn(); }\n});',
+        jsCode:
+          'Object.assign(state, {\n  errors: {},\n foo() {\n const { errors } = someFn(); }\n});',
+        blocks: [],
+      },
+    };
+    const mitosisJson = builderContentToMitosisComponent(content);
+    expect(mitosisJson.state).toMatchInlineSnapshot(`
+      {
+        "errors": {
+          "code": "{}",
+          "propertyType": "normal",
+          "type": "property",
+        },
+        "foo": {
+          "code": "foo() {
+        const {
+          errors: state.errors
+        } = someFn();
       }",
           "type": "method",
         },
