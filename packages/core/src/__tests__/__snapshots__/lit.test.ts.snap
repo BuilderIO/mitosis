@@ -99,7 +99,7 @@ export default class MyBasicRefComponent extends LitElement {
               ? html\`<my-fragment
            ><input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
                   this.onBlur()}
-           @input=\${(event) => (this.name = event.target.value)} />
+           @change=\${(event) => (this.name = event.target.value)} />
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
            <select name=\\"cars\\" id=\\"cars\\">
              <option value=\\"supra\\">GR Supra</option>
@@ -146,7 +146,7 @@ export default class MyBasicComponent extends LitElement {
 }
 </style>
           <div>
-          <input .value=\${DEFAULT_VALUES.name || this.name} @input=\${(
+          <input .value=\${DEFAULT_VALUES.name || this.name} @change=\${(
       myEvent
     ) =>
       (this.name =
@@ -181,7 +181,7 @@ export default class MyBasicForShowComponent extends LitElement {
             (person, index) =>
               html\`\${
                 person === this.name
-                  ? html\`<input .value=\${this.name} @input=\${(event) => {
+                  ? html\`<input .value=\${this.name} @change=\${(event) => {
                       this.name = event.target.value + \\" and \\" + person;
                     }} /> Hello \${person} ! I can run in
           Qwik, Web Component, React, Vue, Solid, or Liquid! \`
@@ -227,7 +227,7 @@ export default class MyBasicComponent extends LitElement {
           \${
             myService.method(\\"hello\\") + this.name
           } Hello! I can run in React, Vue,
-          Solid, or Liquid! <input @input=\${(event) => this.onChange} />
+          Solid, or Liquid! <input @change=\${(event) => this.onChange} />
         </div>
 
         \`;
@@ -447,7 +447,7 @@ export default class MyBasicForComponent extends LitElement {
           <div>
           \${this.names?.map(
             (person, index) => html\`<my-fragment
-        ><input .value=\${this.name} @input=\${(event) => {
+        ><input .value=\${this.name} @change=\${(event) => {
               this.name = event.target.value + \\" and \\" + person;
             }} /> Hello \${person} ! I can run in
         Qwik, Web Component, React, Vue, Solid, or Liquid! </my-fragment
@@ -501,7 +501,7 @@ export default class MyBasicRefComponent extends LitElement {
               ? html\`<my-fragment
            ><input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
                   this.onBlur()}
-           @input=\${(event) => (this.name = event.target.value)} />
+           @change=\${(event) => (this.name = event.target.value)} />
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
            <select name=\\"cars\\" id=\\"cars\\">
              <option value=\\"supra\\">GR Supra</option>
@@ -1467,9 +1467,9 @@ export default class FormInputComponent extends LitElement {
       Builder.isEditing && this.defaultValue ? this.defaultValue : \\"default-key\\"
     } .placeholder=\${this.placeholder}
         .type=\${this.type} .name=\${this.name} .value=\${this.value}
-        .defaultValue=\${this.defaultValue} .required=\${this.required} @input=\${(
-      event
-    ) => this.onChange?.(event.target.value)} />
+        .defaultValue=\${this.defaultValue} .required=\${
+      this.required
+    } @change=\${(event) => this.onChange?.(event.target.value)} />
 
         \`;
   }
@@ -2096,7 +2096,7 @@ export default class MyBasicForwardRefComponent extends LitElement {
 }
 </style>
           <div>
-          <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
+          <input ref=\\"props.inputRef\\" .value=\${this.name} @change=\${(event) =>
       (this.name = event.target.value)} />
         </div>
 
@@ -2130,7 +2130,7 @@ export default class MyBasicForwardRefComponent extends LitElement {
 }
 </style>
           <div>
-          <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
+          <input ref=\\"props.inputRef\\" .value=\${this.name} @change=\${(event) =>
       (this.name = event.target.value)} />
         </div>
 
@@ -2517,6 +2517,38 @@ export default class ComponentWithTypes extends LitElement {
     return html\`
 
           <div>Hello \${this.name || DEFAULT_VALUES.name}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > eventInputAndChange 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"event-input-and-change\\")
+export default class EventInputAndChange extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() name = \\"Steve\\";
+
+  render() {
+    return html\`
+          <style>.input {
+  color: red;
+}
+</style>
+          <div>
+          <input .value=\${this.name} @input=\${(event) =>
+      (this.name = event.target.value)}
+          @change=\${(event) =>
+            (this.name = event.target.value)} /> Hello! I can run in
+          React, Vue, Solid, or Liquid!
+        </div>
 
         \`;
   }
@@ -4451,7 +4483,7 @@ export default class MyBasicRefComponent extends LitElement {
               ? html\`<my-fragment
            ><input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
                   this.onBlur()}
-           @input=\${(event) => (this.name = event.target.value)} />
+           @change=\${(event) => (this.name = event.target.value)} />
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
            <select name=\\"cars\\" id=\\"cars\\">
              <option value=\\"supra\\">GR Supra</option>
@@ -4502,7 +4534,7 @@ export default class MyBasicComponent extends LitElement {
 }
 </style>
           <div>
-          <input .value=\${DEFAULT_VALUES.name || this.name} @input=\${(
+          <input .value=\${DEFAULT_VALUES.name || this.name} @change=\${(
       myEvent
     ) =>
       (this.name =
@@ -4537,7 +4569,7 @@ export default class MyBasicForShowComponent extends LitElement {
             (person, index) =>
               html\`\${
                 person === this.name
-                  ? html\`<input .value=\${this.name} @input=\${(event) => {
+                  ? html\`<input .value=\${this.name} @change=\${(event) => {
                       this.name = event.target.value + \\" and \\" + person;
                     }} /> Hello \${person} ! I can run in
           Qwik, Web Component, React, Vue, Solid, or Liquid! \`
@@ -4583,7 +4615,7 @@ export default class MyBasicComponent extends LitElement {
           \${
             myService.method(\\"hello\\") + this.name
           } Hello! I can run in React, Vue,
-          Solid, or Liquid! <input @input=\${(event) => this.onChange} />
+          Solid, or Liquid! <input @change=\${(event) => this.onChange} />
         </div>
 
         \`;
@@ -4813,7 +4845,7 @@ export default class MyBasicForComponent extends LitElement {
           <div>
           \${this.names?.map(
             (person, index) => html\`<my-fragment
-        ><input .value=\${this.name} @input=\${(event) => {
+        ><input .value=\${this.name} @change=\${(event) => {
               this.name = event.target.value + \\" and \\" + person;
             }} /> Hello \${person} ! I can run in
         Qwik, Web Component, React, Vue, Solid, or Liquid! </my-fragment
@@ -4871,7 +4903,7 @@ export default class MyBasicRefComponent extends LitElement {
               ? html\`<my-fragment
            ><input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
                   this.onBlur()}
-           @input=\${(event) => (this.name = event.target.value)} />
+           @change=\${(event) => (this.name = event.target.value)} />
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
            <select name=\\"cars\\" id=\\"cars\\">
              <option value=\\"supra\\">GR Supra</option>
@@ -5971,9 +6003,9 @@ export default class FormInputComponent extends LitElement {
       Builder.isEditing && this.defaultValue ? this.defaultValue : \\"default-key\\"
     } .placeholder=\${this.placeholder}
         .type=\${this.type} .name=\${this.name} .value=\${this.value}
-        .defaultValue=\${this.defaultValue} .required=\${this.required} @input=\${(
-      event
-    ) => this.onChange?.(event.target.value)} />
+        .defaultValue=\${this.defaultValue} .required=\${
+      this.required
+    } @change=\${(event) => this.onChange?.(event.target.value)} />
 
         \`;
   }
@@ -6701,7 +6733,7 @@ export default class MyBasicForwardRefComponent extends LitElement {
 }
 </style>
           <div>
-          <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
+          <input ref=\\"props.inputRef\\" .value=\${this.name} @change=\${(event) =>
       (this.name = event.target.value)} />
         </div>
 
@@ -6740,7 +6772,7 @@ export default class MyBasicForwardRefComponent extends LitElement {
 }
 </style>
           <div>
-          <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
+          <input ref=\\"props.inputRef\\" .value=\${this.name} @change=\${(event) =>
       (this.name = event.target.value)} />
         </div>
 
@@ -7164,6 +7196,38 @@ export default class ComponentWithTypes extends LitElement {
     return html\`
 
           <div>Hello \${this.name || DEFAULT_VALUES.name}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > eventInputAndChange 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"event-input-and-change\\")
+export default class EventInputAndChange extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() name = \\"Steve\\";
+
+  render() {
+    return html\`
+          <style>.input {
+  color: red;
+}
+</style>
+          <div>
+          <input .value=\${this.name} @input=\${(event) =>
+      (this.name = event.target.value)}
+          @change=\${(event) =>
+            (this.name = event.target.value)} /> Hello! I can run in
+          React, Vue, Solid, or Liquid!
+        </div>
 
         \`;
   }
@@ -9125,10 +9189,10 @@ export default class MyComponent extends LitElement {
     return html\`
 
           <div>
-          <input @input=\${(event) => (this.name = event.target.value)} .value=\${
-      this.name
-    }
-          /> Hello! I can run in React, Vue, Solid, or Liquid!
+          <input @change=\${(event) => (this.name = event.target.value)}
+          .value=\${
+            this.name
+          } /> Hello! I can run in React, Vue, Solid, or Liquid!
         </div>
 
         \`;
@@ -9173,21 +9237,21 @@ export default class MyComponent extends LitElement {
 
           <div>
           <input type=\\"radio\\" value=\\"Plain\\" .checked=\${this.tortilla === 'Plain'}
-          @input=\${(event) => this.tortilla = event.target.value} /> <input type=\\"radio\\"
-          value=\\"Whole wheat\\" .checked=\${this.tortilla === 'Whole wheat'}
-          @input=\${(event) => this.tortilla = event.target.value} /> <input type=\\"radio\\"
-          value=\\"Spinach\\" .checked=\${this.tortilla === 'Spinach'} @input=\${(event) =>
-          this.tortilla = event.target.value} />
+          @change=\${(event) => this.tortilla = event.target.value} /> <input
+          type=\\"radio\\" value=\\"Whole wheat\\" .checked=\${this.tortilla === 'Whole wheat'}
+          @change=\${(event) => this.tortilla = event.target.value} /> <input
+          type=\\"radio\\" value=\\"Spinach\\" .checked=\${this.tortilla === 'Spinach'}
+          @change=\${(event) => this.tortilla = event.target.value} />
           <br />
           <br />
           <input type=\\"checkbox\\" value=\\"Rice\\" .checked=\${this.fillings === 'Rice'}
-          @input=\${(event) => this.fillings = event.target.value} /> <input
+          @change=\${(event) => this.fillings = event.target.value} /> <input
           type=\\"checkbox\\" value=\\"Beans\\" .checked=\${this.fillings === 'Beans'}
-          @input=\${(event) => this.fillings = event.target.value} /> <input
+          @change=\${(event) => this.fillings = event.target.value} /> <input
           type=\\"checkbox\\" value=\\"Cheese\\" .checked=\${this.fillings === 'Cheese'}
-          @input=\${(event) => this.fillings = event.target.value} /> <input
+          @change=\${(event) => this.fillings = event.target.value} /> <input
           type=\\"checkbox\\" value=\\"Guac (extra)\\" .checked=\${this.fillings === 'Guac
-          (extra)'} @input=\${(event) => this.fillings = event.target.value} />
+          (extra)'} @change=\${(event) => this.fillings = event.target.value} />
           <p>Tortilla: \${this.tortilla}</p>
           <p>Fillings: \${this.fillings}</p>
         </div>
@@ -9511,9 +9575,9 @@ export default class MyComponent extends LitElement {
     return html\`
 
           <div>
-          <input type=\\"number\\" @input=\${(event) =>
+          <input type=\\"number\\" @change=\${(event) =>
             (this.a = event.target.value)}
-          .value=\${this.a} /> <input type=\\"number\\" @input=\${(event) =>
+          .value=\${this.a} /> <input type=\\"number\\" @change=\${(event) =>
       (this.b = event.target.value)} .value=\${this.b} /> Result: \${this.result}
         </div>
 
@@ -9620,10 +9684,10 @@ export default class MyComponent extends LitElement {
     return html\`
 
           <div>
-          <input @input=\${(event) => (this.name = event.target.value)} .value=\${
-      this.name
-    }
-          /> Hello! I can run in React, Vue, Solid, or Liquid!
+          <input @change=\${(event) => (this.name = event.target.value)}
+          .value=\${
+            this.name
+          } /> Hello! I can run in React, Vue, Solid, or Liquid!
         </div>
 
         \`;
@@ -9668,21 +9732,21 @@ export default class MyComponent extends LitElement {
 
           <div>
           <input type=\\"radio\\" value=\\"Plain\\" .checked=\${this.tortilla === 'Plain'}
-          @input=\${(event) => this.tortilla = event.target.value} /> <input type=\\"radio\\"
-          value=\\"Whole wheat\\" .checked=\${this.tortilla === 'Whole wheat'}
-          @input=\${(event) => this.tortilla = event.target.value} /> <input type=\\"radio\\"
-          value=\\"Spinach\\" .checked=\${this.tortilla === 'Spinach'} @input=\${(event) =>
-          this.tortilla = event.target.value} />
+          @change=\${(event) => this.tortilla = event.target.value} /> <input
+          type=\\"radio\\" value=\\"Whole wheat\\" .checked=\${this.tortilla === 'Whole wheat'}
+          @change=\${(event) => this.tortilla = event.target.value} /> <input
+          type=\\"radio\\" value=\\"Spinach\\" .checked=\${this.tortilla === 'Spinach'}
+          @change=\${(event) => this.tortilla = event.target.value} />
           <br />
           <br />
           <input type=\\"checkbox\\" value=\\"Rice\\" .checked=\${this.fillings === 'Rice'}
-          @input=\${(event) => this.fillings = event.target.value} /> <input
+          @change=\${(event) => this.fillings = event.target.value} /> <input
           type=\\"checkbox\\" value=\\"Beans\\" .checked=\${this.fillings === 'Beans'}
-          @input=\${(event) => this.fillings = event.target.value} /> <input
+          @change=\${(event) => this.fillings = event.target.value} /> <input
           type=\\"checkbox\\" value=\\"Cheese\\" .checked=\${this.fillings === 'Cheese'}
-          @input=\${(event) => this.fillings = event.target.value} /> <input
+          @change=\${(event) => this.fillings = event.target.value} /> <input
           type=\\"checkbox\\" value=\\"Guac (extra)\\" .checked=\${this.fillings === 'Guac
-          (extra)'} @input=\${(event) => this.fillings = event.target.value} />
+          (extra)'} @change=\${(event) => this.fillings = event.target.value} />
           <p>Tortilla: \${this.tortilla}</p>
           <p>Fillings: \${this.fillings}</p>
         </div>
@@ -10006,9 +10070,9 @@ export default class MyComponent extends LitElement {
     return html\`
 
           <div>
-          <input type=\\"number\\" @input=\${(event) =>
+          <input type=\\"number\\" @change=\${(event) =>
             (this.a = event.target.value)}
-          .value=\${this.a} /> <input type=\\"number\\" @input=\${(event) =>
+          .value=\${this.a} /> <input type=\\"number\\" @change=\${(event) =>
       (this.b = event.target.value)} .value=\${this.b} /> Result: \${this.result}
         </div>
 
