@@ -171,11 +171,11 @@ class {
 }
 
 style {
-  .div-1662b9d6 {
+  .div-36710884 {
     padding: 10px;
   }
 }
-<div class=\\"test div-1662b9d6\\">
+<div class=\\"test div-36710884\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input((myEvent) => state.name = myEvent.target.value)
@@ -351,7 +351,7 @@ exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
 "class {
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.focus();
+    this.inputRef?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.state.name.toLowerCase();
@@ -370,14 +370,14 @@ exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
 }
 
 style {
-  .input-44c9d13a {
+  .input-6a578c15 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-44c9d13a\\"
+      class=\\"input-6a578c15\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur((event) => component.onBlur())
@@ -1111,6 +1111,20 @@ class {
 ></FormInputComponent>"
 `;
 
+exports[`Marko > jsx > Javascript Test > NestedStore 1`] = `
+"class {
+  onCreate() {
+    this.state = { _id: \\"abc\\", _messageId: this.state._id + \\"-message\\" };
+  }
+}
+
+<div id=(state._id)>
+  Test
+
+  <p id=(state._messageId)>Message</p>
+</div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > RawText 1`] = `
 "class {}
 
@@ -1237,16 +1251,16 @@ class {
 }
 
 style {
-  .input-24a8f064 {
+  .input-4b8e7e0e {
     display: block;
   }
-  .textarea-24a8f064 {
+  .textarea-4b8e7e0e {
     display: block;
   }
-  .button-24a8f064 {
+  .button-4b8e7e0e {
     display: block;
   }
-  .review-24a8f064 {
+  .review-4b8e7e0e {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -1255,7 +1269,7 @@ style {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     -webkit-font-smoothing: antialiased;
   }
-  .img-24a8f064 {
+  .img-4b8e7e0e {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -1267,13 +1281,13 @@ style {
   </button>
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-24a8f064\\" />
+    <input placeholder=\\"Title\\" class=\\"input-4b8e7e0e\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-24a8f064\\"
+      class=\\"textarea-4b8e7e0e\\"
     ></textarea>
     <button
-      class=\\"button-24a8f064\\"
+      class=\\"button-4b8e7e0e\\"
       on-click((ev) => {
   ev.preventDefault();
   state.showReviewPrompt = false;
@@ -1283,8 +1297,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-24a8f064\\" key=(review.id)>
-      <img class=\\"img-24a8f064\\" src=(review.avatar) />
+    <div class=\\"review-4b8e7e0e\\" key=(review.id)>
+      <img class=\\"img-4b8e7e0e\\" src=(review.avatar) />
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
         <div>\${review.author}</div>
@@ -1332,6 +1346,30 @@ exports[`Marko > jsx > Javascript Test > Textarea 1`] = `
   value=(input.value)
   defaultValue=(input.defaultValue)
 ></textarea>"
+`;
+
+exports[`Marko > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"class {
+  _do(id) {
+    this.state._active = !!id;
+
+    if (this.input.onChange) {
+      this.input.onChange(this.state._active);
+    }
+  }
+
+  onCreate(input) {
+    this.state = { _id: \\"abc\\", _active: false };
+  }
+
+  onRender() {
+    if (this._do) {
+      this._do(this.state._id);
+    }
+  }
+}
+
+<div>Test</div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > Video 1`] = `
@@ -1483,7 +1521,7 @@ exports[`Marko > jsx > Javascript Test > class + ClassName + css 1`] = `
 class {}
 
 style {
-  .div-7dae732a {
+  .div-6ef0b03e {
     padding: 10px;
   }
 }
@@ -1491,7 +1529,7 @@ style {
   <MyComp class=\\"test\\" className=\\"test2\\">
     Hello! I can run in React, Vue, Solid, or Liquid!
   </MyComp>
-  <div class=\\"test2 test div-7dae732a\\">
+  <div class=\\"test2 test div-6ef0b03e\\">
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </div>"
@@ -1637,30 +1675,6 @@ exports[`Marko > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 class {}
 
 <div>Hello \${input.name || DEFAULT_VALUES.name}</div>"
-`;
-
-exports[`Marko > jsx > Javascript Test > eventInputAndChange 1`] = `
-"class {
-  onCreate() {
-    this.state = { name: \\"Steve\\" };
-  }
-}
-
-style {
-  .input-03a73742 {
-    color: red;
-  }
-}
-<div>
-  <input
-    class=\\"input-03a73742\\"
-    value=(state.name)
-    on-input((event) => state.name = event.target.value)
-    on-input((event) => state.name = event.target.value)
-  />
-
-  Hello! I can run in React, Vue, Solid, or Liquid!
-</div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > expressionState 1`] = `
@@ -2287,6 +2301,20 @@ exports[`Marko > jsx > Javascript Test > self-referencing component with childre
 </div>"
 `;
 
+exports[`Marko > jsx > Javascript Test > setState 1`] = `
+"class {
+  someFn() {
+    this.state.n[0] = \\"123\\";
+  }
+
+  onCreate() {
+    this.state = { n: [\\"123\\"] };
+  }
+}
+
+<div><button on-click((event) => component.someFn())>Click me</button></div>"
+`;
+
 exports[`Marko > jsx > Javascript Test > showExpressions 1`] = `
 "class {}
 
@@ -2752,11 +2780,11 @@ class {
 }
 
 style {
-  .div-d3f72b7e {
+  .div-22f58e48 {
     padding: 10px;
   }
 }
-<div class=\\"test div-d3f72b7e\\">
+<div class=\\"test div-22f58e48\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input((myEvent) => state.name = myEvent.target.value)
@@ -2932,7 +2960,7 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
 "class {
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.focus();
+    this.inputRef?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.state.name.toLowerCase();
@@ -2951,14 +2979,14 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
 }
 
 style {
-  .input-186690a8 {
+  .input-e2a52cdc {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-186690a8\\"
+      class=\\"input-e2a52cdc\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur((event) => component.onBlur())
@@ -3703,6 +3731,20 @@ class {
 ></FormInputComponent>"
 `;
 
+exports[`Marko > jsx > Typescript Test > NestedStore 1`] = `
+"class {
+  onCreate() {
+    this.state = { _id: \\"abc\\", _messageId: this.state._id + \\"-message\\" };
+  }
+}
+
+<div id=(state._id)>
+  Test
+
+  <p id=(state._messageId)>Message</p>
+</div>"
+`;
+
 exports[`Marko > jsx > Typescript Test > RawText 1`] = `
 "class {}
 
@@ -3829,16 +3871,16 @@ class {
 }
 
 style {
-  .input-e74498ce {
+  .input-554308c6 {
     display: block;
   }
-  .textarea-e74498ce {
+  .textarea-554308c6 {
     display: block;
   }
-  .button-e74498ce {
+  .button-554308c6 {
     display: block;
   }
-  .review-e74498ce {
+  .review-554308c6 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -3847,7 +3889,7 @@ style {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     -webkit-font-smoothing: antialiased;
   }
-  .img-e74498ce {
+  .img-554308c6 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -3859,13 +3901,13 @@ style {
   </button>
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-e74498ce\\" />
+    <input placeholder=\\"Title\\" class=\\"input-554308c6\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-e74498ce\\"
+      class=\\"textarea-554308c6\\"
     ></textarea>
     <button
-      class=\\"button-e74498ce\\"
+      class=\\"button-554308c6\\"
       on-click((ev) => {
   ev.preventDefault();
   state.showReviewPrompt = false;
@@ -3875,8 +3917,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-e74498ce\\" key=(review.id)>
-      <img class=\\"img-e74498ce\\" src=(review.avatar) />
+    <div class=\\"review-554308c6\\" key=(review.id)>
+      <img class=\\"img-554308c6\\" src=(review.avatar) />
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
         <div>\${review.author}</div>
@@ -3924,6 +3966,30 @@ exports[`Marko > jsx > Typescript Test > Textarea 1`] = `
   value=(input.value)
   defaultValue=(input.defaultValue)
 ></textarea>"
+`;
+
+exports[`Marko > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"class {
+  _do(id?: string) {
+    this.state._active = !!id;
+
+    if (this.input.onChange) {
+      this.input.onChange(this.state._active);
+    }
+  }
+
+  onCreate(input) {
+    this.state = { _id: \\"abc\\", _active: false };
+  }
+
+  onRender() {
+    if (this._do) {
+      this._do(this.state._id);
+    }
+  }
+}
+
+<div>Test</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > Video 1`] = `
@@ -4075,7 +4141,7 @@ exports[`Marko > jsx > Typescript Test > class + ClassName + css 1`] = `
 class {}
 
 style {
-  .div-7dae732a {
+  .div-6ef0b03e {
     padding: 10px;
   }
 }
@@ -4083,7 +4149,7 @@ style {
   <MyComp class=\\"test\\" className=\\"test2\\">
     Hello! I can run in React, Vue, Solid, or Liquid!
   </MyComp>
-  <div class=\\"test2 test div-7dae732a\\">
+  <div class=\\"test2 test div-6ef0b03e\\">
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </div>"
@@ -4231,30 +4297,6 @@ exports[`Marko > jsx > Typescript Test > defaultValsWithTypes 1`] = `
 class {}
 
 <div>Hello \${input.name || DEFAULT_VALUES.name}</div>"
-`;
-
-exports[`Marko > jsx > Typescript Test > eventInputAndChange 1`] = `
-"class {
-  onCreate() {
-    this.state = { name: \\"Steve\\" };
-  }
-}
-
-style {
-  .input-03a73742 {
-    color: red;
-  }
-}
-<div>
-  <input
-    class=\\"input-03a73742\\"
-    value=(state.name)
-    on-input((event) => state.name = event.target.value)
-    on-input((event) => state.name = event.target.value)
-  />
-
-  Hello! I can run in React, Vue, Solid, or Liquid!
-</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > expressionState 1`] = `
@@ -4888,6 +4930,20 @@ exports[`Marko > jsx > Typescript Test > self-referencing component with childre
   <if(input.name === 'Batman')>
     <MyComponent name=\\"Bruce\\"><div>Wayne</div></MyComponent></if>
 </div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > setState 1`] = `
+"class {
+  someFn() {
+    this.state.n[0] = \\"123\\";
+  }
+
+  onCreate() {
+    this.state = { n: [\\"123\\"] };
+  }
+}
+
+<div><button on-click((event) => component.someFn())>Click me</button></div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > showExpressions 1`] = `

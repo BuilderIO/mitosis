@@ -482,7 +482,7 @@ export default defineComponent({
   methods: {
     onBlur: function onBlur() {
       // Maintain focus
-      this.$refs.inputRef.focus();
+      this.$refs.inputRef?.focus();
     },
     lowerCaseName: function lowerCaseName() {
       return this.name.toLowerCase();
@@ -1416,6 +1416,27 @@ export default defineComponent({
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > NestedStore 1`] = `
+"<template>
+  <div :id=\\"_id\\">
+    Test
+    <p :id=\\"_messageId\\">Message</p>
+  </div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"nested-store\\",
+
+  data() {
+    return { _id: \\"abc\\", _messageId: this._id + \\"-message\\" };
+  },
+});
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > RawText 1`] = `
 "<template>
   <span
@@ -1761,6 +1782,42 @@ export default defineComponent({
   name: \\"textarea\\",
 
   props: [\\"attributes\\", \\"placeholder\\", \\"name\\", \\"value\\", \\"defaultValue\\"],
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"<template>
+  <div>Test</div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"use-value-and-fn-from-store\\",
+
+  props: [\\"onChange\\"],
+
+  data() {
+    return { _id: \\"abc\\", _active: false };
+  },
+
+  updated() {
+    if (this._do) {
+      this._do(this._id);
+    }
+  },
+
+  methods: {
+    _do(id) {
+      this._active = !!id;
+
+      if (this.onChange) {
+        this.onChange(this._active);
+      }
+    },
+  },
 });
 </script>"
 `;
@@ -3362,6 +3419,30 @@ export default defineComponent({
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > setState 1`] = `
+"<template>
+  <div><button @click=\\"async (event) => someFn()\\">Click me</button></div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"set-state\\",
+
+  data() {
+    return { n: [\\"123\\"] };
+  },
+
+  methods: {
+    someFn() {
+      this.n[0] = \\"123\\";
+    },
+  },
+});
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > showExpressions 1`] = `
 "<template>
   <div>
@@ -4530,7 +4611,7 @@ export default defineComponent({
   methods: {
     onBlur: function onBlur() {
       // Maintain focus
-      this.$refs.inputRef.focus();
+      this.$refs.inputRef?.focus();
     },
     lowerCaseName: function lowerCaseName() {
       return this.name.toLowerCase();
@@ -5595,6 +5676,32 @@ export default defineComponent({
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > NestedStore 1`] = `
+"<template>
+  <div :id=\\"_id\\">
+    Test
+    <p :id=\\"_messageId\\">Message</p>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+export default defineComponent({
+  name: \\"nested-store\\",
+
+  data() {
+    return { _id: \\"abc\\", _messageId: this._id + \\"-message\\" };
+  },
+});
+</script>"
+`;
+
 exports[`Vue > jsx > Typescript Test > RawText 1`] = `
 "<template>
   <span
@@ -6010,6 +6117,51 @@ export default defineComponent({
   name: \\"textarea\\",
 
   props: [\\"attributes\\", \\"placeholder\\", \\"name\\", \\"value\\", \\"defaultValue\\"],
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"<template>
+  <div>Test</div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+export default defineComponent({
+  name: \\"use-value-and-fn-from-store\\",
+
+  props: [\\"onChange\\"],
+
+  data() {
+    return { _id: \\"abc\\", _active: false };
+  },
+
+  updated() {
+    if (this._do) {
+      this._do(this._id);
+    }
+  },
+
+  methods: {
+    _do(id?: string) {
+      this._active = !!id;
+
+      if (this.onChange) {
+        this.onChange(this._active);
+      }
+    },
+  },
 });
 </script>"
 `;
@@ -7774,6 +7926,30 @@ export default defineComponent({
   name: \\"my-component\\",
 
   props: [\\"name\\"],
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > setState 1`] = `
+"<template>
+  <div><button @click=\\"async (event) => someFn()\\">Click me</button></div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"set-state\\",
+
+  data() {
+    return { n: [\\"123\\"] };
+  },
+
+  methods: {
+    someFn() {
+      this.n[0] = \\"123\\";
+    },
+  },
 });
 </script>"
 `;

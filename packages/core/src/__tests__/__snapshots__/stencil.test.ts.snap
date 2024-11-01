@@ -453,7 +453,7 @@ export class MyBasicRefComponent {
 
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.focus();
+    this.inputRef?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -1426,6 +1426,28 @@ export class Stepper {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > NestedStore 1`] = `
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"nested-store\\",
+})
+export class NestedStore {
+  @State() _id = \\"abc\\";
+  @State() _messageId = this._id + \\"-message\\";
+
+  render() {
+    return (
+      <div id={this._id}>
+        Test
+        <p id={this._messageId}>Message</p>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > RawText 1`] = `
 "import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
 
@@ -1818,6 +1840,38 @@ export class Textarea {
         defaultValue={this.defaultValue}
       ></textarea>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"import { Component, h, Fragment, Event, Prop, State } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"use-value-and-fn-from-store\\",
+})
+export class UseValueAndFnFromStore {
+  @Event() onChange: any;
+  @State() _id = \\"abc\\";
+  @State() _active = false;
+
+  _do(id) {
+    this._active = !!id;
+
+    if (this.onChange) {
+      this.onChange.emit(this._active);
+    }
+  }
+
+  componentDidUpdate() {
+    if (this._do) {
+      this._do(this._id);
+    }
+  }
+
+  render() {
+    return <div>Test</div>;
   }
 }
 "
@@ -3251,6 +3305,30 @@ export class MyComponent {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > setState 1`] = `
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"set-state\\",
+})
+export class SetState {
+  @State() n = [\\"123\\"];
+
+  someFn() {
+    this.n[0] = \\"123\\";
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={() => this.someFn()}>Click me</button>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > signalsOnUpdate 1`] = `
 "import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
 
@@ -4162,14 +4240,14 @@ export interface Props {
 \`,
 })
 export class MyBasicRefComponent {
-  private inputRef!: HTMLInputElement;
-  private inputNoArgRef!: HTMLLabelElement;
+  private inputRef!: HTMLInputElement | null;
+  private inputNoArgRef!: HTMLLabelElement | null;
   @Prop() showInput: Props[\\"showInput\\"];
   @State() name = \\"PatrickJS\\";
 
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.focus();
+    this.inputRef?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -5273,6 +5351,33 @@ export class Stepper {
 "
 `;
 
+exports[`Stencil > jsx > Typescript Test > NestedStore 1`] = `
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+@Component({
+  tag: \\"nested-store\\",
+})
+export class NestedStore {
+  @State() _id = \\"abc\\";
+  @State() _messageId = this._id + \\"-message\\";
+
+  render() {
+    return (
+      <div id={this._id}>
+        Test
+        <p id={this._messageId}>Message</p>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Typescript Test > RawText 1`] = `
 "import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
 
@@ -5735,6 +5840,47 @@ export class Textarea {
         defaultValue={this.defaultValue}
       ></textarea>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"import { Component, h, Fragment, Event, Prop, State } from \\"@stencil/core\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+@Component({
+  tag: \\"use-value-and-fn-from-store\\",
+})
+export class UseValueAndFnFromStore {
+  @Event() onChange: any;
+  @State() _id = \\"abc\\";
+  @State() _active = false;
+
+  _do(id?: string) {
+    this._active = !!id;
+
+    if (this.onChange) {
+      this.onChange.emit(this._active);
+    }
+  }
+
+  componentDidUpdate() {
+    if (this._do) {
+      this._do(this._id);
+    }
+  }
+
+  render() {
+    return <div>Test</div>;
   }
 }
 "
@@ -7319,6 +7465,30 @@ export class MyComponent {
             <div>Wayne</div>
           </my-component>
         ) : null}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > setState 1`] = `
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"set-state\\",
+})
+export class SetState {
+  @State() n = [\\"123\\"];
+
+  someFn() {
+    this.n[0] = \\"123\\";
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={() => this.someFn()}>Click me</button>
       </div>
     );
   }

@@ -2,13 +2,14 @@ import { babelTransformExpression } from '@/helpers/babel-transform';
 import { capitalize } from '@/helpers/capitalize';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { createCodeProcessorPlugin } from '@/helpers/plugins/process-code';
+import { replaceNodes } from '@/helpers/replace-identifiers';
 import {
   MitosisComponent,
   MitosisState,
   StateValue,
   TargetBlockDefinition,
 } from '@/types/mitosis-component';
-import { NodePath } from '@babel/core';
+import { NodePath, types } from '@babel/core';
 import {
   BlockStatement,
   Expression,
@@ -172,11 +173,27 @@ export function mapStateIdentifiers(json: MitosisComponent) {
   });
 }
 
+/**
+ * Replaces `this.` with `state.` and trims code
+ * @param code origin code
+ */
+const getCleanedStateCode = (code: string): string => {
+  return replaceNodes({
+    code,
+    nodeMaps: [
+      {
+        from: types.thisExpression(),
+        to: types.identifier('state'),
+      },
+    ],
+  }).trim();
+};
+
 const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValue => {
   if (isObjectProperty(item)) {
     if (isFunctionExpression(item.value)) {
       return {
-        code: parseCode(item.value).trim(),
+        code: getCleanedStateCode(parseCode(item.value)),
         type: 'function',
       };
     } else if (isArrowFunctionExpression(item.value)) {
@@ -211,9 +228,9 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
         item.value.params,
         item.value.body as BlockStatement,
       );
-
-      const code = parseCode(n).trim();
-
+      // Replace this. with state. to handle following
+      // const state = useStore({ _do: () => {this._active = !!id;}})
+      const code = getCleanedStateCode(parseCode(n));
       return {
         code: code,
         type: 'method',
@@ -223,13 +240,13 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
       // { foo: ('string' as SomeType) }
       if (isTSAsExpression(item.value)) {
         return {
-          code: parseCode(item.value.expression).trim(),
+          code: getCleanedStateCode(parseCode(item.value.expression)),
           type: 'property',
           propertyType: 'normal',
         };
       }
       return {
-        code: parseCode(item.value).trim(),
+        code: getCleanedStateCode(parseCode(item.value)),
         type: 'property',
         propertyType: 'normal',
       };
@@ -251,7 +268,7 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
       };
     }
 
-    const n = parseCode({ ...item, returnType: null }).trim();
+    const n = getCleanedStateCode(parseCode({ ...item, returnType: null }));
 
     const isGetter = item.kind === 'get';
 
