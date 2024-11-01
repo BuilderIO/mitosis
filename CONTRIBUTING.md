@@ -62,7 +62,7 @@ From there, you can keep iterating until the snapshots look as expected, and the
 Before submitting your PR, please make sure to format the codebase and update all snapshots:
 
 - format the codebase: from the root, run `yarn fmt:prettier`.
-- update all snapshots (in core & CLI): from the root, run `yarn test:update`. This will run an Nx command that will update all the snapshots in the `core` and `cli` packages. while making sure all required dependencies are built beforehand.
+- update all snapshots (in core & CLI): from the root, run `yarn test:update`. This will run a Nx command that will update all the snapshots in the `core` and `cli` packages. while making sure all required dependencies are built beforehand. If there are some difference between the generated snapshots in your local environment and GitHub Action you are able to download the correct snapshots via 'Summary' in the pipeline run. Wait until the job `test-update` is done, scroll to the bottom and download `snapshots-updates`. You should be able to copy&past the snapshots to `packages/core/src/__tests__/__snapshots__`.
 - add Changeset entry: from the root, run `yarn g:changeset` and follow the CLI instructions.
 
 #### Changeset format
