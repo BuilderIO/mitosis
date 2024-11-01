@@ -342,7 +342,7 @@ function MyBasicRefComponent(props) {
     name: \\"PatrickJS\\",
     onBlur: function onBlur() {
       // Maintain focus
-      inputRef.current.focus();
+      inputRef.current?.focus();
     },
     lowerCaseName: function lowerCaseName() {
       return state.name.toLowerCase();
@@ -1253,6 +1253,30 @@ export default observedStepper;
 "
 `;
 
+exports[`React - stateType: mobx > jsx > Javascript Test > NestedStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
+
+function NestedStore(props) {
+  const state = useLocalObservable(() => ({
+    _id: \\"abc\\",
+    _messageId: state._id + \\"-message\\",
+  }));
+
+  return (
+    <div id={state._id}>
+      Test
+      <p id={state._messageId}>Message</p>
+    </div>
+  );
+}
+
+const observedNestedStore = observer(NestedStore);
+export default observedNestedStore;
+"
+`;
+
 exports[`React - stateType: mobx > jsx > Javascript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 
@@ -1565,6 +1589,39 @@ function Textarea(props) {
 
 const observedTextarea = observer(Textarea);
 export default observedTextarea;
+"
+`;
+
+exports[`React - stateType: mobx > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
+
+function UseValueAndFnFromStore(props) {
+  const state = useLocalObservable(() => ({
+    _id: \\"abc\\",
+    _active: false,
+    _do(id) {
+      state._active = !!id;
+
+      if (props.onChange) {
+        props.onChange(state._active);
+      }
+    },
+  }));
+
+  useEffect(() => {
+    if (state._do) {
+      state._do(state._id);
+    }
+  });
+
+  return <div>Test</div>;
+}
+
+const observedUseValueAndFnFromStore = observer(UseValueAndFnFromStore);
+export default observedUseValueAndFnFromStore;
 "
 `;
 
@@ -3018,6 +3075,31 @@ export default observedMyComponent;
 "
 `;
 
+exports[`React - stateType: mobx > jsx > Javascript Test > setState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
+
+function SetState(props) {
+  const state = useLocalObservable(() => ({
+    n: [\\"123\\"],
+    someFn() {
+      state.n[0] = \\"123\\";
+    },
+  }));
+
+  return (
+    <div>
+      <button onClick={(event) => state.someFn()}>Click me</button>
+    </div>
+  );
+}
+
+const observedSetState = observer(SetState);
+export default observedSetState;
+"
+`;
+
 exports[`React - stateType: mobx > jsx > Javascript Test > showExpressions 1`] = `
 "import * as React from \\"react\\";
 
@@ -3891,13 +3973,13 @@ export interface Props {
 }
 
 function MyBasicRefComponent(props: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement | null>(null);
   const state = useLocalObservable(() => ({
     name: \\"PatrickJS\\",
     onBlur: function onBlur() {
       // Maintain focus
-      inputRef.current.focus();
+      inputRef.current?.focus();
     },
     lowerCaseName: function lowerCaseName() {
       return state.name.toLowerCase();
@@ -4931,6 +5013,34 @@ export default observedStepper;
 "
 `;
 
+exports[`React - stateType: mobx > jsx > Typescript Test > NestedStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+function NestedStore(props: any) {
+  const state = useLocalObservable(() => ({
+    _id: \\"abc\\",
+    _messageId: state._id + \\"-message\\",
+  }));
+
+  return (
+    <div id={state._id}>
+      Test
+      <p id={state._messageId}>Message</p>
+    </div>
+  );
+}
+
+const observedNestedStore = observer(NestedStore);
+export default observedNestedStore;
+"
+`;
+
 exports[`React - stateType: mobx > jsx > Typescript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 
@@ -5307,6 +5417,47 @@ function Textarea(props: TextareaProps) {
 
 const observedTextarea = observer(Textarea);
 export default observedTextarea;
+"
+`;
+
+exports[`React - stateType: mobx > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+function UseValueAndFnFromStore(props: MyProps) {
+  const state = useLocalObservable(() => ({
+    _id: \\"abc\\",
+    _active: false,
+    _do(id?: string) {
+      state._active = !!id;
+
+      if (props.onChange) {
+        props.onChange(state._active);
+      }
+    },
+  }));
+
+  useEffect(() => {
+    if (state._do) {
+      state._do(state._id);
+    }
+  });
+
+  return <div>Test</div>;
+}
+
+const observedUseValueAndFnFromStore = observer(UseValueAndFnFromStore);
+export default observedUseValueAndFnFromStore;
 "
 `;
 
@@ -6916,6 +7067,31 @@ function MyComponent(props: any) {
 
 const observedMyComponent = observer(MyComponent);
 export default observedMyComponent;
+"
+`;
+
+exports[`React - stateType: mobx > jsx > Typescript Test > setState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
+
+function SetState(props: any) {
+  const state = useLocalObservable(() => ({
+    n: [\\"123\\"],
+    someFn() {
+      state.n[0] = \\"123\\";
+    },
+  }));
+
+  return (
+    <div>
+      <button onClick={(event) => state.someFn()}>Click me</button>
+    </div>
+  );
+}
+
+const observedSetState = observer(SetState);
+export default observedSetState;
 "
 `;
 

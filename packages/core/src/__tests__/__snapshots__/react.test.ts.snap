@@ -323,7 +323,7 @@ function MyBasicRefComponent(props) {
 
   function onBlur() {
     // Maintain focus
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }
 
   function lowerCaseName() {
@@ -1204,6 +1204,28 @@ export default Stepper;
 "
 `;
 
+exports[`React - stateType: useState > jsx > Javascript Test > NestedStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function NestedStore(props) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_messageId, set_messageId] = useState(() => _id + \\"-message\\");
+
+  return (
+    <div id={_id}>
+      Test
+      <p id={_messageId}>Message</p>
+    </div>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`React - stateType: useState > jsx > Javascript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 
@@ -1504,6 +1526,37 @@ function Textarea(props) {
 }
 
 export default Textarea;
+"
+`;
+
+exports[`React - stateType: useState > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+
+function UseValueAndFnFromStore(props) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_active, set_active] = useState(() => false);
+
+  function _do(id) {
+    set_active(!!id);
+
+    if (props.onChange) {
+      props.onChange(_active);
+    }
+  }
+
+  useEffect(() => {
+    if (_do) {
+      _do(_id);
+    }
+  });
+
+  return <div>Test</div>;
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 
@@ -2915,6 +2968,29 @@ export default MyComponent;
 "
 `;
 
+exports[`React - stateType: useState > jsx > Javascript Test > setState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function SetState(props) {
+  const [n, setN] = useState(() => [\\"123\\"]);
+
+  function someFn() {
+    n[0] = \\"123\\";
+  }
+
+  return (
+    <div>
+      <button onClick={(event) => someFn()}>Click me</button>
+    </div>
+  );
+}
+
+export default SetState;
+"
+`;
+
 exports[`React - stateType: useState > jsx > Javascript Test > showExpressions 1`] = `
 "import * as React from \\"react\\";
 
@@ -3746,13 +3822,13 @@ export interface Props {
 }
 
 function MyBasicRefComponent(props: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement | null>(null);
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   function onBlur() {
     // Maintain focus
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }
 
   function lowerCaseName() {
@@ -4764,6 +4840,35 @@ export default Stepper;
 "
 `;
 
+exports[`React - stateType: useState > jsx > Typescript Test > NestedStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+function NestedStore(props: any) {
+  const [_id, set_id] = useState<MyStore[\\"_id\\"]>(() => \\"abc\\");
+
+  const [_messageId, set_messageId] = useState<MyStore[\\"_messageId\\"]>(
+    () => _id + \\"-message\\"
+  );
+
+  return (
+    <div id={_id}>
+      Test
+      <p id={_messageId}>Message</p>
+    </div>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`React - stateType: useState > jsx > Typescript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 
@@ -5130,6 +5235,46 @@ function Textarea(props: TextareaProps) {
 }
 
 export default Textarea;
+"
+`;
+
+exports[`React - stateType: useState > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+function UseValueAndFnFromStore(props: MyProps) {
+  const [_id, set_id] = useState<MyStore[\\"_id\\"]>(() => \\"abc\\");
+
+  const [_active, set_active] = useState<MyStore[\\"_active\\"]>(() => false);
+
+  function _do(id?: string): ReturnType<MyStore[\\"_do\\"]> {
+    set_active(!!id);
+
+    if (props.onChange) {
+      props.onChange(_active);
+    }
+  }
+
+  useEffect(() => {
+    if (_do) {
+      _do(_id);
+    }
+  });
+
+  return <div>Test</div>;
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 
@@ -6709,6 +6854,29 @@ export default MyComponent;
 "
 `;
 
+exports[`React - stateType: useState > jsx > Typescript Test > setState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function SetState(props: any) {
+  const [n, setN] = useState(() => [\\"123\\"]);
+
+  function someFn() {
+    n[0] = \\"123\\";
+  }
+
+  return (
+    <div>
+      <button onClick={(event) => someFn()}>Click me</button>
+    </div>
+  );
+}
+
+export default SetState;
+"
+`;
+
 exports[`React - stateType: useState > jsx > Typescript Test > showExpressions 1`] = `
 "import * as React from \\"react\\";
 
@@ -7266,13 +7434,13 @@ function SmileReviews(props) {
         {state.showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-4b8e7e0e\\" />
+            <input placeholder=\\"Title\\" className=\\"input-24a8f064\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-4b8e7e0e\\"
+              className=\\"textarea-24a8f064\\"
             />
             <button
-              className=\\"button-4b8e7e0e\\"
+              className=\\"button-24a8f064\\"
               onClick={(ev) => {
                 ev.preventDefault();
                 state.showReviewPrompt = false;
@@ -7283,8 +7451,8 @@ function SmileReviews(props) {
           </>
         ) : null}
         {state.reviews?.map((review, index) => (
-          <div className=\\"review-4b8e7e0e\\" key={review.id}>
-            <img className=\\"img-4b8e7e0e\\" src={review.avatar} />
+          <div className=\\"review-24a8f064\\" key={review.id}>
+            <img className=\\"img-24a8f064\\" src={review.avatar} />
             <div
               className={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
             >
@@ -7296,13 +7464,13 @@ function SmileReviews(props) {
         ))}
       </div>
 
-      <style>{\`.input-4b8e7e0e {
+      <style>{\`.input-24a8f064 {
   display: block;
-}.textarea-4b8e7e0e {
+}.textarea-24a8f064 {
   display: block;
-}.button-4b8e7e0e {
+}.button-24a8f064 {
   display: block;
-}.review-4b8e7e0e {
+}.review-24a8f064 {
   margin: 10px;
   padding: 10px;
   background: white;
@@ -7310,7 +7478,7 @@ function SmileReviews(props) {
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   -webkit-font-smoothing: antialiased;
-}.img-4b8e7e0e {
+}.img-24a8f064 {
   height: 30px;
   width: 30px;
   margin-right: 10px;
@@ -7366,13 +7534,13 @@ function SmileReviews(props) {
         {showReviewPrompt || \\"asdf\\" ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-fb2f23de\\" />
+            <input placeholder=\\"Title\\" className=\\"input-001851ae\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-fb2f23de\\"
+              className=\\"textarea-001851ae\\"
             />
             <button
-              className=\\"button-fb2f23de\\"
+              className=\\"button-001851ae\\"
               onClick={(ev) => {
                 ev.preventDefault();
                 setShowReviewPrompt(false);
@@ -7383,8 +7551,8 @@ function SmileReviews(props) {
           </>
         ) : null}
         {reviews?.map((review, index) => (
-          <div className=\\"review-fb2f23de\\" key={review.id}>
-            <img className=\\"img-fb2f23de\\" src={review.avatar} />
+          <div className=\\"review-001851ae\\" key={review.id}>
+            <img className=\\"img-001851ae\\" src={review.avatar} />
             <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
               <div>N: {index}</div>
               <div>{review.author}</div>
@@ -7394,13 +7562,13 @@ function SmileReviews(props) {
         ))}
       </div>
 
-      <style>{\`.input-fb2f23de {
+      <style>{\`.input-001851ae {
   display: block;
-}.textarea-fb2f23de {
+}.textarea-001851ae {
   display: block;
-}.button-fb2f23de {
+}.button-001851ae {
   display: block;
-}.review-fb2f23de {
+}.review-001851ae {
   margin: 10px;
   padding: 10px;
   background: white;
@@ -7408,7 +7576,7 @@ function SmileReviews(props) {
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   -webkit-font-smoothing: antialiased;
-}.img-fb2f23de {
+}.img-001851ae {
   height: 30px;
   width: 30px;
   margin-right: 10px;

@@ -361,7 +361,7 @@ export default function MyBasicRefComponent(props) {
     name: \\"PatrickJS\\",
     onBlur: function onBlur() {
       // Maintain focus
-      inputRef.current.focus();
+      inputRef.current?.focus();
     },
     lowerCaseName: function lowerCaseName() {
       return state.name.toLowerCase();
@@ -1156,6 +1156,22 @@ export default function Stepper(props) {
 "
 `;
 
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > NestedStore 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export default function NestedStore(props) {
+  const state = useStore({ _id: \\"abc\\", _messageId: state._id + \\"-message\\" });
+
+  return [
+    <div id={state._id}>
+      Test
+      <p id={state._messageId}>Message</p>
+    </div>,
+  ];
+}
+"
+`;
+
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > RawText 1`] = `
 "export default function RawText(props) {
   return [
@@ -1455,6 +1471,27 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
       defaultValue={props.defaultValue}
     />,
   ];
+}
+"
+`;
+
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export default function UseValueAndFnFromStore(props) {
+  const state = useStore({
+    _id: \\"abc\\",
+    _active: false,
+    _do(id) {
+      state._active = !!id;
+
+      if (props.onChange) {
+        props.onChange(state._active);
+      }
+    },
+  });
+
+  return [<div>Test</div>];
 }
 "
 `;
@@ -2493,6 +2530,26 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > setState 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export default function SetState(props) {
+  const state = useStore({
+    n: [\\"123\\"],
+    someFn() {
+      state.n.value[0] = \\"123\\";
+    },
+  });
+
+  return [
+    <div>
+      <button onClick={(event) => state.someFn()}>Click me</button>
+    </div>,
+  ];
+}
+"
+`;
+
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > showExpressions 1`] = `
 "import { Show } from \\"@components\\";
 
@@ -3269,17 +3326,17 @@ export default function MyBasicRefComponent(props) {
     name: \\"PatrickJS\\",
     onBlur: function onBlur() {
       // Maintain focus
-      inputRef.current.focus();
+      inputRef.current?.focus();
     },
     lowerCaseName: function lowerCaseName() {
       return state.name.toLowerCase();
     },
   });
 
-  const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef<HTMLLabelElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement | null>(null);
 
   return [
     <div>
@@ -4181,6 +4238,27 @@ export default function Stepper(props) {
 "
 `;
 
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > NestedStore 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+export default function NestedStore(props) {
+  const state = useStore({ _id: \\"abc\\", _messageId: state._id + \\"-message\\" });
+
+  return [
+    <div id={state._id}>
+      Test
+      <p id={state._messageId}>Message</p>
+    </div>,
+  ];
+}
+"
+`;
+
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > RawText 1`] = `
 "export interface RawTextProps {
   attributes?: any;
@@ -4543,6 +4621,36 @@ export default function Textarea(props) {
       defaultValue={props.defaultValue}
     />,
   ];
+}
+"
+`;
+
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+export default function UseValueAndFnFromStore(props) {
+  const state = useStore({
+    _id: \\"abc\\",
+    _active: false,
+    _do(id?: string) {
+      state._active = !!id;
+
+      if (props.onChange) {
+        props.onChange(state._active);
+      }
+    },
+  });
+
+  return [<div>Test</div>];
 }
 "
 `;
@@ -5722,6 +5830,26 @@ export default function MyComponent(props) {
           <div>Wayne</div>
         </MyComponent>
       ) : null}
+    </div>,
+  ];
+}
+"
+`;
+
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > setState 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export default function SetState(props) {
+  const state = useStore({
+    n: [\\"123\\"],
+    someFn() {
+      state.n.value[0] = \\"123\\";
+    },
+  });
+
+  return [
+    <div>
+      <button onClick={(event) => state.someFn()}>Click me</button>
     </div>,
   ];
 }
@@ -7201,7 +7329,7 @@ export default function MyBasicRefComponent(props) {
     name: \\"PatrickJS\\",
     onBlur: function onBlur() {
       // Maintain focus
-      inputRef.current.focus();
+      inputRef.current?.focus();
     },
     lowerCaseName: function lowerCaseName() {
       return state.name.toLowerCase();
@@ -8000,6 +8128,22 @@ export default function Stepper(props) {
 "
 `;
 
+exports[`Mitosis, format: legacy > jsx > Javascript Test > NestedStore 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export default function NestedStore(props) {
+  const state = useStore({ _id: \\"abc\\", _messageId: state._id + \\"-message\\" });
+
+  return (
+    <div id={state._id}>
+      Test
+      <p id={state._messageId}>Message</p>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Mitosis, format: legacy > jsx > Javascript Test > RawText 1`] = `
 "export default function RawText(props) {
   return (
@@ -8301,6 +8445,27 @@ exports[`Mitosis, format: legacy > jsx > Javascript Test > Textarea 1`] = `
       defaultValue={props.defaultValue}
     />
   );
+}
+"
+`;
+
+exports[`Mitosis, format: legacy > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export default function UseValueAndFnFromStore(props) {
+  const state = useStore({
+    _id: \\"abc\\",
+    _active: false,
+    _do(id) {
+      state._active = !!id;
+
+      if (props.onChange) {
+        props.onChange(state._active);
+      }
+    },
+  });
+
+  return <div>Test</div>;
 }
 "
 `;
@@ -9344,6 +9509,26 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Mitosis, format: legacy > jsx > Javascript Test > setState 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export default function SetState(props) {
+  const state = useStore({
+    n: [\\"123\\"],
+    someFn() {
+      state.n.value[0] = \\"123\\";
+    },
+  });
+
+  return (
+    <div>
+      <button onClick={(event) => state.someFn()}>Click me</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Mitosis, format: legacy > jsx > Javascript Test > showExpressions 1`] = `
 "import { Show } from \\"@builder.io/mitosis\\";
 
@@ -10158,17 +10343,17 @@ export default function MyBasicRefComponent(props) {
     name: \\"PatrickJS\\",
     onBlur: function onBlur() {
       // Maintain focus
-      inputRef.current.focus();
+      inputRef.current?.focus();
     },
     lowerCaseName: function lowerCaseName() {
       return state.name.toLowerCase();
     },
   });
 
-  const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef<HTMLLabelElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement | null>(null);
 
   return (
     <div>
@@ -11077,6 +11262,27 @@ export default function Stepper(props) {
 "
 `;
 
+exports[`Mitosis, format: legacy > jsx > Typescript Test > NestedStore 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+export default function NestedStore(props) {
+  const state = useStore({ _id: \\"abc\\", _messageId: state._id + \\"-message\\" });
+
+  return (
+    <div id={state._id}>
+      Test
+      <p id={state._messageId}>Message</p>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Mitosis, format: legacy > jsx > Typescript Test > RawText 1`] = `
 "export interface RawTextProps {
   attributes?: any;
@@ -11444,6 +11650,36 @@ export default function Textarea(props) {
       defaultValue={props.defaultValue}
     />
   );
+}
+"
+`;
+
+exports[`Mitosis, format: legacy > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+export default function UseValueAndFnFromStore(props) {
+  const state = useStore({
+    _id: \\"abc\\",
+    _active: false,
+    _do(id?: string) {
+      state._active = !!id;
+
+      if (props.onChange) {
+        props.onChange(state._active);
+      }
+    },
+  });
+
+  return <div>Test</div>;
 }
 "
 `;
@@ -12632,6 +12868,26 @@ export default function MyComponent(props) {
           <div>Wayne</div>
         </MyComponent>
       </Show>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Mitosis, format: legacy > jsx > Typescript Test > setState 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export default function SetState(props) {
+  const state = useStore({
+    n: [\\"123\\"],
+    someFn() {
+      state.n.value[0] = \\"123\\";
+    },
+  });
+
+  return (
+    <div>
+      <button onClick={(event) => state.someFn()}>Click me</button>
     </div>
   );
 }
@@ -14179,7 +14435,7 @@ function MyBasicRefComponent(props) {
 
   function onBlur() {
     // Maintain focus
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }
 
   function lowerCaseName() {
@@ -15033,6 +15289,28 @@ export default Stepper;
 "
 `;
 
+exports[`Mitosis, format: react > jsx > Javascript Test > NestedStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function NestedStore(props) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_messageId, set_messageId] = useState(() => _id + \\"-message\\");
+
+  return (
+    <div id={_id}>
+      Test
+      <p id={_messageId}>Message</p>
+    </div>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`Mitosis, format: react > jsx > Javascript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 
@@ -15367,6 +15645,37 @@ function Textarea(props) {
 }
 
 export default Textarea;
+"
+`;
+
+exports[`Mitosis, format: react > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+
+function UseValueAndFnFromStore(props) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_active, set_active] = useState(() => false);
+
+  function _do(id) {
+    set_active(!!id);
+
+    if (props.onChange) {
+      props.onChange(_active);
+    }
+  }
+
+  useEffect(() => {
+    if (_do) {
+      _do(_id);
+    }
+  });
+
+  return <div>Test</div>;
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 
@@ -16756,6 +17065,29 @@ export default MyComponent;
 "
 `;
 
+exports[`Mitosis, format: react > jsx > Javascript Test > setState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function SetState(props) {
+  const [n, setN] = useState(() => [\\"123\\"]);
+
+  function someFn() {
+    n[0] = \\"123\\";
+  }
+
+  return (
+    <div>
+      <button onClick={(event) => someFn()}>Click me</button>
+    </div>
+  );
+}
+
+export default SetState;
+"
+`;
+
 exports[`Mitosis, format: react > jsx > Javascript Test > showExpressions 1`] = `
 "import * as React from \\"react\\";
 
@@ -17661,7 +17993,7 @@ function MyBasicRefComponent(props) {
 
   function onBlur() {
     // Maintain focus
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }
 
   function lowerCaseName() {
@@ -18524,6 +18856,28 @@ export default Stepper;
 "
 `;
 
+exports[`Mitosis, format: react > jsx > Typescript Test > NestedStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function NestedStore(props) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_messageId, set_messageId] = useState(() => _id + \\"-message\\");
+
+  return (
+    <div id={_id}>
+      Test
+      <p id={_messageId}>Message</p>
+    </div>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`Mitosis, format: react > jsx > Typescript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 
@@ -18858,6 +19212,37 @@ function Textarea(props) {
 }
 
 export default Textarea;
+"
+`;
+
+exports[`Mitosis, format: react > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+
+function UseValueAndFnFromStore(props) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_active, set_active] = useState(() => false);
+
+  function _do(id?: string) {
+    set_active(!!id);
+
+    if (props.onChange) {
+      props.onChange(_active);
+    }
+  }
+
+  useEffect(() => {
+    if (_do) {
+      _do(_id);
+    }
+  });
+
+  return <div>Test</div>;
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 
@@ -20254,6 +20639,29 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Mitosis, format: react > jsx > Typescript Test > setState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function SetState(props) {
+  const [n, setN] = useState(() => [\\"123\\"]);
+
+  function someFn() {
+    n[0] = \\"123\\";
+  }
+
+  return (
+    <div>
+      <button onClick={(event) => someFn()}>Click me</button>
+    </div>
+  );
+}
+
+export default SetState;
 "
 `;
 

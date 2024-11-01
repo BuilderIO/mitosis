@@ -330,7 +330,7 @@ function MyBasicRefComponent(props) {
     name: \\"PatrickJS\\",
     onBlur: function onBlur() {
       // Maintain focus
-      inputRef.current.focus();
+      inputRef.current?.focus();
     },
     lowerCaseName: function lowerCaseName() {
       return state.name.toLowerCase();
@@ -1224,6 +1224,29 @@ export default Stepper;
 "
 `;
 
+exports[`React - stateType: valtio > jsx > Javascript Test > NestedStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalProxy } from \\"valtio/utils\\";
+
+function NestedStore(props) {
+  const state = useLocalProxy({
+    _id: \\"abc\\",
+    _messageId: state._id + \\"-message\\",
+  });
+
+  return (
+    <div id={state._id}>
+      Test
+      <p id={state._messageId}>Message</p>
+    </div>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`React - stateType: valtio > jsx > Javascript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 
@@ -1525,6 +1548,38 @@ function Textarea(props) {
 }
 
 export default Textarea;
+"
+`;
+
+exports[`React - stateType: valtio > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { useLocalProxy } from \\"valtio/utils\\";
+
+function UseValueAndFnFromStore(props) {
+  const state = useLocalProxy({
+    _id: \\"abc\\",
+    _active: false,
+    _do(id) {
+      state._active = !!id;
+
+      if (props.onChange) {
+        props.onChange(state._active);
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (state._do) {
+      state._do(state._id);
+    }
+  });
+
+  return <div>Test</div>;
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 
@@ -2929,6 +2984,30 @@ export default MyComponent;
 "
 `;
 
+exports[`React - stateType: valtio > jsx > Javascript Test > setState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalProxy } from \\"valtio/utils\\";
+
+function SetState(props) {
+  const state = useLocalProxy({
+    n: [\\"123\\"],
+    someFn() {
+      state.n[0] = \\"123\\";
+    },
+  });
+
+  return (
+    <div>
+      <button onClick={(event) => state.someFn()}>Click me</button>
+    </div>
+  );
+}
+
+export default SetState;
+"
+`;
+
 exports[`React - stateType: valtio > jsx > Javascript Test > showExpressions 1`] = `
 "import * as React from \\"react\\";
 
@@ -3767,13 +3846,13 @@ export interface Props {
 }
 
 function MyBasicRefComponent(props: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement | null>(null);
   const state = useLocalProxy({
     name: \\"PatrickJS\\",
     onBlur: function onBlur() {
       // Maintain focus
-      inputRef.current.focus();
+      inputRef.current?.focus();
     },
     lowerCaseName: function lowerCaseName() {
       return state.name.toLowerCase();
@@ -4790,6 +4869,33 @@ export default Stepper;
 "
 `;
 
+exports[`React - stateType: valtio > jsx > Typescript Test > NestedStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalProxy } from \\"valtio/utils\\";
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+function NestedStore(props: any) {
+  const state = useLocalProxy({
+    _id: \\"abc\\",
+    _messageId: state._id + \\"-message\\",
+  });
+
+  return (
+    <div id={state._id}>
+      Test
+      <p id={state._messageId}>Message</p>
+    </div>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`React - stateType: valtio > jsx > Typescript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 
@@ -5155,6 +5261,46 @@ function Textarea(props: TextareaProps) {
 }
 
 export default Textarea;
+"
+`;
+
+exports[`React - stateType: valtio > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+import { useLocalProxy } from \\"valtio/utils\\";
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+function UseValueAndFnFromStore(props: MyProps) {
+  const state = useLocalProxy({
+    _id: \\"abc\\",
+    _active: false,
+    _do(id?: string) {
+      state._active = !!id;
+
+      if (props.onChange) {
+        props.onChange(state._active);
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (state._do) {
+      state._do(state._id);
+    }
+  });
+
+  return <div>Test</div>;
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 
@@ -6715,6 +6861,30 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`React - stateType: valtio > jsx > Typescript Test > setState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalProxy } from \\"valtio/utils\\";
+
+function SetState(props: any) {
+  const state = useLocalProxy({
+    n: [\\"123\\"],
+    someFn() {
+      state.n[0] = \\"123\\";
+    },
+  });
+
+  return (
+    <div>
+      <button onClick={(event) => state.someFn()}>Click me</button>
+    </div>
+  );
+}
+
+export default SetState;
 "
 `;
 
