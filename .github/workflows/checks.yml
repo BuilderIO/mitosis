@@ -73,6 +73,36 @@ jobs:
       - name: Run tests
         run: yarn ci:test
 
+  test-update:
+    if: always() && (needs.test.result == 'failure')
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/yarn-nm-install
+        with:
+          cache-node-modules: true
+          cache-install-state: true
+
+      - name: 🏃🆙⏲️ Run test-update
+        run: yarn test:update
+
+      - name: 🆙 Upload snapshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshots-updates
+          path: ./packages/core/src/__tests__/__snapshots__
+          retention-days: 30
+
   site:
     runs-on: ubuntu-latest
     steps:
