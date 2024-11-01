@@ -37,6 +37,7 @@ const basicForwardRef = getRawFile('./data/basic-forwardRef.raw.tsx');
 const basicForwardRefMetadata = getRawFile('./data/basic-forwardRef-metadata.raw.tsx');
 const basicRefPrevious = getRawFile('./data/basic-ref-usePrevious.raw.tsx');
 const basicRefAssignment = getRawFile('./data/basic-ref-assignment.raw.tsx');
+const eventInputAndChange = getRawFile('./data/events/event-input-and-change.raw.tsx');
 const propsDestructure = getRawFile('./data/basic-props-destructure.raw.tsx');
 const nestedStyles = getRawFile('./data/nested-styles.raw.tsx');
 const preserveExportOrLocalStatement = getRawFile(
@@ -253,6 +254,7 @@ const BASIC_TESTS: Tests = {
   useTarget,
   signalsOnUpdate,
   getterState,
+  eventInputAndChange,
   NestedStore,
   UseValueAndFnFromStore,
   'store-async-function': StoreAsyncFunction,

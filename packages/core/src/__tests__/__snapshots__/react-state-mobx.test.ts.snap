@@ -2150,6 +2150,39 @@ export default observedComponentWithTypes;
 "
 `;
 
+exports[`React - stateType: mobx > jsx > Javascript Test > eventInputAndChange 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
+
+function EventInputAndChange(props) {
+  const state = useLocalObservable(() => ({ name: \\"Steve\\" }));
+
+  return (
+    <>
+      <div>
+        <input
+          className=\\"input\\"
+          value={state.name}
+          onInput={(event) => (state.name = event.target.value)}
+          onChange={(event) => (state.name = event.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+const observedEventInputAndChange = observer(EventInputAndChange);
+export default observedEventInputAndChange;
+"
+`;
+
 exports[`React - stateType: mobx > jsx > Javascript Test > expressionState 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -6054,6 +6087,39 @@ function ComponentWithTypes(props: Props) {
 
 const observedComponentWithTypes = observer(ComponentWithTypes);
 export default observedComponentWithTypes;
+"
+`;
+
+exports[`React - stateType: mobx > jsx > Typescript Test > eventInputAndChange 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
+
+function EventInputAndChange(props: any) {
+  const state = useLocalObservable(() => ({ name: \\"Steve\\" }));
+
+  return (
+    <>
+      <div>
+        <input
+          className=\\"input\\"
+          value={state.name}
+          onInput={(event) => (state.name = event.target.value)}
+          onChange={(event) => (state.name = event.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+const observedEventInputAndChange = observer(EventInputAndChange);
+export default observedEventInputAndChange;
 "
 `;
 

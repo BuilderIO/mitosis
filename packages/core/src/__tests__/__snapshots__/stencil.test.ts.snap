@@ -109,7 +109,7 @@ export class MyBasicRefComponent {
               ref={(el) => (this.inputRef = el)}
               value={this.name}
               onBlur={(event) => this.onBlur()}
-              onInput={(event) => (this.name = event.target.value)}
+              onChange={(event) => (this.name = event.target.value)}
             />
             <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
               Choose a car:
@@ -160,7 +160,7 @@ export class MyBasicComponent {
       <div class=\\"test div\\">
         <input
           value={DEFAULT_VALUES.name || this.name}
-          onInput={(myEvent) => (this.name = myEvent.target.value)}
+          onChange={(myEvent) => (this.name = myEvent.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
@@ -188,7 +188,7 @@ export class MyBasicForShowComponent {
             <Fragment>
               <input
                 value={this.name}
-                onInput={(event) => {
+                onChange={(event) => {
                   this.name = event.target.value + \\" and \\" + person;
                 }}
               />
@@ -231,7 +231,7 @@ export class MyBasicComponent {
       <div>
         {myService.method(\\"hello\\") + this.name}
         Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onInput={() => this.onChange} />
+        <input onChange={() => this.onChange} />
       </div>
     );
   }
@@ -417,7 +417,7 @@ export class MyBasicForComponent {
           <Fragment>
             <input
               value={this.name}
-              onInput={(event) => {
+              onChange={(event) => {
                 this.name = event.target.value + \\" and \\" + person;
               }}
             />
@@ -469,7 +469,7 @@ export class MyBasicRefComponent {
               ref={(el) => (this.inputRef = el)}
               value={this.name}
               onBlur={(event) => this.onBlur()}
-              onInput={(event) => (this.name = event.target.value)}
+              onChange={(event) => (this.name = event.target.value)}
             />
             <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
               Choose a car:
@@ -1392,7 +1392,7 @@ export class FormInputComponent {
         value={this.value}
         defaultValue={this.defaultValue}
         required={this.required}
-        onInput={(event) => this.onChange?.(event.target.value)}
+        onChange={(event) => this.onChange?.(event.target.value)}
       />
     );
   }
@@ -2007,7 +2007,7 @@ export class MyBasicForwardRefComponent {
           class=\\"input\\"
           ref={(el) => (this.inputRef = el)}
           value={this.name}
-          onInput={(event) => (this.name = event.target.value)}
+          onChange={(event) => (this.name = event.target.value)}
         />
       </div>
     );
@@ -2039,7 +2039,7 @@ export class MyBasicForwardRefComponent {
           class=\\"input\\"
           ref={(el) => (this.inputRef = el)}
           value={this.name}
-          onInput={(event) => (this.name = event.target.value)}
+          onChange={(event) => (this.name = event.target.value)}
         />
       </div>
     );
@@ -2385,6 +2385,38 @@ export class ComponentWithTypes {
         {\\" \\"}
         Hello
         {this.name || DEFAULT_VALUES.name}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > eventInputAndChange 1`] = `
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"event-input-and-change\\",
+
+  styles: \`
+        .input {
+          color: red;
+        }
+\`,
+})
+export class EventInputAndChange {
+  @State() name = \\"Steve\\";
+
+  render() {
+    return (
+      <div>
+        <input
+          class=\\"input\\"
+          value={this.name}
+          onInput={(event) => (this.name = event.target.value)}
+          onChange={(event) => (this.name = event.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
     );
   }
@@ -3853,7 +3885,7 @@ export class MyBasicRefComponent {
               ref={(el) => (this.inputRef = el)}
               value={this.name}
               onBlur={(event) => this.onBlur()}
-              onInput={(event) => (this.name = event.target.value)}
+              onChange={(event) => (this.name = event.target.value)}
             />
             <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
               Choose a car:
@@ -3908,7 +3940,7 @@ export class MyBasicComponent {
       <div class=\\"test div\\">
         <input
           value={DEFAULT_VALUES.name || this.name}
-          onInput={(myEvent) => (this.name = myEvent.target.value)}
+          onChange={(myEvent) => (this.name = myEvent.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
@@ -3936,7 +3968,7 @@ export class MyBasicForShowComponent {
             <Fragment>
               <input
                 value={this.name}
-                onInput={(event) => {
+                onChange={(event) => {
                   this.name = event.target.value + \\" and \\" + person;
                 }}
               />
@@ -3979,7 +4011,7 @@ export class MyBasicComponent {
       <div>
         {myService.method(\\"hello\\") + this.name}
         Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onInput={() => this.onChange} />
+        <input onChange={() => this.onChange} />
       </div>
     );
   }
@@ -4175,7 +4207,7 @@ export class MyBasicForComponent {
           <Fragment>
             <input
               value={this.name}
-              onInput={(event) => {
+              onChange={(event) => {
                 this.name = event.target.value + \\" and \\" + person;
               }}
             />
@@ -4231,7 +4263,7 @@ export class MyBasicRefComponent {
               ref={(el) => (this.inputRef = el)}
               value={this.name}
               onBlur={(event) => this.onBlur()}
-              onInput={(event) => (this.name = event.target.value)}
+              onChange={(event) => (this.name = event.target.value)}
             />
             <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
               Choose a car:
@@ -5285,7 +5317,7 @@ export class FormInputComponent {
         value={this.value}
         defaultValue={this.defaultValue}
         required={this.required}
-        onInput={(event) => this.onChange?.(event.target.value)}
+        onChange={(event) => this.onChange?.(event.target.value)}
       />
     );
   }
@@ -6015,7 +6047,7 @@ export class MyBasicForwardRefComponent {
           class=\\"input\\"
           ref={(el) => (this.inputRef = el)}
           value={this.name}
-          onInput={(event) => (this.name = event.target.value)}
+          onChange={(event) => (this.name = event.target.value)}
         />
       </div>
     );
@@ -6052,7 +6084,7 @@ export class MyBasicForwardRefComponent {
           class=\\"input\\"
           ref={(el) => (this.inputRef = el)}
           value={this.name}
-          onInput={(event) => (this.name = event.target.value)}
+          onChange={(event) => (this.name = event.target.value)}
         />
       </div>
     );
@@ -6435,6 +6467,38 @@ export class ComponentWithTypes {
         {\\" \\"}
         Hello
         {this.name || DEFAULT_VALUES.name}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > eventInputAndChange 1`] = `
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"event-input-and-change\\",
+
+  styles: \`
+        .input {
+          color: red;
+        }
+\`,
+})
+export class EventInputAndChange {
+  @State() name = \\"Steve\\";
+
+  render() {
+    return (
+      <div>
+        <input
+          class=\\"input\\"
+          value={this.name}
+          onInput={(event) => (this.name = event.target.value)}
+          onChange={(event) => (this.name = event.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
     );
   }
@@ -7892,7 +7956,7 @@ export class MyComponent {
     return (
       <div>
         <input
-          onInput={(event) => (this.name = event.target.value)}
+          onChange={(event) => (this.name = event.target.value)}
           value={this.name}
         />
         Hello! I can run in React, Vue, Solid, or Liquid!
@@ -7920,19 +7984,19 @@ export class MyComponent {
           type=\\"radio\\"
           value=\\"Plain\\"
           checked={this.tortilla === \\"Plain\\"}
-          onInput={(event) => (this.tortilla = event.target.value)}
+          onChange={(event) => (this.tortilla = event.target.value)}
         />
         <input
           type=\\"radio\\"
           value=\\"Whole wheat\\"
           checked={this.tortilla === \\"Whole wheat\\"}
-          onInput={(event) => (this.tortilla = event.target.value)}
+          onChange={(event) => (this.tortilla = event.target.value)}
         />
         <input
           type=\\"radio\\"
           value=\\"Spinach\\"
           checked={this.tortilla === \\"Spinach\\"}
-          onInput={(event) => (this.tortilla = event.target.value)}
+          onChange={(event) => (this.tortilla = event.target.value)}
         />
         <br />
         <br />
@@ -7940,25 +8004,25 @@ export class MyComponent {
           type=\\"checkbox\\"
           value=\\"Rice\\"
           checked={this.fillings === \\"Rice\\"}
-          onInput={(event) => (this.fillings = event.target.value)}
+          onChange={(event) => (this.fillings = event.target.value)}
         />
         <input
           type=\\"checkbox\\"
           value=\\"Beans\\"
           checked={this.fillings === \\"Beans\\"}
-          onInput={(event) => (this.fillings = event.target.value)}
+          onChange={(event) => (this.fillings = event.target.value)}
         />
         <input
           type=\\"checkbox\\"
           value=\\"Cheese\\"
           checked={this.fillings === \\"Cheese\\"}
-          onInput={(event) => (this.fillings = event.target.value)}
+          onChange={(event) => (this.fillings = event.target.value)}
         />
         <input
           type=\\"checkbox\\"
           value=\\"Guac (extra)\\"
           checked={this.fillings === \\"Guac (extra)\\"}
-          onInput={(event) => (this.fillings = event.target.value)}
+          onChange={(event) => (this.fillings = event.target.value)}
         />
         <p>
           Tortilla:
@@ -8218,12 +8282,12 @@ export class MyComponent {
       <div>
         <input
           type=\\"number\\"
-          onInput={(event) => (this.a = event.target.value)}
+          onChange={(event) => (this.a = event.target.value)}
           value={this.a}
         />
         <input
           type=\\"number\\"
-          onInput={(event) => (this.b = event.target.value)}
+          onChange={(event) => (this.b = event.target.value)}
           value={this.b}
         />
         Result:
@@ -8319,7 +8383,7 @@ export class MyComponent {
     return (
       <div>
         <input
-          onInput={(event) => (this.name = event.target.value)}
+          onChange={(event) => (this.name = event.target.value)}
           value={this.name}
         />
         Hello! I can run in React, Vue, Solid, or Liquid!
@@ -8347,19 +8411,19 @@ export class MyComponent {
           type=\\"radio\\"
           value=\\"Plain\\"
           checked={this.tortilla === \\"Plain\\"}
-          onInput={(event) => (this.tortilla = event.target.value)}
+          onChange={(event) => (this.tortilla = event.target.value)}
         />
         <input
           type=\\"radio\\"
           value=\\"Whole wheat\\"
           checked={this.tortilla === \\"Whole wheat\\"}
-          onInput={(event) => (this.tortilla = event.target.value)}
+          onChange={(event) => (this.tortilla = event.target.value)}
         />
         <input
           type=\\"radio\\"
           value=\\"Spinach\\"
           checked={this.tortilla === \\"Spinach\\"}
-          onInput={(event) => (this.tortilla = event.target.value)}
+          onChange={(event) => (this.tortilla = event.target.value)}
         />
         <br />
         <br />
@@ -8367,25 +8431,25 @@ export class MyComponent {
           type=\\"checkbox\\"
           value=\\"Rice\\"
           checked={this.fillings === \\"Rice\\"}
-          onInput={(event) => (this.fillings = event.target.value)}
+          onChange={(event) => (this.fillings = event.target.value)}
         />
         <input
           type=\\"checkbox\\"
           value=\\"Beans\\"
           checked={this.fillings === \\"Beans\\"}
-          onInput={(event) => (this.fillings = event.target.value)}
+          onChange={(event) => (this.fillings = event.target.value)}
         />
         <input
           type=\\"checkbox\\"
           value=\\"Cheese\\"
           checked={this.fillings === \\"Cheese\\"}
-          onInput={(event) => (this.fillings = event.target.value)}
+          onChange={(event) => (this.fillings = event.target.value)}
         />
         <input
           type=\\"checkbox\\"
           value=\\"Guac (extra)\\"
           checked={this.fillings === \\"Guac (extra)\\"}
-          onInput={(event) => (this.fillings = event.target.value)}
+          onChange={(event) => (this.fillings = event.target.value)}
         />
         <p>
           Tortilla:
@@ -8645,12 +8709,12 @@ export class MyComponent {
       <div>
         <input
           type=\\"number\\"
-          onInput={(event) => (this.a = event.target.value)}
+          onChange={(event) => (this.a = event.target.value)}
           value={this.a}
         />
         <input
           type=\\"number\\"
-          onInput={(event) => (this.b = event.target.value)}
+          onChange={(event) => (this.b = event.target.value)}
           value={this.b}
         />
         Result:

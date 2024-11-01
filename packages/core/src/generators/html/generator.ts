@@ -18,7 +18,6 @@ import { hasComponent } from '../../helpers/has-component';
 import { hasProps } from '../../helpers/has-props';
 import { hasStatefulDom } from '../../helpers/has-stateful-dom';
 import isChildren from '../../helpers/is-children';
-import { isComponent } from '../../helpers/is-component';
 import { isHtmlAttribute } from '../../helpers/is-html-attribute';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { mapRefs } from '../../helpers/map-refs';
@@ -427,9 +426,6 @@ const blockToHtml = (
 
       if (key.startsWith('on')) {
         let event = key.replace('on', '').toLowerCase();
-        if (!isComponent(json) && event === 'change') {
-          event = 'input';
-        }
         const fnName = camelCase(`on-${elId}-${event}`);
         const codeContent: string = removeSurroundingBlock(
           updateReferencesInCode(useValue, options, blockOptions),
