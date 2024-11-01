@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.16
+
+### Patch Changes
+
+- 3ab462a: [Stencil] feat: add e2e test for stencil
+
 ## 0.5.15
 
 ### Patch Changes
