@@ -1,31 +1,30 @@
+import { mediaQueryRegex, sizes } from '@/constants/media-sizes';
+import { ToBuilderOptions } from '@/generators/builder/types';
+import { dedent } from '@/helpers/dedent';
+import { fastClone } from '@/helpers/fast-clone';
+import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
+import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
+import { hasProps } from '@/helpers/has-props';
+import { isComponent } from '@/helpers/is-component';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
+import { isUpperCase } from '@/helpers/is-upper-case';
+import { parseCodeToAst } from '@/helpers/parsers';
+import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { replaceNodes } from '@/helpers/replace-identifiers';
-import { types } from '@babel/core';
+import { checkHasState } from '@/helpers/state';
+import { isBuilderElement, symbolBlocksAsChildren } from '@/parsers/builder';
+import { hashCodeAsString } from '@/symbols/symbol-processor';
+import { ForNode, MitosisNode } from '@/types/mitosis-node';
+import { MitosisStyles } from '@/types/mitosis-styles';
+import { TranspilerArgs } from '@/types/transpiler';
+import { traverse as babelTraverse, types } from '@babel/core';
+import generate from '@babel/generator';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { attempt, mapValues, omit, omitBy, set } from 'lodash';
 import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
-import { mediaQueryRegex, sizes } from '../constants/media-sizes';
-import { dedent } from '../helpers/dedent';
-import { fastClone } from '../helpers/fast-clone';
-import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { hasProps } from '../helpers/has-props';
-import { isComponent } from '../helpers/is-component';
-import { isUpperCase } from '../helpers/is-upper-case';
-import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { checkHasState } from '../helpers/state';
-import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
-import { hashCodeAsString } from '../symbols/symbol-processor';
-import { ForNode, MitosisNode } from '../types/mitosis-node';
-import { MitosisStyles } from '../types/mitosis-styles';
-import { BaseTranspilerOptions, TranspilerArgs } from '../types/transpiler';
-import { stringifySingleScopeOnMount } from './helpers/on-mount';
-
-export interface ToBuilderOptions extends BaseTranspilerOptions {
-  includeIds?: boolean;
-}
+import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 
 const omitMetaProperties = (obj: Record<string, any>) =>
   omitBy(obj, (_value, key) => key.startsWith('$'));
@@ -94,33 +93,122 @@ const componentMappers: {
 
     return block;
   },
+  PersonalizationContainer(node, options) {
+    const block = blockToBuilder(node, options, { skipMapper: true });
+    const variants: any[] = [];
+    let defaultVariant: BuilderElement[] = [];
+    const validFakeNodeNames = [
+      'Variant',
+      'PersonalizationOption',
+      'PersonalizationVariant',
+      'Personalization',
+    ];
+    block.children!.forEach((item) => {
+      if (item.component && validFakeNodeNames.includes(item.component?.name)) {
+        let query: any;
+        if (item.component.options.query) {
+          const optionsQuery = item.component.options.query;
+          if (Array.isArray(optionsQuery)) {
+            query = optionsQuery.map((q) => ({
+              '@type': '@builder.io/core:Query',
+              ...q,
+            }));
+          } else {
+            query = [
+              {
+                '@type': '@builder.io/core:Query',
+                ...optionsQuery,
+              },
+            ];
+          }
+          const newVariant = {
+            ...item.component.options,
+            query,
+            blocks: item.children,
+          };
+          variants.push(newVariant);
+        } else if (item.children) {
+          defaultVariant.push(...item.children);
+        }
+      } else {
+        defaultVariant.push(item);
+      }
+    });
+    delete block.properties;
+    delete block.bindings;
+
+    block.component!.options.variants = variants;
+    block.children = defaultVariant;
+
+    return block;
+  },
   For(_node, options) {
+    const node = _node as any as ForNode;
+
+    const replaceIndexNode = (str: string) =>
+      replaceNodes({
+        code: str,
+        nodeMaps: [
+          {
+            from: types.identifier(target),
+            to: types.memberExpression(types.identifier('state'), types.identifier('$index')),
+          },
+        ],
+      });
+
     // rename `index` var to `state.$index`
+    const target = node.scope.indexName || 'index';
     const replaceIndex = (node: MitosisNode) => {
       traverse(node).forEach(function (thing) {
-        if (isMitosisNode(thing)) {
-          for (const [key, value] of Object.entries(thing.bindings)) {
-            if (value?.code.includes('index')) {
-              thing.bindings[key]!.code = replaceNodes({
-                code: value.code,
-                nodeMaps: [
-                  {
-                    from: types.identifier('index'),
-                    to: types.memberExpression(
-                      types.identifier('state'),
-                      types.identifier('$index'),
-                    ),
-                  },
-                ],
+        if (!isMitosisNode(thing)) return;
+        for (const [key, value] of Object.entries(thing.bindings)) {
+          if (!value) continue;
+          if (!value.code.includes(target)) continue;
+
+          if (value.type === 'single' && value.bindingType === 'function') {
+            try {
+              const code = value.code;
+
+              const programNode = parseCodeToAst(code);
+
+              if (!programNode) continue;
+
+              babelTraverse(programNode, {
+                Program(path) {
+                  if (path.scope.hasBinding(target)) return;
+
+                  const x = {
+                    id: types.identifier(target),
+                    init: types.identifier('PLACEHOLDER'),
+                  };
+                  path.scope.push(x);
+                  path.scope.rename(target, 'state.$index');
+                  path.traverse({
+                    VariableDeclaration(p) {
+                      if (p.node.declarations.length === 1 && p.node.declarations[0].id === x.id) {
+                        p.remove();
+                      }
+                    },
+                  });
+                },
               });
+
+              thing.bindings[key]!.code = generate(programNode).code;
+            } catch (error) {
+              console.error(
+                'Error processing function binding. Falling back to simple replacement.',
+                error,
+              );
+              thing.bindings[key]!.code = replaceIndexNode(value.code);
             }
+          } else {
+            thing.bindings[key]!.code = replaceIndexNode(value.code);
           }
         }
       });
       return node;
     };
 
-    const node = _node as any as ForNode;
     return el(
       {
         component: {
@@ -138,6 +226,57 @@ const componentMappers: {
     );
   },
   Show(node, options) {
+    const elseCase = node.meta.else as MitosisNode;
+    const children = node.children.filter(filterEmptyTextNodes);
+    const showNode =
+      children.length > 0
+        ? el(
+            {
+              // TODO: the reverse mapping for this
+              component: {
+                name: 'Core:Fragment',
+              },
+              bindings: {
+                show: node.bindings.when?.code as string,
+              },
+              children: children.map((node) => blockToBuilder(node, options)),
+            },
+            options,
+          )
+        : undefined;
+
+    const elseNode =
+      elseCase && filterEmptyTextNodes(elseCase)
+        ? el(
+            {
+              // TODO: the reverse mapping for this
+              component: {
+                name: 'Core:Fragment',
+              },
+              bindings: {
+                hide: node.bindings.when?.code as string,
+              },
+              children: [blockToBuilder(elseCase, options)],
+            },
+            options,
+          )
+        : undefined;
+
+    if (elseNode && showNode) {
+      return el(
+        {
+          component: {
+            name: 'Core:Fragment',
+          },
+          children: [showNode, elseNode],
+        },
+        options,
+      );
+    } else if (showNode) {
+      return showNode;
+    } else if (elseNode) {
+      return elseNode;
+    }
     return el(
       {
         // TODO: the reverse mapping for this
@@ -147,9 +286,7 @@ const componentMappers: {
         bindings: {
           show: node.bindings.when?.code as string,
         },
-        children: node.children
-          .filter(filterEmptyTextNodes)
-          .map((node) => blockToBuilder(node, options)),
+        children: [],
       },
       options,
     );
@@ -229,8 +366,19 @@ export const blockToBuilder = (
     const eventBindingKeyRegex = /^on([A-Z])/;
     const firstCharMatchForEventBindingKey = key.match(eventBindingKeyRegex)?.[1];
     if (firstCharMatchForEventBindingKey) {
+      let actionBody = bindings[key]?.async
+        ? `(async () => ${bindings[key]?.code as string})()`
+        : removeSurroundingBlock(bindings[key]?.code as string);
+
+      const eventIdentifier = bindings[key]?.arguments?.[0];
+      if (typeof eventIdentifier === 'string' && eventIdentifier !== 'event') {
+        actionBody = replaceNodes({
+          code: actionBody,
+          nodeMaps: [{ from: types.identifier(eventIdentifier), to: types.identifier('event') }],
+        });
+      }
       actions[key.replace(eventBindingKeyRegex, firstCharMatchForEventBindingKey.toLowerCase())] =
-        removeSurroundingBlock(bindings[key]?.code as string);
+        actionBody;
       delete bindings[key];
     }
   }
@@ -249,9 +397,15 @@ export const blockToBuilder = (
       if (!(parsed instanceof Error)) {
         componentOptions[key] = parsed;
       } else {
-        builderBindings[`component.options.${key}`] = bindings[key]!.code;
+        if (!json.slots?.[key]) {
+          builderBindings[`component.options.${key}`] = bindings[key]!.code;
+        }
       }
     }
+  }
+
+  for (const key in json.slots) {
+    componentOptions[key] = json.slots[key].map((node) => blockToBuilder(node, options));
   }
 
   const hasCss = !!bindings.css?.code;
@@ -290,7 +444,9 @@ export const blockToBuilder = (
 
   if (thisIsComponent) {
     for (const key in json.bindings) {
-      builderBindings[`component.options.${key}`] = json.bindings[key]!.code;
+      if (!json.slots?.[key]) {
+        builderBindings[`component.options.${key}`] = json.bindings[key]!.code;
+      }
     }
   }
 
@@ -339,7 +495,7 @@ export const componentToBuilder =
         ${!hasProps(component) ? '' : `var props = state;`}
 
         ${!hasState ? '' : `Object.assign(state, ${getStateObjectStringFromComponent(component)});`}
-        
+
         ${stringifySingleScopeOnMount(component)}
       `),
         tsCode: tryFormat(dedent`
@@ -376,6 +532,20 @@ export const componentToBuilder =
         const value = subComponentMap[el.component?.name!];
         if (value) {
           set(el, 'component.options.symbol.content', value);
+        }
+        if (el.bindings) {
+          for (const [key, value] of Object.entries(el.bindings)) {
+            if (value.match(/\n|;/)) {
+              if (!el.code) {
+                el.code = {};
+              }
+              if (!el.code.bindings) {
+                el.code.bindings = {};
+              }
+              el.code.bindings[key] = value;
+              el.bindings[key] = ` return ${value}`;
+            }
+          }
         }
       }
     });

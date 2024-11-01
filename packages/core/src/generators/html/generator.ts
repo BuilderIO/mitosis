@@ -1,53 +1,50 @@
+import { ToHtmlOptions } from '@/generators/html/types';
 import { NodePath, types } from '@babel/core';
 import { pipe } from 'fp-ts/lib/function';
 import { camelCase, kebabCase } from 'lodash';
 import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
-import { SELF_CLOSING_HTML_TAGS } from '../constants/html_tags';
-import { babelTransformExpression } from '../helpers/babel-transform';
-import { dashCase } from '../helpers/dash-case';
-import { fastClone } from '../helpers/fast-clone';
-import { getPropFunctions } from '../helpers/get-prop-functions';
-import { getProps } from '../helpers/get-props';
-import { getPropsRef } from '../helpers/get-props-ref';
-import { getRefs } from '../helpers/get-refs';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { hasBindingsText } from '../helpers/has-bindings-text';
-import { hasComponent } from '../helpers/has-component';
-import { hasProps } from '../helpers/has-props';
-import { hasStatefulDom } from '../helpers/has-stateful-dom';
-import isChildren from '../helpers/is-children';
-import { isHtmlAttribute } from '../helpers/is-html-attribute';
-import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { mapRefs } from '../helpers/map-refs';
-import { initializeOptions } from '../helpers/merge-options';
-import { getForArguments } from '../helpers/nodes/for';
-import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { renderPreComponent } from '../helpers/render-imports';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
+import { babelTransformExpression } from '../../helpers/babel-transform';
+import { dashCase } from '../../helpers/dash-case';
+import { fastClone } from '../../helpers/fast-clone';
+import { getPropFunctions } from '../../helpers/get-prop-functions';
+import { getProps } from '../../helpers/get-props';
+import { getPropsRef } from '../../helpers/get-props-ref';
+import { getRefs } from '../../helpers/get-refs';
+import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
+import { hasBindingsText } from '../../helpers/has-bindings-text';
+import { hasComponent } from '../../helpers/has-component';
+import { hasProps } from '../../helpers/has-props';
+import { hasStatefulDom } from '../../helpers/has-stateful-dom';
+import isChildren from '../../helpers/is-children';
+import { isComponent } from '../../helpers/is-component';
+import { isHtmlAttribute } from '../../helpers/is-html-attribute';
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { mapRefs } from '../../helpers/map-refs';
+import { initializeOptions } from '../../helpers/merge-options';
+import { getForArguments } from '../../helpers/nodes/for';
+import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
+import { renderPreComponent } from '../../helpers/render-imports';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
 import {
   DO_NOT_USE_ARGS,
   DO_NOT_USE_CONTEXT_VARS_TRANSFORMS,
   DO_NOT_USE_VARS_TRANSFORMS,
   StripStateAndPropsRefsOptions,
   stripStateAndPropsRefs,
-} from '../helpers/strip-state-and-props-refs';
-import { collectCss } from '../helpers/styles/collect-css';
+} from '../../helpers/strip-state-and-props-refs';
+import { collectCss } from '../../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
-} from '../modules/plugins';
-import { MitosisComponent } from '../types/mitosis-component';
-import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-import { stringifySingleScopeOnMount } from './helpers/on-mount';
-
-export interface ToHtmlOptions extends BaseTranspilerOptions {
-  format?: 'class' | 'script';
-  prefix?: string;
-}
+} from '../../modules/plugins';
+import { MitosisComponent } from '../../types/mitosis-component';
+import { MitosisNode, checkIsForNode } from '../../types/mitosis-node';
+import { TranspilerGenerator } from '../../types/transpiler';
+import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 
 type ScopeVars = Array<string>;
 type StringRecord = { [key: string]: string };
@@ -434,12 +431,13 @@ const blockToHtml = (
         const codeContent: string = removeSurroundingBlock(
           updateReferencesInCode(useValue, options, blockOptions),
         );
+        const asyncKeyword = json.bindings[key]?.async ? 'async ' : '';
         options.js += `
           // Event handler for '${event}' event on ${elId}
           ${
             options.format === 'class'
-              ? `this.${fnName} = (${cusArg.join(',')}) => {`
-              : `function ${fnName} (${cusArg.join(',')}) {`
+              ? `this.${fnName} = ${asyncKeyword}(${cusArg.join(',')}) => {`
+              : `${asyncKeyword}function ${fnName} (${cusArg.join(',')}) {`
           }
               ${addScopeVars(
                 scopeVars,
@@ -658,7 +656,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
           !hasChangeListeners
             ? ''
             : `
-        
+
         // Function to update data bindings and loops
         // call update() when you mutate state and need the updates to reflect
         // in the dom
@@ -693,7 +691,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
                     options,
                   );
                   return code + '\n';
-                }, '')} 
+                }, '')}
                 `
           }
 
@@ -730,7 +728,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
               ${updateReferencesInCode(
                 addUpdateAfterSetInCode(stringifySingleScopeOnMount(json), options),
                 options,
-              )} 
+              )}
               `
         }
 
@@ -743,8 +741,8 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
             // grabs the content of a node that is between <template> tags
             // iterates through child nodes to register all content including text elements
             // attaches the content after the template
-  
-  
+
+
             const elementFragment = el.content.cloneNode(true);
             const children = Array.from(elementFragment.childNodes)
             children.forEach(child => {
@@ -758,7 +756,7 @@ export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
             });
             el.after(elementFragment);
           }
-  
+
         `
         }
         ${
@@ -992,9 +990,9 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
       })}
       /**
        * Usage:
-       * 
+       *
        *  <${kebabName}></${kebabName}>
-       * 
+       *
        */
       class ${ComponentName} extends ${
       options?.experimental?.classExtends
@@ -1200,8 +1198,8 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
             // grabs the content of a node that is between <template> tags
             // iterates through child nodes to register all content including text elements
             // attaches the content after the template
-  
-  
+
+
             const elementFragment = el.content.cloneNode(true);
             const children = Array.from(elementFragment.childNodes)
             children.forEach(child => {
@@ -1281,7 +1279,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
                 `;
               }
               return code + '\n';
-            }, '')} 
+            }, '')}
             `
           }
         }
@@ -1378,7 +1376,7 @@ export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
                   ? `
               ${options?.experimental?.generateQuerySelectorAll(key, code)}
               `
-                  : `              
+                  : `
               this._root.querySelectorAll("[data-el='${key}']").forEach((el) => {
                 ${code}
               })

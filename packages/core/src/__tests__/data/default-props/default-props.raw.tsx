@@ -31,7 +31,7 @@ export default function Button(props: ButtonProps) {
         </a>
       </Show>
       <Show when={!props.link}>
-        <button {...props.attributes} onClick={(event) => props.onClick(event)} type="button">
+        <button {...props.attributes} onClick={() => props.onClick()} type="button">
           {props.buttonText}
         </button>
       </Show>

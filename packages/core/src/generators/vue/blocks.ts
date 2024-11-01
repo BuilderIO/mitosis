@@ -1,3 +1,4 @@
+import { createSingleBinding } from '@/helpers/bindings';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import isChildren from '@/helpers/is-children';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
@@ -52,8 +53,10 @@ const NODE_MAPPERS: {
   },
   For(_json, options) {
     const json = _json as ForNode;
-    const keyValue = json.bindings.key || { code: 'index', type: 'single' };
-    const forValue = `(${json.scope.forName}, index) in ${json.bindings.each?.code}`;
+    const keyValue = json.bindings.key || { code: json.scope.indexName ?? 'index', type: 'single' };
+    const forValue = `(${json.scope.forName ?? '_'}, ${json.scope.indexName ?? 'index'}) in ${
+      json.bindings.each?.code
+    }`;
 
     // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
     return `<template :key="${encodeQuotes(keyValue?.code || 'index')}" v-for="${encodeQuotes(
@@ -129,21 +132,25 @@ const stringifyBinding =
 
       if (key.startsWith('on') && isValidHtmlTag) {
         // handle html native on[event] props
-        const { arguments: cusArgs = ['event'] } = value!;
+        const { arguments: cusArgs = ['event'], async } = value;
         let event = key.replace('on', '').toLowerCase();
         const isAssignmentExpression = useValue.includes('=');
 
-        const eventHandlerValue = pipe(
-          replaceIdentifiers({
-            code: useValue,
-            from: cusArgs[0],
-            to: '$event',
-          }),
-          isAssignmentExpression ? identity : removeSurroundingBlock,
-          removeSurroundingBlock,
-          encodeQuotes,
-        );
-
+        let eventHandlerValue: string;
+        if (async) {
+          eventHandlerValue = pipe(
+            replaceIdentifiers({
+              code: useValue,
+              from: cusArgs[0],
+              to: '$event',
+            }),
+            isAssignmentExpression ? identity : removeSurroundingBlock,
+            removeSurroundingBlock,
+            encodeQuotes,
+          );
+        } else {
+          eventHandlerValue = `async (${cusArgs.join(', ')}) => ${useValue}`;
+        }
         const eventHandlerKey = `${SPECIAL_PROPERTIES.V_ON_AT}${event}`;
 
         return `${eventHandlerKey}="${eventHandlerValue}"`;
@@ -216,7 +223,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   if (SPECIAL_HTML_TAGS.includes(node.name)) {
     // Vue doesn't allow style/script tags in templates, but does support them through dynamic components.
-    node.bindings.is = { code: `'${node.name}'`, type: 'single' };
+    node.bindings.is = createSingleBinding({ code: `'${node.name}'` });
     node.name = 'component';
   }
 

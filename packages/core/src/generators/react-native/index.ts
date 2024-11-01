@@ -1,3 +1,4 @@
+import { ToReactNativeOptions } from '@/generators/react-native/types';
 import { createSingleBinding } from '@/helpers/bindings';
 import { fastClone } from '@/helpers/fast-clone';
 import isChildren from '@/helpers/is-children';
@@ -6,19 +7,14 @@ import { mergeOptions } from '@/helpers/merge-options';
 import { ClassStyleMap } from '@/helpers/styles/helpers';
 import { Dictionary } from '@/helpers/typescript';
 import { MitosisComponent } from '@/types/mitosis-component';
-import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
+import { TranspilerGenerator } from '@/types/transpiler';
 import json5 from 'json5';
 import { camelCase, size } from 'lodash';
 import traverse from 'neotraverse/legacy';
 import { MitosisNode, Plugin } from '../..';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
-import { componentToReact } from '../react';
+import { ToReactOptions, componentToReact } from '../react';
 import { sanitizeReactNativeBlockStyles } from './sanitize-react-native-block-styles';
-
-export interface ToReactNativeOptions extends BaseTranspilerOptions {
-  stylesType: 'emotion' | 'react-native' | 'twrnc' | 'native-wind';
-  stateType: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
-}
 
 const stylePropertiesThatMustBeNumber = new Set(['lineHeight']);
 
@@ -34,7 +30,10 @@ const sanitizeStyle = (obj: any) => (key: string, value: string) => {
   }
 };
 
-export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap => {
+export const collectReactNativeStyles = (
+  json: MitosisComponent,
+  options: ToReactOptions,
+): ClassStyleMap => {
   const styleMap: ClassStyleMap = {};
 
   const componentIndexes: Dictionary<number | undefined> = {};
@@ -55,7 +54,7 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
       // Style properties like `"20px"` need to be numbers like `20` for react native
       for (const key in cssValue) {
         sanitizeStyle(cssValue)(key, cssValue[key]);
-        cssValue = sanitizeReactNativeBlockStyles(cssValue);
+        cssValue = sanitizeReactNativeBlockStyles(cssValue, options);
       }
     }
 
@@ -65,7 +64,7 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
         // Style properties like `"20px"` need to be numbers like `20` for react native
         for (const key in styleValue) {
           sanitizeStyle(styleValue)(key, styleValue[key]);
-          styleValue = sanitizeReactNativeBlockStyles(styleValue);
+          styleValue = sanitizeReactNativeBlockStyles(styleValue, options);
         }
 
         item.bindings.style!.code = json5.stringify(styleValue);

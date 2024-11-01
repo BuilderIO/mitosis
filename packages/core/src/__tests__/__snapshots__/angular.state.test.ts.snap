@@ -1,5 +1,91 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > Advanced 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-show-component\\",
+  template: \`
+    <main>
+      <ng-container *ngFor=\\"let person of names; index as i\\">
+        <div>{{i}} : {{person}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names\\">
+        <span>{{person}}</span>
+      </ng-container>
+      <ng-container *ngFor=\\"let _ of names\\"><br /></ng-container>
+      <ng-container
+        *ngFor=\\"let _ of Array.from({
+          length: 10
+        }); index as ee\\"
+      >
+        <pre>{{ee}}</pre>
+      </ng-container>
+      <ng-container *ngFor=\\"let _ of node_0_For\\">
+        <p>{{index}}</p>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as index\\">
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as count\\"
+      >
+        <span>{{person}} {{count}}</span>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as i\\">
+        <span>{{person}} {{i}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as index\\"
+      >
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+    </main>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicForShowComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+  node_0_For = null;
+
+  ngOnInit() {
+    this.node_0_For = Array.from({
+      length: 10,
+    });
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_For = Array.from({
+        length: 10,
+      });
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicForShowComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForShowComponent],
+})
+export class MyBasicForShowComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > AdvancedRef 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -17,7 +103,7 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
             #inputRef
             [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
-            (change)=\\"name = $event.target.value\\"
+            (input)=\\"name = $event.target.value\\"
           />
           <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
           <select name=\\"cars\\" id=\\"cars\\">
@@ -95,10 +181,10 @@ export const DEFAULT_VALUES = {
     <div class=\\"test div\\">
       <input
         [attr.value]=\\"DEFAULT_VALUES.name || name\\"
-        (change)=\\"name = $event.target.value\\"
+        (input)=\\"name = $event.target.value\\"
       />
 
-      Hello! I can run in React, Vue, Solid, or Liquid!
+      Hello! I can run in React, Vue, Solid, or Liquid! &gt;
     </div>
   \`,
   styles: [
@@ -144,7 +230,7 @@ import { Component } from \\"@angular/core\\";
     <div>
       <ng-container *ngFor=\\"let person of names\\">
         <ng-container *ngIf=\\"person === name\\">
-          <input [attr.value]=\\"name\\" (change)=\\"node_0_input($event, person)\\" />
+          <input [attr.value]=\\"name\\" (input)=\\"node_0_input($event, person)\\" />
 
           Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
           Solid, or Liquid!
@@ -192,7 +278,7 @@ import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
     <div>
       {{node_0_div}} Hello! I can run in React, Vue, Solid, or Liquid!
 
-      <input (change)=\\"onChange\\" />
+      <input (input)=\\"onChange\\" />
     </div>
   \`,
   styles: [
@@ -510,7 +596,7 @@ import { Component } from \\"@angular/core\\";
     <div>
       <ng-container *ngFor=\\"let person of names\\">
         <ng-container>
-          <input [attr.value]=\\"name\\" (change)=\\"node_0_input($event, person)\\" />
+          <input [attr.value]=\\"name\\" (input)=\\"node_0_input($event, person)\\" />
 
           Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
           Solid, or Liquid!
@@ -567,7 +653,7 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
             #inputRef
             [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
-            (change)=\\"name = $event.target.value\\"
+            (input)=\\"name = $event.target.value\\"
           />
           <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
           <select name=\\"cars\\" id=\\"cars\\">
@@ -637,7 +723,7 @@ import { Component } from \\"@angular/core\\";
 @Component({
   selector: \\"my-basic-ref-assignment-component\\",
   template: \`
-    <div><button (click)=\\"handlerClick($event)\\">Click</button></div>
+    <div><button (click)=\\"await handlerClick($event)\\">Click</button></div>
   \`,
   styles: [
     \`
@@ -845,7 +931,7 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"column\\",
   template: \`
     <div class=\\"builder-columns div\\">
-      <ng-container *ngFor=\\"let column of columns; let index = index\\">
+      <ng-container *ngFor=\\"let column of columns; index as index\\">
         <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
       </ng-container>
     </div>
@@ -1287,34 +1373,34 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
+          *ngFor=\\"let block of builderBlock?.children; index as index; trackBy: trackByBlock0\\"
         >
-          <BuilderBlockComponent
+          <builder-block-component
             [block]=\\"block\\"
             [index]=\\"index\\"
-          ></BuilderBlockComponent>
+          ></builder-block-component>
         </ng-container>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'error'\\">
-        <BuilderBlocks
+        <builder-blocks
           dataPath=\\"errorMessage\\"
           [blocks]=\\"errorMessage\\"
-        ></BuilderBlocks>
+        ></builder-blocks>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'sending'\\">
-        <BuilderBlocks
+        <builder-blocks
           dataPath=\\"sendingMessage\\"
           [blocks]=\\"sendingMessage\\"
-        ></BuilderBlocks>
+        ></builder-blocks>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'error' && responseData\\">
         <pre class=\\"builder-form-error-text pre\\">{{node_1_div}}</pre>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'success'\\">
-        <BuilderBlocks
+        <builder-blocks
           dataPath=\\"successMessage\\"
           [blocks]=\\"successMessage\\"
-        ></BuilderBlocks>
+        ></builder-blocks>
       </ng-container>
     </form>
   \`,
@@ -1778,7 +1864,7 @@ import { Component } from \\"@angular/core\\";
   selector: \\"img-state-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
+      <ng-container *ngFor=\\"let item of images; index as itemIndex\\">
         <ng-container>
           <img class=\\"custom-class\\" [attr.src]=\\"item\\" />
         </ng-container>
@@ -1944,7 +2030,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
-      (change)=\\"onChange?.($event.target.value)\\"
+      (input)=\\"onChange?.($event.target.value)\\"
       #elRef0
     />
   \`,
@@ -2337,7 +2423,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.name]=\\"name\\"
       #elRef0
     >
-      <ng-container *ngFor=\\"let option of options; let index = index\\">
+      <ng-container *ngFor=\\"let option of options; index as index\\">
         <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
@@ -2581,7 +2667,7 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         <button class=\\"button\\" (click)=\\"node_0_button($event)\\">Submit</button>
       </ng-container>
       <ng-container
-        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
+        *ngFor=\\"let review of reviews; index as index; trackBy: trackByReview0\\"
       >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
@@ -2638,8 +2724,8 @@ export default class SmileReviews {
   snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
-  node_0_button = (event) => {
-    event.preventDefault();
+  node_0_button = (ev) => {
+    ev.preventDefault();
     this.showReviewPrompt = false;
   };
   trackByReview0(index, review) {
@@ -3318,7 +3404,7 @@ import { Component } from \\"@angular/core\\";
       <input
         class=\\"input\\"
         [attr.value]=\\"name\\"
-        (change)=\\"name = $event.target.value\\"
+        (input)=\\"name = $event.target.value\\"
       />
     </div>
   \`,
@@ -3359,7 +3445,7 @@ import { Component } from \\"@angular/core\\";
       <input
         class=\\"input\\"
         [attr.value]=\\"name\\"
-        (change)=\\"name = $event.target.value\\"
+        (input)=\\"name = $event.target.value\\"
       />
     </div>
   \`,
@@ -3447,8 +3533,13 @@ import { Component } from \\"@angular/core\\";
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
-    <div class=\\"test2 test div\\">
-      Hello! I can run in React, Vue, Solid, or Liquid!
+    <div>
+      <my-comp class=\\"test\\" className=\\"test2\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </my-comp>
+      <div class=\\"test2 test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
     </div>
   \`,
   styles: [
@@ -3466,7 +3557,7 @@ export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
-  imports: [CommonModule],
+  imports: [CommonModule, MyCompModule],
   exports: [MyBasicComponent],
 })
 export class MyBasicComponentModule {}
@@ -3797,7 +3888,7 @@ const defaultProps = {
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\" #elRef1>
+        <button type=\\"button\\" (click)=\\"this.onClick.emit()\\" #elRef1>
           {{buttonText}}
         </button>
       </ng-container>
@@ -4201,50 +4292,6 @@ export default class MyComponent {
   exports: [MyComponent],
 })
 export class MyComponentModule {}
-"
-`;
-
-exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > eventInputAndChange 1`] = `
-"import { NgModule } from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
-
-import { Component } from \\"@angular/core\\";
-
-@Component({
-  selector: \\"event-input-and-change\\",
-  template: \`
-    <div>
-      <input
-        class=\\"input\\"
-        [attr.value]=\\"name\\"
-        (input)=\\"name = $event.target.value\\"
-        (change)=\\"name = $event.target.value\\"
-      />
-
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
-  \`,
-  styles: [
-    \`
-      :host {
-        display: contents;
-      }
-      .input {
-        color: red;
-      }
-    \`,
-  ],
-})
-export default class EventInputAndChange {
-  name = \\"Steve\\";
-}
-
-@NgModule({
-  declarations: [EventInputAndChange],
-  imports: [CommonModule],
-  exports: [EventInputAndChange],
-})
-export class EventInputAndChangeModule {}
 "
 `;
 
@@ -4861,6 +4908,40 @@ export class OnInitModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > onInitPlain 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"on-init-plain\\",
+  template: \`
+    <div></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class OnInitPlain {
+  ngOnInit() {
+    console.log(\\"onInit\\");
+  }
+}
+
+@NgModule({
+  declarations: [OnInitPlain],
+  imports: [CommonModule],
+  exports: [OnInitPlain],
+})
+export class OnInitPlainModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > onMount 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -5042,8 +5123,8 @@ import { Component } from \\"@angular/core\\";
     <div>
       <input
         [attr.value]=\\"name\\"
-        (change)=\\"name = $event.target.value\\"
-        (changeOrSomething)=\\"name = $event.target.value\\"
+        (input)=\\"name = $event.target.value\\"
+        (changeorsomething)=\\"name = $event.target.value\\"
       />
 
       Hello! I can run in React, Vue, Solid, or Liquid!
@@ -5325,7 +5406,7 @@ import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
       </ng-container>
       <ng-container *ngIf=\\"node_1_Show\\">
         <ng-container
-          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
+          *ngFor=\\"let data of repeatItemData; index as index; trackBy: trackByData0\\"
         >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
@@ -5922,6 +6003,18 @@ import { Component, Input } from \\"@angular/core\\";
         <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">
+          <div>complete</div>
+        </ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
+        <ng-container *ngIf=\\"conditionC === 'Complete'\\">dff</ng-container>
+        <ng-container *ngIf=\\"!(conditionC === 'Complete')\\">
+          <div>complete else</div>
+        </ng-container>
+      </ng-container>
     </div>
   \`,
   styles: [
@@ -5935,6 +6028,7 @@ import { Component, Input } from \\"@angular/core\\";
 export default class ShowWithOtherValues {
   @Input() conditionA;
   @Input() conditionB;
+  @Input() conditionC;
 }
 
 @NgModule({
@@ -5957,7 +6051,7 @@ import { Component, Input } from \\"@angular/core\\";
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
       <ng-container
-        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
+        *ngFor=\\"let item of items; index as idx; trackBy: trackByItem0\\"
       >
         <div>{{item}}</div>
       </ng-container>
@@ -6416,6 +6510,46 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > store-async-function 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"string-literal-store\\",
+  template: \`
+    <div></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class StringLiteralStore {
+  arrowFunction = async function arrowFunction() {
+    return Promise.resolve();
+  };
+  namedFunction = async function namedFunction() {
+    return Promise.resolve();
+  };
+  fetchUsers = async function fetchUsers() {
+    return Promise.resolve();
+  };
+}
+
+@NgModule({
+  declarations: [StringLiteralStore],
+  imports: [CommonModule],
+  exports: [StringLiteralStore],
+})
+export class StringLiteralStoreModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > string-literal-store 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -6760,6 +6894,80 @@ export class TypeDependencyModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > typeExternalStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"type-external-store\\",
+  template: \`
+    <div>Hello {{_name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeExternalStore {
+  _name = \\"test\\";
+}
+
+@NgModule({
+  declarations: [TypeExternalStore],
+  imports: [CommonModule],
+  exports: [TypeExternalStore],
+})
+export class TypeExternalStoreModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > typeGetterStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"type-getter-store\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeGetterStore {
+  name = \\"test\\";
+  getName() {
+    if (this.name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return this.name;
+  }
+  get test() {
+    return \\"test\\";
+  }
+}
+
+@NgModule({
+  declarations: [TypeGetterStore],
+  imports: [CommonModule],
+  exports: [TypeGetterStore],
+})
+export class TypeGetterStoreModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > use-style 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7007,9 +7215,12 @@ export default class UseTargetComponent {
     return prefix + \\"foo\\";
   }
   lastName = \\"bar\\";
+  foo = \\"bar\\";
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
+      console.log(this.foo);
+      this.foo = \\"bar\\";
     }
   }
 }
@@ -7095,6 +7306,92 @@ export class MyBasicComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > Advanced 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, SimpleChanges } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-show-component\\",
+  template: \`
+    <main>
+      <ng-container *ngFor=\\"let person of names; index as i\\">
+        <div>{{i}} : {{person}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names\\">
+        <span>{{person}}</span>
+      </ng-container>
+      <ng-container *ngFor=\\"let _ of names\\"><br /></ng-container>
+      <ng-container
+        *ngFor=\\"let _ of Array.from({
+          length: 10
+        }); index as ee\\"
+      >
+        <pre>{{ee}}</pre>
+      </ng-container>
+      <ng-container *ngFor=\\"let _ of node_0_For\\">
+        <p>{{index}}</p>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as index\\">
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as count\\"
+      >
+        <span>{{person}} {{count}}</span>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as i\\">
+        <span>{{person}} {{i}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as index\\"
+      >
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+    </main>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicForShowComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+  node_0_For = null;
+
+  ngOnInit() {
+    this.node_0_For = Array.from({
+      length: 10,
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_For = Array.from({
+        length: 10,
+      });
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicForShowComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForShowComponent],
+})
+export class MyBasicForShowComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > AdvancedRef 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7122,7 +7419,7 @@ export interface Props {
             #inputRef
             [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
-            (change)=\\"name = $event.target.value\\"
+            (input)=\\"name = $event.target.value\\"
           />
           <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
           <select name=\\"cars\\" id=\\"cars\\">
@@ -7204,10 +7501,10 @@ export const DEFAULT_VALUES = {
     <div class=\\"test div\\">
       <input
         [attr.value]=\\"DEFAULT_VALUES.name || name\\"
-        (change)=\\"name = $event.target.value\\"
+        (input)=\\"name = $event.target.value\\"
       />
 
-      Hello! I can run in React, Vue, Solid, or Liquid!
+      Hello! I can run in React, Vue, Solid, or Liquid! &gt;
     </div>
   \`,
   styles: [
@@ -7228,8 +7525,8 @@ export default class MyBasicComponent {
   underscore_fn_name() {
     return \\"bar\\";
   }
-  age = 1;
-  sports = [\\"\\"];
+  age: number = 1;
+  sports: Array<string> = [\\"\\"];
 }
 
 @NgModule({
@@ -7253,7 +7550,7 @@ import { Component } from \\"@angular/core\\";
     <div>
       <ng-container *ngFor=\\"let person of names\\">
         <ng-container *ngIf=\\"person === name\\">
-          <input [attr.value]=\\"name\\" (change)=\\"node_0_input($event, person)\\" />
+          <input [attr.value]=\\"name\\" (input)=\\"node_0_input($event, person)\\" />
 
           Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
           Solid, or Liquid!
@@ -7301,7 +7598,7 @@ import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
     <div>
       {{node_0_div}} Hello! I can run in React, Vue, Solid, or Liquid!
 
-      <input (change)=\\"onChange\\" />
+      <input (input)=\\"onChange\\" />
     </div>
   \`,
   styles: [
@@ -7629,7 +7926,7 @@ import { Component } from \\"@angular/core\\";
     <div>
       <ng-container *ngFor=\\"let person of names\\">
         <ng-container>
-          <input [attr.value]=\\"name\\" (change)=\\"node_0_input($event, person)\\" />
+          <input [attr.value]=\\"name\\" (input)=\\"node_0_input($event, person)\\" />
 
           Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
           Solid, or Liquid!
@@ -7696,7 +7993,7 @@ export interface Props {
             #inputRef
             [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
-            (change)=\\"name = $event.target.value\\"
+            (input)=\\"name = $event.target.value\\"
           />
           <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
           <select name=\\"cars\\" id=\\"cars\\">
@@ -7770,7 +8067,7 @@ export interface Props {
 @Component({
   selector: \\"my-basic-ref-assignment-component\\",
   template: \`
-    <div><button (click)=\\"handlerClick($event)\\">Click</button></div>
+    <div><button (click)=\\"await handlerClick($event)\\">Click</button></div>
   \`,
   styles: [
     \`
@@ -8005,7 +8302,7 @@ export interface ColumnProps {
   selector: \\"column\\",
   template: \`
     <div class=\\"builder-columns div\\">
-      <ng-container *ngFor=\\"let column of columns; let index = index\\">
+      <ng-container *ngFor=\\"let column of columns; index as index\\">
         <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
       </ng-container>
     </div>
@@ -8507,34 +8804,34 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
+          *ngFor=\\"let block of builderBlock?.children; index as index; trackBy: trackByBlock0\\"
         >
-          <BuilderBlockComponent
+          <builder-block-component
             [block]=\\"block\\"
             [index]=\\"index\\"
-          ></BuilderBlockComponent>
+          ></builder-block-component>
         </ng-container>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'error'\\">
-        <BuilderBlocks
+        <builder-blocks
           dataPath=\\"errorMessage\\"
           [blocks]=\\"errorMessage!\\"
-        ></BuilderBlocks>
+        ></builder-blocks>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'sending'\\">
-        <BuilderBlocks
+        <builder-blocks
           dataPath=\\"sendingMessage\\"
           [blocks]=\\"sendingMessage!\\"
-        ></BuilderBlocks>
+        ></builder-blocks>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'error' && responseData\\">
         <pre class=\\"builder-form-error-text pre\\">{{node_1_div}}</pre>
       </ng-container>
       <ng-container *ngIf=\\"submissionState === 'success'\\">
-        <BuilderBlocks
+        <builder-blocks
           dataPath=\\"successMessage\\"
           [blocks]=\\"successMessage!\\"
-        ></BuilderBlocks>
+        ></builder-blocks>
       </ng-container>
     </form>
   \`,
@@ -9030,7 +9327,7 @@ import { Component } from \\"@angular/core\\";
   selector: \\"img-state-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
+      <ng-container *ngFor=\\"let item of images; index as itemIndex\\">
         <ng-container>
           <img class=\\"custom-class\\" [attr.src]=\\"item\\" />
         </ng-container>
@@ -9226,7 +9523,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.value]=\\"value\\"
       [attr.defaultValue]=\\"defaultValue\\"
       [attr.required]=\\"required\\"
-      (change)=\\"onChange?.($event.target.value)\\"
+      (input)=\\"onChange?.($event.target.value)\\"
       #elRef0
     />
   \`,
@@ -9650,7 +9947,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.name]=\\"name\\"
       #elRef0
     >
-      <ng-container *ngFor=\\"let option of options; let index = index\\">
+      <ng-container *ngFor=\\"let option of options; index as index\\">
         <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
@@ -9915,7 +10212,7 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         <button class=\\"button\\" (click)=\\"node_0_button($event)\\">Submit</button>
       </ng-container>
       <ng-container
-        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
+        *ngFor=\\"let review of reviews; index as index; trackBy: trackByReview0\\"
       >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
@@ -9972,8 +10269,8 @@ export default class SmileReviews {
   snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
-  node_0_button = (event) => {
-    event.preventDefault();
+  node_0_button = (ev) => {
+    ev.preventDefault();
     this.showReviewPrompt = false;
   };
   trackByReview0(index, review) {
@@ -10711,7 +11008,7 @@ export interface Props {
       <input
         class=\\"input\\"
         [attr.value]=\\"name\\"
-        (change)=\\"name = $event.target.value\\"
+        (input)=\\"name = $event.target.value\\"
       />
     </div>
   \`,
@@ -10757,7 +11054,7 @@ export interface Props {
       <input
         class=\\"input\\"
         [attr.value]=\\"name\\"
-        (change)=\\"name = $event.target.value\\"
+        (input)=\\"name = $event.target.value\\"
       />
     </div>
   \`,
@@ -10845,8 +11142,13 @@ import { Component } from \\"@angular/core\\";
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
-    <div class=\\"test2 test div\\">
-      Hello! I can run in React, Vue, Solid, or Liquid!
+    <div>
+      <my-comp class=\\"test\\" className=\\"test2\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </my-comp>
+      <div class=\\"test2 test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
     </div>
   \`,
   styles: [
@@ -10864,7 +11166,7 @@ export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
-  imports: [CommonModule],
+  imports: [CommonModule, MyCompModule],
   exports: [MyBasicComponent],
 })
 export class MyBasicComponentModule {}
@@ -11220,7 +11522,7 @@ const defaultProps = {
         </a>
       </ng-container>
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\" #elRef1>
+        <button type=\\"button\\" (click)=\\"this.onClick.emit()\\" #elRef1>
           {{buttonText}}
         </button>
       </ng-container>
@@ -11640,50 +11942,6 @@ export default class MyComponent {
   exports: [MyComponent],
 })
 export class MyComponentModule {}
-"
-`;
-
-exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > eventInputAndChange 1`] = `
-"import { NgModule } from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
-
-import { Component } from \\"@angular/core\\";
-
-@Component({
-  selector: \\"event-input-and-change\\",
-  template: \`
-    <div>
-      <input
-        class=\\"input\\"
-        [attr.value]=\\"name\\"
-        (input)=\\"name = $event.target.value\\"
-        (change)=\\"name = $event.target.value\\"
-      />
-
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
-  \`,
-  styles: [
-    \`
-      :host {
-        display: contents;
-      }
-      .input {
-        color: red;
-      }
-    \`,
-  ],
-})
-export default class EventInputAndChange {
-  name = \\"Steve\\";
-}
-
-@NgModule({
-  declarations: [EventInputAndChange],
-  imports: [CommonModule],
-  exports: [EventInputAndChange],
-})
-export class EventInputAndChangeModule {}
 "
 `;
 
@@ -12326,6 +12584,40 @@ export class OnInitModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > onInitPlain 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"on-init-plain\\",
+  template: \`
+    <div></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class OnInitPlain {
+  ngOnInit() {
+    console.log(\\"onInit\\");
+  }
+}
+
+@NgModule({
+  declarations: [OnInitPlain],
+  imports: [CommonModule],
+  exports: [OnInitPlain],
+})
+export class OnInitPlainModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > onMount 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -12511,8 +12803,8 @@ import { Component } from \\"@angular/core\\";
     <div>
       <input
         [attr.value]=\\"name\\"
-        (change)=\\"name = $event.target.value\\"
-        (changeOrSomething)=\\"name = $event.target.value\\"
+        (input)=\\"name = $event.target.value\\"
+        (changeorsomething)=\\"name = $event.target.value\\"
       />
 
       Hello! I can run in React, Vue, Solid, or Liquid!
@@ -12845,7 +13137,7 @@ import type { RepeatData } from \\"./types.js\\";
       </ng-container>
       <ng-container *ngIf=\\"node_1_Show\\">
         <ng-container
-          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
+          *ngFor=\\"let data of repeatItemData; index as index; trackBy: trackByData0\\"
         >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
@@ -13467,6 +13759,18 @@ interface Props {
         <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">
+          <div>complete</div>
+        </ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
+        <ng-container *ngIf=\\"conditionC === 'Complete'\\">dff</ng-container>
+        <ng-container *ngIf=\\"!(conditionC === 'Complete')\\">
+          <div>complete else</div>
+        </ng-container>
+      </ng-container>
     </div>
   \`,
   styles: [
@@ -13480,6 +13784,7 @@ interface Props {
 export default class ShowWithOtherValues {
   @Input() conditionA!: Props[\\"conditionA\\"];
   @Input() conditionB!: Props[\\"conditionB\\"];
+  @Input() conditionC!: Props[\\"conditionC\\"];
 }
 
 @NgModule({
@@ -13507,7 +13812,7 @@ interface Props {
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
       <ng-container
-        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
+        *ngFor=\\"let item of items; index as idx; trackBy: trackByItem0\\"
       >
         <div>{{item}}</div>
       </ng-container>
@@ -13990,6 +14295,46 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > store-async-function 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"string-literal-store\\",
+  template: \`
+    <div></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class StringLiteralStore {
+  arrowFunction = async function arrowFunction() {
+    return Promise.resolve();
+  };
+  namedFunction = async function namedFunction() {
+    return Promise.resolve();
+  };
+  fetchUsers = async function fetchUsers() {
+    return Promise.resolve();
+  };
+}
+
+@NgModule({
+  declarations: [StringLiteralStore],
+  imports: [CommonModule],
+  exports: [StringLiteralStore],
+})
+export class StringLiteralStoreModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > string-literal-store 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -14341,6 +14686,88 @@ export class TypeDependencyModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > typeExternalStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+import { FooStore } from \\"./foo-store\\";
+
+@Component({
+  selector: \\"type-external-store\\",
+  template: \`
+    <div>Hello {{_name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeExternalStore {
+  _name: FooStore[\\"_name\\"] = \\"test\\";
+}
+
+@NgModule({
+  declarations: [TypeExternalStore],
+  imports: [CommonModule],
+  exports: [TypeExternalStore],
+})
+export class TypeExternalStoreModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > typeGetterStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+@Component({
+  selector: \\"type-getter-store\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeGetterStore {
+  name: GetterStore[\\"name\\"] = \\"test\\";
+  getName(): ReturnType<GetterStore[\\"getName\\"]> {
+    if (this.name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return this.name;
+  }
+  get test(): ReturnType<GetterStore[\\"test\\"]> {
+    return \\"test\\";
+  }
+}
+
+@NgModule({
+  declarations: [TypeGetterStore],
+  imports: [CommonModule],
+  exports: [TypeGetterStore],
+})
+export class TypeGetterStoreModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > use-style 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -14588,9 +15015,12 @@ export default class UseTargetComponent {
     return prefix + \\"foo\\";
   }
   lastName = \\"bar\\";
+  foo = \\"bar\\";
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
+      console.log(this.foo);
+      this.foo = \\"bar\\";
     }
   }
 }
@@ -14654,7 +15084,7 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-component\\",
   template: \`
     <div>
-      <input (change)=\\"name = $event.target.value\\" [attr.value]=\\"name\\" />
+      <input (input)=\\"name = $event.target.value\\" [attr.value]=\\"name\\" />
 
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
@@ -14694,19 +15124,19 @@ import { Component } from \\"@angular/core\\";
         type=\\"radio\\"
         value=\\"Plain\\"
         [attr.checked]=\\"tortilla === 'Plain'\\"
-        (change)=\\"tortilla = $event.target.value\\"
+        (input)=\\"tortilla = $event.target.value\\"
       />
       <input
         type=\\"radio\\"
         value=\\"Whole wheat\\"
         [attr.checked]=\\"tortilla === 'Whole wheat'\\"
-        (change)=\\"tortilla = $event.target.value\\"
+        (input)=\\"tortilla = $event.target.value\\"
       />
       <input
         type=\\"radio\\"
         value=\\"Spinach\\"
         [attr.checked]=\\"tortilla === 'Spinach'\\"
-        (change)=\\"tortilla = $event.target.value\\"
+        (input)=\\"tortilla = $event.target.value\\"
       />
       <br />
       <br />
@@ -14714,24 +15144,24 @@ import { Component } from \\"@angular/core\\";
         type=\\"checkbox\\"
         value=\\"Rice\\"
         [attr.checked]=\\"fillings === 'Rice'\\"
-        (change)=\\"fillings = $event.target.value\\"
+        (input)=\\"fillings = $event.target.value\\"
       />
       <input
         type=\\"checkbox\\"
         value=\\"Beans\\"
         [attr.checked]=\\"fillings === 'Beans'\\"
-        (change)=\\"fillings = $event.target.value\\"
+        (input)=\\"fillings = $event.target.value\\"
       />
       <input
         type=\\"checkbox\\"
         value=\\"Cheese\\"
         [attr.checked]=\\"fillings === 'Cheese'\\"
-        (change)=\\"fillings = $event.target.value\\"
+        (input)=\\"fillings = $event.target.value\\"
       />
       <input
         type=\\"checkbox\\"
         [attr.checked]=\\"node_0_input\\"
-        (change)=\\"fillings = $event.target.value\\"
+        (input)=\\"fillings = $event.target.value\\"
         [attr.value]=\\"node_1_input\\"
       />
       <p>Tortilla: {{tortilla}}</p>
@@ -15166,16 +15596,8 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-component\\",
   template: \`
     <div>
-      <input
-        type=\\"number\\"
-        (change)=\\"a = $event.target.value\\"
-        [attr.value]=\\"a\\"
-      />
-      <input
-        type=\\"number\\"
-        (change)=\\"b = $event.target.value\\"
-        [attr.value]=\\"b\\"
-      />
+      <input type=\\"number\\" (input)=\\"a = $event.target.value\\" [attr.value]=\\"a\\" />
+      <input type=\\"number\\" (input)=\\"b = $event.target.value\\" [attr.value]=\\"b\\" />
 
       Result: {{result}}
     </div>
@@ -15331,7 +15753,7 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-component\\",
   template: \`
     <div>
-      <input (change)=\\"name = $event.target.value\\" [attr.value]=\\"name\\" />
+      <input (input)=\\"name = $event.target.value\\" [attr.value]=\\"name\\" />
 
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
@@ -15371,19 +15793,19 @@ import { Component, SimpleChanges } from \\"@angular/core\\";
         type=\\"radio\\"
         value=\\"Plain\\"
         [attr.checked]=\\"tortilla === 'Plain'\\"
-        (change)=\\"tortilla = $event.target.value\\"
+        (input)=\\"tortilla = $event.target.value\\"
       />
       <input
         type=\\"radio\\"
         value=\\"Whole wheat\\"
         [attr.checked]=\\"tortilla === 'Whole wheat'\\"
-        (change)=\\"tortilla = $event.target.value\\"
+        (input)=\\"tortilla = $event.target.value\\"
       />
       <input
         type=\\"radio\\"
         value=\\"Spinach\\"
         [attr.checked]=\\"tortilla === 'Spinach'\\"
-        (change)=\\"tortilla = $event.target.value\\"
+        (input)=\\"tortilla = $event.target.value\\"
       />
       <br />
       <br />
@@ -15391,24 +15813,24 @@ import { Component, SimpleChanges } from \\"@angular/core\\";
         type=\\"checkbox\\"
         value=\\"Rice\\"
         [attr.checked]=\\"fillings === 'Rice'\\"
-        (change)=\\"fillings = $event.target.value\\"
+        (input)=\\"fillings = $event.target.value\\"
       />
       <input
         type=\\"checkbox\\"
         value=\\"Beans\\"
         [attr.checked]=\\"fillings === 'Beans'\\"
-        (change)=\\"fillings = $event.target.value\\"
+        (input)=\\"fillings = $event.target.value\\"
       />
       <input
         type=\\"checkbox\\"
         value=\\"Cheese\\"
         [attr.checked]=\\"fillings === 'Cheese'\\"
-        (change)=\\"fillings = $event.target.value\\"
+        (input)=\\"fillings = $event.target.value\\"
       />
       <input
         type=\\"checkbox\\"
         [attr.checked]=\\"node_0_input\\"
-        (change)=\\"fillings = $event.target.value\\"
+        (input)=\\"fillings = $event.target.value\\"
         [attr.value]=\\"node_1_input\\"
       />
       <p>Tortilla: {{tortilla}}</p>
@@ -15843,16 +16265,8 @@ import { Component, SimpleChanges } from \\"@angular/core\\";
   selector: \\"my-component\\",
   template: \`
     <div>
-      <input
-        type=\\"number\\"
-        (change)=\\"a = $event.target.value\\"
-        [attr.value]=\\"a\\"
-      />
-      <input
-        type=\\"number\\"
-        (change)=\\"b = $event.target.value\\"
-        [attr.value]=\\"b\\"
-      />
+      <input type=\\"number\\" (input)=\\"a = $event.target.value\\" [attr.value]=\\"a\\" />
+      <input type=\\"number\\" (input)=\\"b = $event.target.value\\" [attr.value]=\\"b\\" />
 
       Result: {{result}}
     </div>

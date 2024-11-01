@@ -9,6 +9,22 @@ import { transformAttributeName } from './helpers';
 
 const { types } = babel;
 
+const getBodyExpression = (node: babel.types.Node) => {
+  if (types.isArrowFunctionExpression(node) || types.isFunctionExpression(node)) {
+    const callback = node.body;
+    if (callback.type === 'BlockStatement') {
+      for (const statement of callback.body) {
+        if (statement.type === 'ReturnStatement') {
+          return statement.argument;
+        }
+      }
+    } else {
+      return callback;
+    }
+  }
+  return undefined;
+};
+
 const getForArguments = (params: any[]): ForNode['scope'] => {
   const [forName, indexName, collectionName] = params
     .filter((param): param is babel.types.Identifier => types.isIdentifier(param))
@@ -29,9 +45,10 @@ export const jsxElementToJson = (
   node: babel.types.Expression | babel.types.JSX,
 ): MitosisNode | null => {
   if (types.isJSXText(node)) {
+    const value = typeof node.extra?.raw === 'string' ? node.extra.raw : node.value;
     return createMitosisNode({
       properties: {
-        _text: node.value,
+        _text: value,
       },
     });
   }
@@ -44,22 +61,63 @@ export const jsxElementToJson = (
     return jsxElementToJson(node.expression as any);
   }
 
-  if (types.isCallExpression(node) || types.isOptionalCallExpression(node)) {
-    const callback = node.arguments[0];
-    if (types.isArrowFunctionExpression(callback)) {
-      if (types.isIdentifier(callback.params[0])) {
-        const forArguments = getForArguments(callback.params);
+  if (
+    (types.isCallExpression(node) || types.isOptionalCallExpression(node)) &&
+    (node.callee.type === 'MemberExpression' || node.callee.type === 'OptionalMemberExpression')
+  ) {
+    const isMap = node.callee.property.type === 'Identifier' && node.callee.property.name === 'map';
+    const isArrayFrom =
+      node.callee.property.type === 'Identifier' &&
+      node.callee.property.name === 'from' &&
+      node.callee.object.type === 'Identifier' &&
+      node.callee.object.name === 'Array';
+    if (isMap) {
+      const callback = node.arguments[0];
+      const bodyExpression = getBodyExpression(callback);
+      if (bodyExpression) {
+        const forArguments = getForArguments(
+          (callback as babel.types.ArrowFunctionExpression | babel.types.FunctionExpression).params,
+        );
         return createMitosisNode({
           name: 'For',
           bindings: {
             each: createSingleBinding({
-              code: generate(node.callee)
-                .code // Remove .map or potentially ?.map
-                .replace(/\??\.map$/, ''),
+              code: generate(node.callee.object, {
+                compact: true,
+              }).code,
             }),
           },
           scope: forArguments,
-          children: [jsxElementToJson(callback.body as any)!],
+          children: [jsxElementToJson(bodyExpression)!],
+        });
+      }
+    } else if (isArrayFrom) {
+      // Array.from
+      const each = node.arguments[0];
+      const callback = node.arguments[1];
+      const bodyExpression = getBodyExpression(callback);
+      if (bodyExpression) {
+        const forArguments = getForArguments(
+          (callback as babel.types.ArrowFunctionExpression | babel.types.FunctionExpression).params,
+        );
+
+        return createMitosisNode({
+          name: 'For',
+          bindings: {
+            each: createSingleBinding({
+              code: generate(
+                {
+                  ...node,
+                  arguments: [each],
+                },
+                {
+                  compact: true,
+                },
+              ).code,
+            }),
+          },
+          scope: forArguments,
+          children: [jsxElementToJson(bodyExpression)!],
         });
       }
     }
@@ -69,7 +127,11 @@ export const jsxElementToJson = (
       return createMitosisNode({
         name: 'Show',
         bindings: {
-          when: createSingleBinding({ code: generate(node.left).code! }),
+          when: createSingleBinding({
+            code: generate(node.left, {
+              compact: true,
+            }).code!,
+          }),
         },
         children: [jsxElementToJson(node.right as any)!],
       });
@@ -85,7 +147,7 @@ export const jsxElementToJson = (
         else: jsxElementToJson(node.alternate as any),
       },
       bindings: {
-        when: createSingleBinding({ code: generate(node.test).code }),
+        when: createSingleBinding({ code: generate(node.test, { compact: true }).code }),
       },
       children: child === null ? [] : [child],
     });
@@ -115,7 +177,7 @@ export const jsxElementToJson = (
   if (!types.isJSXElement(node)) {
     return createMitosisNode({
       bindings: {
-        _text: createSingleBinding({ code: generate(node).code }),
+        _text: createSingleBinding({ code: generate(node, { compact: true }).code }),
       },
     });
   }
@@ -133,7 +195,7 @@ export const jsxElementToJson = (
 
     const whenValue =
       whenAttr && types.isJSXExpressionContainer(whenAttr.value)
-        ? generate(whenAttr.value.expression).code
+        ? generate(whenAttr.value.expression, { compact: true }).code
         : undefined;
 
     const elseValue =
@@ -166,7 +228,7 @@ export const jsxElementToJson = (
 
         const forCode = pipe(node.openingElement.attributes[0], (attr) => {
           if (types.isJSXAttribute(attr) && types.isJSXExpressionContainer(attr.value)) {
-            return generate(attr.value.expression).code;
+            return generate(attr.value.expression, { compact: true }).code;
           } else {
             // TO-DO: is an empty string valid here?
             return '';
@@ -227,8 +289,10 @@ export const jsxElementToJson = (
             : [];
 
           memo.bindings[key] = createSingleBinding({
-            code: generate(expression.body).code,
+            code: generate(expression.body, { compact: true }).code,
+            async: expression.async === true ? true : undefined,
             arguments: args.length ? args : undefined,
+            bindingType: 'function',
           });
         } else if (types.isJSXElement(expression)) {
           // <Foo myProp={<MoreMitosisNode><div /></MoreMitosisNode>} />
@@ -238,9 +302,13 @@ export const jsxElementToJson = (
           memo.slots[key] = [slotNode];
 
           // Temporarily keep the slot as a binding until we migrate generators to use the slots.
-          memo.bindings[key] = createSingleBinding({ code: generate(expression).code });
+          memo.bindings[key] = createSingleBinding({
+            code: generate(expression, { compact: true }).code,
+          });
         } else {
-          memo.bindings[key] = createSingleBinding({ code: generate(expression).code });
+          memo.bindings[key] = createSingleBinding({
+            code: generate(expression, { compact: true }).code,
+          });
         }
 
         return memo;
@@ -249,10 +317,10 @@ export const jsxElementToJson = (
         // too so can do this accurately when order matters. Also tempting to not support spread,
         // as some frameworks do not support it (e.g. Angular) tho Angular may be the only one
 
-        const { code: key } = generate(item.argument);
+        const { code: key } = generate(item.argument, { compact: true });
 
         memo.bindings[key] = {
-          code: types.stringLiteral(generate(item.argument).code).value,
+          code: types.stringLiteral(generate(item.argument, { compact: true }).code).value,
           type: 'spread',
           spreadType: 'normal',
         };

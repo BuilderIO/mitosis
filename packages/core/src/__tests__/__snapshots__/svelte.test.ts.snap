@@ -1,5 +1,50 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Svelte > jsx > Javascript Test > Advanced 1`] = `
+"<script>
+  let name = \\"PatrickJS\\";
+  let names = [\\"Steve\\", \\"PatrickJS\\"];
+</script>
+
+<main>
+  {#each names as person, i}
+    <div>{i}: {person}</div>
+  {/each}
+
+  {#each names as person}
+    <span>{person}</span>
+  {/each}
+
+  {#each names as item}
+    <br />
+  {/each}
+
+  {#each Array.from({ length: 10 }) as _, ee}
+    <pre>{ee}</pre>
+  {/each}
+
+  {#each Array.from({ length: 10 }) as item}
+    <p>{index}</p>
+  {/each}
+
+  {#each names as person, index}
+    <span>{person}{index}</span>
+  {/each}
+
+  {#each Array.from({ length: 10 }) as person, count}
+    <span>{person}{count}</span>
+  {/each}
+
+  {#each names as person, i}
+    <span>{person}{i}</span>
+  {/each}
+
+  {#each Array.from({ length: 10 }) as person, index}
+    <span>{person}{index}</span>
+  {/each}
+</main>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > AdvancedRef 1`] = `
 "<script>
   export let showInput;
@@ -74,7 +119,7 @@ exports[`Svelte > jsx > Javascript Test > Basic 1`] = `
       name = myEvent.target.value;
     }}
   />
-  Hello! I can run in React, Vue, Solid, or Liquid!
+  Hello! I can run in React, Vue, Solid, or Liquid! &gt;
 </div>
 
 <style>
@@ -316,8 +361,8 @@ exports[`Svelte > jsx > Javascript Test > BasicRefAssignment 1`] = `
 
 <div>
   <button
-    on:click={(evt) => {
-      handlerClick(evt);
+    on:click={async (evt) => {
+      await handlerClick(evt);
     }}>Click</button
   >
 </div>"
@@ -1299,8 +1344,8 @@ exports[`Svelte > jsx > Javascript Test > Stamped.io 1`] = `
     <textarea placeholder=\\"How was your experience?\\" class=\\"textarea\\" />
     <button
       class=\\"button\\"
-      on:click={(event) => {
-        event.preventDefault();
+      on:click={(ev) => {
+        ev.preventDefault();
         showReviewPrompt = false;
       }}
     >
@@ -1532,8 +1577,17 @@ exports[`Svelte > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > class + ClassName + css 1`] = `
-"<div class=\\"test2 test div\\">
-  Hello! I can run in React, Vue, Solid, or Liquid!
+"<script>
+  import MyComp from \\"./my-component.svelte\\";
+</script>
+
+<div>
+  <MyComp class=\\"test\\" className=\\"test2\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </MyComp>
+  <div class=\\"test2 test div\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
 </div>
 
 <style>
@@ -1700,7 +1754,7 @@ exports[`Svelte > jsx > Javascript Test > defaultProps 1`] = `
       type=\\"button\\"
       {...attributes}
       on:click={(event) => {
-        onClick(event);
+        onClick();
       }}>{buttonText}</button
     >
   {/if}
@@ -1985,6 +2039,14 @@ exports[`Svelte > jsx > Javascript Test > onInit 1`] = `
 </script>
 
 <div>Default name defined by parent {name}</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > onInitPlain 1`] = `
+"<script>
+  console.log(\\"onInit\\");
+</script>
+
+<div />"
 `;
 
 exports[`Svelte > jsx > Javascript Test > onMount 1`] = `
@@ -2476,6 +2538,7 @@ exports[`Svelte > jsx > Javascript Test > showExpressions 1`] = `
 "<script>
   export let conditionA;
   export let conditionB;
+  export let conditionC;
 </script>
 
 <div>
@@ -2547,6 +2610,19 @@ exports[`Svelte > jsx > Javascript Test > showExpressions 1`] = `
     {/if}
   {:else}
     4mb
+  {/if}
+  {#if conditionA === \\"Default\\"}
+    {#if conditionB === \\"Complete\\"}
+      <div>complete</div>
+    {:else}
+      9mb
+    {/if}
+  {:else}
+    {#if conditionC === \\"Complete\\"}
+      dff
+    {:else}
+      <div>complete else</div>
+    {/if}
   {/if}
 </div>"
 `;
@@ -2644,6 +2720,24 @@ exports[`Svelte > jsx > Javascript Test > spreadNestedProps 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > spreadProps 1`] = `"<input {...$$props} />"`;
+
+exports[`Svelte > jsx > Javascript Test > store-async-function 1`] = `
+"<script>
+  async function arrowFunction() {
+    return Promise.resolve();
+  }
+
+  async function namedFunction() {
+    return Promise.resolve();
+  }
+
+  async function fetchUsers() {
+    return Promise.resolve();
+  }
+</script>
+
+<div />"
+`;
 
 exports[`Svelte > jsx > Javascript Test > string-literal-store 1`] = `
 "<script>
@@ -2750,6 +2844,33 @@ exports[`Svelte > jsx > Javascript Test > typeDependency 1`] = `
 <div>{foo}</div>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > typeExternalStore 1`] = `
+"<script>
+  let _name = \\"test\\";
+</script>
+
+<div>Hello {_name}!</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > typeGetterStore 1`] = `
+"<script>
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+  $: test = () => {
+    return \\"test\\";
+  };
+
+  let name = \\"test\\";
+</script>
+
+<div>Hello {name}!</div>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > use-style 1`] = `
 "<button type=\\"button\\">Button</button>
 
@@ -2802,8 +2923,12 @@ exports[`Svelte > jsx > Javascript Test > useTarget 1`] = `
   };
 
   let lastName = \\"bar\\";
+  let foo = \\"bar\\";
 
-  onMount(() => {});
+  onMount(() => {
+    console.log(foo);
+    foo = \\"bar\\";
+  });
 </script>
 
 <div>{name()}</div>"
@@ -2834,6 +2959,51 @@ exports[`Svelte > jsx > Remove Internal mitosis package 1`] = `
 </script>
 
 <div>Hello {name}! I can run in React, Qwik, Vue, Solid, or Liquid!</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > Advanced 1`] = `
+"<script lang=\\"ts\\">
+  let name = \\"PatrickJS\\";
+  let names = [\\"Steve\\", \\"PatrickJS\\"];
+</script>
+
+<main>
+  {#each names as person, i}
+    <div>{i}: {person}</div>
+  {/each}
+
+  {#each names as person}
+    <span>{person}</span>
+  {/each}
+
+  {#each names as item}
+    <br />
+  {/each}
+
+  {#each Array.from({ length: 10 }) as _, ee}
+    <pre>{ee}</pre>
+  {/each}
+
+  {#each Array.from({ length: 10 }) as item}
+    <p>{index}</p>
+  {/each}
+
+  {#each names as person, index}
+    <span>{person}{index}</span>
+  {/each}
+
+  {#each Array.from({ length: 10 }) as person, count}
+    <span>{person}{count}</span>
+  {/each}
+
+  {#each names as person, i}
+    <span>{person}{i}</span>
+  {/each}
+
+  {#each Array.from({ length: 10 }) as person, index}
+    <span>{person}{index}</span>
+  {/each}
+</main>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > AdvancedRef 1`] = `
@@ -2922,7 +3092,7 @@ exports[`Svelte > jsx > Typescript Test > Basic 1`] = `
       name = myEvent.target.value;
     }}
   />
-  Hello! I can run in React, Vue, Solid, or Liquid!
+  Hello! I can run in React, Vue, Solid, or Liquid! &gt;
 </div>
 
 <style>
@@ -3195,8 +3365,8 @@ exports[`Svelte > jsx > Typescript Test > BasicRefAssignment 1`] = `
 
 <div>
   <button
-    on:click={(evt) => {
-      handlerClick(evt);
+    on:click={async (evt) => {
+      await handlerClick(evt);
     }}>Click</button
   >
 </div>"
@@ -4410,8 +4580,8 @@ exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
     <textarea placeholder=\\"How was your experience?\\" class=\\"textarea\\" />
     <button
       class=\\"button\\"
-      on:click={(event) => {
-        event.preventDefault();
+      on:click={(ev) => {
+        ev.preventDefault();
         showReviewPrompt = false;
       }}
     >
@@ -4713,10 +4883,16 @@ exports[`Svelte > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 
 exports[`Svelte > jsx > Typescript Test > class + ClassName + css 1`] = `
 "<script lang=\\"ts\\">
+  import MyComp from \\"./my-component.svelte\\";
 </script>
 
-<div class=\\"test2 test div\\">
-  Hello! I can run in React, Vue, Solid, or Liquid!
+<div>
+  <MyComp class=\\"test\\" className=\\"test2\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </MyComp>
+  <div class=\\"test2 test div\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
 </div>
 
 <style>
@@ -4923,7 +5099,7 @@ exports[`Svelte > jsx > Typescript Test > defaultProps 1`] = `
       type=\\"button\\"
       {...attributes}
       on:click={(event) => {
-        onClick(event);
+        onClick();
       }}>{buttonText}</button
     >
   {/if}
@@ -5256,6 +5432,14 @@ exports[`Svelte > jsx > Typescript Test > onInit 1`] = `
 </script>
 
 <div>Default name defined by parent {name}</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > onInitPlain 1`] = `
+"<script lang=\\"ts\\">
+  console.log(\\"onInit\\");
+</script>
+
+<div />"
 `;
 
 exports[`Svelte > jsx > Typescript Test > onMount 1`] = `
@@ -5854,6 +6038,7 @@ exports[`Svelte > jsx > Typescript Test > showExpressions 1`] = `
 <script lang=\\"ts\\">
   export let conditionA: Props[\\"conditionA\\"];
   export let conditionB: Props[\\"conditionB\\"];
+  export let conditionC: Props[\\"conditionC\\"];
 </script>
 
 <div>
@@ -5925,6 +6110,19 @@ exports[`Svelte > jsx > Typescript Test > showExpressions 1`] = `
     {/if}
   {:else}
     4mb
+  {/if}
+  {#if conditionA === \\"Default\\"}
+    {#if conditionB === \\"Complete\\"}
+      <div>complete</div>
+    {:else}
+      9mb
+    {/if}
+  {:else}
+    {#if conditionC === \\"Complete\\"}
+      dff
+    {:else}
+      <div>complete else</div>
+    {/if}
   {/if}
 </div>"
 `;
@@ -6065,6 +6263,24 @@ exports[`Svelte > jsx > Typescript Test > spreadProps 1`] = `
 <input {...$$props} />"
 `;
 
+exports[`Svelte > jsx > Typescript Test > store-async-function 1`] = `
+"<script lang=\\"ts\\">
+  async function arrowFunction() {
+    return Promise.resolve();
+  }
+
+  async function namedFunction() {
+    return Promise.resolve();
+  }
+
+  async function fetchUsers() {
+    return Promise.resolve();
+  }
+</script>
+
+<div />"
+`;
+
 exports[`Svelte > jsx > Typescript Test > string-literal-store 1`] = `
 "<script lang=\\"ts\\">
   let foo = 123;
@@ -6183,6 +6399,43 @@ exports[`Svelte > jsx > Typescript Test > typeDependency 1`] = `
 <div>{foo}</div>"
 `;
 
+exports[`Svelte > jsx > Typescript Test > typeExternalStore 1`] = `
+"<script lang=\\"ts\\">
+  import { FooStore } from \\"./foo-store\\";
+
+  let _name = \\"test\\";
+</script>
+
+<div>Hello {_name}!</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > typeGetterStore 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type GetterStore = {
+    getName: () => string;
+    name: string;
+    get test(): string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+  $: test = () => {
+    return \\"test\\";
+  };
+
+  let name = \\"test\\";
+</script>
+
+<div>Hello {name}!</div>"
+`;
+
 exports[`Svelte > jsx > Typescript Test > use-style 1`] = `
 "<script lang=\\"ts\\">
 </script>
@@ -6244,8 +6497,12 @@ exports[`Svelte > jsx > Typescript Test > useTarget 1`] = `
   };
 
   let lastName = \\"bar\\";
+  let foo = \\"bar\\";
 
-  onMount(() => {});
+  onMount(() => {
+    console.log(foo);
+    foo = \\"bar\\";
+  });
 </script>
 
 <div>{name()}</div>"

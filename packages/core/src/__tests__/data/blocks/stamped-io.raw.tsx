@@ -43,8 +43,8 @@ export default function SmileReviews(props: SmileReviewsProps) {
         <textarea css={{ display: 'block' }} placeholder="How was your experience?" />
         <button
           css={{ display: 'block' }}
-          onClick={(event) => {
-            event.preventDefault();
+          onClick={(ev) => {
+            ev.preventDefault();
             state.showReviewPrompt = false;
           }}
         >

@@ -79,7 +79,7 @@ const getActionBindingsFromBlock = (
   const actionKeys = Object.keys(actions);
   if (actionKeys.length) {
     for (const key of actionKeys) {
-      const value = actions[key];
+      let value = actions[key];
       // Skip empty values
       if (!value.trim()) {
         continue;
@@ -90,7 +90,16 @@ const getActionBindingsFromBlock = (
         continue;
       }
       const useKey = `on${upperFirst(key)}`;
-      bindings[useKey] = createSingleBinding({ code: `${wrapBindingIfNeeded(value, options)}` });
+      const asyncPrefix = `(async () =>`;
+      const asyncSuffix = ')()';
+      const isAsync = value.startsWith(asyncPrefix) && value.endsWith(asyncSuffix);
+      if (isAsync) {
+        value = value.slice(asyncPrefix.length, -asyncSuffix.length);
+      }
+      bindings[useKey] = createSingleBinding({
+        code: `${wrapBindingIfNeeded(value, options)}`,
+        async: isAsync ? true : undefined,
+      });
     }
   }
 
@@ -351,6 +360,51 @@ const componentMappers: {
         }),
       ) || [];
 
+    return node;
+  },
+  PersonalizationContainer(block, options) {
+    const node = builderElementToMitosisNode(block, options, {
+      skipMapper: true,
+    });
+
+    delete node.bindings.variants;
+    delete node.properties.variants;
+
+    const newChildren: MitosisNode[] =
+      block.component?.options.variants?.map((variant: any) => {
+        const variantNode = createMitosisNode({
+          name: 'Variant',
+          properties: {
+            name: variant.name,
+            startDate: variant.startDate,
+            endDate: variant.endDate,
+          },
+          meta: getMetaFromBlock(block, options),
+          children: variant.blocks.map((col: any) => builderElementToMitosisNode(col, options)),
+        });
+        const queryOptions = variant.query as any[];
+        if (Array.isArray(queryOptions)) {
+          variantNode.bindings.query = createSingleBinding({
+            code: JSON.stringify(queryOptions.map((q) => omit(q, '@type'))),
+          });
+        } else if (queryOptions) {
+          variantNode.bindings.query = createSingleBinding({
+            code: JSON.stringify(omit(queryOptions, '@type')),
+          });
+        }
+        return variantNode;
+      }) || [];
+
+    const defaultVariant = createMitosisNode({
+      name: 'Variant',
+      properties: {
+        default: '',
+      },
+      children: node.children,
+    });
+    newChildren.push(defaultVariant);
+
+    node.children = newChildren;
     return node;
   },
   'Shopify:For': (block, options) => {

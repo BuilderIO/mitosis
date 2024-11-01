@@ -1,3 +1,5 @@
+import { ToMitosisOptions } from '@/generators/mitosis/types';
+import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -6,25 +8,21 @@ import {
 } from '@/modules/plugins';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import { HOOKS } from '../constants/hooks';
-import { SELF_CLOSING_HTML_TAGS } from '../constants/html_tags';
-import { dedent } from '../helpers/dedent';
-import { fastClone } from '../helpers/fast-clone';
-import { getComponents } from '../helpers/get-components';
-import { getRefs } from '../helpers/get-refs';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { isRootTextNode } from '../helpers/is-root-text-node';
-import { mapRefs } from '../helpers/map-refs';
-import { renderPreComponent } from '../helpers/render-imports';
-import { checkHasState } from '../helpers/state';
-import { MitosisComponent } from '../types/mitosis-component';
-import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-import { blockToReact, componentToReact } from './react';
-
-export interface ToMitosisOptions extends BaseTranspilerOptions {
-  format: 'react' | 'legacy';
-}
+import { HOOKS } from '../../constants/hooks';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
+import { dedent } from '../../helpers/dedent';
+import { fastClone } from '../../helpers/fast-clone';
+import { getComponents } from '../../helpers/get-components';
+import { getRefs } from '../../helpers/get-refs';
+import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
+import { isRootTextNode } from '../../helpers/is-root-text-node';
+import { mapRefs } from '../../helpers/map-refs';
+import { renderPreComponent } from '../../helpers/render-imports';
+import { checkHasState } from '../../helpers/state';
+import { MitosisComponent } from '../../types/mitosis-component';
+import { MitosisNode, checkIsForNode, checkIsShowNode } from '../../types/mitosis-node';
+import { TranspilerGenerator } from '../../types/transpiler';
+import { blockToReact, componentToReact } from '../react';
 
 export const DEFAULT_FORMAT: ToMitosisOptions['format'] = 'legacy';
 
@@ -37,6 +35,7 @@ export const blockToMitosis = (
   json: MitosisNode,
   toMitosisOptions: Partial<ToMitosisOptions> = {},
   component: MitosisComponent,
+  insideJsx: boolean,
 ): string => {
   const options: ToMitosisOptions = {
     format: DEFAULT_FORMAT,
@@ -53,26 +52,74 @@ export const blockToMitosis = (
         prettier: options.prettier,
       },
       component,
-      true,
+      insideJsx,
     );
+  }
+
+  if (checkIsShowNode(json)) {
+    const when = json.bindings.when?.code;
+    const elseCase = json.meta.else as MitosisNode;
+    if (options.nativeConditionals) {
+      const needsWrapper = json.children.length !== 1;
+
+      const renderChildren = `${needsWrapper ? '<>' : ''}
+        ${json.children
+          .map((child) => blockToMitosis(child, options, component, needsWrapper))
+          .join('\n')}
+    ${needsWrapper ? '</>' : ''}`;
+
+      const renderElse =
+        elseCase && isMitosisNode(elseCase)
+          ? blockToMitosis(elseCase, options, component, false)
+          : 'null';
+      return `${insideJsx ? '{' : ''}(${when}) ? ${renderChildren} : ${renderElse}${
+        insideJsx ? '}' : ''
+      }`;
+    } else {
+      const elseHandler = elseCase
+        ? ` else={${blockToMitosis(elseCase, options, component, false)}}`
+        : '';
+      return `<Show when={${when}}${elseHandler}>
+  ${json.children.map((child) => blockToMitosis(child, options, component, true)).join('\n')}
+</Show>`;
+    }
   }
 
   if (checkIsForNode(json)) {
     const needsWrapper = json.children.length !== 1;
-    return `<For each={${json.bindings.each?.code}}>
-    {(${json.scope.forName}, ${json.scope.indexName || 'index'}) =>
+    if (options.nativeLoops) {
+      const a = `${insideJsx ? '{' : ''}(${json.bindings.each?.code}).map(
+      (${json.scope.forName || '_'}, ${json.scope.indexName || 'index'}) => (
       ${needsWrapper ? '<>' : ''}
-        ${json.children.map((child) => blockToMitosis(child, options, component))}}
+        ${json.children
+          .map((child) => blockToMitosis(child, options, component, needsWrapper))
+          .join('\n')}
+      ${needsWrapper ? '</>' : ''}
+      ))${insideJsx ? '}' : ''}`;
+      return a;
+    }
+    return `<For each={${json.bindings.each?.code}}>
+    {(${json.scope.forName || '_'}, ${json.scope.indexName || 'index'}) =>
+      ${needsWrapper ? '<>' : ''}
+        ${json.children.map((child) => blockToMitosis(child, options, component, needsWrapper))}}
       ${needsWrapper ? '</>' : ''}
     </For>`;
   }
 
   if (json.properties._text) {
-    return json.properties._text as string;
+    if (insideJsx) {
+      return `${json.properties._text}`;
+    } else {
+      return `<>${json.properties._text}</>`;
+    }
   }
 
   if (json.bindings._text?.code) {
-    return `{${json.bindings._text?.code}}`;
+    if (insideJsx) {
+      return `{${json.bindings._text.code}}`;
+    } else {
+      return `${json.bindings._text.code}`;
+    }
   }
 
   let str = '';
@@ -91,10 +138,16 @@ export const blockToMitosis = (
   for (const key in json.bindings) {
     const value = json.bindings[key]?.code as string;
 
+    if (json.slots?.[key]) {
+      continue;
+    }
+
     if (json.bindings[key]?.type === 'spread') {
       str += ` {...(${json.bindings[key]?.code})} `;
     } else if (key.startsWith('on')) {
-      str += ` ${key}={event => ${value.replace(/\s*;$/, '')}} `;
+      const { arguments: cusArgs = ['event'], async } = json.bindings[key]!;
+      const asyncKeyword = async ? 'async ' : '';
+      str += ` ${key}={${asyncKeyword}(${cusArgs.join(',')}) => ${value.replace(/\s*;$/, '')}} `;
     } else {
       if (!isValidAttributeName(key)) {
         console.warn('Skipping invalid attribute name:', key);
@@ -103,6 +156,22 @@ export const blockToMitosis = (
       }
     }
   }
+
+  for (const key in json.slots) {
+    const value = json.slots[key];
+    str += ` ${key}={`;
+    if (value.length > 1) {
+      str += '<>';
+    }
+    str += json.slots[key]
+      .map((item) => blockToMitosis(item, options, component, insideJsx))
+      .join('\n');
+    if (value.length > 1) {
+      str += '</>';
+    }
+    str += `}`;
+  }
+
   if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
     return str + ' />';
   }
@@ -113,8 +182,9 @@ export const blockToMitosis = (
     return str;
   }
   str += '>';
+
   if (json.children) {
-    str += json.children.map((item) => blockToMitosis(item, options, component)).join('\n');
+    str += json.children.map((item) => blockToMitosis(item, options, component, true)).join('\n');
   }
 
   str += `</${json.name}>`;
@@ -172,6 +242,13 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
     const addWrapper = json.children.length !== 1 || isRootTextNode(json);
 
     const components = Array.from(getComponents(json));
+    const mitosisCoreComponents: string[] = [];
+    if (!options.nativeConditionals) {
+      mitosisCoreComponents.push('Show');
+    }
+    if (!options.nativeLoops) {
+      mitosisCoreComponents.push('For');
+    }
 
     const mitosisComponents = components.filter((item) => mitosisCoreComponents.includes(item));
     const otherComponents = components.filter((item) => !mitosisCoreComponents.includes(item));
@@ -220,9 +297,11 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
 
       ${json.style ? `useStyle(\`${json.style}\`)` : ''}
 
-      return (${addWrapper ? '<>' : ''}
-        ${json.children.map((item) => blockToMitosis(item, options, component)).join('\n')}
-        ${addWrapper ? '</>' : ''})
+      return ${options.returnArray ? '[' : '('}${addWrapper ? '<>' : ''}
+        ${json.children
+          .map((item) => blockToMitosis(item, options, component, addWrapper))
+          .join('\n')}
+        ${addWrapper ? '</>' : ''}${options.returnArray ? ']' : ')'}
     }
 
   `;
@@ -239,7 +318,9 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
           ],
         });
       } catch (err) {
-        console.error('Format error for file:', str, JSON.stringify(json, null, 2));
+        if (process.env.NODE_ENV !== 'test') {
+          console.error('Format error for file:', str, JSON.stringify(json, null, 2));
+        }
         throw err;
       }
     }

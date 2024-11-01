@@ -1,5 +1,278 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Html > jsx > Javascript Test > Advanced 1`] = `
+"<main>
+  <template data-el=\\"for\\">
+    <div>
+      <template data-el=\\"div-1\\"><!-- i --></template>
+      :
+      <template data-el=\\"div-2\\"><!-- person --></template>
+    </div>
+  </template>
+
+  <template data-el=\\"for-2\\">
+    <span>
+      <template data-el=\\"div-3\\"><!-- person --></template>
+    </span>
+  </template>
+
+  <template data-el=\\"for-3\\"><br /></template>
+
+  <template data-el=\\"for-4\\">
+    <pre><template data-el=\\"div-4\\"><!-- ee --></template></pre>
+  </template>
+
+  <template data-el=\\"for-5\\">
+    <p>
+      <template data-el=\\"div-5\\"><!-- index --></template>
+    </p>
+  </template>
+
+  <template data-el=\\"for-6\\">
+    <span>
+      <template data-el=\\"div-6\\"><!-- person --></template>
+      <template data-el=\\"div-7\\"><!-- index --></template>
+    </span>
+  </template>
+
+  <template data-el=\\"for-7\\">
+    <span>
+      <template data-el=\\"div-8\\"><!-- person --></template>
+      <template data-el=\\"div-9\\"><!-- count --></template>
+    </span>
+  </template>
+
+  <template data-el=\\"for-8\\">
+    <span>
+      <template data-el=\\"div-10\\"><!-- person --></template>
+      <template data-el=\\"div-11\\"><!-- i --></template>
+    </span>
+  </template>
+
+  <template data-el=\\"for-9\\">
+    <span>
+      <template data-el=\\"div-12\\"><!-- person --></template>
+      <template data-el=\\"div-13\\"><!-- index --></template>
+    </span>
+  </template>
+</main>
+<script>
+  (() => {
+    const state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
+        let array = state.names;
+        renderLoop(el, array, \\"person\\", \\"i\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        const i = getScope(el, \\"i\\");
+        renderTextNode(el, i);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        const person = getScope(el, \\"person\\");
+        renderTextNode(el, person);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-2']\\").forEach((el) => {
+        let array = state.names;
+        renderLoop(el, array, \\"person\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
+        const person = getScope(el, \\"person\\");
+        renderTextNode(el, person);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-3']\\").forEach((el) => {
+        let array = state.names;
+        renderLoop(el, array, \\"item\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='for-4']\\").forEach((el) => {
+        let array = Array.from({
+          length: 10,
+        });
+        renderLoop(el, array, \\"_\\", \\"ee\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-4']\\").forEach((el) => {
+        const ee = getScope(el, \\"ee\\");
+        renderTextNode(el, ee);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-5']\\").forEach((el) => {
+        let array = Array.from({
+          length: 10,
+        });
+        renderLoop(el, array, \\"item\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-5']\\").forEach((el) => {
+        renderTextNode(el, index);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-6']\\").forEach((el) => {
+        let array = state.names;
+        renderLoop(el, array, \\"person\\", \\"index\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-6']\\").forEach((el) => {
+        const person = getScope(el, \\"person\\");
+        renderTextNode(el, person);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-7']\\").forEach((el) => {
+        const index = getScope(el, \\"index\\");
+        renderTextNode(el, index);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-7']\\").forEach((el) => {
+        let array = Array.from({
+          length: 10,
+        });
+        renderLoop(el, array, \\"person\\", \\"count\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-8']\\").forEach((el) => {
+        const person = getScope(el, \\"person\\");
+        renderTextNode(el, person);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-9']\\").forEach((el) => {
+        const count = getScope(el, \\"count\\");
+        renderTextNode(el, count);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-8']\\").forEach((el) => {
+        let array = state.names;
+        renderLoop(el, array, \\"person\\", \\"i\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-10']\\").forEach((el) => {
+        const person = getScope(el, \\"person\\");
+        renderTextNode(el, person);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-11']\\").forEach((el) => {
+        const i = getScope(el, \\"i\\");
+        renderTextNode(el, i);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-9']\\").forEach((el) => {
+        let array = Array.from({
+          length: 10,
+        });
+        renderLoop(el, array, \\"person\\", \\"index\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-12']\\").forEach((el) => {
+        const person = getScope(el, \\"person\\");
+        renderTextNode(el, person);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-13']\\").forEach((el) => {
+        const index = getScope(el, \\"index\\");
+        renderTextNode(el, index);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
+    // Helper to render loops
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
+      for (let [index, value] of array.entries()) {
+        const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
+        children.forEach((child) => {
+          if (itemName !== undefined) {
+            scope[itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            scope[itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            scope[collectionName] = array;
+          }
+          child.scope = scope;
+          if (template.context) {
+            child.context = template.context;
+          }
+          this.nodesToDestroy.push(child);
+          collection.unshift(child);
+        });
+        collection.forEach((child) => template.after(child));
+      }
+    }
+
+    function getScope(el, name) {
+      do {
+        let value = el?.scope?.[name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > AdvancedRef 1`] = `
 "<div>
   <template data-el=\\"show\\">
@@ -143,7 +416,7 @@ exports[`Html > jsx > Javascript Test > Basic 1`] = `
 "<div class=\\"test div\\">
   <input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 
-  Hello! I can run in React, Vue, Solid, or Liquid!
+  Hello! I can run in React, Vue, Solid, or Liquid! &gt;
 </div>
 <style>
   .div {
@@ -1109,8 +1382,8 @@ exports[`Html > jsx > Javascript Test > BasicRefAssignment 1`] = `
     }
 
     // Event handler for 'click' event on button-1
-    function onButton1Click(evt) {
-      state.handlerClick(evt);
+    async function onButton1Click(evt) {
+      await state.handlerClick(evt);
     }
 
     // Update with initial state on first load
@@ -2882,8 +3155,8 @@ exports[`Html > jsx > Javascript Test > Stamped.io 1`] = `
     }
 
     // Event handler for 'click' event on button-2
-    function onButton2Click(event) {
-      event.preventDefault();
+    function onButton2Click(ev) {
+      ev.preventDefault();
       state.showReviewPrompt = false;
       update();
     }
@@ -3610,8 +3883,13 @@ exports[`Html > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 `;
 
 exports[`Html > jsx > Javascript Test > class + ClassName + css 1`] = `
-"<div class=\\"test2 test div\\">
-  Hello! I can run in React, Vue, Solid, or Liquid!
+"<div>
+  <MyComp class=\\"test\\" className=\\"test2\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </MyComp>
+  <div class=\\"test2 test div\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
 </div>
 <style>
   .div {
@@ -3931,7 +4209,7 @@ exports[`Html > jsx > Javascript Test > defaultProps 1`] = `
 
     // Event handler for 'click' event on button-1
     function onButton1Click(event) {
-      props.onClick(event);
+      props.onClick();
     }
 
     // Update with initial state on first load
@@ -4612,6 +4890,11 @@ exports[`Html > jsx > Javascript Test > onInit 1`] = `
     }
   })();
 </script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > onInitPlain 1`] = `
+"<div></div>
 "
 `;
 
@@ -5747,6 +6030,9 @@ exports[`Html > jsx > Javascript Test > showExpressions 1`] = `
   <template data-el=\\"show-15\\">
     <template data-el=\\"show-16\\">20mb</template>
   </template>
+  <template data-el=\\"show-17\\">
+    <template data-el=\\"show-18\\"><div>complete</div></template>
+  </template>
 </div>
 <script>
   (() => {
@@ -5881,6 +6167,20 @@ exports[`Html > jsx > Javascript Test > showExpressions 1`] = `
       });
 
       document.querySelectorAll(\\"[data-el='show-16']\\").forEach((el) => {
+        const whenCondition = props.conditionB === \\"Complete\\";
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-17']\\").forEach((el) => {
+        const whenCondition = props.conditionA === \\"Default\\";
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-18']\\").forEach((el) => {
         const whenCondition = props.conditionB === \\"Complete\\";
         if (whenCondition) {
           showContent(el);
@@ -6350,6 +6650,11 @@ exports[`Html > jsx > Javascript Test > spreadProps 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > store-async-function 1`] = `
+"<div></div>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > string-literal-store 1`] = `
 "<div>
   <template data-el=\\"div-1\\"><!-- state.foo --></template>
@@ -6707,6 +7012,134 @@ exports[`Html > jsx > Javascript Test > typeDependency 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > typeExternalStore 1`] = `
+"<div>
+  Hello
+  <template data-el=\\"div-1\\"><!-- state._name --></template>
+  !
+</div>
+<script>
+  (() => {
+    const state = { _name: \\"test\\" };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state._name);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > typeGetterStore 1`] = `
+"<div>
+  Hello
+  <template data-el=\\"div-1\\"><!-- state.name --></template>
+  !
+</div>
+<script>
+  (() => {
+    const state = {
+      name: \\"test\\",
+      getName() {
+        if (state.name === \\"a\\") {
+          return \\"b\\";
+        }
+
+        return state.name;
+      },
+      get test() {
+        return \\"test\\";
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.name);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > use-style 1`] = `
 "<button type=\\"button\\">Button</button>
 <style>
@@ -6761,6 +7194,7 @@ exports[`Html > jsx > Javascript Test > useTarget 1`] = `
         return prefix + \\"foo\\";
       },
       lastName: \\"bar\\",
+      foo: \\"bar\\",
     };
 
     let context = null;
@@ -6795,6 +7229,9 @@ exports[`Html > jsx > Javascript Test > useTarget 1`] = `
     update();
 
     // onMount
+    console.log(state.foo);
+    state.foo = \\"bar\\";
+    update();
 
     // Helper text DOM nodes
     function renderTextNode(el, text) {
@@ -6874,6 +7311,279 @@ exports[`Html > jsx > Remove Internal mitosis package 1`] = `
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > Advanced 1`] = `
+"<main>
+  <template data-el=\\"for\\">
+    <div>
+      <template data-el=\\"div-1\\"><!-- i --></template>
+      :
+      <template data-el=\\"div-2\\"><!-- person --></template>
+    </div>
+  </template>
+
+  <template data-el=\\"for-2\\">
+    <span>
+      <template data-el=\\"div-3\\"><!-- person --></template>
+    </span>
+  </template>
+
+  <template data-el=\\"for-3\\"><br /></template>
+
+  <template data-el=\\"for-4\\">
+    <pre><template data-el=\\"div-4\\"><!-- ee --></template></pre>
+  </template>
+
+  <template data-el=\\"for-5\\">
+    <p>
+      <template data-el=\\"div-5\\"><!-- index --></template>
+    </p>
+  </template>
+
+  <template data-el=\\"for-6\\">
+    <span>
+      <template data-el=\\"div-6\\"><!-- person --></template>
+      <template data-el=\\"div-7\\"><!-- index --></template>
+    </span>
+  </template>
+
+  <template data-el=\\"for-7\\">
+    <span>
+      <template data-el=\\"div-8\\"><!-- person --></template>
+      <template data-el=\\"div-9\\"><!-- count --></template>
+    </span>
+  </template>
+
+  <template data-el=\\"for-8\\">
+    <span>
+      <template data-el=\\"div-10\\"><!-- person --></template>
+      <template data-el=\\"div-11\\"><!-- i --></template>
+    </span>
+  </template>
+
+  <template data-el=\\"for-9\\">
+    <span>
+      <template data-el=\\"div-12\\"><!-- person --></template>
+      <template data-el=\\"div-13\\"><!-- index --></template>
+    </span>
+  </template>
+</main>
+<script>
+  (() => {
+    const state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
+        let array = state.names;
+        renderLoop(el, array, \\"person\\", \\"i\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        const i = getScope(el, \\"i\\");
+        renderTextNode(el, i);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        const person = getScope(el, \\"person\\");
+        renderTextNode(el, person);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-2']\\").forEach((el) => {
+        let array = state.names;
+        renderLoop(el, array, \\"person\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
+        const person = getScope(el, \\"person\\");
+        renderTextNode(el, person);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-3']\\").forEach((el) => {
+        let array = state.names;
+        renderLoop(el, array, \\"item\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='for-4']\\").forEach((el) => {
+        let array = Array.from({
+          length: 10,
+        });
+        renderLoop(el, array, \\"_\\", \\"ee\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-4']\\").forEach((el) => {
+        const ee = getScope(el, \\"ee\\");
+        renderTextNode(el, ee);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-5']\\").forEach((el) => {
+        let array = Array.from({
+          length: 10,
+        });
+        renderLoop(el, array, \\"item\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-5']\\").forEach((el) => {
+        renderTextNode(el, index);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-6']\\").forEach((el) => {
+        let array = state.names;
+        renderLoop(el, array, \\"person\\", \\"index\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-6']\\").forEach((el) => {
+        const person = getScope(el, \\"person\\");
+        renderTextNode(el, person);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-7']\\").forEach((el) => {
+        const index = getScope(el, \\"index\\");
+        renderTextNode(el, index);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-7']\\").forEach((el) => {
+        let array = Array.from({
+          length: 10,
+        });
+        renderLoop(el, array, \\"person\\", \\"count\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-8']\\").forEach((el) => {
+        const person = getScope(el, \\"person\\");
+        renderTextNode(el, person);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-9']\\").forEach((el) => {
+        const count = getScope(el, \\"count\\");
+        renderTextNode(el, count);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-8']\\").forEach((el) => {
+        let array = state.names;
+        renderLoop(el, array, \\"person\\", \\"i\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-10']\\").forEach((el) => {
+        const person = getScope(el, \\"person\\");
+        renderTextNode(el, person);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-11']\\").forEach((el) => {
+        const i = getScope(el, \\"i\\");
+        renderTextNode(el, i);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-9']\\").forEach((el) => {
+        let array = Array.from({
+          length: 10,
+        });
+        renderLoop(el, array, \\"person\\", \\"index\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-12']\\").forEach((el) => {
+        const person = getScope(el, \\"person\\");
+        renderTextNode(el, person);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-13']\\").forEach((el) => {
+        const index = getScope(el, \\"index\\");
+        renderTextNode(el, index);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
+    // Helper to render loops
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
+      for (let [index, value] of array.entries()) {
+        const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
+        children.forEach((child) => {
+          if (itemName !== undefined) {
+            scope[itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            scope[itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            scope[collectionName] = array;
+          }
+          child.scope = scope;
+          if (template.context) {
+            child.context = template.context;
+          }
+          this.nodesToDestroy.push(child);
+          collection.unshift(child);
+        });
+        collection.forEach((child) => template.after(child));
+      }
+    }
+
+    function getScope(el, name) {
+      do {
+        let value = el?.scope?.[name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
     }
   })();
 </script>
@@ -7023,7 +7733,7 @@ exports[`Html > jsx > Typescript Test > Basic 1`] = `
 "<div class=\\"test div\\">
   <input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 
-  Hello! I can run in React, Vue, Solid, or Liquid!
+  Hello! I can run in React, Vue, Solid, or Liquid! &gt;
 </div>
 <style>
   .div {
@@ -7989,8 +8699,8 @@ exports[`Html > jsx > Typescript Test > BasicRefAssignment 1`] = `
     }
 
     // Event handler for 'click' event on button-1
-    function onButton1Click(evt) {
-      state.handlerClick(evt);
+    async function onButton1Click(evt) {
+      await state.handlerClick(evt);
     }
 
     // Update with initial state on first load
@@ -9762,8 +10472,8 @@ exports[`Html > jsx > Typescript Test > Stamped.io 1`] = `
     }
 
     // Event handler for 'click' event on button-2
-    function onButton2Click(event) {
-      event.preventDefault();
+    function onButton2Click(ev) {
+      ev.preventDefault();
       state.showReviewPrompt = false;
       update();
     }
@@ -10490,8 +11200,13 @@ exports[`Html > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 `;
 
 exports[`Html > jsx > Typescript Test > class + ClassName + css 1`] = `
-"<div class=\\"test2 test div\\">
-  Hello! I can run in React, Vue, Solid, or Liquid!
+"<div>
+  <MyComp class=\\"test\\" className=\\"test2\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </MyComp>
+  <div class=\\"test2 test div\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
 </div>
 <style>
   .div {
@@ -10811,7 +11526,7 @@ exports[`Html > jsx > Typescript Test > defaultProps 1`] = `
 
     // Event handler for 'click' event on button-1
     function onButton1Click(event) {
-      props.onClick(event);
+      props.onClick();
     }
 
     // Update with initial state on first load
@@ -11492,6 +12207,11 @@ exports[`Html > jsx > Typescript Test > onInit 1`] = `
     }
   })();
 </script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > onInitPlain 1`] = `
+"<div></div>
 "
 `;
 
@@ -12630,6 +13350,9 @@ exports[`Html > jsx > Typescript Test > showExpressions 1`] = `
   <template data-el=\\"show-15\\">
     <template data-el=\\"show-16\\">20mb</template>
   </template>
+  <template data-el=\\"show-17\\">
+    <template data-el=\\"show-18\\"><div>complete</div></template>
+  </template>
 </div>
 <script>
   (() => {
@@ -12764,6 +13487,20 @@ exports[`Html > jsx > Typescript Test > showExpressions 1`] = `
       });
 
       document.querySelectorAll(\\"[data-el='show-16']\\").forEach((el) => {
+        const whenCondition = props.conditionB === \\"Complete\\";
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-17']\\").forEach((el) => {
+        const whenCondition = props.conditionA === \\"Default\\";
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='show-18']\\").forEach((el) => {
         const whenCondition = props.conditionB === \\"Complete\\";
         if (whenCondition) {
           showContent(el);
@@ -13233,6 +13970,11 @@ exports[`Html > jsx > Typescript Test > spreadProps 1`] = `
 "
 `;
 
+exports[`Html > jsx > Typescript Test > store-async-function 1`] = `
+"<div></div>
+"
+`;
+
 exports[`Html > jsx > Typescript Test > string-literal-store 1`] = `
 "<div>
   <template data-el=\\"div-1\\"><!-- state.foo --></template>
@@ -13590,6 +14332,134 @@ exports[`Html > jsx > Typescript Test > typeDependency 1`] = `
 "
 `;
 
+exports[`Html > jsx > Typescript Test > typeExternalStore 1`] = `
+"<div>
+  Hello
+  <template data-el=\\"div-1\\"><!-- state._name --></template>
+  !
+</div>
+<script>
+  (() => {
+    const state = { _name: \\"test\\" };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state._name);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > typeGetterStore 1`] = `
+"<div>
+  Hello
+  <template data-el=\\"div-1\\"><!-- state.name --></template>
+  !
+</div>
+<script>
+  (() => {
+    const state = {
+      name: \\"test\\",
+      getName() {
+        if (state.name === \\"a\\") {
+          return \\"b\\";
+        }
+
+        return state.name;
+      },
+      get test() {
+        return \\"test\\";
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.name);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Typescript Test > use-style 1`] = `
 "<button type=\\"button\\">Button</button>
 <style>
@@ -13644,6 +14514,7 @@ exports[`Html > jsx > Typescript Test > useTarget 1`] = `
         return prefix + \\"foo\\";
       },
       lastName: \\"bar\\",
+      foo: \\"bar\\",
     };
 
     let context = null;
@@ -13678,6 +14549,9 @@ exports[`Html > jsx > Typescript Test > useTarget 1`] = `
     update();
 
     // onMount
+    console.log(state.foo);
+    state.foo = \\"bar\\";
+    update();
 
     // Helper text DOM nodes
     function renderTextNode(el, text) {

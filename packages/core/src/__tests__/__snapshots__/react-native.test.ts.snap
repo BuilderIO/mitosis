@@ -1,5 +1,76 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`React Native > Vaild react-native styles 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function MyBasicComponent(props) {
+  const [classState, setClassState] = useState(() => \\"testClassName\\");
+
+  return (
+    <View>
+      <View style={styles.view1}>
+        <Text>Hey world</Text>
+      </View>
+      <View style={styles.view2}>
+        <Text>Flex container</Text>
+      </View>
+      <View style={styles.view3}>
+        <Text>Testing unsupported properties</Text>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  view1: {
+    backgroundColor: \\"#971f1f\\",
+    paddingTop: 20,
+    paddingRight: 20,
+    paddingBottom: 20,
+    paddingLeft: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: \\"blue\\",
+    borderStyle: \\"solid\\",
+    fontSize: 16,
+    fontWeight: \\"bold\\",
+    fontFamily: \\"Arial\\",
+  },
+  view2: {
+    marginTop: 10,
+    marginRight: 15,
+    marginBottom: 10,
+    marginLeft: 15,
+    display: \\"flex\\",
+    flexDirection: \\"column\\",
+    alignItems: \\"center\\",
+    justifyContent: \\"space-between\\",
+    width: \\"100%\\",
+    height: 200,
+    color: \\"green\\",
+    fontSize: 20,
+  },
+  view3: { opacity: \\"0.8\\", transform: \\"scale(1.1)\\" },
+});
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > AdvancedRef 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -110,7 +181,7 @@ function MyBasicComponent(props) {
         value={DEFAULT_VALUES.name || name}
         onChange={(myEvent) => setName(myEvent.target.value)}
       />
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid! &gt;</Text>
     </View>
   );
 }
@@ -529,7 +600,7 @@ function MyBasicRefAssignmentComponent(props) {
 
   return (
     <View>
-      <Button onPress={(evt) => handlerClick(evt)}>
+      <Button onPress={async (evt) => await handlerClick(evt)}>
         <Text>Click</Text>
       </Button>
     </View>
@@ -1755,8 +1826,8 @@ function SmileReviews(props) {
           <TextInput placeholder=\\"Title\\" />
           <View placeholder=\\"How was your experience?\\" />
           <Button
-            onPress={(event) => {
-              event.preventDefault();
+            onPress={(ev) => {
+              ev.preventDefault();
               setShowReviewPrompt(false);
             }}
           >
@@ -2185,11 +2256,17 @@ import {
   Button,
   Linking,
 } from \\"react-native\\";
+import MyComp from \\"./my-component\\";
 
 function MyBasicComponent(props) {
   return (
-    <View style={styles.view1}>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    <View>
+      <MyComp>
+        <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      </MyComp>
+      <View style={styles.view1}>
+        <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      </View>
     </View>
   );
 }
@@ -2504,7 +2581,7 @@ function Button(props) {
         <Button
           type=\\"button\\"
           {...props.attributes}
-          onPress={(event) => props.onClick(event)}
+          onPress={(event) => props.onClick()}
         >
           <Text>{props.buttonText}</Text>
         </Button>
@@ -3157,6 +3234,37 @@ function OnInit(props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > onInitPlain 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useRef } from \\"react\\";
+
+function OnInitPlain(props) {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    console.log(\\"onInit\\");
+    hasInitialized.current = true;
+  }
+
+  return <View />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -4110,6 +4218,27 @@ function ShowWithOtherValues(props) {
           <Text>4mb</Text>
         </>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <>
+          {props.conditionB === \\"Complete\\" ? (
+            <View>
+              <Text>complete</Text>
+            </View>
+          ) : (
+            <>
+              <Text>9mb</Text>
+            </>
+          )}
+        </>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <>
+          <Text>dff</Text>
+        </>
+      ) : (
+        <View>
+          <Text>complete else</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -4372,6 +4501,42 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > store-async-function 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+
+function StringLiteralStore(props) {
+  async function arrowFunction() {
+    return Promise.resolve();
+  }
+
+  async function namedFunction() {
+    return Promise.resolve();
+  }
+
+  async function fetchUsers() {
+    return Promise.resolve();
+  }
+
+  return <View />;
+}
+
+export default StringLiteralStore;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > string-literal-store 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -4559,6 +4724,84 @@ export default TypeDependency;
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > typeExternalStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function TypeExternalStore(props) {
+  const [_name, set_name] = useState(() => \\"test\\");
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{_name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > typeGetterStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function TypeGetterStore(props) {
+  const [name, setName] = useState(() => \\"test\\");
+
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test() {
+    return \\"test\\";
+  }
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > use-style 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -4676,7 +4919,12 @@ function UseTargetComponent(props) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return (
     <View>
@@ -4874,9 +5122,9 @@ function MyBasicComponent(props: MyBasicComponentProps) {
     return \\"bar\\";
   }
 
-  const [age, setAge] = useState(() => 1);
+  const [age, setAge] = useState<number>(() => 1);
 
-  const [sports, setSports] = useState(() => [\\"\\"]);
+  const [sports, setSports] = useState<Array<string>>(() => [\\"\\"]);
 
   return (
     <View style={styles.view1}>
@@ -4884,7 +5132,7 @@ function MyBasicComponent(props: MyBasicComponentProps) {
         value={DEFAULT_VALUES.name || name}
         onChange={(myEvent) => setName(myEvent.target.value)}
       />
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid! &gt;</Text>
     </View>
   );
 }
@@ -5321,7 +5569,7 @@ function MyBasicRefAssignmentComponent(props: Props) {
 
   return (
     <View>
-      <Button onPress={(evt) => handlerClick(evt)}>
+      <Button onPress={async (evt) => await handlerClick(evt)}>
         <Text>Click</Text>
       </Button>
     </View>
@@ -6718,8 +6966,8 @@ function SmileReviews(props: SmileReviewsProps) {
           <TextInput placeholder=\\"Title\\" />
           <View placeholder=\\"How was your experience?\\" />
           <Button
-            onPress={(event) => {
-              event.preventDefault();
+            onPress={(ev) => {
+              ev.preventDefault();
               setShowReviewPrompt(false);
             }}
           >
@@ -7206,11 +7454,17 @@ import {
   Button,
   Linking,
 } from \\"react-native\\";
+import MyComp from \\"./my-component\\";
 
 function MyBasicComponent(props: any) {
   return (
-    <View style={styles.view1}>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    <View>
+      <MyComp>
+        <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      </MyComp>
+      <View style={styles.view1}>
+        <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      </View>
     </View>
   );
 }
@@ -7551,7 +7805,7 @@ function Button(props: ButtonProps) {
         <Button
           type=\\"button\\"
           {...props.attributes}
-          onPress={(event) => props.onClick(event)}
+          onPress={(event) => props.onClick()}
         >
           <Text>{props.buttonText}</Text>
         </Button>
@@ -8236,6 +8490,37 @@ function OnInit(props: Props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > onInitPlain 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useRef } from \\"react\\";
+
+function OnInitPlain(props: any) {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    console.log(\\"onInit\\");
+    hasInitialized.current = true;
+  }
+
+  return <View />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -9268,6 +9553,27 @@ function ShowWithOtherValues(props: Props) {
           <Text>4mb</Text>
         </>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <>
+          {props.conditionB === \\"Complete\\" ? (
+            <View>
+              <Text>complete</Text>
+            </View>
+          ) : (
+            <>
+              <Text>9mb</Text>
+            </>
+          )}
+        </>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <>
+          <Text>dff</Text>
+        </>
+      ) : (
+        <View>
+          <Text>complete else</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -9552,6 +9858,42 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`React Native > jsx > Typescript Test > store-async-function 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+
+function StringLiteralStore(props: any) {
+  async function arrowFunction() {
+    return Promise.resolve();
+  }
+
+  async function namedFunction() {
+    return Promise.resolve();
+  }
+
+  async function fetchUsers() {
+    return Promise.resolve();
+  }
+
+  return <View />;
+}
+
+export default StringLiteralStore;
+"
+`;
+
 exports[`React Native > jsx > Typescript Test > string-literal-store 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -9746,6 +10088,91 @@ export default TypeDependency;
 "
 `;
 
+exports[`React Native > jsx > Typescript Test > typeExternalStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+import { FooStore } from \\"./foo-store\\";
+
+function TypeExternalStore(props: any) {
+  const [_name, set_name] = useState<FooStore[\\"_name\\"]>(() => \\"test\\");
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{_name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > typeGetterStore 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+function TypeGetterStore(props: any) {
+  const [name, setName] = useState<GetterStore[\\"name\\"]>(() => \\"test\\");
+
+  function getName(): ReturnType<GetterStore[\\"getName\\"]> {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test(): ReturnType<GetterStore[\\"test\\"]> {
+    return \\"test\\";
+  }
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`React Native > jsx > Typescript Test > use-style 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -9863,7 +10290,12 @@ function UseTargetComponent(props: any) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return (
     <View>

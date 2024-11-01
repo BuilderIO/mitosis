@@ -88,7 +88,7 @@ function MyBasicComponent(props) {
           value={DEFAULT_VALUES.name || name}
           onChange={(myEvent) => setName(myEvent.target.value)}
         />
-        Hello! I can run in React, Vue, Solid, or Liquid!
+        Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
       <style jsx>{\`
         .div {
@@ -383,7 +383,7 @@ function MyBasicRefAssignmentComponent(props) {
 
   return (
     <div>
-      <button onClick={(evt) => handlerClick(evt)}>Click</button>
+      <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
     </div>
   );
 }
@@ -1387,8 +1387,8 @@ function SmileReviews(props) {
             />
             <button
               className=\\"button\\"
-              onClick={(event) => {
-                event.preventDefault();
+              onClick={(ev) => {
+                ev.preventDefault();
                 setShowReviewPrompt(false);
               }}
             >
@@ -1694,12 +1694,18 @@ export default MyBasicOnUpdateReturnComponent;
 
 exports[`RSC > jsx > Javascript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
+import MyComp from \\"./my-component\\";
 
 function MyBasicComponent(props) {
   return (
     <>
-      <div className=\\"test2 test div\\">
-        Hello! I can run in React, Vue, Solid, or Liquid!
+      <div>
+        <MyComp className=\\"test\\" className=\\"test2\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </MyComp>
+        <div className=\\"test2 test div\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </div>
       </div>
       <style jsx>{\`
         .div {
@@ -1924,7 +1930,7 @@ function Button(props) {
         <button
           type=\\"button\\"
           {...props.attributes}
-          onClick={(event) => props.onClick(event)}
+          onClick={(event) => props.onClick()}
         >
           {props.buttonText}
         </button>
@@ -2329,6 +2335,19 @@ export default OnInit;
 "
 `;
 
+exports[`RSC > jsx > Javascript Test > onInitPlain 1`] = `
+"import * as React from \\"react\\";
+
+function OnInitPlain(props) {
+  console.log(\\"onInit\\");
+
+  return <div />;
+}
+
+export default OnInitPlain;
+"
+`;
+
 exports[`RSC > jsx > Javascript Test > onMount 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -2699,6 +2718,13 @@ function ShowWithOtherValues(props) {
       ) : (
         <>4mb</>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <>{props.conditionB === \\"Complete\\" ? <div>complete</div> : <>9mb</>}</>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <>dff</>
+      ) : (
+        <div>complete else</div>
+      )}
     </div>
   );
 }
@@ -2824,6 +2850,27 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`RSC > jsx > Javascript Test > store-async-function 1`] = `
+"import * as React from \\"react\\";
+
+function StringLiteralStore(props) {
+  const arrowFunction = async function arrowFunction() {
+    return Promise.resolve();
+  };
+  const namedFunction = async function namedFunction() {
+    return Promise.resolve();
+  };
+  const fetchUsers = async function fetchUsers() {
+    return Promise.resolve();
+  };
+
+  return <div />;
+}
+
+export default StringLiteralStore;
+"
+`;
+
 exports[`RSC > jsx > Javascript Test > string-literal-store 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -2941,6 +2988,48 @@ export default TypeDependency;
 "
 `;
 
+exports[`RSC > jsx > Javascript Test > typeExternalStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function TypeExternalStore(props) {
+  const [_name, set_name] = useState(() => \\"test\\");
+
+  return <div>Hello {_name}! </div>;
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`RSC > jsx > Javascript Test > typeGetterStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+function TypeGetterStore(props) {
+  const [name, setName] = useState(() => \\"test\\");
+
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test() {
+    return \\"test\\";
+  }
+
+  return <div>Hello {name}! </div>;
+}
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`RSC > jsx > Javascript Test > use-style 1`] = `
 "import * as React from \\"react\\";
 
@@ -3028,7 +3117,12 @@ function UseTargetComponent(props) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return <div>{name()}</div>;
 }
@@ -3039,15 +3133,10 @@ export default UseTargetComponent;
 
 exports[`RSC > jsx > Javascript Test > webComponent 1`] = `
 "import * as React from \\"react\\";
-import { useRef } from \\"react\\";
 import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props) {
-  const hasInitialized = useRef(false);
-  if (!hasInitialized.current) {
-    register();
-    hasInitialized.current = true;
-  }
+  register();
 
   return (
     <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -3164,9 +3253,9 @@ function MyBasicComponent(props: MyBasicComponentProps) {
     return \\"bar\\";
   }
 
-  const [age, setAge] = useState(() => 1);
+  const [age, setAge] = useState<number>(() => 1);
 
-  const [sports, setSports] = useState(() => [\\"\\"]);
+  const [sports, setSports] = useState<Array<string>>(() => [\\"\\"]);
 
   return (
     <>
@@ -3175,7 +3264,7 @@ function MyBasicComponent(props: MyBasicComponentProps) {
           value={DEFAULT_VALUES.name || name}
           onChange={(myEvent) => setName(myEvent.target.value)}
         />
-        Hello! I can run in React, Vue, Solid, or Liquid!
+        Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
       <style jsx>{\`
         .div {
@@ -3488,7 +3577,7 @@ function MyBasicRefAssignmentComponent(props: Props) {
 
   return (
     <div>
-      <button onClick={(evt) => handlerClick(evt)}>Click</button>
+      <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
     </div>
   );
 }
@@ -4663,8 +4752,8 @@ function SmileReviews(props: SmileReviewsProps) {
             />
             <button
               className=\\"button\\"
-              onClick={(event) => {
-                event.preventDefault();
+              onClick={(ev) => {
+                ev.preventDefault();
                 setShowReviewPrompt(false);
               }}
             >
@@ -5028,12 +5117,18 @@ export default MyBasicOnUpdateReturnComponent;
 
 exports[`RSC > jsx > Typescript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
+import MyComp from \\"./my-component\\";
 
 function MyBasicComponent(props: any) {
   return (
     <>
-      <div className=\\"test2 test div\\">
-        Hello! I can run in React, Vue, Solid, or Liquid!
+      <div>
+        <MyComp className=\\"test\\" className=\\"test2\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </MyComp>
+        <div className=\\"test2 test div\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </div>
       </div>
       <style jsx>{\`
         .div {
@@ -5284,7 +5379,7 @@ function Button(props: ButtonProps) {
         <button
           type=\\"button\\"
           {...props.attributes}
-          onClick={(event) => props.onClick(event)}
+          onClick={(event) => props.onClick()}
         >
           {props.buttonText}
         </button>
@@ -5718,6 +5813,19 @@ function OnInit(props: Props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`RSC > jsx > Typescript Test > onInitPlain 1`] = `
+"import * as React from \\"react\\";
+
+function OnInitPlain(props: any) {
+  console.log(\\"onInit\\");
+
+  return <div />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -6157,6 +6265,13 @@ function ShowWithOtherValues(props: Props) {
       ) : (
         <>4mb</>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <>{props.conditionB === \\"Complete\\" ? <div>complete</div> : <>9mb</>}</>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <>dff</>
+      ) : (
+        <div>complete else</div>
+      )}
     </div>
   );
 }
@@ -6304,6 +6419,27 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`RSC > jsx > Typescript Test > store-async-function 1`] = `
+"import * as React from \\"react\\";
+
+function StringLiteralStore(props: any) {
+  const arrowFunction = async function arrowFunction() {
+    return Promise.resolve();
+  };
+  const namedFunction = async function namedFunction() {
+    return Promise.resolve();
+  };
+  const fetchUsers = async function fetchUsers() {
+    return Promise.resolve();
+  };
+
+  return <div />;
+}
+
+export default StringLiteralStore;
+"
+`;
+
 exports[`RSC > jsx > Typescript Test > string-literal-store 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -6428,6 +6564,55 @@ export default TypeDependency;
 "
 `;
 
+exports[`RSC > jsx > Typescript Test > typeExternalStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { FooStore } from \\"./foo-store\\";
+
+function TypeExternalStore(props: any) {
+  const [_name, set_name] = useState<FooStore[\\"_name\\"]>(() => \\"test\\");
+
+  return <div>Hello {_name}! </div>;
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`RSC > jsx > Typescript Test > typeGetterStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+function TypeGetterStore(props: any) {
+  const [name, setName] = useState<GetterStore[\\"name\\"]>(() => \\"test\\");
+
+  function getName(): ReturnType<GetterStore[\\"getName\\"]> {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test(): ReturnType<GetterStore[\\"test\\"]> {
+    return \\"test\\";
+  }
+
+  return <div>Hello {name}! </div>;
+}
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`RSC > jsx > Typescript Test > use-style 1`] = `
 "import * as React from \\"react\\";
 
@@ -6515,7 +6700,12 @@ function UseTargetComponent(props: any) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return <div>{name()}</div>;
 }
@@ -6526,15 +6716,10 @@ export default UseTargetComponent;
 
 exports[`RSC > jsx > Typescript Test > webComponent 1`] = `
 "import * as React from \\"react\\";
-import { useRef } from \\"react\\";
 import { register } from \\"swiper/element/bundle\\";
 
 function MyBasicWebComponent(props: any) {
-  const hasInitialized = useRef(false);
-  if (!hasInitialized.current) {
-    register();
-    hasInitialized.current = true;
-  }
+  register();
 
   return (
     <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">

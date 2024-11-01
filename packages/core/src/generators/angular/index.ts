@@ -1,6 +1,8 @@
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '@/constants/html_tags';
+import { createSingleBinding } from '@/helpers/bindings';
 import { dedent } from '@/helpers/dedent';
 import { fastClone } from '@/helpers/fast-clone';
+import { getChildComponents } from '@/helpers/get-child-components';
 import { getComponentsUsed } from '@/helpers/get-components-used';
 import { getCustomImports } from '@/helpers/get-custom-imports';
 import { getPropFunctions } from '@/helpers/get-prop-functions';
@@ -8,6 +10,7 @@ import { getProps } from '@/helpers/get-props';
 import { getPropsRef } from '@/helpers/get-props-ref';
 import { getRefs } from '@/helpers/get-refs';
 import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
+import { getTypedFunction } from '@/helpers/get-typed-function';
 import { indent } from '@/helpers/indent';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { isUpperCase } from '@/helpers/is-upper-case';
@@ -47,7 +50,9 @@ import {
   addCodeToOnInit,
   addCodeToOnUpdate,
   getAppropriateTemplateFunctionKeys,
+  getDefaultProps,
   makeReactiveState,
+  transformState,
 } from './helpers';
 import {
   AngularBlockOptions,
@@ -217,7 +222,8 @@ const stringifyBinding =
 
     if (keyToUse.startsWith('on')) {
       const { event, value } = processEventBinding(keyToUse, code, node.name, cusArgs[0]);
-      return ` (${event})="${value}"`;
+      // Angular events are all lowerCased
+      return ` (${event.toLowerCase()})="${value}"`;
     } else if (keyToUse === 'class') {
       return ` [class]="${code}" `;
     } else if (keyToUse === 'ref' || keyToUse === 'spreadRef') {
@@ -353,12 +359,12 @@ export const blockToAngular = ({
         type: 'method',
       };
 
-      str += `<ng-container *ngFor="let ${forName} of ${json.bindings.each?.code}${
-        indexName ? `; let ${indexName} = index` : ''
+      str += `<ng-container *ngFor="let ${forName ?? '_'} of ${json.bindings.each?.code}${
+        indexName ? `; index as ${indexName}` : ''
       }; trackBy: ${trackByFnName}">`;
     } else {
-      str += `<ng-container *ngFor="let ${forName} of ${json.bindings.each?.code}${
-        indexName ? `; let ${indexName} = index` : ''
+      str += `<ng-container *ngFor="let ${forName ?? '_'} of ${json.bindings.each?.code}${
+        indexName ? `; index as ${indexName}` : ''
       }">`;
     }
     str += json.children
@@ -445,10 +451,10 @@ export const blockToAngular = ({
           const spreadRefIndex = root.meta._spreadRefIndex || 0;
           refName = `elRef${spreadRefIndex}`;
           root.meta._spreadRefIndex = (spreadRefIndex as number) + 1;
-          json.bindings['spreadRef'] = { code: refName, type: 'single' };
+          json.bindings['spreadRef'] = createSingleBinding({ code: refName });
           root.refs[refName] = { argument: '' };
         }
-        json.bindings['spreadRef'] = { code: refName, type: 'single' };
+        json.bindings['spreadRef'] = createSingleBinding({ code: refName });
         root.refs[refName] = { argument: '' };
         root.meta.onViewInit = (root.meta.onViewInit || { code: '' }) as BaseHook;
         let spreadCode = '';
@@ -670,7 +676,7 @@ const handleProperties = (json: MitosisComponent, item: MitosisNode, index: numb
     }
     const newBindingName = generateNewBindingName(index, item.name);
     json.state[newBindingName] = { code: '`' + `${item.properties[key]}` + '`', type: 'property' };
-    item.bindings[key] = { code: `state.${newBindingName}`, type: 'single' };
+    item.bindings[key] = createSingleBinding({ code: `state.${newBindingName}` });
     delete item.properties[key];
     index++;
   }
@@ -718,25 +724,6 @@ const classPropertiesPlugin = () => ({
     },
   },
 });
-
-// if any state "property" is trying to access state.* or props.*
-// then we need to move them to onInit where they can be accessed
-const transformState = (json: MitosisComponent) => {
-  Object.entries(json.state)
-    .reverse()
-    .forEach(([key, value]) => {
-      if (value?.type === 'property') {
-        if (value.code && (value.code.includes('state.') || value.code.includes('props.'))) {
-          const code = stripStateAndPropsRefs(value.code, { replaceWith: 'this' });
-          json.state[key]!.code = 'null';
-          if (!json.hooks.onInit?.code) {
-            json.hooks.onInit = { code: '' };
-          }
-          json.hooks.onInit.code = `\nthis.${key} = ${code};\n${json.hooks.onInit.code}`;
-        }
-      }
-    });
-};
 
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   (userOptions = {}) =>
@@ -821,16 +808,9 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     }
 
     const [forwardProp, hasPropRef] = getPropsRef(json, true);
-    const childComponents: string[] = [json.name]; // a component can be recursively used in itself
     const propsTypeRef = json.propsTypeRef !== 'any' ? json.propsTypeRef : undefined;
 
-    json.imports.forEach(({ imports }) => {
-      Object.keys(imports).forEach((key) => {
-        if (imports[key] === 'default') {
-          childComponents.push(key);
-        }
-      });
-    });
+    const childComponents: string[] = getChildComponents(json);
 
     const customImports = getCustomImports(json);
 
@@ -931,13 +911,21 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
     const dataString = getStateObjectStringFromComponent(json, {
       format: 'class',
-      valueMapper: processAngularCode({
-        replaceWith: 'this',
-        contextVars,
-        outputVars,
-        domRefs: Array.from(domRefs),
-        stateVars,
-      }),
+      withType: options.typescript,
+      valueMapper: (code, type, typeParameter) => {
+        let value = code;
+        if (type !== 'data') {
+          value = getTypedFunction(code, options.typescript, typeParameter);
+        }
+
+        return processAngularCode({
+          replaceWith: 'this',
+          contextVars,
+          outputVars,
+          domRefs: Array.from(domRefs),
+          stateVars,
+        })(value);
+      },
     });
 
     const refsForObjSpread = getRefs(json, 'spreadRef');
@@ -972,19 +960,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       componentMetadata[key] = value;
     });
 
-    const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
-      if (!json.defaultProps) return '';
-      const defalutPropsString = Object.keys(json.defaultProps)
-        .map((prop) => {
-          const value = json.defaultProps!.hasOwnProperty(prop)
-            ? json.defaultProps![prop]?.code
-            : 'undefined';
-          return `${prop}: ${value}`;
-        })
-        .join(',');
-      return `const defaultProps = {${defalutPropsString}};\n`;
-    };
-
     const hasConstructor =
       Boolean(injectables.length) || dynamicComponents.size || refsForObjSpread.size;
 
@@ -1006,7 +981,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
-    ${getPropsDefinition({ json })}
+    ${getDefaultProps(json)}
     ${renderPreComponent({
       explicitImportFileExtension: options.explicitImportFileExtension,
       component: json,
@@ -1053,7 +1028,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             `@ViewChild('${refName}') ${refName}${options.typescript ? '!: ElementRef' : ''}`,
         )
         .join('\n')}
-      
+
       ${Array.from(dynamicComponents)
         .map(
           (component) =>

@@ -1,8 +1,9 @@
-import { describe, test } from 'vitest';
+import { parseJsx } from '@/parsers/jsx';
+import { Target } from '@/types/config';
+import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
+import { describe, expect, test } from 'vitest';
 import { MitosisComponent, createTypescriptProject, parseSvelte } from '..';
-import { parseJsx } from '../parsers/jsx';
-import { Target } from '../types/config';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
+
 const getRawFile = async (filePath: string) => {
   const code = await import(`${filePath}?raw`).then((x) => x.default as string);
   return { code, filePath: ['src', '__tests__', filePath].join('/') };
@@ -11,6 +12,8 @@ const getRawFile = async (filePath: string) => {
 type RawFile = ReturnType<typeof getRawFile>;
 
 const getterState = getRawFile('./data/blocks/getter-state.raw.tsx');
+const advancedFor = getRawFile('./data/advanced-for.raw.tsx');
+
 const basicForShow = getRawFile('./data/basic-for-show.raw.tsx');
 const basicBooleanAttribute = getRawFile('./data/basic-boolean-attribute.raw.tsx');
 const basicOnMountUpdate = getRawFile('./data/basic-onMount-update.raw.tsx');
@@ -50,6 +53,8 @@ const propsType = getRawFile('./data/types/component-props-type.raw.tsx');
 const propsInterface = getRawFile('./data/types/component-props-interface.raw.tsx');
 const preserveTyping = getRawFile('./data/types/preserve-typing.raw.tsx');
 const typeDependency = getRawFile('./data/types/type-dependency.raw.tsx');
+const typeExternalStore = getRawFile('./data/types/type-external-store.raw.tsx');
+const typeGetterStore = getRawFile('./data/types/type-getter-store.raw.tsx');
 
 const defaultProps = getRawFile('./data/default-props/default-props.raw.tsx');
 const defaultPropsOutsideComponent = getRawFile(
@@ -84,6 +89,7 @@ const inputParentBlock = getRawFile('./data/blocks/input-parent.raw.tsx');
 const multipleOnUpdate = getRawFile('./data/blocks/multiple-onUpdate.raw.tsx');
 const multipleOnUpdateWithDeps = getRawFile('./data/blocks/multiple-onUpdateWithDeps.raw.tsx');
 const onInit = getRawFile('./data/blocks/onInit.raw.tsx');
+const onInitPlain = getRawFile('./data/blocks/onInit-plain.raw.tsx');
 const onEvent = getRawFile('./data/blocks/onEvent.raw.tsx');
 const onInitonMount = getRawFile('./data/blocks/onInit-onMount.raw.tsx');
 const onMount = getRawFile('./data/blocks/onMount.raw.tsx');
@@ -125,6 +131,7 @@ const inputToTextInputRN = getRawFile('./data/react-native/text-input.raw.tsx');
 
 const StringLiteralStore = getRawFile('./data/string-literal-store.raw.tsx');
 const StringLiteralStoreKebab = getRawFile('./data/string-literal-store-kebab.raw.tsx');
+const StoreAsyncFunction = getRawFile('./data/store-async-function.raw.tsx');
 
 /**
  * Use TestsWithFailFor when you want to write a test that you know will fail
@@ -189,6 +196,7 @@ const BASIC_TESTS: Tests = {
   Columns: columns,
   onUpdate: onUpdate,
   onInit: onInit,
+  onInitPlain,
   onEvent,
   onUpdateWithDeps: onUpdateWithDeps,
   onMount: onMount,
@@ -199,6 +207,8 @@ const BASIC_TESTS: Tests = {
   defaultPropsOutsideComponent,
   preserveTyping: preserveTyping,
   typeDependency,
+  typeExternalStore,
+  typeGetterStore,
   defaultValsWithTypes: getRawFile('./data/types/component-with-default-values-types.raw.tsx'),
   'import types': builderRenderContent,
   subComponent,
@@ -239,6 +249,7 @@ const BASIC_TESTS: Tests = {
   signalsOnUpdate,
   getterState,
   eventInputAndChange,
+  'store-async-function': StoreAsyncFunction,
   'string-literal-store': StringLiteralStore,
   'string-literal-store-kebab': {
     file: StringLiteralStoreKebab,
@@ -285,6 +296,7 @@ const FORM_BLOCK_TESTS: Tests = {
 const FOR_SHOW_TESTS: Tests = {
   Section: sectionState,
   Basic: basicForShow,
+  Advanced: advancedFor,
 };
 
 const FORWARD_REF_TESTS: Tests = {
@@ -421,6 +433,18 @@ const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     ADVANCED_REF,
     ON_UPDATE_RETURN,
   ],
+  mitosis: [
+    BASIC_TESTS,
+    SLOTS_TESTS,
+    SHOW_TESTS,
+    FORWARD_REF_TESTS,
+    MULTI_ON_UPDATE_TESTS,
+    FORM_BLOCK_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
+    FOR_SHOW_TESTS,
+    CONTEXT_TEST,
+  ],
   webcomponent: [
     CONTEXT_TEST,
     BASIC_TESTS,
@@ -473,13 +497,12 @@ const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     CONTEXT_TEST,
     BASIC_TESTS,
     SLOTS_TESTS,
-    // ROOT_SHOW_TESTS,
     FORWARD_REF_TESTS,
-    // MULTI_ON_UPDATE_TESTS,
+    MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
     ADVANCED_REF,
     ON_UPDATE_RETURN,
-    // FOR_SHOW_TESTS
+    FOR_SHOW_TESTS,
   ],
   solid: [
     CONTEXT_TEST,
@@ -580,14 +603,35 @@ export const runTestsForSvelteSyntax = () => {
 
 const tsProject = createTypescriptProject(__dirname + '/tsconfig.json');
 
+const filterTests = (testArray?: Tests[], only?: string[]) =>
+  testArray?.map((tests: Tests) => {
+    if (!only) {
+      return tests;
+    }
+
+    const filteredTests: Tests = {};
+
+    Object.entries(tests).forEach(([key, test]) => {
+      if (only.includes(key)) {
+        filteredTests[key] = test;
+      }
+    });
+
+    return filteredTests;
+  });
+
 export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   target,
   generator,
   options,
+  only,
+  logOutput,
 }: {
   target: Target;
   generator: TranspilerGenerator<X>;
   options: X;
+  logOutput?: boolean;
+  only?: string[]; // Test only some tests based on key
 }) => {
   const configurations: { options: X; testName: string }[] = [
     { options: { ...options, typescript: false }, testName: 'Javascript Test' },
@@ -617,26 +661,28 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                   typescript: false,
                 },
           ),
-        testsArray: JSX_TESTS_FOR_TARGET[target],
+        testsArray: filterTests(JSX_TESTS_FOR_TARGET[target], only),
       },
       {
         name: 'svelte',
-        parser: async ({ filePath, code }) => parseSvelte(code),
-        testsArray: [SVELTE_SYNTAX_TESTS],
+        parser: async ({ code }) => parseSvelte(code),
+        testsArray: filterTests([SVELTE_SYNTAX_TESTS], only),
       },
     ];
     for (const { name, parser, testsArray } of parsers) {
       if (testsArray) {
         describe(name, () => {
-          if (name === 'jsx' && options.typescript === false) {
-            test('Remove Internal mitosis package', async () => {
-              const t = await basicMitosis;
-              const component = parseJsx(t.code, {
-                compileAwayPackages: ['@dummy/custom-mitosis'],
+          if (!only) {
+            if (name === 'jsx' && options.typescript === false) {
+              test('Remove Internal mitosis package', async () => {
+                const t = await basicMitosis;
+                const component = parseJsx(t.code, {
+                  compileAwayPackages: ['@dummy/custom-mitosis'],
+                });
+                const output = generator(options)({ component, path: t.filePath });
+                expect(output).toMatchSnapshot();
               });
-              const output = generator(options)({ component, path: t.filePath });
-              expect(output).toMatchSnapshot();
-            });
+            }
           }
           describe(testName, () => {
             testsArray.forEach((tests) => {
@@ -654,7 +700,13 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                     expect(getOutput).toThrowError();
                   } else {
                     try {
-                      expect(getOutput()).toMatchSnapshot();
+                      const output = getOutput();
+                      if (logOutput) {
+                        process.stdout.write(`--- Start: ${key} ---\n\n`);
+                        process.stdout.write(output);
+                        process.stdout.write(`--- End: ${key} ---\n\n`);
+                      }
+                      expect(output).toMatchSnapshot();
                     } catch (error) {
                       expect(getOutput).toThrowErrorMatchingSnapshot();
                     }

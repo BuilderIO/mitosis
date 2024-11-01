@@ -1,5 +1,127 @@
 # Change Log
 
+## 0.5.15
+
+### Patch Changes
+
+- a0ad5ab: [Builder]: Fix: use scope.rename to rename identifiers in For loop
+
+## 0.5.14
+
+### Patch Changes
+
+- 39af4d6: [Builder] Fix: do not rename vars within For that are shadowing the loop's index
+
+## 0.5.13
+
+### Patch Changes
+
+- c7d2f8c: [All] fix: support async event handlers
+
+## 0.5.12
+
+### Patch Changes
+
+- 5e2cf3c: respect async with anonymous arrow function in state
+
+## 0.5.11
+
+### Patch Changes
+
+- db9dbf9: [All] fix: parsers/generate for loops
+
+## 0.5.10
+
+### Patch Changes
+
+- 499b4b7: [Mitosis] feat: add returnArray option
+
+## 0.5.9
+
+### Patch Changes
+
+- 8c2be87: Fix multi line bindings from Mitosis to Builder
+
+## 0.5.8
+
+### Patch Changes
+
+- 8d823a1: [Builder] Fix: support Show.else property
+
+## 0.5.7
+
+### Patch Changes
+
+- 7a099d2: [Builder,Mitosis] Feature: add Slots support.
+
+## 0.5.6
+
+### Patch Changes
+
+- 0aa642a: [All]: Fix: accessing `useState()` getter/setter within `useTarget()`
+
+## 0.5.5
+
+### Patch Changes
+
+- 56c6347: [Mitosis] Feature: add `nativeConditionals` and `nativeLoops` for `legacy` mode
+
+## 0.5.4
+
+### Patch Changes
+
+- d13e693: [LIT] Bug: Passing wrong object for transforming ref(Element ref) result in breakage
+
+## 0.5.3
+
+### Patch Changes
+
+- 82c79fd: [React] Fix: Inline `onInit` hook when generating RSC components.
+
+## 0.5.2
+
+### Patch Changes
+
+- dad8e2f: Fix: do not consolidate class and className for Mitosis components
+
+## 0.5.1
+
+### Patch Changes
+
+- dbd5a50: [React-Native] Feature: add `sanitizeReactNative` flag responsible for sanitizing styles. Defaults to `false`.
+
+## 0.5.0
+
+### Minor Changes
+
+- 4171a19: [Stencil] feat: refactor stencil generator to work with stencil v4
+
+  [Stencil,Angular] fix: issue with nested components for frameworks (stencil, angular) with custom elements via [`getChildComponents`](../packages/core/src/helpers/get-child-components.ts)
+
+### Patch Changes
+
+- 7e2c95f: [Angular] fix: issue with angular events not transformed to lower-case
+- d59d328: [Angular, React, Vue] fix: issue with functions inside `useStore` missing ReturnType<...> when using `typescript: true` in config
+
+## 0.4.7
+
+### Patch Changes
+
+- 068efab: [Angular, React, Vue] feat: add typescript support for `useStore`
+
+## 0.4.6
+
+### Patch Changes
+
+- a7fd87f: [All] Fix: Property handle escaped text in JSXString nodes.
+- a7fd87f: [Builder] Feature: Parse and serialize PersonalizedContainer in a JSX/LLM friendly way (like Columns)
+
+## 0.4.5
+
+### Patch Changes
+
+- 428b3ab: chore: update internal structure for generators and add more information for options and metadata
+
 ## 0.4.4
 
 ### Patch Changes

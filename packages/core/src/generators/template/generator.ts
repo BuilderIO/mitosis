@@ -1,19 +1,18 @@
+import { ToTemplateOptions } from '@/generators/template/types';
 import { format } from 'prettier/standalone';
-import { SELF_CLOSING_HTML_TAGS } from '../constants/html_tags';
-import { dedent } from '../helpers/dedent';
-import { fastClone } from '../helpers/fast-clone';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { collectCss } from '../helpers/styles/collect-css';
+import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
+import { dedent } from '../../helpers/dedent';
+import { fastClone } from '../../helpers/fast-clone';
+import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
+import { collectCss } from '../../helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
-} from '../modules/plugins';
-import { MitosisNode, checkIsForNode } from '../types/mitosis-node';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-
-export interface ToTemplateOptions extends BaseTranspilerOptions {}
+} from '../../modules/plugins';
+import { MitosisNode, checkIsForNode } from '../../types/mitosis-node';
+import { TranspilerGenerator } from '../../types/transpiler';
 
 const mappers: {
   [key: string]: (json: MitosisNode, options: ToTemplateOptions) => string;

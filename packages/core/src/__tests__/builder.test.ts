@@ -1,17 +1,21 @@
-import { componentToReact, ToMitosisOptions } from '..';
-import { componentToBuilder } from '../generators/builder';
-import { componentToHtml } from '../generators/html';
-import { componentToMitosis } from '../generators/mitosis';
-import { dedent } from '../helpers/dedent';
-import { builderContentToMitosisComponent, extractStateHook } from '../parsers/builder';
-import { parseJsx } from '../parsers/jsx';
-import { compileAwayBuilderComponents } from '../plugins/compile-away-builder-components';
-
+import { componentToBuilder } from '@/generators/builder';
+import { componentToHtml } from '@/generators/html';
+import { componentToMitosis } from '@/generators/mitosis';
+import { ToMitosisOptions } from '@/generators/mitosis/types';
+import { componentToReact } from '@/generators/react';
+import { dedent } from '@/helpers/dedent';
+import { builderContentToMitosisComponent, extractStateHook } from '@/parsers/builder';
+import { parseJsx } from '@/parsers/jsx';
+import { compileAwayBuilderComponents } from '@/plugins/compile-away-builder-components';
 import { BuilderContent } from '@builder.io/sdk';
+
+import advancedFor from './data/advanced-for.raw.tsx?raw';
+import asyncBindings from './data/basic-ref-assignment.raw.tsx?raw';
 import columns from './data/blocks/columns.raw.tsx?raw';
 import customCode from './data/blocks/custom-code.raw.tsx?raw';
 import embed from './data/blocks/embed.raw.tsx?raw';
 import image from './data/blocks/image.raw.tsx?raw';
+import indexInFor from './data/blocks/index-in-for.raw.tsx?raw';
 import stamped from './data/blocks/stamped-io.raw.tsx?raw';
 import booleanContent from './data/builder/boolean.json?raw';
 import customComponentSlotPropertyContent from './data/builder/custom-component-slot-property.json?raw';
@@ -19,6 +23,7 @@ import lazyLoadSection from './data/builder/lazy-load-section.json?raw';
 import slotsContent from './data/builder/slots.json?raw';
 import slots2Content from './data/builder/slots2.json?raw';
 import textBindings from './data/builder/text-bindings.json?raw';
+import show from './data/show/show-expressions.raw.tsx?raw';
 
 const mitosisOptions: ToMitosisOptions = {
   format: 'legacy',
@@ -40,8 +45,38 @@ describe('Builder', () => {
     expect(mitosis).toMatchSnapshot();
   });
 
+  test('Show', () => {
+    const component = parseJsx(show);
+    const builderJson = componentToBuilder()({ component });
+    expect(builderJson).toMatchSnapshot();
+
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
+    expect(mitosis).toMatchSnapshot();
+  });
+
+  test('Advanced For', () => {
+    const component = parseJsx(advancedFor);
+    const builderJson = componentToBuilder()({ component });
+    expect(builderJson).toMatchSnapshot();
+
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
+    expect(mitosis).toMatchSnapshot();
+  });
+
   test('CustomCode', () => {
     const component = parseJsx(customCode);
+    const builderJson = componentToBuilder()({ component });
+    expect(builderJson).toMatchSnapshot();
+
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
+    expect(mitosis).toMatchSnapshot();
+  });
+
+  test('async bindings', () => {
+    const component = parseJsx(asyncBindings);
     const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
 
@@ -55,6 +90,14 @@ describe('Builder', () => {
     const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
 
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
+    expect(mitosis).toMatchSnapshot();
+  });
+
+  test('Index inside For', () => {
+    const component = parseJsx(indexInFor);
+    const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
     const mitosis = componentToMitosis()({ component: backToMitosis });
     expect(mitosis).toMatchSnapshot();
@@ -285,6 +328,9 @@ describe('Builder', () => {
             image="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F52dcecf48f9c48cc8ddd8f81fec63236"
             buttonLink="https://example.com"
             buttonText="Click"
+            multiBinding={{
+              hello: state.message,
+            }}
             height={400}
             css={{
               display: "flex",
@@ -418,7 +464,7 @@ describe('Builder', () => {
     expect(out).toMatchSnapshot();
   });
 
-  test('binding', () => {
+  test('bindings', () => {
     const component = builderContentToMitosisComponent(bindingJson as any as BuilderContent);
     expect(component).toMatchSnapshot();
     const mitosis = componentToMitosis(mitosisOptions)({
@@ -434,7 +480,7 @@ describe('Builder', () => {
         .foo {
           background: green;
         }
-        
+
         .bar {
           font-weight: bold;
         }
@@ -455,6 +501,141 @@ describe('Builder', () => {
 
     const jsxToMitosis = parseJsx(jsx);
     expect(jsxToMitosis.style).toMatchSnapshot();
+  });
+
+  test('Snapshot PersonalizedContainer', () => {
+    const code = dedent`
+      import { PersonalizationContainer, Variant } from "@components";
+
+      export default function MyComponent(props) {
+        return (
+          <PersonalizationContainer>
+            <Variant
+              name="variant1"
+              startDate="2024-01-01"
+              query={{
+                property: "urlPath",
+                operation: "is",
+                value: "/home",
+              }}
+            >
+              <div>Home</div>
+              <div>Div</div>
+            </Variant>
+            <PersonalizationOption
+              name="2"
+              query={[
+                {
+                  property: "gendr",
+                  operation: "is",
+                  value: ["male", "female"],
+                },
+              ]}
+            >
+              <>Male</>
+            </PersonalizationOption>
+            <Variant>
+              <div>Default</div>
+            </Variant>
+            <div>More tree</div>
+
+          </PersonalizationContainer>
+        );
+      }
+    `;
+
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
+    expect(builderJson.data?.blocks?.[0]).toMatchSnapshot();
+
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
+    });
+    expect(mitosis.trim()).toMatchSnapshot();
+  });
+
+  test('Regenerate PersonalizedContainer', () => {
+    const code = dedent`
+      import { PersonalizationContainer, Variant } from "@components";
+
+      export default function MyComponent(props) {
+        return (
+          <PersonalizationContainer>
+            <Variant
+              name="2"
+              startDate="2024-01-01"
+              endDate="2024-01-31"
+              query={[
+                {
+                  property: "gendr",
+                  operation: "is",
+                  value: "male",
+                },
+              ]}
+            >
+              <div>Male</div>
+            </Variant>
+            <Variant default="">
+              <div>Default</div>
+            </Variant>
+          </PersonalizationContainer>
+        );
+      }
+    `;
+
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
+    });
+    expect(mitosis.trim()).toEqual(code.trim());
+  });
+
+  test('nodes as props', () => {
+    const content = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            component: {
+              name: 'Foo',
+              options: {
+                prop: [
+                  {
+                    '@type': '@builder.io/sdk:Element' as const,
+                    component: {
+                      name: 'Bar',
+                      options: {
+                        hello: 'world',
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    const mitosisJson = builderContentToMitosisComponent(content);
+    expect(mitosisJson).toMatchSnapshot();
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: mitosisJson,
+    });
+
+    expect(mitosis).toMatchSnapshot();
+
+    const builder = parseJsx(mitosis);
+    expect(builder).toMatchSnapshot();
+    const json = componentToBuilder()({ component: builder });
+    expect(json).toMatchSnapshot();
+    expect(json.data?.blocks?.[0]?.component?.name).toBe('Foo');
+    expect(json.data?.blocks?.[0]?.component?.options?.prop?.[0]?.component?.options.hello).toBe(
+      'world',
+    );
   });
 });
 

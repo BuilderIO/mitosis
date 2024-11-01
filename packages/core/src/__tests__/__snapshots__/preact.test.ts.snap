@@ -88,7 +88,7 @@ function MyBasicComponent(props) {
           value={DEFAULT_VALUES.name || name}
           onChange={(myEvent) => setName(myEvent.target.value)}
         />
-        Hello! I can run in React, Vue, Solid, or Liquid!
+        Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
       <style jsx>{\`
         .div {
@@ -385,7 +385,7 @@ function MyBasicRefAssignmentComponent(props) {
 
   return (
     <div>
-      <button onClick={(evt) => handlerClick(evt)}>Click</button>
+      <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
     </div>
   );
 }
@@ -1404,8 +1404,8 @@ function SmileReviews(props) {
             />
             <button
               className=\\"button\\"
-              onClick={(event) => {
-                event.preventDefault();
+              onClick={(ev) => {
+                ev.preventDefault();
                 setShowReviewPrompt(false);
               }}
             >
@@ -1711,12 +1711,18 @@ export default MyBasicOnUpdateReturnComponent;
 exports[`Preact > jsx > Javascript Test > class + ClassName + css 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
+import MyComp from \\"./my-component\\";
 
 function MyBasicComponent(props) {
   return (
     <Fragment>
-      <div className=\\"test2 test div\\">
-        Hello! I can run in React, Vue, Solid, or Liquid!
+      <div>
+        <MyComp className=\\"test\\" className=\\"test2\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </MyComp>
+        <div className=\\"test2 test div\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </div>
       </div>
       <style jsx>{\`
         .div {
@@ -1943,7 +1949,7 @@ function Button(props) {
         <button
           type=\\"button\\"
           {...props.attributes}
-          onClick={(event) => props.onClick(event)}
+          onClick={(event) => props.onClick()}
         >
           {props.buttonText}
         </button>
@@ -2352,6 +2358,25 @@ function OnInit(props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > onInitPlain 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useRef } from \\"preact/hooks\\";
+
+function OnInitPlain(props) {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    console.log(\\"onInit\\");
+    hasInitialized.current = true;
+  }
+
+  return <div />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -3018,6 +3043,19 @@ function ShowWithOtherValues(props) {
       ) : (
         <Fragment>4mb</Fragment>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <Fragment>
+          {props.conditionB === \\"Complete\\" ? (
+            <div>complete</div>
+          ) : (
+            <Fragment>9mb</Fragment>
+          )}
+        </Fragment>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <Fragment>dff</Fragment>
+      ) : (
+        <div>complete else</div>
+      )}
     </div>
   );
 }
@@ -3169,6 +3207,30 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > store-async-function 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function StringLiteralStore(props) {
+  async function arrowFunction() {
+    return Promise.resolve();
+  }
+
+  async function namedFunction() {
+    return Promise.resolve();
+  }
+
+  async function fetchUsers() {
+    return Promise.resolve();
+  }
+
+  return <div />;
+}
+
+export default StringLiteralStore;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > string-literal-store 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -3291,6 +3353,48 @@ export default TypeDependency;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > typeExternalStore 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function TypeExternalStore(props) {
+  const [_name, set_name] = useState(() => \\"test\\");
+
+  return <div>Hello {_name}! </div>;
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > typeGetterStore 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function TypeGetterStore(props) {
+  const [name, setName] = useState(() => \\"test\\");
+
+  function getName() {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test() {
+    return \\"test\\";
+  }
+
+  return <div>Hello {name}! </div>;
+}
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > use-style 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -3381,7 +3485,12 @@ function UseTargetComponent(props) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return <div>{name()}</div>;
 }
@@ -3518,9 +3627,9 @@ function MyBasicComponent(props: MyBasicComponentProps) {
     return \\"bar\\";
   }
 
-  const [age, setAge] = useState(() => 1);
+  const [age, setAge] = useState<number>(() => 1);
 
-  const [sports, setSports] = useState(() => [\\"\\"]);
+  const [sports, setSports] = useState<Array<string>>(() => [\\"\\"]);
 
   return (
     <Fragment>
@@ -3529,7 +3638,7 @@ function MyBasicComponent(props: MyBasicComponentProps) {
           value={DEFAULT_VALUES.name || name}
           onChange={(myEvent) => setName(myEvent.target.value)}
         />
-        Hello! I can run in React, Vue, Solid, or Liquid!
+        Hello! I can run in React, Vue, Solid, or Liquid! &gt;
       </div>
       <style jsx>{\`
         .div {
@@ -3844,7 +3953,7 @@ function MyBasicRefAssignmentComponent(props: Props) {
 
   return (
     <div>
-      <button onClick={(evt) => handlerClick(evt)}>Click</button>
+      <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
     </div>
   );
 }
@@ -5034,8 +5143,8 @@ function SmileReviews(props: SmileReviewsProps) {
             />
             <button
               className=\\"button\\"
-              onClick={(event) => {
-                event.preventDefault();
+              onClick={(ev) => {
+                ev.preventDefault();
                 setShowReviewPrompt(false);
               }}
             >
@@ -5399,12 +5508,18 @@ export default MyBasicOnUpdateReturnComponent;
 exports[`Preact > jsx > Typescript Test > class + ClassName + css 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
+import MyComp from \\"./my-component\\";
 
 function MyBasicComponent(props: any) {
   return (
     <Fragment>
-      <div className=\\"test2 test div\\">
-        Hello! I can run in React, Vue, Solid, or Liquid!
+      <div>
+        <MyComp className=\\"test\\" className=\\"test2\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </MyComp>
+        <div className=\\"test2 test div\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </div>
       </div>
       <style jsx>{\`
         .div {
@@ -5657,7 +5772,7 @@ function Button(props: ButtonProps) {
         <button
           type=\\"button\\"
           {...props.attributes}
-          onClick={(event) => props.onClick(event)}
+          onClick={(event) => props.onClick()}
         >
           {props.buttonText}
         </button>
@@ -6098,6 +6213,25 @@ function OnInit(props: Props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > onInitPlain 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useRef } from \\"preact/hooks\\";
+
+function OnInitPlain(props: any) {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    console.log(\\"onInit\\");
+    hasInitialized.current = true;
+  }
+
+  return <div />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -6843,6 +6977,19 @@ function ShowWithOtherValues(props: Props) {
       ) : (
         <Fragment>4mb</Fragment>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <Fragment>
+          {props.conditionB === \\"Complete\\" ? (
+            <div>complete</div>
+          ) : (
+            <Fragment>9mb</Fragment>
+          )}
+        </Fragment>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <Fragment>dff</Fragment>
+      ) : (
+        <div>complete else</div>
+      )}
     </div>
   );
 }
@@ -7016,6 +7163,30 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Preact > jsx > Typescript Test > store-async-function 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function StringLiteralStore(props: any) {
+  async function arrowFunction() {
+    return Promise.resolve();
+  }
+
+  async function namedFunction() {
+    return Promise.resolve();
+  }
+
+  async function fetchUsers() {
+    return Promise.resolve();
+  }
+
+  return <div />;
+}
+
+export default StringLiteralStore;
+"
+`;
+
 exports[`Preact > jsx > Typescript Test > string-literal-store 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -7145,6 +7316,55 @@ export default TypeDependency;
 "
 `;
 
+exports[`Preact > jsx > Typescript Test > typeExternalStore 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+import { FooStore } from \\"./foo-store\\";
+
+function TypeExternalStore(props: any) {
+  const [_name, set_name] = useState<FooStore[\\"_name\\"]>(() => \\"test\\");
+
+  return <div>Hello {_name}! </div>;
+}
+
+export default TypeExternalStore;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > typeGetterStore 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+type GetterStore = {
+  getName: () => string;
+  name: string;
+  get test(): string;
+};
+
+function TypeGetterStore(props: any) {
+  const [name, setName] = useState<GetterStore[\\"name\\"]>(() => \\"test\\");
+
+  function getName(): ReturnType<GetterStore[\\"getName\\"]> {
+    if (name === \\"a\\") {
+      return \\"b\\";
+    }
+
+    return name;
+  }
+
+  function test(): ReturnType<GetterStore[\\"test\\"]> {
+    return \\"test\\";
+  }
+
+  return <div>Hello {name}! </div>;
+}
+
+export default TypeGetterStore;
+"
+`;
+
 exports[`Preact > jsx > Typescript Test > use-style 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -7235,7 +7455,12 @@ function UseTargetComponent(props: any) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return <div>{name()}</div>;
 }

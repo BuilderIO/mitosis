@@ -143,7 +143,7 @@ export default function MyComponent() {
 
 ## Styling
 
-### `css`
+### `css-in-js`
 
 Styling is done via the `css` prop on DOM elements and components. It takes CSS properties in `camelCase` (like the `style` object on DOM elements) and properties as valid CSS strings
 
@@ -170,7 +170,47 @@ export default function ResponsiveExample() {
 }
 ```
 
-You can also use the [useStyle](/docs/hooks#useStyle) hook to add styles to a component
+You can also use the [useStyle](/docs/hooks#usestyle) hook to add styles to a component
+
+### `import .css file`
+
+In general all imports inside a Mitosis component are passed to the generated output file.
+Therefore, you can import a `.css` file like this:
+
+````css
+/* ./src/my-component/my-component.css */
+
+
+.my-component{
+    margin-top: 10px;
+}
+````
+
+```tsx
+/* ./src/my-component/my-component.lite.tsx */
+import "./my-component.css";
+
+export default function CSSExample() {
+  return <div class="my-component" />;
+}
+```
+
+> **Note:** The Mitosis cli will only move `.ts` and `.js` files to the output directory.
+> You need to move the `.css` file by your own.
+
+### `headless components`
+
+Another approach is to develop your components without a fixed style inside the Mitosis component, a.k.a. "headless components".
+
+You can do so by loading the styles inside the consuming webapp via a bundler (vite, webpack, etc.) or with a head stylesheet `<link rel="stylesheet" ...`.
+You can then use `class` or `data-*` attributes inside your Mitosis component to apply those styles:
+
+```tsx
+/* ./src/my-component/my-component.lite.tsx */
+export default function CSSExample() {
+  return <div class="my-component" />;
+}
+```
 
 ## `class` vs `className`
 
@@ -235,6 +275,14 @@ export default function MyComponent(props) {
 ```
 
 </details>
+
+> **Note**: You cannot directly iterate over the children prop. It is a special property intended for rendering like this:
+
+```jsx
+<div>{props.children}</div>
+````
+
+Many frameworks do not support manipulating or iterating over it directly, unlike frameworks such as React or Vue.
 
 ### Slot
 

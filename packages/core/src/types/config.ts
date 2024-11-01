@@ -47,7 +47,7 @@ export type MitosisConfig = {
   overridesDir?: string;
   /**
    * Dictionary of per-target configuration. For each target, the available options can be inspected by going to
-   * `packages/core/src/targets.ts` and looking at the first argument of the desired generator.
+   * `packages/core/src/generators/xxx/types.ts`.
    *
    * Example:
    *
