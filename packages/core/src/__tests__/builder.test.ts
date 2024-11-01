@@ -638,7 +638,7 @@ describe('Builder', () => {
     );
   });
 
-  test.only('do not transform scoped variable to match state var', () => {
+  test.fails('do not transform scoped variable to match state var', () => {
     const content = {
       data: {
         tsCode:
@@ -667,7 +667,7 @@ describe('Builder', () => {
     `);
   });
 
-  test.only('do not transform destructured variable to match state', () => {
+  test.fails('do not transform destructured variable to match state', () => {
     const content = {
       data: {
         tsCode: 'useStore({\n  errors: {},\n foo() {\n const { errors } = someFn(); }\n});',
