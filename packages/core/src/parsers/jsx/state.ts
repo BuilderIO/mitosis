@@ -3,16 +3,23 @@ import { capitalize } from '@/helpers/capitalize';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { createCodeProcessorPlugin } from '@/helpers/plugins/process-code';
 import { replaceNodes } from '@/helpers/replace-identifiers';
-import { MitosisComponent, MitosisState, StateValue } from '@/types/mitosis-component';
+import {
+  MitosisComponent,
+  MitosisState,
+  StateValue,
+  TargetBlockDefinition,
+} from '@/types/mitosis-component';
 import { NodePath, types } from '@babel/core';
 import {
   BlockStatement,
   Expression,
+  Identifier,
   Node,
   ObjectExpression,
   ObjectMethod,
   ObjectProperty,
   assignmentExpression,
+  functionExpression,
   identifier,
   isArrowFunctionExpression,
   isDeclaration,
@@ -146,8 +153,21 @@ export function mapStateIdentifiers(json: MitosisComponent) {
 
   plugin(json);
 
+  for (const key in json.targetBlocks) {
+    const targetBlock = json.targetBlocks[key];
+    for (const targetBlockKey of Object.keys(targetBlock)) {
+      const block = targetBlock[targetBlockKey as keyof TargetBlockDefinition];
+      if (block && 'code' in block) {
+        block.code = mapStateIdentifiersInExpression(block.code, stateProperties);
+      }
+    }
+  }
+
   traverse(json).forEach(function (item) {
-    if (isMitosisNode(item)) {
+    // only consolidate bindings for HTML tags, not custom components
+    // custom components are always PascalCase, e.g. MyComponent
+    // but HTML tags are lowercase, e.g. div
+    if (isMitosisNode(item) && item.name.toLowerCase() === item.name) {
       consolidateClassBindings(item);
     }
   });
@@ -177,6 +197,31 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
         type: 'function',
       };
     } else if (isArrowFunctionExpression(item.value)) {
+      /**
+       * Arrow functions are normally converted to object methods to work around
+       * limitations with arrow functions in state in frameworks such as Svelte.
+       * However, this conversion does not work for async arrow functions due to
+       * how we handle parsing in `handleErrorOrExpression` for parsing
+       * expressions. That code does not detect async functions in order to apply
+       * its parsing workarounds. Even if it did, it does not consider async code
+       * when prefixing with "function". This would result in "function async foo()"
+       * which is not a valid function expression definition.
+       */
+      // TODO ENG-7256 Find a way to do this without diverging code path
+      if (item.value.async) {
+        const func = functionExpression(
+          item.key as Identifier,
+          item.value.params,
+          item.value.body as BlockStatement,
+          false,
+          true,
+        );
+
+        return {
+          code: parseCode(func).trim(),
+          type: 'function',
+        };
+      }
       const n = objectMethod(
         'method',
         item.key as Expression,
@@ -207,6 +252,22 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
       };
     }
   } else if (isObjectMethod(item)) {
+    // TODO ENG-7256 Find a way to do this without diverging code path
+    if (item.async) {
+      const func = functionExpression(
+        item.key as Identifier,
+        item.params,
+        item.body as BlockStatement,
+        false,
+        true,
+      );
+
+      return {
+        code: parseCode(func).trim(),
+        type: 'function',
+      };
+    }
+
     const n = getCleanedStateCode(parseCode({ ...item, returnType: null }));
 
     const isGetter = item.kind === 'get';

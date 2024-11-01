@@ -53,8 +53,8 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
 
   if (checkIsForNode(json)) {
     return `\${${processBinding(json.bindings.each?.code as string)}?.map((${
-      json.scope.forName
-    }, index) => (
+      json.scope.forName ?? '_'
+    }, ${json.scope.indexName ?? 'index'}) => (
       html\`${json.children
         .filter(filterEmptyTextNodes)
         .map((item) => blockToLit(item, options))
@@ -94,8 +94,12 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
       str += ` ref="${code}" `;
     } else if (key.startsWith('on')) {
       let useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
+      const asyncKeyword = json.bindings[key]?.async ? 'async ' : '';
       useKey = '@' + useKey.substring(2).toLowerCase();
-      str += ` ${useKey}=\${${cusArgs.join(',')} => ${processBinding(code as string)}} `;
+
+      str += ` ${useKey}=\${${asyncKeyword}(${cusArgs.join(',')}) => ${processBinding(
+        code as string,
+      )}} `;
     } else {
       const value = processBinding(code as string);
       // If they key includes a '-' it's an attribute, not a property
@@ -138,7 +142,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
     let css = collectCss(json);
 
     const domRefs = getRefs(json);
-    mapRefs(component, (refName) => `this.${camelCase(refName)}`);
+    mapRefs(json, (refName) => `this.${camelCase(refName)}`);
 
     if (options.plugins) {
       json = runPostJsonPlugins({ json, plugins: options.plugins });
@@ -193,7 +197,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
         });
       } catch (err) {
         // If can't format HTML (this can happen with lit given it is tagged template strings),
-        // at least remove excess space
+        // at least remove excess fspace
         html = html.replace(/\n{3,}/g, '\n\n');
       }
     }
@@ -249,15 +253,15 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
           `,
         )
         .join('\n')}
-    
-  
+
+
       ${Array.from(props)
         .map((item) => `@property() ${item}: any`)
         .join('\n')}
 
         ${dataString}
         ${methodsString}
-      
+
         ${
           json.hooks.onMount.length === 0
             ? ''
@@ -271,11 +275,11 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
         ${
           !json.hooks.onUpdate?.length
             ? ''
-            : `updated() { 
-              ${json.hooks.onUpdate.map((hook) => processBinding(hook.code)).join('\n\n')} 
+            : `updated() {
+              ${json.hooks.onUpdate.map((hook) => processBinding(hook.code)).join('\n\n')}
             }`
         }
-    
+
       render() {
         return html\`
           ${options.useShadowDom || !css.length ? '' : `<style>${css}</style>`}

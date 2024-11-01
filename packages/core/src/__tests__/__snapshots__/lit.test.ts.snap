@@ -1,5 +1,60 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Lit > jsx > Javascript Test > Advanced 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-for-show-component\\")
+export default class MyBasicForShowComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() name = \\"PatrickJS\\";
+  @state() names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  render() {
+    return html\`
+
+          <main>
+          \${this.names?.map(
+            (person, i) => html\`
+      <div>\${i} : \${person}</div>
+      \`
+          )} \${this.names?.map((person, index) => html\`<span>\${person}</span>\`)}
+          \${this.names?.map((_, index) => html\`<br />\`)} \${Array.from({
+      length: 10,
+    })?.map(
+      (_, ee) => html\`
+      <pre>\${ee}</pre>
+      \`
+    )} \${Array.from({ length: 10 })?.map(
+      (_, index) => html\`
+      <p>\${index}</p>
+      \`
+    )} \${this.names?.map(
+      (person, index) => html\`<span
+        >\${person} \${index}</span
+      >\`
+    )} \${Array.from({ length: 10 })?.map(
+      (person, count) => html\`<span
+        >\${person} \${count}</span
+      >\`
+    )} \${this.names?.map(
+      (person, i) => html\`<span>\${person} \${i}</span>\`
+    )} \${Array.from({ length: 10 })?.map(
+      (person, index) => html\`<span
+        >\${person} \${index}</span
+      >\`
+    )}
+        </main>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > AdvancedRef 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -22,7 +77,7 @@ export default class MyBasicRefComponent extends LitElement {
 
   onBlur = function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -428,7 +483,7 @@ export default class MyBasicRefComponent extends LitElement {
 
   onBlur = function onBlur() {
     // Maintain focus
-    inputRef?.focus();
+    this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -476,15 +531,15 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
 
   handlerClick = function handlerClick(event) {
     event.preventDefault();
-    console.log(\\"current value\\", holdValueRef);
-    holdValueRef = holdValueRef + \\"JS\\";
+    console.log(\\"current value\\", this.holdValueRef);
+    this.holdValueRef = this.holdValueRef + \\"JS\\";
   };
 
   render() {
     return html\`
 
-          <div ><button  @click=\${(evt) =>
-            this.handlerClick(evt)} >Click</button></div>
+          <div ><button  @click=\${async (evt) =>
+            await this.handlerClick(evt)} >Click</button></div>
         \`;
   }
 }
@@ -517,7 +572,7 @@ export default class MyPreviousComponent extends LitElement {
   @state() count = 0;
 
   updated() {
-    prevCount = this.count;
+    this.prevCount = this.count;
   }
 
   render() {
@@ -527,7 +582,7 @@ export default class MyPreviousComponent extends LitElement {
                 Now:
         \${this.count}
         , before:
-        \${prevCount}</h1>
+        \${this.prevCount}</h1>
         <button  @click=\${(event) =>
           (this.count += 1)} >Increment</button></div>
         \`;
@@ -756,9 +811,9 @@ export default class CustomCode extends LitElement {
 
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem && typeof window !== \\"undefined\\") {
+    if (this.elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem.getElementsByTagName(\\"script\\");
+      const scripts = this.elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -831,9 +886,9 @@ export default class CustomCode extends LitElement {
 
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem && typeof window !== \\"undefined\\") {
+    if (this.elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem.getElementsByTagName(\\"script\\");
+      const scripts = this.elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -1041,8 +1096,8 @@ export default class FormComponent extends LitElement {
         },
       });
 
-      if (formRef) {
-        formRef.dispatchEvent(presubmitEvent);
+      if (this.formRef) {
+        this.formRef.dispatchEvent(presubmitEvent);
 
         if (presubmitEvent.defaultPrevented) {
           return;
@@ -1100,8 +1155,8 @@ export default class FormComponent extends LitElement {
               },
             });
 
-            if (formRef) {
-              formRef.dispatchEvent(submitSuccessEvent);
+            if (this.formRef) {
+              this.formRef.dispatchEvent(submitSuccessEvent);
 
               if (submitSuccessEvent.defaultPrevented) {
                 return;
@@ -1109,19 +1164,19 @@ export default class FormComponent extends LitElement {
               /* TODO: option to turn this on/off? */
 
               if (this.resetFormOnSubmit !== false) {
-                formRef.reset();
+                this.formRef.reset();
               }
             }
             /* TODO: client side route event first that can be preventDefaulted */
 
             if (this.successUrl) {
-              if (formRef) {
+              if (this.formRef) {
                 const event = new CustomEvent(\\"route\\", {
                   detail: {
                     url: this.successUrl,
                   },
                 });
-                formRef.dispatchEvent(event);
+                this.formRef.dispatchEvent(event);
 
                 if (!event.defaultPrevented) {
                   location.href = this.successUrl;
@@ -1139,8 +1194,8 @@ export default class FormComponent extends LitElement {
             },
           });
 
-          if (formRef) {
-            formRef.dispatchEvent(submitErrorEvent);
+          if (this.formRef) {
+            this.formRef.dispatchEvent(submitErrorEvent);
 
             if (submitErrorEvent.defaultPrevented) {
               return;
@@ -1241,8 +1296,8 @@ export default class Image extends LitElement {
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
+        if (this.pictureRef) {
+          const rect = this.pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -1320,7 +1375,7 @@ export default class ImgStateComponent extends LitElement {
 
           <div>
           \${this.images?.map(
-            (item, index) => html\`<my-fragment
+            (item, itemIndex) => html\`<my-fragment
         ><img .src=\\"\${item}\\" .key=\\"\${itemIndex}\\" /></my-fragment
       >\`
           )}
@@ -1444,34 +1499,6 @@ export default class Stepper extends LitElement {
           <form-input-component  name=\\"kingzez\\"  type=\\"text\\"  @change=\${(
             value
           ) => this.handleChange(value)} ></form-input-component>
-        \`;
-  }
-}
-"
-`;
-
-exports[`Lit > jsx > Javascript Test > NestedStore 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-@customElement(\\"nested-store\\")
-export default class NestedStore extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
-
-  @state() _id = \\"abc\\";
-  @state() _messageId = this._id + \\"-message\\";
-
-  render() {
-    return html\`
-
-          <div .id=\\"\${this._id}\\">
-          Test
-
-          <p .id=\\"\${this._messageId}\\">Message</p>
-        </div>
-
         \`;
   }
 }
@@ -1797,8 +1824,8 @@ export default class SmileReviews extends LitElement {
             ? html\`<input  placeholder=\\"Email\\"  />
        <input  placeholder=\\"Title\\"  />
        <textarea  placeholder=\\"How was your experience?\\" ></textarea>
-       <button  @click=\${(event) => {
-         event.preventDefault();
+       <button  @click=\${(ev) => {
+         ev.preventDefault();
          this.showReviewPrompt = false;
        }} >
                  Submit
@@ -1918,46 +1945,6 @@ export default class Textarea extends LitElement {
           .value=\\"\${this.value}\\"
           .defaultValue=\\"\${this.defaultValue}\\"
         ></textarea>
-
-        \`;
-  }
-}
-"
-`;
-
-exports[`Lit > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-@customElement(\\"use-value-and-fn-from-store\\")
-export default class UseValueAndFnFromStore extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
-
-  @property() onChange: any;
-
-  @state() _id = \\"abc\\";
-  @state() _active = false;
-
-  _do(id) {
-    this._active = !!id;
-
-    if (this.onChange) {
-      this.onChange(this._active);
-    }
-  }
-
-  updated() {
-    if (this._do) {
-      this._do(this._id);
-    }
-  }
-
-  render() {
-    return html\`
-
-          <div>Test</div>
 
         \`;
   }
@@ -2194,7 +2181,9 @@ export default class MyBasicOnUpdateReturnComponent extends LitElement {
 `;
 
 exports[`Lit > jsx > Javascript Test > class + ClassName + css 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
+"import \\"./my-component.ts\\";
+
+import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
@@ -2209,7 +2198,10 @@ export default class MyBasicComponent extends LitElement {
   padding: 10px;
 }
 </style>
+          <div>
+          <my-comp> Hello! I can run in React, Vue, Solid, or Liquid! </my-comp>
           <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+        </div>
 
         \`;
   }
@@ -2842,7 +2834,7 @@ export default class Embed extends LitElement {
   }
 
   connectedCallback() {
-    elem.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    this.elem.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
   }
 
   render() {
@@ -2903,6 +2895,27 @@ export default class OnInit extends LitElement {
     return html\`
 
           <div>Default name defined by parent \${this.name}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > onInitPlain 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"on-init-plain\\")
+export default class OnInitPlain extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+
+          <div></div>
 
         \`;
   }
@@ -3648,33 +3661,6 @@ export default class MyComponent extends LitElement {
 "
 `;
 
-exports[`Lit > jsx > Javascript Test > setState 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-@customElement(\\"set-state\\")
-export default class SetState extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
-
-  @state() n = [\\"123\\"];
-
-  someFn() {
-    this.n[0] = \\"123\\";
-  }
-
-  render() {
-    return html\`
-
-          <div ><button  @click=\${(event) =>
-            this.someFn()} >Click me</button></div>
-        \`;
-  }
-}
-"
-`;
-
 exports[`Lit > jsx > Javascript Test > showExpressions 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -3687,6 +3673,7 @@ export default class ShowWithOtherValues extends LitElement {
 
   @property() conditionA: any;
   @property() conditionB: any;
+  @property() conditionC: any;
 
   render() {
     return html\`
@@ -3713,6 +3700,22 @@ export default class ShowWithOtherValues extends LitElement {
       this.conditionA === \\"Default\\"
         ? html\`\${this.conditionB === \\"Complete\\" ? html\`20mb\` : html\`9mb\`}\`
         : html\`4mb\`
+    } \${
+      this.conditionA === \\"Default\\"
+        ? html\`\${
+            this.conditionB === \\"Complete\\"
+              ? html\`
+          <div>complete</div>
+          \`
+              : html\`9mb\`
+          }\`
+        : html\`\${
+            this.conditionC === \\"Complete\\"
+              ? html\`dff\`
+              : html\`
+          <div>complete else</div>
+          \`
+          }\`
     }
         </div>
 
@@ -3741,7 +3744,7 @@ export default class NestedShow extends LitElement {
           \${
             this.conditionA
               ? html\`\${this.items?.map(
-                  (item, index) => html\`
+                  (item, idx) => html\`
         <div .key=\\"\${idx}\\">\${item}</div>
         \`
                 )}\`
@@ -3935,6 +3938,37 @@ export default class MyBasicComponent extends LitElement {
     return html\`
 
           <input \${spread(props)} />
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > store-async-function 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"string-literal-store\\")
+export default class StringLiteralStore extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  arrowFunction = async function arrowFunction() {
+    return Promise.resolve();
+  };
+  namedFunction = async function namedFunction() {
+    return Promise.resolve();
+  };
+  fetchUsers = async function fetchUsers() {
+    return Promise.resolve();
+  };
+
+  render() {
+    return html\`
+
+          <div></div>
 
         \`;
   }
@@ -4241,13 +4275,17 @@ export default class UseTargetComponent extends LitElement {
   }
 
   @state() lastName = \\"bar\\";
+  @state() foo = \\"bar\\";
 
   get name() {
     const prefix = \\"li\\";
     return prefix + \\"foo\\";
   }
 
-  connectedCallback() {}
+  connectedCallback() {
+    console.log(this.foo);
+    this.foo = \\"bar\\";
+  }
 
   render() {
     return html\`
@@ -4310,6 +4348,61 @@ export default class MyBasicComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Typescript Test > Advanced 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-for-show-component\\")
+export default class MyBasicForShowComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() name = \\"PatrickJS\\";
+  @state() names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  render() {
+    return html\`
+
+          <main>
+          \${this.names?.map(
+            (person, i) => html\`
+      <div>\${i} : \${person}</div>
+      \`
+          )} \${this.names?.map((person, index) => html\`<span>\${person}</span>\`)}
+          \${this.names?.map((_, index) => html\`<br />\`)} \${Array.from({
+      length: 10,
+    })?.map(
+      (_, ee) => html\`
+      <pre>\${ee}</pre>
+      \`
+    )} \${Array.from({ length: 10 })?.map(
+      (_, index) => html\`
+      <p>\${index}</p>
+      \`
+    )} \${this.names?.map(
+      (person, index) => html\`<span
+        >\${person} \${index}</span
+      >\`
+    )} \${Array.from({ length: 10 })?.map(
+      (person, count) => html\`<span
+        >\${person} \${count}</span
+      >\`
+    )} \${this.names?.map(
+      (person, i) => html\`<span>\${person} \${i}</span>\`
+    )} \${Array.from({ length: 10 })?.map(
+      (person, index) => html\`<span
+        >\${person} \${index}</span
+      >\`
+    )}
+        </main>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Typescript Test > AdvancedRef 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -4336,7 +4429,7 @@ export default class MyBasicRefComponent extends LitElement {
 
   onBlur = function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -4760,7 +4853,7 @@ export default class MyBasicRefComponent extends LitElement {
 
   onBlur = function onBlur() {
     // Maintain focus
-    inputRef?.focus();
+    this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -4812,15 +4905,15 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
 
   handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
-    console.log(\\"current value\\", holdValueRef);
-    holdValueRef = holdValueRef + \\"JS\\";
+    console.log(\\"current value\\", this.holdValueRef);
+    this.holdValueRef = this.holdValueRef + \\"JS\\";
   };
 
   render() {
     return html\`
 
-          <div ><button  @click=\${(evt) =>
-            this.handlerClick(evt)} >Click</button></div>
+          <div ><button  @click=\${async (evt) =>
+            await this.handlerClick(evt)} >Click</button></div>
         \`;
   }
 }
@@ -4857,7 +4950,7 @@ export default class MyPreviousComponent extends LitElement {
   @state() count = 0;
 
   updated() {
-    prevCount = this.count;
+    this.prevCount = this.count;
   }
 
   render() {
@@ -4867,7 +4960,7 @@ export default class MyPreviousComponent extends LitElement {
                 Now:
         \${this.count}
         , before:
-        \${prevCount}</h1>
+        \${this.prevCount}</h1>
         <button  @click=\${(event) =>
           (this.count += 1)} >Increment</button></div>
         \`;
@@ -5136,9 +5229,9 @@ export default class CustomCode extends LitElement {
 
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem && typeof window !== \\"undefined\\") {
+    if (this.elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem.getElementsByTagName(\\"script\\");
+      const scripts = this.elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -5216,9 +5309,9 @@ export default class CustomCode extends LitElement {
 
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem && typeof window !== \\"undefined\\") {
+    if (this.elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem.getElementsByTagName(\\"script\\");
+      const scripts = this.elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -5457,8 +5550,8 @@ export default class FormComponent extends LitElement {
         },
       });
 
-      if (formRef) {
-        formRef.dispatchEvent(presubmitEvent);
+      if (this.formRef) {
+        this.formRef.dispatchEvent(presubmitEvent);
 
         if (presubmitEvent.defaultPrevented) {
           return;
@@ -5516,8 +5609,8 @@ export default class FormComponent extends LitElement {
               },
             });
 
-            if (formRef) {
-              formRef.dispatchEvent(submitSuccessEvent);
+            if (this.formRef) {
+              this.formRef.dispatchEvent(submitSuccessEvent);
 
               if (submitSuccessEvent.defaultPrevented) {
                 return;
@@ -5525,19 +5618,19 @@ export default class FormComponent extends LitElement {
               /* TODO: option to turn this on/off? */
 
               if (this.resetFormOnSubmit !== false) {
-                formRef.reset();
+                this.formRef.reset();
               }
             }
             /* TODO: client side route event first that can be preventDefaulted */
 
             if (this.successUrl) {
-              if (formRef) {
+              if (this.formRef) {
                 const event = new CustomEvent(\\"route\\", {
                   detail: {
                     url: this.successUrl,
                   },
                 });
-                formRef.dispatchEvent(event);
+                this.formRef.dispatchEvent(event);
 
                 if (!event.defaultPrevented) {
                   location.href = this.successUrl;
@@ -5555,8 +5648,8 @@ export default class FormComponent extends LitElement {
             },
           });
 
-          if (formRef) {
-            formRef.dispatchEvent(submitErrorEvent);
+          if (this.formRef) {
+            this.formRef.dispatchEvent(submitErrorEvent);
 
             if (submitErrorEvent.defaultPrevented) {
               return;
@@ -5679,8 +5772,8 @@ export default class Image extends LitElement {
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
+        if (this.pictureRef) {
+          const rect = this.pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -5758,7 +5851,7 @@ export default class ImgStateComponent extends LitElement {
 
           <div>
           \${this.images?.map(
-            (item, index) => html\`<my-fragment
+            (item, itemIndex) => html\`<my-fragment
         ><img .src=\\"\${item}\\" .key=\\"\${itemIndex}\\" /></my-fragment
       >\`
           )}
@@ -5910,39 +6003,6 @@ export default class Stepper extends LitElement {
           <form-input-component  name=\\"kingzez\\"  type=\\"text\\"  @change=\${(
             value
           ) => this.handleChange(value)} ></form-input-component>
-        \`;
-  }
-}
-"
-`;
-
-exports[`Lit > jsx > Typescript Test > NestedStore 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type MyStore = {
-  _id?: string;
-  _messageId?: string;
-};
-
-@customElement(\\"nested-store\\")
-export default class NestedStore extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
-
-  @state() _id = \\"abc\\";
-  @state() _messageId = this._id + \\"-message\\";
-
-  render() {
-    return html\`
-
-          <div .id=\\"\${this._id}\\">
-          Test
-
-          <p .id=\\"\${this._messageId}\\">Message</p>
-        </div>
-
         \`;
   }
 }
@@ -6317,8 +6377,8 @@ export default class SmileReviews extends LitElement {
             ? html\`<input  placeholder=\\"Email\\"  />
        <input  placeholder=\\"Title\\"  />
        <textarea  placeholder=\\"How was your experience?\\" ></textarea>
-       <button  @click=\${(event) => {
-         event.preventDefault();
+       <button  @click=\${(ev) => {
+         ev.preventDefault();
          this.showReviewPrompt = false;
        }} >
                  Submit
@@ -6459,55 +6519,6 @@ export default class Textarea extends LitElement {
           .value=\\"\${this.value}\\"
           .defaultValue=\\"\${this.defaultValue}\\"
         ></textarea>
-
-        \`;
-  }
-}
-"
-`;
-
-exports[`Lit > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type MyProps = {
-  onChange?: (active: boolean) => void;
-};
-type MyStore = {
-  _id?: string;
-  _active?: boolean;
-  _do?: (id?: string) => void;
-};
-
-@customElement(\\"use-value-and-fn-from-store\\")
-export default class UseValueAndFnFromStore extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
-
-  @property() onChange: any;
-
-  @state() _id = \\"abc\\";
-  @state() _active = false;
-
-  _do(id?: string) {
-    this._active = !!id;
-
-    if (this.onChange) {
-      this.onChange(this._active);
-    }
-  }
-
-  updated() {
-    if (this._do) {
-      this._do(this._id);
-    }
-  }
-
-  render() {
-    return html\`
-
-          <div>Test</div>
 
         \`;
   }
@@ -6780,7 +6791,9 @@ export default class MyBasicOnUpdateReturnComponent extends LitElement {
 `;
 
 exports[`Lit > jsx > Typescript Test > class + ClassName + css 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
+"import \\"./my-component.ts\\";
+
+import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
@@ -6795,7 +6808,10 @@ export default class MyBasicComponent extends LitElement {
   padding: 10px;
 }
 </style>
+          <div>
+          <my-comp> Hello! I can run in React, Vue, Solid, or Liquid! </my-comp>
           <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+        </div>
 
         \`;
   }
@@ -7481,7 +7497,7 @@ export default class Embed extends LitElement {
   }
 
   connectedCallback() {
-    elem.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+    this.elem.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
   }
 
   render() {
@@ -7546,6 +7562,27 @@ export default class OnInit extends LitElement {
     return html\`
 
           <div>Default name defined by parent \${this.name}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > onInitPlain 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"on-init-plain\\")
+export default class OnInitPlain extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+
+          <div></div>
 
         \`;
   }
@@ -8365,33 +8402,6 @@ export default class MyComponent extends LitElement {
 "
 `;
 
-exports[`Lit > jsx > Typescript Test > setState 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-@customElement(\\"set-state\\")
-export default class SetState extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
-
-  @state() n = [\\"123\\"];
-
-  someFn() {
-    this.n[0] = \\"123\\";
-  }
-
-  render() {
-    return html\`
-
-          <div ><button  @click=\${(event) =>
-            this.someFn()} >Click me</button></div>
-        \`;
-  }
-}
-"
-`;
-
 exports[`Lit > jsx > Typescript Test > showExpressions 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -8409,6 +8419,7 @@ export default class ShowWithOtherValues extends LitElement {
 
   @property() conditionA: any;
   @property() conditionB: any;
+  @property() conditionC: any;
 
   render() {
     return html\`
@@ -8435,6 +8446,22 @@ export default class ShowWithOtherValues extends LitElement {
       this.conditionA === \\"Default\\"
         ? html\`\${this.conditionB === \\"Complete\\" ? html\`20mb\` : html\`9mb\`}\`
         : html\`4mb\`
+    } \${
+      this.conditionA === \\"Default\\"
+        ? html\`\${
+            this.conditionB === \\"Complete\\"
+              ? html\`
+          <div>complete</div>
+          \`
+              : html\`9mb\`
+          }\`
+        : html\`\${
+            this.conditionC === \\"Complete\\"
+              ? html\`dff\`
+              : html\`
+          <div>complete else</div>
+          \`
+          }\`
     }
         </div>
 
@@ -8468,7 +8495,7 @@ export default class NestedShow extends LitElement {
           \${
             this.conditionA
               ? html\`\${this.items?.map(
-                  (item, index) => html\`
+                  (item, idx) => html\`
         <div .key=\\"\${idx}\\">\${item}</div>
         \`
                 )}\`
@@ -8679,6 +8706,37 @@ export default class MyBasicComponent extends LitElement {
     return html\`
 
           <input \${spread(props)} />
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > store-async-function 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"string-literal-store\\")
+export default class StringLiteralStore extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  arrowFunction = async function arrowFunction() {
+    return Promise.resolve();
+  };
+  namedFunction = async function namedFunction() {
+    return Promise.resolve();
+  };
+  fetchUsers = async function fetchUsers() {
+    return Promise.resolve();
+  };
+
+  render() {
+    return html\`
+
+          <div></div>
 
         \`;
   }
@@ -9001,13 +9059,17 @@ export default class UseTargetComponent extends LitElement {
   }
 
   @state() lastName = \\"bar\\";
+  @state() foo = \\"bar\\";
 
   get name() {
     const prefix = \\"li\\";
     return prefix + \\"foo\\";
   }
 
-  connectedCallback() {}
+  connectedCallback() {
+    console.log(this.foo);
+    this.foo = \\"bar\\";
+  }
 
   render() {
     return html\`
@@ -9111,21 +9173,21 @@ export default class MyComponent extends LitElement {
 
           <div>
           <input type=\\"radio\\" value=\\"Plain\\" .checked=\${this.tortilla === 'Plain'}
-          @input=\${event => this.tortilla = event.target.value} /> <input type=\\"radio\\"
-          value=\\"Whole wheat\\" .checked=\${this.tortilla === 'Whole wheat'} @input=\${event
-          => this.tortilla = event.target.value} /> <input type=\\"radio\\" value=\\"Spinach\\"
-          .checked=\${this.tortilla === 'Spinach'} @input=\${event => this.tortilla =
-          event.target.value} />
+          @input=\${(event) => this.tortilla = event.target.value} /> <input type=\\"radio\\"
+          value=\\"Whole wheat\\" .checked=\${this.tortilla === 'Whole wheat'}
+          @input=\${(event) => this.tortilla = event.target.value} /> <input type=\\"radio\\"
+          value=\\"Spinach\\" .checked=\${this.tortilla === 'Spinach'} @input=\${(event) =>
+          this.tortilla = event.target.value} />
           <br />
           <br />
           <input type=\\"checkbox\\" value=\\"Rice\\" .checked=\${this.fillings === 'Rice'}
-          @input=\${event => this.fillings = event.target.value} /> <input
+          @input=\${(event) => this.fillings = event.target.value} /> <input
           type=\\"checkbox\\" value=\\"Beans\\" .checked=\${this.fillings === 'Beans'}
-          @input=\${event => this.fillings = event.target.value} /> <input
+          @input=\${(event) => this.fillings = event.target.value} /> <input
           type=\\"checkbox\\" value=\\"Cheese\\" .checked=\${this.fillings === 'Cheese'}
-          @input=\${event => this.fillings = event.target.value} /> <input
+          @input=\${(event) => this.fillings = event.target.value} /> <input
           type=\\"checkbox\\" value=\\"Guac (extra)\\" .checked=\${this.fillings === 'Guac
-          (extra)'} @input=\${event => this.fillings = event.target.value} />
+          (extra)'} @input=\${(event) => this.fillings = event.target.value} />
           <p>Tortilla: \${this.tortilla}</p>
           <p>Fillings: \${this.fillings}</p>
         </div>
@@ -9606,21 +9668,21 @@ export default class MyComponent extends LitElement {
 
           <div>
           <input type=\\"radio\\" value=\\"Plain\\" .checked=\${this.tortilla === 'Plain'}
-          @input=\${event => this.tortilla = event.target.value} /> <input type=\\"radio\\"
-          value=\\"Whole wheat\\" .checked=\${this.tortilla === 'Whole wheat'} @input=\${event
-          => this.tortilla = event.target.value} /> <input type=\\"radio\\" value=\\"Spinach\\"
-          .checked=\${this.tortilla === 'Spinach'} @input=\${event => this.tortilla =
-          event.target.value} />
+          @input=\${(event) => this.tortilla = event.target.value} /> <input type=\\"radio\\"
+          value=\\"Whole wheat\\" .checked=\${this.tortilla === 'Whole wheat'}
+          @input=\${(event) => this.tortilla = event.target.value} /> <input type=\\"radio\\"
+          value=\\"Spinach\\" .checked=\${this.tortilla === 'Spinach'} @input=\${(event) =>
+          this.tortilla = event.target.value} />
           <br />
           <br />
           <input type=\\"checkbox\\" value=\\"Rice\\" .checked=\${this.fillings === 'Rice'}
-          @input=\${event => this.fillings = event.target.value} /> <input
+          @input=\${(event) => this.fillings = event.target.value} /> <input
           type=\\"checkbox\\" value=\\"Beans\\" .checked=\${this.fillings === 'Beans'}
-          @input=\${event => this.fillings = event.target.value} /> <input
+          @input=\${(event) => this.fillings = event.target.value} /> <input
           type=\\"checkbox\\" value=\\"Cheese\\" .checked=\${this.fillings === 'Cheese'}
-          @input=\${event => this.fillings = event.target.value} /> <input
+          @input=\${(event) => this.fillings = event.target.value} /> <input
           type=\\"checkbox\\" value=\\"Guac (extra)\\" .checked=\${this.fillings === 'Guac
-          (extra)'} @input=\${event => this.fillings = event.target.value} />
+          (extra)'} @input=\${(event) => this.fillings = event.target.value} />
           <p>Tortilla: \${this.tortilla}</p>
           <p>Fillings: \${this.fillings}</p>
         </div>

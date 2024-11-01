@@ -1,4 +1,5 @@
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '@/constants/html_tags';
+import { createSingleBinding } from '@/helpers/bindings';
 import { dedent } from '@/helpers/dedent';
 import { fastClone } from '@/helpers/fast-clone';
 import { getChildComponents } from '@/helpers/get-child-components';
@@ -361,12 +362,12 @@ export const blockToAngular = ({
         type: 'method',
       };
 
-      str += `<ng-container *ngFor="let ${forName} of ${json.bindings.each?.code}${
-        indexName ? `; let ${indexName} = index` : ''
+      str += `<ng-container *ngFor="let ${forName ?? '_'} of ${json.bindings.each?.code}${
+        indexName ? `; index as ${indexName}` : ''
       }; trackBy: ${trackByFnName}">`;
     } else {
-      str += `<ng-container *ngFor="let ${forName} of ${json.bindings.each?.code}${
-        indexName ? `; let ${indexName} = index` : ''
+      str += `<ng-container *ngFor="let ${forName ?? '_'} of ${json.bindings.each?.code}${
+        indexName ? `; index as ${indexName}` : ''
       }">`;
     }
     str += json.children
@@ -453,10 +454,10 @@ export const blockToAngular = ({
           const spreadRefIndex = root.meta._spreadRefIndex || 0;
           refName = `elRef${spreadRefIndex}`;
           root.meta._spreadRefIndex = (spreadRefIndex as number) + 1;
-          json.bindings['spreadRef'] = { code: refName, type: 'single' };
+          json.bindings['spreadRef'] = createSingleBinding({ code: refName });
           root.refs[refName] = { argument: '' };
         }
-        json.bindings['spreadRef'] = { code: refName, type: 'single' };
+        json.bindings['spreadRef'] = createSingleBinding({ code: refName });
         root.refs[refName] = { argument: '' };
         root.meta.onViewInit = (root.meta.onViewInit || { code: '' }) as BaseHook;
         let spreadCode = '';
@@ -678,7 +679,7 @@ const handleProperties = (json: MitosisComponent, item: MitosisNode, index: numb
     }
     const newBindingName = generateNewBindingName(index, item.name);
     json.state[newBindingName] = { code: '`' + `${item.properties[key]}` + '`', type: 'property' };
-    item.bindings[key] = { code: `state.${newBindingName}`, type: 'single' };
+    item.bindings[key] = createSingleBinding({ code: `state.${newBindingName}` });
     delete item.properties[key];
     index++;
   }
@@ -1030,7 +1031,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             `@ViewChild('${refName}') ${refName}${options.typescript ? '!: ElementRef' : ''}`,
         )
         .join('\n')}
-      
+
       ${Array.from(dynamicComponents)
         .map(
           (component) =>

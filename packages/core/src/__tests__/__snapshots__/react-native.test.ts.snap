@@ -1,5 +1,76 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`React Native > Vaild react-native styles 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function MyBasicComponent(props) {
+  const [classState, setClassState] = useState(() => \\"testClassName\\");
+
+  return (
+    <View>
+      <View style={styles.view1}>
+        <Text>Hey world</Text>
+      </View>
+      <View style={styles.view2}>
+        <Text>Flex container</Text>
+      </View>
+      <View style={styles.view3}>
+        <Text>Testing unsupported properties</Text>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  view1: {
+    backgroundColor: \\"#971f1f\\",
+    paddingTop: 20,
+    paddingRight: 20,
+    paddingBottom: 20,
+    paddingLeft: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: \\"blue\\",
+    borderStyle: \\"solid\\",
+    fontSize: 16,
+    fontWeight: \\"bold\\",
+    fontFamily: \\"Arial\\",
+  },
+  view2: {
+    marginTop: 10,
+    marginRight: 15,
+    marginBottom: 10,
+    marginLeft: 15,
+    display: \\"flex\\",
+    flexDirection: \\"column\\",
+    alignItems: \\"center\\",
+    justifyContent: \\"space-between\\",
+    width: \\"100%\\",
+    height: 200,
+    color: \\"green\\",
+    fontSize: 20,
+  },
+  view3: { opacity: \\"0.8\\", transform: \\"scale(1.1)\\" },
+});
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > AdvancedRef 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -529,7 +600,7 @@ function MyBasicRefAssignmentComponent(props) {
 
   return (
     <View>
-      <Button onPress={(evt) => handlerClick(evt)}>
+      <Button onPress={async (evt) => await handlerClick(evt)}>
         <Text>Click</Text>
       </Button>
     </View>
@@ -1791,8 +1862,8 @@ function SmileReviews(props) {
           <TextInput placeholder=\\"Title\\" />
           <View placeholder=\\"How was your experience?\\" />
           <Button
-            onPress={(event) => {
-              event.preventDefault();
+            onPress={(ev) => {
+              ev.preventDefault();
               setShowReviewPrompt(false);
             }}
           >
@@ -2268,11 +2339,17 @@ import {
   Button,
   Linking,
 } from \\"react-native\\";
+import MyComp from \\"./my-component\\";
 
 function MyBasicComponent(props) {
   return (
-    <View style={styles.view1}>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    <View>
+      <MyComp>
+        <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      </MyComp>
+      <View style={styles.view1}>
+        <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      </View>
     </View>
   );
 }
@@ -3201,6 +3278,37 @@ function OnInit(props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > onInitPlain 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useRef } from \\"react\\";
+
+function OnInitPlain(props) {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    console.log(\\"onInit\\");
+    hasInitialized.current = true;
+  }
+
+  return <View />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -4191,6 +4299,27 @@ function ShowWithOtherValues(props) {
           <Text>4mb</Text>
         </>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <>
+          {props.conditionB === \\"Complete\\" ? (
+            <View>
+              <Text>complete</Text>
+            </View>
+          ) : (
+            <>
+              <Text>9mb</Text>
+            </>
+          )}
+        </>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <>
+          <Text>dff</Text>
+        </>
+      ) : (
+        <View>
+          <Text>complete else</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -4450,6 +4579,42 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > store-async-function 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+
+function StringLiteralStore(props) {
+  async function arrowFunction() {
+    return Promise.resolve();
+  }
+
+  async function namedFunction() {
+    return Promise.resolve();
+  }
+
+  async function fetchUsers() {
+    return Promise.resolve();
+  }
+
+  return <View />;
+}
+
+export default StringLiteralStore;
 "
 `;
 
@@ -4835,7 +5000,12 @@ function UseTargetComponent(props) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return (
     <View>
@@ -5480,7 +5650,7 @@ function MyBasicRefAssignmentComponent(props: Props) {
 
   return (
     <View>
-      <Button onPress={(evt) => handlerClick(evt)}>
+      <Button onPress={async (evt) => await handlerClick(evt)}>
         <Text>Click</Text>
       </Button>
     </View>
@@ -6920,8 +7090,8 @@ function SmileReviews(props: SmileReviewsProps) {
           <TextInput placeholder=\\"Title\\" />
           <View placeholder=\\"How was your experience?\\" />
           <Button
-            onPress={(event) => {
-              event.preventDefault();
+            onPress={(ev) => {
+              ev.preventDefault();
               setShowReviewPrompt(false);
             }}
           >
@@ -7464,11 +7634,17 @@ import {
   Button,
   Linking,
 } from \\"react-native\\";
+import MyComp from \\"./my-component\\";
 
 function MyBasicComponent(props: any) {
   return (
-    <View style={styles.view1}>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    <View>
+      <MyComp>
+        <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      </MyComp>
+      <View style={styles.view1}>
+        <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      </View>
     </View>
   );
 }
@@ -8455,6 +8631,37 @@ function OnInit(props: Props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > onInitPlain 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useRef } from \\"react\\";
+
+function OnInitPlain(props: any) {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    console.log(\\"onInit\\");
+    hasInitialized.current = true;
+  }
+
+  return <View />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -9524,6 +9731,27 @@ function ShowWithOtherValues(props: Props) {
           <Text>4mb</Text>
         </>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <>
+          {props.conditionB === \\"Complete\\" ? (
+            <View>
+              <Text>complete</Text>
+            </View>
+          ) : (
+            <>
+              <Text>9mb</Text>
+            </>
+          )}
+        </>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <>
+          <Text>dff</Text>
+        </>
+      ) : (
+        <View>
+          <Text>complete else</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -9805,6 +10033,42 @@ function MyBasicComponent(props: any) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > store-async-function 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+
+function StringLiteralStore(props: any) {
+  async function arrowFunction() {
+    return Promise.resolve();
+  }
+
+  async function namedFunction() {
+    return Promise.resolve();
+  }
+
+  async function fetchUsers() {
+    return Promise.resolve();
+  }
+
+  return <View />;
+}
+
+export default StringLiteralStore;
 "
 `;
 
@@ -10204,7 +10468,12 @@ function UseTargetComponent(props: any) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return (
     <View>

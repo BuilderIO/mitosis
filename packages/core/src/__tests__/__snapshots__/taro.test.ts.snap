@@ -394,7 +394,7 @@ function MyBasicRefAssignmentComponent(props) {
 
   return (
     <View>
-      <Button onClick={(evt) => handlerClick(evt)}>Click</Button>
+      <Button onClick={async (evt) => await handlerClick(evt)}>Click</Button>
     </View>
   );
 }
@@ -1413,8 +1413,8 @@ function SmileReviews(props) {
             />
             <Button
               className=\\"button\\"
-              onClick={(event) => {
-                event.preventDefault();
+              onClick={(ev) => {
+                ev.preventDefault();
                 setShowReviewPrompt(false);
               }}
             >
@@ -1761,13 +1761,17 @@ export default MyBasicOnUpdateReturnComponent;
 
 exports[`Taro > jsx > Javascript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
+import MyComp from \\"./my-component\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props) {
   return (
     <>
-      <View className=\\"view\\">
-        Hello! I can run in React, Vue, Solid, or Liquid!
+      <View>
+        <MyComp>Hello! I can run in React, Vue, Solid, or Liquid!</MyComp>
+        <View className=\\"view\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </View>
       </View>
       <style jsx>{\`
         .view {
@@ -2381,6 +2385,25 @@ function OnInit(props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > onInitPlain 1`] = `
+"import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
+
+function OnInitPlain(props) {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    console.log(\\"onInit\\");
+    hasInitialized.current = true;
+  }
+
+  return <View />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -3046,6 +3069,15 @@ function ShowWithOtherValues(props) {
       ) : (
         <>4mb</>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <>
+          {props.conditionB === \\"Complete\\" ? <View>complete</View> : <>9mb</>}
+        </>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <>dff</>
+      ) : (
+        <View>complete else</View>
+      )}
     </View>
   );
 }
@@ -3177,6 +3209,30 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > store-async-function 1`] = `
+"import * as React from \\"react\\";
+import { View } from \\"@tarojs/components\\";
+
+function StringLiteralStore(props) {
+  async function arrowFunction() {
+    return Promise.resolve();
+  }
+
+  async function namedFunction() {
+    return Promise.resolve();
+  }
+
+  async function fetchUsers() {
+    return Promise.resolve();
+  }
+
+  return <View />;
+}
+
+export default StringLiteralStore;
 "
 `;
 
@@ -3435,7 +3491,12 @@ function UseTargetComponent(props) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return <View>{name()}</View>;
 }
@@ -3913,7 +3974,7 @@ function MyBasicRefAssignmentComponent(props: Props) {
 
   return (
     <View>
-      <Button onClick={(evt) => handlerClick(evt)}>Click</Button>
+      <Button onClick={async (evt) => await handlerClick(evt)}>Click</Button>
     </View>
   );
 }
@@ -5118,8 +5179,8 @@ function SmileReviews(props: SmileReviewsProps) {
             />
             <Button
               className=\\"button\\"
-              onClick={(event) => {
-                event.preventDefault();
+              onClick={(ev) => {
+                ev.preventDefault();
                 setShowReviewPrompt(false);
               }}
             >
@@ -5538,13 +5599,17 @@ export default MyBasicOnUpdateReturnComponent;
 
 exports[`Taro > jsx > Typescript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
+import MyComp from \\"./my-component\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function MyBasicComponent(props: any) {
   return (
     <>
-      <View className=\\"view\\">
-        Hello! I can run in React, Vue, Solid, or Liquid!
+      <View>
+        <MyComp>Hello! I can run in React, Vue, Solid, or Liquid!</MyComp>
+        <View className=\\"view\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </View>
       </View>
       <style jsx>{\`
         .view {
@@ -6220,6 +6285,25 @@ function OnInit(props: Props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > onInitPlain 1`] = `
+"import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+import { View } from \\"@tarojs/components\\";
+
+function OnInitPlain(props: any) {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    console.log(\\"onInit\\");
+    hasInitialized.current = true;
+  }
+
+  return <View />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -6970,6 +7054,15 @@ function ShowWithOtherValues(props: Props) {
       ) : (
         <>4mb</>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <>
+          {props.conditionB === \\"Complete\\" ? <View>complete</View> : <>9mb</>}
+        </>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <>dff</>
+      ) : (
+        <View>complete else</View>
+      )}
     </View>
   );
 }
@@ -7126,6 +7219,30 @@ function MyBasicComponent(props: any) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > store-async-function 1`] = `
+"import * as React from \\"react\\";
+import { View } from \\"@tarojs/components\\";
+
+function StringLiteralStore(props: any) {
+  async function arrowFunction() {
+    return Promise.resolve();
+  }
+
+  async function namedFunction() {
+    return Promise.resolve();
+  }
+
+  async function fetchUsers() {
+    return Promise.resolve();
+  }
+
+  return <View />;
+}
+
+export default StringLiteralStore;
 "
 `;
 
@@ -7398,7 +7515,12 @@ function UseTargetComponent(props: any) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return <View>{name()}</View>;
 }

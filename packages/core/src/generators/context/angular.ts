@@ -35,7 +35,9 @@ export default class ${context.name}Context {
           ],
         });
       } catch (err) {
-        console.error('Format error for file:', str);
+        if (process.env.NODE_ENV !== 'test') {
+          console.error('Format error for file:', str);
+        }
         throw err;
       }
     }

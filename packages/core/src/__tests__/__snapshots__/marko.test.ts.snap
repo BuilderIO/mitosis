@@ -58,6 +58,52 @@ exports[`Marko > formatting 3`] = `
 "
 `;
 
+exports[`Marko > jsx > Javascript Test > Advanced 1`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+  }
+}
+
+<main>
+  <for|person,i| of=(state.names)>
+    <div>\${i} : \${person}</div>
+  </for>
+  <for|person| of=(state.names)>
+    <span>\${person}</span>
+  </for>
+  <for|item| of=(state.names)>
+    <br />
+  </for>
+  <for|_,ee| of=(Array.from({
+  length: 10
+}))>
+    <pre>\${ee}</pre>
+  </for>
+  <for|item| of=(Array.from({
+  length: 10
+}))>
+    <p>\${index}</p>
+  </for>
+  <for|person,index| of=(state.names)>
+    <span>\${person} \${index}</span>
+  </for>
+  <for|person,count| of=(Array.from({
+  length: 10
+}))>
+    <span>\${person} \${count}</span>
+  </for>
+  <for|person,i| of=(state.names)>
+    <span>\${person} \${i}</span>
+  </for>
+  <for|person,index| of=(Array.from({
+  length: 10
+}))>
+    <span>\${person} \${index}</span>
+  </for>
+</main>"
+`;
+
 exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `
 "class {
   onBlur = function onBlur() {
@@ -84,19 +130,19 @@ exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `
   }
 }
 
-style { 
-  .input-8aea05e4 {
+style {
+  .input-218fa7c6 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-8aea05e4\\"
+      class=\\"input-218fa7c6\\"
       key=\\"inputRef\\"
       value=(state.name)
-      on-blur(event => component.onBlur())
-      on-input(event => state.name = event.target.value)
+      on-blur((event) => component.onBlur())
+      on-input((event) => state.name = event.target.value)
     />
     <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
     <select name=\\"cars\\" id=\\"cars\\">
@@ -124,15 +170,15 @@ class {
   }
 }
 
-style { 
-  .div-3970f665 {
+style {
+  .div-36710884 {
     padding: 10px;
   }
 }
-<div class=\\"test div-3970f665\\">
+<div class=\\"test div-36710884\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
-    on-input(myEvent => state.name = myEvent.target.value)
+    on-input((myEvent) => state.name = myEvent.target.value)
   />
 
   Hello! I can run in React, Vue, Solid, or Liquid! &gt;
@@ -151,7 +197,7 @@ exports[`Marko > jsx > Javascript Test > Basic 2`] = `
     <if(person === state.name)>
       <input
         value=(state.name)
-        on-input(event => {
+        on-input((event) => {
   state.name = event.target.value + ' and ' + person;
 })
       />
@@ -186,7 +232,7 @@ class {
   \${myService.method('hello') + state.name} Hello! I can run in React, Vue,
   Solid, or Liquid!
 
-  <input on-input(event => component.onChange) />
+  <input on-input((event) => component.onChange) />
 </div>"
 `;
 
@@ -290,7 +336,7 @@ exports[`Marko > jsx > Javascript Test > BasicFor 1`] = `
   <for|person| of=(state.names)>
     <input
       value=(state.name)
-      on-input(event => {
+      on-input((event) => {
   state.name = event.target.value + ' and ' + person;
 })
     />
@@ -305,7 +351,7 @@ exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
 "class {
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef?.focus();
+    this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.state.name.toLowerCase();
@@ -323,19 +369,19 @@ exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
   }
 }
 
-style { 
-  .input-d2b8a7d4 {
+style {
+  .input-68b0692e {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-d2b8a7d4\\"
+      class=\\"input-68b0692e\\"
       key=\\"inputRef\\"
       value=(state.name)
-      on-blur(event => component.onBlur())
-      on-input(event => state.name = event.target.value)
+      on-blur((event) => component.onBlur())
+      on-input((event) => state.name = event.target.value)
     />
     <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
     <select name=\\"cars\\" id=\\"cars\\">
@@ -358,7 +404,9 @@ exports[`Marko > jsx > Javascript Test > BasicRefAssignment 1`] = `
 }
 
 <div>
-  <button on-click(evt => component.handlerClick(evt))>Click</button>
+  <button on-click(async (evt) => await component.handlerClick(evt))>
+    Click
+  </button>
 </div>"
 `;
 
@@ -388,7 +436,7 @@ class {
 
 <div>
   <h1>Now: \${state.count} , before: \${this.prevCount}</h1>
-  <button on-click(event => state.count += 1)>Increment</button>
+  <button on-click((event) => state.count += 1)>Increment</button>
 </div>"
 `;
 
@@ -428,30 +476,30 @@ exports[`Marko > jsx > Javascript Test > Columns 1`] = `
   }
 }
 
-style { 
-  .div-8ebf4416 {
+style {
+  .div-2411fb2a {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     line-height: normal;
   }
   @media (max-width: 999px) {
-    .div-8ebf4416 {
+    .div-2411fb2a {
       flex-direction: row;
     }
   }
   @media (max-width: 639px) {
-    .div-8ebf4416 {
+    .div-2411fb2a {
       flex-direction: row-reverse;
     }
   }
-  .div-8ebf4416-2 {
+  .div-2411fb2a-2 {
     flex-grow: 1;
   }
 }
-<div class=\\"builder-columns div-8ebf4416\\">
+<div class=\\"builder-columns div-2411fb2a\\">
   <for|column,index| of=(input.columns)>
-    <div class=\\"builder-column div-8ebf4416-2\\">\${column.content} \${index}</div>
+    <div class=\\"builder-column div-2411fb2a-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
 `;
@@ -486,7 +534,7 @@ exports[`Marko > jsx > Javascript Test > ContentSlotJSX 1`] = `
   <div
     name=(input.slotContent ? 'name1' : 'name2')
     title=(input.slotContent ? 'title1' : 'title2')  ...(props.attributes)
-    on-click(event => component.show())
+    on-click((event) => component.show())
     class=(component.cls)
   >
     <if(state.showContent && input.slotContent)>
@@ -870,8 +918,8 @@ class {
   }
 }
 
-style { 
-  .pre-13d8e5f6 {
+style {
+  .pre-b80a56e2 {
     padding: 10px;
     color: red;
     text-align: center;
@@ -883,7 +931,7 @@ style {
   action=(!input.sendWithJs && input.action)
   method=(input.method)
   name=(input.name)
-  on-submit(event => component.onSubmit(event))  ...(props.attributes)
+  on-submit((event) => component.onSubmit(event))  ...(props.attributes)
 >
   <if(input.builderBlock && input.builderBlock.children)>
     <for|block,index| of=(input.builderBlock?.children)>
@@ -906,7 +954,7 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-13d8e5f6\\">
+    <pre class=\\"builder-form-error-text pre-b80a56e2\\">
 \${JSON.stringify(state.responseData, null, 2)}</pre>
   </if>
 
@@ -972,8 +1020,8 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
   }
 }
 
-style { 
-  .img-e6dfb5ae {
+style {
+  .img-3747ab04 {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -986,9 +1034,9 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-e6dfb5ae')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-3747ab04')
         src=(input.image)
-        on-load(event => component.setLoaded())
+        on-load((event) => component.setLoaded())
         srcset=(input.srcset)
         sizes=(input.sizes)
     /></if>
@@ -1043,7 +1091,7 @@ class {}
   value=(input.value)
   defaultValue=(input.defaultValue)
   required=(input.required)
-  on-input(event => input.onChange?.(event.target.value))
+  on-input((event) => input.onChange?.(event.target.value))
 />"
 `;
 
@@ -1059,22 +1107,8 @@ class {
 <FormInputComponent
   name=\\"kingzez\\"
   type=\\"text\\"
-  on-change(value => component.handleChange(value))
+  on-change((value) => component.handleChange(value))
 ></FormInputComponent>"
-`;
-
-exports[`Marko > jsx > Javascript Test > NestedStore 1`] = `
-"class {
-  onCreate() {
-    this.state = { _id: \\"abc\\", _messageId: this.state._id + \\"-message\\" };
-  }
-}
-
-<div id=(state._id)>
-  Test
-
-  <p id=(state._messageId)>Message</p>
-</div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > RawText 1`] = `
@@ -1202,17 +1236,17 @@ class {
   }
 }
 
-style { 
-  .input-c36324fe {
+style {
+  .input-4b8e7e0e {
     display: block;
   }
-  .textarea-c36324fe {
+  .textarea-4b8e7e0e {
     display: block;
   }
-  .button-c36324fe {
+  .button-4b8e7e0e {
     display: block;
   }
-  .review-c36324fe {
+  .review-4b8e7e0e {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -1221,27 +1255,27 @@ style {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     -webkit-font-smoothing: antialiased;
   }
-  .img-c36324fe {
+  .img-4b8e7e0e {
     height: 30px;
     width: 30px;
     margin-right: 10px;
   }
 }
 <div data-user=(state.name)>
-  <button on-click(event => state.showReviewPrompt = true)>
+  <button on-click((event) => state.showReviewPrompt = true)>
     Write a review
   </button>
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-c36324fe\\" />
+    <input placeholder=\\"Title\\" class=\\"input-4b8e7e0e\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-c36324fe\\"
+      class=\\"textarea-4b8e7e0e\\"
     ></textarea>
     <button
-      class=\\"button-c36324fe\\"
-      on-click(event => {
-  event.preventDefault();
+      class=\\"button-4b8e7e0e\\"
+      on-click((ev) => {
+  ev.preventDefault();
   state.showReviewPrompt = false;
 })
     >
@@ -1249,8 +1283,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-c36324fe\\" key=(review.id)>
-      <img class=\\"img-c36324fe\\" src=(review.avatar) />
+    <div class=\\"review-4b8e7e0e\\" key=(review.id)>
+      <img class=\\"img-4b8e7e0e\\" src=(review.avatar) />
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
         <div>\${review.author}</div>
@@ -1298,30 +1332,6 @@ exports[`Marko > jsx > Javascript Test > Textarea 1`] = `
   value=(input.value)
   defaultValue=(input.defaultValue)
 ></textarea>"
-`;
-
-exports[`Marko > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
-"class {
-  _do(id) {
-    this.state._active = !!id;
-
-    if (this.input.onChange) {
-      this.input.onChange(this.state._active);
-    }
-  }
-
-  onCreate(input) {
-    this.state = { _id: \\"abc\\", _active: false };
-  }
-
-  onRender() {
-    if (this._do) {
-      this._do(this.state._id);
-    }
-  }
-}
-
-<div>Test</div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > Video 1`] = `
@@ -1399,17 +1409,17 @@ exports[`Marko > jsx > Javascript Test > basicForwardRef 1`] = `
   }
 }
 
-style { 
-  .input-02928ba3 {
+style {
+  .input-24f3ca54 {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-02928ba3\\"
+    class=\\"input-24f3ca54\\"
     key=\\"propsInputRef\\"
     value=(state.name)
-    on-input(event => state.name = event.target.value)
+    on-input((event) => state.name = event.target.value)
   />
 </div>"
 `;
@@ -1425,17 +1435,17 @@ exports[`Marko > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
   }
 }
 
-style { 
-  .input-0a0d0fee {
+style {
+  .input-bda1f37c {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-0a0d0fee\\"
+    class=\\"input-bda1f37c\\"
     key=\\"propsInputRef\\"
     value=(state.name)
-    on-input(event => state.name = event.target.value)
+    on-input((event) => state.name = event.target.value)
   />
 </div>"
 `;
@@ -1468,27 +1478,34 @@ exports[`Marko > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > class + ClassName + css 1`] = `
-"class {}
+"import MyComp from \\"./my-component.marko\\";
 
-style { 
-  .div-6b6c27cc {
+class {}
+
+style {
+  .div-6ef0b03e {
     padding: 10px;
   }
 }
-<div class=\\"test2 test div-6b6c27cc\\">
-  Hello! I can run in React, Vue, Solid, or Liquid!
+<div>
+  <MyComp class=\\"test\\" className=\\"test2\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </MyComp>
+  <div class=\\"test2 test div-6ef0b03e\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
 </div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > class + css 1`] = `
 "class {}
 
-style { 
-  .div-fb8d32e6 {
+style {
+  .div-defca3e2 {
     padding: 10px;
   }
 }
-<div class=\\"test div-fb8d32e6\\">
+<div class=\\"test div-defca3e2\\">
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>"
 `;
@@ -1496,12 +1513,12 @@ style {
 exports[`Marko > jsx > Javascript Test > className + css 1`] = `
 "class {}
 
-style { 
-  .div-fb8d32e6 {
+style {
+  .div-defca3e2 {
     padding: 10px;
   }
 }
-<div class=\\"test div-fb8d32e6\\">
+<div class=\\"test div-defca3e2\\">
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>"
 `;
@@ -1531,12 +1548,12 @@ exports[`Marko > jsx > Javascript Test > classState 1`] = `
   }
 }
 
-style { 
-  .div-1abc267a {
+style {
+  .div-0a9f895c {
     padding: 10px;
   }
 }
-<div class=(state.classState + ' div-1abc267a') style=(state.styleState)>
+<div class=(state.classState + ' div-0a9f895c') style=(state.styleState)>
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>"
 `;
@@ -1583,7 +1600,7 @@ exports[`Marko > jsx > Javascript Test > defaultProps 1`] = `
     <button
       type=\\"button\\"
       ...(props.attributes)
-      on-click(event => input.onClick())
+      on-click((event) => input.onClick())
     >
       \${input.buttonText}
     </button></if>
@@ -1605,7 +1622,7 @@ exports[`Marko > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
     <button
       type=\\"button\\"
       ...(props.attributes)
-      on-click(event => input.onClick(event))
+      on-click((event) => input.onClick(event))
     >
       \${input.text}
     </button></if>
@@ -1736,34 +1753,34 @@ exports[`Marko > jsx > Javascript Test > nestedShow 1`] = `
 exports[`Marko > jsx > Javascript Test > nestedStyles 1`] = `
 "class {}
 
-style { 
-  .div-7ff9918d {
+style {
+  .div-7671878a {
     display: flex;
     --bar: red;
     color: var(--bar);
   }
   @media (max-width: env(--mobile)) {
-    .div-7ff9918d {
+    .div-7671878a {
       display: block;
     }
   }
-  .div-7ff9918d:hover {
+  .div-7671878a:hover {
     display: flex;
   }
-  .div-7ff9918d:active {
+  .div-7671878a:active {
     display: inline;
   }
-  .div-7ff9918d .nested-selector {
+  .div-7671878a .nested-selector {
     display: grid;
   }
-  .div-7ff9918d .nested-selector:hover {
+  .div-7671878a .nested-selector:hover {
     display: block;
   }
-  .div-7ff9918d.nested-selector:active {
+  .div-7671878a.nested-selector:active {
     display: inline-block;
   }
 }
-<div class=\\"div-7ff9918d\\">Hello world</div>"
+<div class=\\"div-7671878a\\">Hello world</div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > onEvent 1`] = `
@@ -1806,6 +1823,12 @@ class {
 }
 
 <div>Default name defined by parent \${state.name}</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > onInitPlain 1`] = `
+"class {}
+
+<div></div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > onMount 1`] = `
@@ -2189,13 +2212,13 @@ class {
   }
 }
 
-style { 
-  .div-2f1bf84a {
+style {
+  .div-cf88ea4c {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-2f1bf84a\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-cf88ea4c\\" on-click((event) => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -2240,20 +2263,6 @@ exports[`Marko > jsx > Javascript Test > self-referencing component with childre
 </div>"
 `;
 
-exports[`Marko > jsx > Javascript Test > setState 1`] = `
-"class {
-  someFn() {
-    this.state.n[0] = \\"123\\";
-  }
-
-  onCreate() {
-    this.state = { n: [\\"123\\"] };
-  }
-}
-
-<div><button on-click(event => component.someFn())>Click me</button></div>"
-`;
-
 exports[`Marko > jsx > Javascript Test > showExpressions 1`] = `
 "class {}
 
@@ -2291,6 +2300,12 @@ exports[`Marko > jsx > Javascript Test > showExpressions 1`] = `
     <if(input.conditionB === 'Complete')> 20mb</if>
     <else>9mb</else></if>
   <else>4mb</else>
+  <if(input.conditionA === 'Default')>
+    <if(input.conditionB === 'Complete')> <div>complete</div></if>
+    <else>9mb</else></if>
+  <else
+    ><if(input.conditionC === 'Complete')> dff</if>
+    <else><div>complete else</div></else></else>
 </div>"
 `;
 
@@ -2341,12 +2356,12 @@ exports[`Marko > jsx > Javascript Test > signalsOnUpdate 1`] = `
   }
 }
 
-style { 
-  .div-120e4d4e {
+style {
+  .div-ba05009e {
     padding: 10px;
   }
 }
-<div class=\\"test div-120e4d4e\\">\${input.id} \${input.foo.value.bar.baz}</div>"
+<div class=\\"test div-ba05009e\\">\${input.id} \${input.foo.value.bar.baz}</div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > spreadAttrs 1`] = `
@@ -2365,6 +2380,22 @@ exports[`Marko > jsx > Javascript Test > spreadProps 1`] = `
 "class {}
 
 <input ...(props) />"
+`;
+
+exports[`Marko > jsx > Javascript Test > store-async-function 1`] = `
+"class {
+  arrowFunction = async function arrowFunction() {
+    return Promise.resolve();
+  };
+  namedFunction = async function namedFunction() {
+    return Promise.resolve();
+  };
+  fetchUsers = async function fetchUsers() {
+    return Promise.resolve();
+  };
+}
+
+<div></div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > string-literal-store 1`] = `
@@ -2392,15 +2423,15 @@ exports[`Marko > jsx > Javascript Test > string-literal-store-kebab 1`] = `
 exports[`Marko > jsx > Javascript Test > styleClassAndCss 1`] = `
 "class {}
 
-style { 
-  .div-53ff897e {
+style {
+  .div-35e34a45 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
   }
 }
 <div
-  class=\\"builder-column div-53ff897e\\"
+  class=\\"builder-column div-35e34a45\\"
   style=({
   width: '100%'
 })
@@ -2410,8 +2441,8 @@ style {
 exports[`Marko > jsx > Javascript Test > stylePropClassAndCss 1`] = `
 "class {}
 
-style { 
-  .div-40d76e28 {
+style {
+  .div-bee7e1a8 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -2419,7 +2450,7 @@ style {
 }
 <div
   style=(input.attributes.style)
-  class=(input.attributes.class + ' div-40d76e28')
+  class=(input.attributes.class + ' div-bee7e1a8')
 ></div>"
 `;
 
@@ -2498,7 +2529,7 @@ exports[`Marko > jsx > Javascript Test > typeGetterStore 1`] = `
 exports[`Marko > jsx > Javascript Test > use-style 1`] = `
 "class {}
 
-style { 
+style {
   button {
     background: blue;
     color: white;
@@ -2512,24 +2543,24 @@ style {
 exports[`Marko > jsx > Javascript Test > use-style-and-css 1`] = `
 "class {}
 
-style { 
+style {
   button {
     font-size: 12px;
     outline: 1px solid black;
   }
 
-  .button-11144e0c {
+  .button-49a5373c {
     background: blue;
     color: white;
   }
 }
-<button type=\\"button\\" class=\\"button-11144e0c\\">Button</button>"
+<button type=\\"button\\" class=\\"button-49a5373c\\">Button</button>"
 `;
 
 exports[`Marko > jsx > Javascript Test > use-style-outside-component 1`] = `
 "class {}
 
-style { 
+style {
   button {
     background: blue;
     color: white;
@@ -2548,10 +2579,13 @@ exports[`Marko > jsx > Javascript Test > useTarget 1`] = `
   }
 
   onCreate() {
-    this.state = { lastName: \\"bar\\" };
+    this.state = { lastName: \\"bar\\", foo: \\"bar\\" };
   }
 
-  onMount() {}
+  onMount() {
+    console.log(this.state.foo);
+    this.state.foo = \\"bar\\";
+  }
 }
 
 <div>\${component.name}</div>"
@@ -2581,6 +2615,52 @@ exports[`Marko > jsx > Remove Internal mitosis package 1`] = `
 </div>"
 `;
 
+exports[`Marko > jsx > Typescript Test > Advanced 1`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+  }
+}
+
+<main>
+  <for|person,i| of=(state.names)>
+    <div>\${i} : \${person}</div>
+  </for>
+  <for|person| of=(state.names)>
+    <span>\${person}</span>
+  </for>
+  <for|item| of=(state.names)>
+    <br />
+  </for>
+  <for|_,ee| of=(Array.from({
+  length: 10
+}))>
+    <pre>\${ee}</pre>
+  </for>
+  <for|item| of=(Array.from({
+  length: 10
+}))>
+    <p>\${index}</p>
+  </for>
+  <for|person,index| of=(state.names)>
+    <span>\${person} \${index}</span>
+  </for>
+  <for|person,count| of=(Array.from({
+  length: 10
+}))>
+    <span>\${person} \${count}</span>
+  </for>
+  <for|person,i| of=(state.names)>
+    <span>\${person} \${i}</span>
+  </for>
+  <for|person,index| of=(Array.from({
+  length: 10
+}))>
+    <span>\${person} \${index}</span>
+  </for>
+</main>"
+`;
+
 exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
 "class {
   onBlur = function onBlur() {
@@ -2607,19 +2687,19 @@ exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
   }
 }
 
-style { 
-  .input-3b7b900d {
+style {
+  .input-c72441a0 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-3b7b900d\\"
+      class=\\"input-c72441a0\\"
       key=\\"inputRef\\"
       value=(state.name)
-      on-blur(event => component.onBlur())
-      on-input(event => state.name = event.target.value)
+      on-blur((event) => component.onBlur())
+      on-input((event) => state.name = event.target.value)
     />
     <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
     <select name=\\"cars\\" id=\\"cars\\">
@@ -2647,15 +2727,15 @@ class {
   }
 }
 
-style { 
-  .div-476b44c0 {
+style {
+  .div-22f58e48 {
     padding: 10px;
   }
 }
-<div class=\\"test div-476b44c0\\">
+<div class=\\"test div-22f58e48\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
-    on-input(myEvent => state.name = myEvent.target.value)
+    on-input((myEvent) => state.name = myEvent.target.value)
   />
 
   Hello! I can run in React, Vue, Solid, or Liquid! &gt;
@@ -2674,7 +2754,7 @@ exports[`Marko > jsx > Typescript Test > Basic 2`] = `
     <if(person === state.name)>
       <input
         value=(state.name)
-        on-input(event => {
+        on-input((event) => {
   state.name = event.target.value + ' and ' + person;
 })
       />
@@ -2709,7 +2789,7 @@ class {
   \${myService.method('hello') + state.name} Hello! I can run in React, Vue,
   Solid, or Liquid!
 
-  <input on-input(event => component.onChange) />
+  <input on-input((event) => component.onChange) />
 </div>"
 `;
 
@@ -2813,7 +2893,7 @@ exports[`Marko > jsx > Typescript Test > BasicFor 1`] = `
   <for|person| of=(state.names)>
     <input
       value=(state.name)
-      on-input(event => {
+      on-input((event) => {
   state.name = event.target.value + ' and ' + person;
 })
     />
@@ -2828,7 +2908,7 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
 "class {
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef?.focus();
+    this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.state.name.toLowerCase();
@@ -2846,19 +2926,19 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
   }
 }
 
-style { 
-  .input-9b2529ca {
+style {
+  .input-2d5acf4c {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-9b2529ca\\"
+      class=\\"input-2d5acf4c\\"
       key=\\"inputRef\\"
       value=(state.name)
-      on-blur(event => component.onBlur())
-      on-input(event => state.name = event.target.value)
+      on-blur((event) => component.onBlur())
+      on-input((event) => state.name = event.target.value)
     />
     <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
     <select name=\\"cars\\" id=\\"cars\\">
@@ -2881,7 +2961,9 @@ exports[`Marko > jsx > Typescript Test > BasicRefAssignment 1`] = `
 }
 
 <div>
-  <button on-click(evt => component.handlerClick(evt))>Click</button>
+  <button on-click(async (evt) => await component.handlerClick(evt))>
+    Click
+  </button>
 </div>"
 `;
 
@@ -2911,7 +2993,7 @@ class {
 
 <div>
   <h1>Now: \${state.count} , before: \${this.prevCount}</h1>
-  <button on-click(event => state.count += 1)>Increment</button>
+  <button on-click((event) => state.count += 1)>Increment</button>
 </div>"
 `;
 
@@ -2951,30 +3033,30 @@ exports[`Marko > jsx > Typescript Test > Columns 1`] = `
   }
 }
 
-style { 
-  .div-589a139a {
+style {
+  .div-7a1249a4 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     line-height: normal;
   }
   @media (max-width: 999px) {
-    .div-589a139a {
+    .div-7a1249a4 {
       flex-direction: row;
     }
   }
   @media (max-width: 639px) {
-    .div-589a139a {
+    .div-7a1249a4 {
       flex-direction: row-reverse;
     }
   }
-  .div-589a139a-2 {
+  .div-7a1249a4-2 {
     flex-grow: 1;
   }
 }
-<div class=\\"builder-columns div-589a139a\\">
+<div class=\\"builder-columns div-7a1249a4\\">
   <for|column,index| of=(input.columns)>
-    <div class=\\"builder-column div-589a139a-2\\">\${column.content} \${index}</div>
+    <div class=\\"builder-column div-7a1249a4-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
 `;
@@ -3013,7 +3095,7 @@ class {
   <div
     name=(input.slotContent ? 'name1' : 'name2')
     title=(input.slotContent ? 'title1' : 'title2')  ...(props.attributes)
-    on-click(event => component.show())
+    on-click((event) => component.show())
     class=(component.cls)
   >
     <if(state.showContent && input.slotContent)>
@@ -3404,8 +3486,8 @@ class {
   }
 }
 
-style { 
-  .pre-6976c39e {
+style {
+  .pre-82a300b6 {
     padding: 10px;
     color: red;
     text-align: center;
@@ -3417,7 +3499,7 @@ style {
   action=(!input.sendWithJs && input.action)
   method=(input.method)
   name=(input.name)
-  on-submit(event => component.onSubmit(event))  ...(props.attributes)
+  on-submit((event) => component.onSubmit(event))  ...(props.attributes)
 >
   <if(input.builderBlock && input.builderBlock.children)>
     <for|block,index| of=(input.builderBlock?.children)>
@@ -3440,7 +3522,7 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-6976c39e\\">
+    <pre class=\\"builder-form-error-text pre-82a300b6\\">
 \${JSON.stringify(state.responseData, null, 2)}</pre>
   </if>
 
@@ -3506,8 +3588,8 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
   }
 }
 
-style { 
-  .img-22f3c8d4 {
+style {
+  .img-b8232e4e {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -3520,9 +3602,9 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-22f3c8d4')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-b8232e4e')
         src=(input.image)
-        on-load(event => component.setLoaded())
+        on-load((event) => component.setLoaded())
         srcset=(input.srcset)
         sizes=(input.sizes)
     /></if>
@@ -3577,7 +3659,7 @@ class {}
   value=(input.value)
   defaultValue=(input.defaultValue)
   required=(input.required)
-  on-input(event => input.onChange?.(event.target.value))
+  on-input((event) => input.onChange?.(event.target.value))
 />"
 `;
 
@@ -3593,22 +3675,8 @@ class {
 <FormInputComponent
   name=\\"kingzez\\"
   type=\\"text\\"
-  on-change(value => component.handleChange(value))
+  on-change((value) => component.handleChange(value))
 ></FormInputComponent>"
-`;
-
-exports[`Marko > jsx > Typescript Test > NestedStore 1`] = `
-"class {
-  onCreate() {
-    this.state = { _id: \\"abc\\", _messageId: this.state._id + \\"-message\\" };
-  }
-}
-
-<div id=(state._id)>
-  Test
-
-  <p id=(state._messageId)>Message</p>
-</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > RawText 1`] = `
@@ -3736,17 +3804,17 @@ class {
   }
 }
 
-style { 
-  .input-6d576eee {
+style {
+  .input-554308c6 {
     display: block;
   }
-  .textarea-6d576eee {
+  .textarea-554308c6 {
     display: block;
   }
-  .button-6d576eee {
+  .button-554308c6 {
     display: block;
   }
-  .review-6d576eee {
+  .review-554308c6 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -3755,27 +3823,27 @@ style {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     -webkit-font-smoothing: antialiased;
   }
-  .img-6d576eee {
+  .img-554308c6 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
   }
 }
 <div data-user=(state.name)>
-  <button on-click(event => state.showReviewPrompt = true)>
+  <button on-click((event) => state.showReviewPrompt = true)>
     Write a review
   </button>
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-6d576eee\\" />
+    <input placeholder=\\"Title\\" class=\\"input-554308c6\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-6d576eee\\"
+      class=\\"textarea-554308c6\\"
     ></textarea>
     <button
-      class=\\"button-6d576eee\\"
-      on-click(event => {
-  event.preventDefault();
+      class=\\"button-554308c6\\"
+      on-click((ev) => {
+  ev.preventDefault();
   state.showReviewPrompt = false;
 })
     >
@@ -3783,8 +3851,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-6d576eee\\" key=(review.id)>
-      <img class=\\"img-6d576eee\\" src=(review.avatar) />
+    <div class=\\"review-554308c6\\" key=(review.id)>
+      <img class=\\"img-554308c6\\" src=(review.avatar) />
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
         <div>\${review.author}</div>
@@ -3832,30 +3900,6 @@ exports[`Marko > jsx > Typescript Test > Textarea 1`] = `
   value=(input.value)
   defaultValue=(input.defaultValue)
 ></textarea>"
-`;
-
-exports[`Marko > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
-"class {
-  _do(id?: string) {
-    this.state._active = !!id;
-
-    if (this.input.onChange) {
-      this.input.onChange(this.state._active);
-    }
-  }
-
-  onCreate(input) {
-    this.state = { _id: \\"abc\\", _active: false };
-  }
-
-  onRender() {
-    if (this._do) {
-      this._do(this.state._id);
-    }
-  }
-}
-
-<div>Test</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > Video 1`] = `
@@ -3933,17 +3977,17 @@ exports[`Marko > jsx > Typescript Test > basicForwardRef 1`] = `
   }
 }
 
-style { 
-  .input-41e589d4 {
+style {
+  .input-18b632d8 {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-41e589d4\\"
+    class=\\"input-18b632d8\\"
     key=\\"propsInputRef\\"
     value=(state.name)
-    on-input(event => state.name = event.target.value)
+    on-input((event) => state.name = event.target.value)
   />
 </div>"
 `;
@@ -3959,17 +4003,17 @@ exports[`Marko > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
   }
 }
 
-style { 
-  .input-2da13ec2 {
+style {
+  .input-bed36ef0 {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-2da13ec2\\"
+    class=\\"input-bed36ef0\\"
     key=\\"propsInputRef\\"
     value=(state.name)
-    on-input(event => state.name = event.target.value)
+    on-input((event) => state.name = event.target.value)
   />
 </div>"
 `;
@@ -4002,27 +4046,34 @@ exports[`Marko > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > class + ClassName + css 1`] = `
-"class {}
+"import MyComp from \\"./my-component.marko\\";
 
-style { 
-  .div-6b6c27cc {
+class {}
+
+style {
+  .div-6ef0b03e {
     padding: 10px;
   }
 }
-<div class=\\"test2 test div-6b6c27cc\\">
-  Hello! I can run in React, Vue, Solid, or Liquid!
+<div>
+  <MyComp class=\\"test\\" className=\\"test2\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </MyComp>
+  <div class=\\"test2 test div-6ef0b03e\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
 </div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > class + css 1`] = `
 "class {}
 
-style { 
-  .div-fb8d32e6 {
+style {
+  .div-defca3e2 {
     padding: 10px;
   }
 }
-<div class=\\"test div-fb8d32e6\\">
+<div class=\\"test div-defca3e2\\">
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>"
 `;
@@ -4030,12 +4081,12 @@ style {
 exports[`Marko > jsx > Typescript Test > className + css 1`] = `
 "class {}
 
-style { 
-  .div-fb8d32e6 {
+style {
+  .div-defca3e2 {
     padding: 10px;
   }
 }
-<div class=\\"test div-fb8d32e6\\">
+<div class=\\"test div-defca3e2\\">
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>"
 `;
@@ -4067,12 +4118,12 @@ exports[`Marko > jsx > Typescript Test > classState 1`] = `
   }
 }
 
-style { 
-  .div-1abc267a {
+style {
+  .div-0a9f895c {
     padding: 10px;
   }
 }
-<div class=(state.classState + ' div-1abc267a') style=(state.styleState)>
+<div class=(state.classState + ' div-0a9f895c') style=(state.styleState)>
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>"
 `;
@@ -4119,7 +4170,7 @@ exports[`Marko > jsx > Typescript Test > defaultProps 1`] = `
     <button
       type=\\"button\\"
       ...(props.attributes)
-      on-click(event => input.onClick())
+      on-click((event) => input.onClick())
     >
       \${input.buttonText}
     </button></if>
@@ -4141,7 +4192,7 @@ exports[`Marko > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
     <button
       type=\\"button\\"
       ...(props.attributes)
-      on-click(event => input.onClick(event))
+      on-click((event) => input.onClick(event))
     >
       \${input.text}
     </button></if>
@@ -4273,34 +4324,34 @@ exports[`Marko > jsx > Typescript Test > nestedShow 1`] = `
 exports[`Marko > jsx > Typescript Test > nestedStyles 1`] = `
 "class {}
 
-style { 
-  .div-7ff9918d {
+style {
+  .div-7671878a {
     display: flex;
     --bar: red;
     color: var(--bar);
   }
   @media (max-width: env(--mobile)) {
-    .div-7ff9918d {
+    .div-7671878a {
       display: block;
     }
   }
-  .div-7ff9918d:hover {
+  .div-7671878a:hover {
     display: flex;
   }
-  .div-7ff9918d:active {
+  .div-7671878a:active {
     display: inline;
   }
-  .div-7ff9918d .nested-selector {
+  .div-7671878a .nested-selector {
     display: grid;
   }
-  .div-7ff9918d .nested-selector:hover {
+  .div-7671878a .nested-selector:hover {
     display: block;
   }
-  .div-7ff9918d.nested-selector:active {
+  .div-7671878a.nested-selector:active {
     display: inline-block;
   }
 }
-<div class=\\"div-7ff9918d\\">Hello world</div>"
+<div class=\\"div-7671878a\\">Hello world</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > onEvent 1`] = `
@@ -4343,6 +4394,12 @@ class {
 }
 
 <div>Default name defined by parent \${state.name}</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > onInitPlain 1`] = `
+"class {}
+
+<div></div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > onMount 1`] = `
@@ -4734,13 +4791,13 @@ class {
   }
 }
 
-style { 
-  .div-6b87b95c {
+style {
+  .div-9a79dfbc {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-6b87b95c\\" on-click(event => trackClick(input.content.id))>
+<div class=\\"div-9a79dfbc\\" on-click((event) => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -4785,20 +4842,6 @@ exports[`Marko > jsx > Typescript Test > self-referencing component with childre
 </div>"
 `;
 
-exports[`Marko > jsx > Typescript Test > setState 1`] = `
-"class {
-  someFn() {
-    this.state.n[0] = \\"123\\";
-  }
-
-  onCreate() {
-    this.state = { n: [\\"123\\"] };
-  }
-}
-
-<div><button on-click(event => component.someFn())>Click me</button></div>"
-`;
-
 exports[`Marko > jsx > Typescript Test > showExpressions 1`] = `
 "class {}
 
@@ -4836,6 +4879,12 @@ exports[`Marko > jsx > Typescript Test > showExpressions 1`] = `
     <if(input.conditionB === 'Complete')> 20mb</if>
     <else>9mb</else></if>
   <else>4mb</else>
+  <if(input.conditionA === 'Default')>
+    <if(input.conditionB === 'Complete')> <div>complete</div></if>
+    <else>9mb</else></if>
+  <else
+    ><if(input.conditionC === 'Complete')> dff</if>
+    <else><div>complete else</div></else></else>
 </div>"
 `;
 
@@ -4883,12 +4932,12 @@ exports[`Marko > jsx > Typescript Test > signalsOnUpdate 1`] = `
   }
 }
 
-style { 
-  .div-52492278 {
+style {
+  .div-8c5e5900 {
     padding: 10px;
   }
 }
-<div class=\\"test div-52492278\\">\${input.id} \${input.foo.bar.baz}</div>"
+<div class=\\"test div-8c5e5900\\">\${input.id} \${input.foo.bar.baz}</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > spreadAttrs 1`] = `
@@ -4907,6 +4956,22 @@ exports[`Marko > jsx > Typescript Test > spreadProps 1`] = `
 "class {}
 
 <input ...(props) />"
+`;
+
+exports[`Marko > jsx > Typescript Test > store-async-function 1`] = `
+"class {
+  arrowFunction = async function arrowFunction() {
+    return Promise.resolve();
+  };
+  namedFunction = async function namedFunction() {
+    return Promise.resolve();
+  };
+  fetchUsers = async function fetchUsers() {
+    return Promise.resolve();
+  };
+}
+
+<div></div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > string-literal-store 1`] = `
@@ -4934,15 +4999,15 @@ exports[`Marko > jsx > Typescript Test > string-literal-store-kebab 1`] = `
 exports[`Marko > jsx > Typescript Test > styleClassAndCss 1`] = `
 "class {}
 
-style { 
-  .div-53ff897e {
+style {
+  .div-35e34a45 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
   }
 }
 <div
-  class=\\"builder-column div-53ff897e\\"
+  class=\\"builder-column div-35e34a45\\"
   style=({
   width: '100%'
 })
@@ -4952,8 +5017,8 @@ style {
 exports[`Marko > jsx > Typescript Test > stylePropClassAndCss 1`] = `
 "class {}
 
-style { 
-  .div-40d76e28 {
+style {
+  .div-bee7e1a8 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -4961,7 +5026,7 @@ style {
 }
 <div
   style=(input.attributes.style)
-  class=(input.attributes.class + ' div-40d76e28')
+  class=(input.attributes.class + ' div-bee7e1a8')
 ></div>"
 `;
 
@@ -5045,7 +5110,7 @@ exports[`Marko > jsx > Typescript Test > typeGetterStore 1`] = `
 exports[`Marko > jsx > Typescript Test > use-style 1`] = `
 "class {}
 
-style { 
+style {
   button {
     background: blue;
     color: white;
@@ -5059,24 +5124,24 @@ style {
 exports[`Marko > jsx > Typescript Test > use-style-and-css 1`] = `
 "class {}
 
-style { 
+style {
   button {
     font-size: 12px;
     outline: 1px solid black;
   }
 
-  .button-11144e0c {
+  .button-49a5373c {
     background: blue;
     color: white;
   }
 }
-<button type=\\"button\\" class=\\"button-11144e0c\\">Button</button>"
+<button type=\\"button\\" class=\\"button-49a5373c\\">Button</button>"
 `;
 
 exports[`Marko > jsx > Typescript Test > use-style-outside-component 1`] = `
 "class {}
 
-style { 
+style {
   button {
     background: blue;
     color: white;
@@ -5095,10 +5160,13 @@ exports[`Marko > jsx > Typescript Test > useTarget 1`] = `
   }
 
   onCreate() {
-    this.state = { lastName: \\"bar\\" };
+    this.state = { lastName: \\"bar\\", foo: \\"bar\\" };
   }
 
-  onMount() {}
+  onMount() {
+    console.log(this.state.foo);
+    this.state.foo = \\"bar\\";
+  }
 }
 
 <div>\${component.name}</div>"
@@ -5125,7 +5193,7 @@ exports[`Marko > svelte > Javascript Test > basic 1`] = `
 
 <div>
   <input
-    on-input(event => state.name = event.target.value)
+    on-input((event) => state.name = event.target.value)
     value=(state.name)
   />
 
@@ -5145,19 +5213,19 @@ exports[`Marko > svelte > Javascript Test > bindGroup 1`] = `
     type=\\"radio\\"
     value=\\"Plain\\"
     checked=(state.tortilla === 'Plain')
-    on-input(event => state.tortilla = event.target.value)
+    on-input((event) => state.tortilla = event.target.value)
   />
   <input
     type=\\"radio\\"
     value=\\"Whole wheat\\"
     checked=(state.tortilla === 'Whole wheat')
-    on-input(event => state.tortilla = event.target.value)
+    on-input((event) => state.tortilla = event.target.value)
   />
   <input
     type=\\"radio\\"
     value=\\"Spinach\\"
     checked=(state.tortilla === 'Spinach')
-    on-input(event => state.tortilla = event.target.value)
+    on-input((event) => state.tortilla = event.target.value)
   />
   <br />
   <br />
@@ -5165,25 +5233,25 @@ exports[`Marko > svelte > Javascript Test > bindGroup 1`] = `
     type=\\"checkbox\\"
     value=\\"Rice\\"
     checked=(state.fillings === 'Rice')
-    on-input(event => state.fillings = event.target.value)
+    on-input((event) => state.fillings = event.target.value)
   />
   <input
     type=\\"checkbox\\"
     value=\\"Beans\\"
     checked=(state.fillings === 'Beans')
-    on-input(event => state.fillings = event.target.value)
+    on-input((event) => state.fillings = event.target.value)
   />
   <input
     type=\\"checkbox\\"
     value=\\"Cheese\\"
     checked=(state.fillings === 'Cheese')
-    on-input(event => state.fillings = event.target.value)
+    on-input((event) => state.fillings = event.target.value)
   />
   <input
     type=\\"checkbox\\"
     value=\\"Guac (extra)\\"
     checked=(state.fillings === 'Guac (extra)')
-    on-input(event => state.fillings = event.target.value)
+    on-input((event) => state.fillings = event.target.value)
   />
   <p>Tortilla: \${state.tortilla}</p>
   <p>Fillings: \${state.fillings}</p>
@@ -5244,9 +5312,9 @@ exports[`Marko > svelte > Javascript Test > eventHandlers 1`] = `
 }
 
 <div>
-  <button on-click(a => component.log('hi'))>Log</button>
-  <button on-click(event => component.log(event))>Log</button>
-  <button on-click(event => component.log(event))>Log</button>
+  <button on-click((a) => component.log('hi'))>Log</button>
+  <button on-click((event) => component.log(event))>Log</button>
+  <button on-click((event) => component.log(event))>Log</button>
 </div>"
 `;
 
@@ -5272,8 +5340,9 @@ exports[`Marko > svelte > Javascript Test > ifElse 1`] = `
 }
 
 <if(state.show)>
-  <button on-click(event => component.toggle(event))>Hide</button></if>
-<else><button on-click(event => component.toggle(event))>Show</button></else>"
+  <button on-click((event) => component.toggle(event))>Hide</button></if>
+<else
+  ><button on-click((event) => component.toggle(event))>Show</button></else>"
 `;
 
 exports[`Marko > svelte > Javascript Test > imports 1`] = `
@@ -5342,12 +5411,12 @@ exports[`Marko > svelte > Javascript Test > reactiveWithFn 1`] = `
 <div>
   <input
     type=\\"number\\"
-    on-input(event => state.a = event.target.value)
+    on-input((event) => state.a = event.target.value)
     value=(state.a)
   />
   <input
     type=\\"number\\"
-    on-input(event => state.b = event.target.value)
+    on-input((event) => state.b = event.target.value)
     value=(state.b)
   />
 
@@ -5366,7 +5435,7 @@ exports[`Marko > svelte > Javascript Test > slots 1`] = `
 exports[`Marko > svelte > Javascript Test > style 1`] = `
 "class {}
 
-style { 
+style {
   input {
     color: red;
     font-size: 12px;
@@ -5403,7 +5472,7 @@ exports[`Marko > svelte > Typescript Test > basic 1`] = `
 
 <div>
   <input
-    on-input(event => state.name = event.target.value)
+    on-input((event) => state.name = event.target.value)
     value=(state.name)
   />
 
@@ -5423,19 +5492,19 @@ exports[`Marko > svelte > Typescript Test > bindGroup 1`] = `
     type=\\"radio\\"
     value=\\"Plain\\"
     checked=(state.tortilla === 'Plain')
-    on-input(event => state.tortilla = event.target.value)
+    on-input((event) => state.tortilla = event.target.value)
   />
   <input
     type=\\"radio\\"
     value=\\"Whole wheat\\"
     checked=(state.tortilla === 'Whole wheat')
-    on-input(event => state.tortilla = event.target.value)
+    on-input((event) => state.tortilla = event.target.value)
   />
   <input
     type=\\"radio\\"
     value=\\"Spinach\\"
     checked=(state.tortilla === 'Spinach')
-    on-input(event => state.tortilla = event.target.value)
+    on-input((event) => state.tortilla = event.target.value)
   />
   <br />
   <br />
@@ -5443,25 +5512,25 @@ exports[`Marko > svelte > Typescript Test > bindGroup 1`] = `
     type=\\"checkbox\\"
     value=\\"Rice\\"
     checked=(state.fillings === 'Rice')
-    on-input(event => state.fillings = event.target.value)
+    on-input((event) => state.fillings = event.target.value)
   />
   <input
     type=\\"checkbox\\"
     value=\\"Beans\\"
     checked=(state.fillings === 'Beans')
-    on-input(event => state.fillings = event.target.value)
+    on-input((event) => state.fillings = event.target.value)
   />
   <input
     type=\\"checkbox\\"
     value=\\"Cheese\\"
     checked=(state.fillings === 'Cheese')
-    on-input(event => state.fillings = event.target.value)
+    on-input((event) => state.fillings = event.target.value)
   />
   <input
     type=\\"checkbox\\"
     value=\\"Guac (extra)\\"
     checked=(state.fillings === 'Guac (extra)')
-    on-input(event => state.fillings = event.target.value)
+    on-input((event) => state.fillings = event.target.value)
   />
   <p>Tortilla: \${state.tortilla}</p>
   <p>Fillings: \${state.fillings}</p>
@@ -5522,9 +5591,9 @@ exports[`Marko > svelte > Typescript Test > eventHandlers 1`] = `
 }
 
 <div>
-  <button on-click(a => component.log('hi'))>Log</button>
-  <button on-click(event => component.log(event))>Log</button>
-  <button on-click(event => component.log(event))>Log</button>
+  <button on-click((a) => component.log('hi'))>Log</button>
+  <button on-click((event) => component.log(event))>Log</button>
+  <button on-click((event) => component.log(event))>Log</button>
 </div>"
 `;
 
@@ -5550,8 +5619,9 @@ exports[`Marko > svelte > Typescript Test > ifElse 1`] = `
 }
 
 <if(state.show)>
-  <button on-click(event => component.toggle(event))>Hide</button></if>
-<else><button on-click(event => component.toggle(event))>Show</button></else>"
+  <button on-click((event) => component.toggle(event))>Hide</button></if>
+<else
+  ><button on-click((event) => component.toggle(event))>Show</button></else>"
 `;
 
 exports[`Marko > svelte > Typescript Test > imports 1`] = `
@@ -5620,12 +5690,12 @@ exports[`Marko > svelte > Typescript Test > reactiveWithFn 1`] = `
 <div>
   <input
     type=\\"number\\"
-    on-input(event => state.a = event.target.value)
+    on-input((event) => state.a = event.target.value)
     value=(state.a)
   />
   <input
     type=\\"number\\"
-    on-input(event => state.b = event.target.value)
+    on-input((event) => state.b = event.target.value)
     value=(state.b)
   />
 
@@ -5644,7 +5714,7 @@ exports[`Marko > svelte > Typescript Test > slots 1`] = `
 exports[`Marko > svelte > Typescript Test > style 1`] = `
 "class {}
 
-style { 
+style {
   input {
     color: red;
     font-size: 12px;

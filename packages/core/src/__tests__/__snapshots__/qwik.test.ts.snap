@@ -1734,6 +1734,89 @@ export const __proxyMerge__ = function __proxyMerge__(state, local) {
 }
 `;
 
+exports[`qwik > jsx > Javascript Test > Advanced 1`] = `
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+
+export const MyBasicForShowComponent = component$((props) => {
+  const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
+
+  return (
+    <main>
+      {(state.names || []).map((person, i) => {
+        return (
+          <div>
+            {i}: {person}
+          </div>
+        );
+      })}
+      {(state.names || []).map((person) => {
+        return <span>{person}</span>;
+      })}
+      {(state.names || []).map((item) => {
+        return <br />;
+      })}
+      {(
+        Array.from({
+          length: 10,
+        }) || []
+      ).map((_, ee) => {
+        return <pre>{ee}</pre>;
+      })}
+      {(
+        Array.from({
+          length: 10,
+        }) || []
+      ).map((item) => {
+        return <p>{index}</p>;
+      })}
+      {(state.names || []).map((person, index) => {
+        return (
+          <span>
+            {person}
+            {index}
+          </span>
+        );
+      })}
+      {(
+        Array.from({
+          length: 10,
+        }) || []
+      ).map((person, count) => {
+        return (
+          <span>
+            {person}
+            {count}
+          </span>
+        );
+      })}
+      {(state.names || []).map((person, i) => {
+        return (
+          <span>
+            {person}
+            {i}
+          </span>
+        );
+      })}
+      {(
+        Array.from({
+          length: 10,
+        }) || []
+      ).map((person, index) => {
+        return (
+          <span>
+            {person}
+            {index}
+          </span>
+        );
+      })}
+    </main>
+  );
+});
+
+export default MyBasicForShowComponent;
+"
+`;
+
 exports[`qwik > jsx > Javascript Test > Basic 1`] = `
 "import {
   $,
@@ -2112,7 +2195,9 @@ export const MyBasicRefAssignmentComponent = component$((props) => {
 
   return (
     <div>
-      <button onClick$={$((event) => state.handlerClick(evt))}>Click</button>
+      <button onClick$={$((event) => await state.handlerClick(evt))}>
+        Click
+      </button>
     </div>
   );
 });
@@ -3567,14 +3652,21 @@ export const STYLES = \`
 `;
 
 exports[`qwik > jsx > Javascript Test > class + ClassName + css 1`] = `
-"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+"import MyComp from \\"./my-component.jsx\\";
+
+import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props) => {
   useStylesScoped$(STYLES);
 
   return (
-    <div class=\\"test2 test div-MyBasicComponent\\">
-      Hello! I can run in React, Vue, Solid, or Liquid!
+    <div>
+      <MyComp class=\\"test\\" className=\\"test2\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </MyComp>
+      <div class=\\"test2 test div-MyBasicComponent\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
     </div>
   );
 });
@@ -4087,6 +4179,21 @@ export const OnInit = component$((props) => {
 });
 
 export default OnInit;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > onInitPlain 1`] = `
+"import { Fragment, component$, h, useTask$ } from \\"@builder.io/qwik\\";
+
+export const OnInitPlain = component$((props) => {
+  useTask$(() => {
+    console.log(\\"onInit\\");
+  });
+
+  return <div></div>;
+});
+
+export default OnInitPlain;
 "
 `;
 
@@ -4696,7 +4803,7 @@ exports[`qwik > jsx > Javascript Test > showExpressions 1`] = `
 "SyntaxError: Expression expected. (5:115)
   3 | export const ShowWithOtherValues=component$((props)=>{
   4 |
-> 5 | return (<div>{props.conditionA?<>Content0</>:<>ContentA</>}{props.conditionA?<>ContentA</>:null}{props.conditionA?:<>ContentA</>}{props.conditionA?<>ContentB</>:<>{undefined}</>}{props.conditionA?<>{undefined}</>:<>ContentB</>}{props.conditionA?<>ContentC</>:null}{props.conditionA?:<>ContentC</>}{props.conditionA?<>ContentD</>:null}{props.conditionA?:<>ContentD</>}{props.conditionA?<>ContentE</>:<>hello</>}{props.conditionA?<>hello</>:<>ContentE</>}{props.conditionA?<>ContentF</>:<>123</>}{props.conditionA?<>123</>:<>ContentF</>}{props.conditionA === 'Default'?<>4mb</>:props.conditionB === 'Complete'?<>20mb</>:<>9mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<>20mb</>:<>9mb</>:<>4mb</>}</div>)});
+> 5 | return (<div>{props.conditionA?<>Content0</>:<>ContentA</>}{props.conditionA?<>ContentA</>:null}{props.conditionA?:<>ContentA</>}{props.conditionA?<>ContentB</>:<>{undefined}</>}{props.conditionA?<>{undefined}</>:<>ContentB</>}{props.conditionA?<>ContentC</>:null}{props.conditionA?:<>ContentC</>}{props.conditionA?<>ContentD</>:null}{props.conditionA?:<>ContentD</>}{props.conditionA?<>ContentE</>:<>hello</>}{props.conditionA?<>hello</>:<>ContentE</>}{props.conditionA?<>ContentF</>:<>123</>}{props.conditionA?<>123</>:<>ContentF</>}{props.conditionA === 'Default'?<>4mb</>:props.conditionB === 'Complete'?<>20mb</>:<>9mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<>20mb</>:<>9mb</>:<>4mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<div>complete</div>:<>9mb</>:props.conditionC === 'Complete'?<>dff</>:<div>complete else</div>}</div>)});
     |                                                                                                                   ^
   6 |
   7 | export default ShowWithOtherValues;
@@ -4705,7 +4812,7 @@ import{Fragment,component$,h}from\\"@builder.io/qwik\\";
 
 export const ShowWithOtherValues=component$((props)=>{
 
-return (<div>{props.conditionA?<>Content0</>:<>ContentA</>}{props.conditionA?<>ContentA</>:null}{props.conditionA?:<>ContentA</>}{props.conditionA?<>ContentB</>:<>{undefined}</>}{props.conditionA?<>{undefined}</>:<>ContentB</>}{props.conditionA?<>ContentC</>:null}{props.conditionA?:<>ContentC</>}{props.conditionA?<>ContentD</>:null}{props.conditionA?:<>ContentD</>}{props.conditionA?<>ContentE</>:<>hello</>}{props.conditionA?<>hello</>:<>ContentE</>}{props.conditionA?<>ContentF</>:<>123</>}{props.conditionA?<>123</>:<>ContentF</>}{props.conditionA === 'Default'?<>4mb</>:props.conditionB === 'Complete'?<>20mb</>:<>9mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<>20mb</>:<>9mb</>:<>4mb</>}</div>)});
+return (<div>{props.conditionA?<>Content0</>:<>ContentA</>}{props.conditionA?<>ContentA</>:null}{props.conditionA?:<>ContentA</>}{props.conditionA?<>ContentB</>:<>{undefined}</>}{props.conditionA?<>{undefined}</>:<>ContentB</>}{props.conditionA?<>ContentC</>:null}{props.conditionA?:<>ContentC</>}{props.conditionA?<>ContentD</>:null}{props.conditionA?:<>ContentD</>}{props.conditionA?<>ContentE</>:<>hello</>}{props.conditionA?<>hello</>:<>ContentE</>}{props.conditionA?<>ContentF</>:<>123</>}{props.conditionA?<>123</>:<>ContentF</>}{props.conditionA === 'Default'?<>4mb</>:props.conditionB === 'Complete'?<>20mb</>:<>9mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<>20mb</>:<>9mb</>:<>4mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<div>complete</div>:<>9mb</>:props.conditionC === 'Complete'?<>dff</>:<div>complete else</div>}</div>)});
 
 export default ShowWithOtherValues;
 
@@ -4831,6 +4938,28 @@ export const MyBasicComponent = component$((props) => {
 });
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > store-async-function 1`] = `
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const arrowFunction = async function arrowFunction() {
+  return Promise.resolve();
+};
+export const namedFunction = async function namedFunction() {
+  return Promise.resolve();
+};
+export const fetchUsers = async function fetchUsers() {
+  return Promise.resolve();
+};
+export const StringLiteralStore = component$((props) => {
+  const state = {};
+
+  return <div></div>;
+});
+
+export default StringLiteralStore;
 "
 `;
 
@@ -5089,10 +5218,14 @@ export const UseTargetComponent = component$((props) => {
     const prefix = \\"q\\";
     return prefix + \\"foo\\";
   });
-  const state = useStore({ lastName: \\"bar\\" });
+  const state = useStore({ foo: \\"bar\\", lastName: \\"bar\\" });
   useVisibleTask$(() => {
+    console.log(state.foo);
+    state.foo = \\"bar\\";
     console.log(\\"qwik\\");
     state.lastName = \\"baz\\";
+    console.log(state.foo);
+    state.foo = \\"baz\\";
   });
 
   return <div>{name.value}</div>;
@@ -5139,6 +5272,92 @@ export const MyBasicComponent = component$((props) => {
 });
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > Advanced 1`] = `
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+
+export const MyBasicForShowComponent = component$((props: any) => {
+  const state = useStore<any>({
+    name: \\"PatrickJS\\",
+    names: [\\"Steve\\", \\"PatrickJS\\"],
+  });
+
+  return (
+    <main>
+      {(state.names || []).map((person, i) => {
+        return (
+          <div>
+            {i}: {person}
+          </div>
+        );
+      })}
+      {(state.names || []).map((person) => {
+        return <span>{person}</span>;
+      })}
+      {(state.names || []).map((item) => {
+        return <br />;
+      })}
+      {(
+        Array.from({
+          length: 10,
+        }) || []
+      ).map((_, ee) => {
+        return <pre>{ee}</pre>;
+      })}
+      {(
+        Array.from({
+          length: 10,
+        }) || []
+      ).map((item) => {
+        return <p>{index}</p>;
+      })}
+      {(state.names || []).map((person, index) => {
+        return (
+          <span>
+            {person}
+            {index}
+          </span>
+        );
+      })}
+      {(
+        Array.from({
+          length: 10,
+        }) || []
+      ).map((person, count) => {
+        return (
+          <span>
+            {person}
+            {count}
+          </span>
+        );
+      })}
+      {(state.names || []).map((person, i) => {
+        return (
+          <span>
+            {person}
+            {i}
+          </span>
+        );
+      })}
+      {(
+        Array.from({
+          length: 10,
+        }) || []
+      ).map((person, index) => {
+        return (
+          <span>
+            {person}
+            {index}
+          </span>
+        );
+      })}
+    </main>
+  );
+});
+
+export default MyBasicForShowComponent;
 "
 `;
 
@@ -5546,7 +5765,9 @@ export const MyBasicRefAssignmentComponent = component$((props: Props) => {
 
   return (
     <div>
-      <button onClick$={$((event) => state.handlerClick(evt))}>Click</button>
+      <button onClick$={$((event) => await state.handlerClick(evt))}>
+        Click
+      </button>
     </div>
   );
 });
@@ -7225,14 +7446,21 @@ export const STYLES = \`
 `;
 
 exports[`qwik > jsx > Typescript Test > class + ClassName + css 1`] = `
-"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+"import MyComp from \\"./my-component.jsx\\";
+
+import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
 
 export const MyBasicComponent = component$((props: any) => {
   useStylesScoped$(STYLES);
 
   return (
-    <div class=\\"test2 test div-MyBasicComponent\\">
-      Hello! I can run in React, Vue, Solid, or Liquid!
+    <div>
+      <MyComp class=\\"test\\" className=\\"test2\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </MyComp>
+      <div class=\\"test2 test div-MyBasicComponent\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
     </div>
   );
 });
@@ -7790,6 +8018,21 @@ export const OnInit = component$((props: Props) => {
 });
 
 export default OnInit;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > onInitPlain 1`] = `
+"import { Fragment, component$, h, useTask$ } from \\"@builder.io/qwik\\";
+
+export const OnInitPlain = component$((props: any) => {
+  useTask$(() => {
+    console.log(\\"onInit\\");
+  });
+
+  return <div></div>;
+});
+
+export default OnInitPlain;
 "
 `;
 
@@ -8469,7 +8712,7 @@ exports[`qwik > jsx > Typescript Test > showExpressions 1`] = `
 "SyntaxError: Expression expected. (9:115)
    7 | export const ShowWithOtherValues=component$((props:Props)=>{
    8 |
->  9 | return (<div>{props.conditionA?<>Content0</>:<>ContentA</>}{props.conditionA?<>ContentA</>:null}{props.conditionA?:<>ContentA</>}{props.conditionA?<>ContentB</>:<>{undefined}</>}{props.conditionA?<>{undefined}</>:<>ContentB</>}{props.conditionA?<>ContentC</>:null}{props.conditionA?:<>ContentC</>}{props.conditionA?<>ContentD</>:null}{props.conditionA?:<>ContentD</>}{props.conditionA?<>ContentE</>:<>hello</>}{props.conditionA?<>hello</>:<>ContentE</>}{props.conditionA?<>ContentF</>:<>123</>}{props.conditionA?<>123</>:<>ContentF</>}{props.conditionA === 'Default'?<>4mb</>:props.conditionB === 'Complete'?<>20mb</>:<>9mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<>20mb</>:<>9mb</>:<>4mb</>}</div>)});
+>  9 | return (<div>{props.conditionA?<>Content0</>:<>ContentA</>}{props.conditionA?<>ContentA</>:null}{props.conditionA?:<>ContentA</>}{props.conditionA?<>ContentB</>:<>{undefined}</>}{props.conditionA?<>{undefined}</>:<>ContentB</>}{props.conditionA?<>ContentC</>:null}{props.conditionA?:<>ContentC</>}{props.conditionA?<>ContentD</>:null}{props.conditionA?:<>ContentD</>}{props.conditionA?<>ContentE</>:<>hello</>}{props.conditionA?<>hello</>:<>ContentE</>}{props.conditionA?<>ContentF</>:<>123</>}{props.conditionA?<>123</>:<>ContentF</>}{props.conditionA === 'Default'?<>4mb</>:props.conditionB === 'Complete'?<>20mb</>:<>9mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<>20mb</>:<>9mb</>:<>4mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<div>complete</div>:<>9mb</>:props.conditionC === 'Complete'?<>dff</>:<div>complete else</div>}</div>)});
      |                                                                                                                   ^
   10 |
   11 | export default ShowWithOtherValues;
@@ -8482,7 +8725,7 @@ interface Props {
 }
 export const ShowWithOtherValues=component$((props:Props)=>{
 
-return (<div>{props.conditionA?<>Content0</>:<>ContentA</>}{props.conditionA?<>ContentA</>:null}{props.conditionA?:<>ContentA</>}{props.conditionA?<>ContentB</>:<>{undefined}</>}{props.conditionA?<>{undefined}</>:<>ContentB</>}{props.conditionA?<>ContentC</>:null}{props.conditionA?:<>ContentC</>}{props.conditionA?<>ContentD</>:null}{props.conditionA?:<>ContentD</>}{props.conditionA?<>ContentE</>:<>hello</>}{props.conditionA?<>hello</>:<>ContentE</>}{props.conditionA?<>ContentF</>:<>123</>}{props.conditionA?<>123</>:<>ContentF</>}{props.conditionA === 'Default'?<>4mb</>:props.conditionB === 'Complete'?<>20mb</>:<>9mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<>20mb</>:<>9mb</>:<>4mb</>}</div>)});
+return (<div>{props.conditionA?<>Content0</>:<>ContentA</>}{props.conditionA?<>ContentA</>:null}{props.conditionA?:<>ContentA</>}{props.conditionA?<>ContentB</>:<>{undefined}</>}{props.conditionA?<>{undefined}</>:<>ContentB</>}{props.conditionA?<>ContentC</>:null}{props.conditionA?:<>ContentC</>}{props.conditionA?<>ContentD</>:null}{props.conditionA?:<>ContentD</>}{props.conditionA?<>ContentE</>:<>hello</>}{props.conditionA?<>hello</>:<>ContentE</>}{props.conditionA?<>ContentF</>:<>123</>}{props.conditionA?<>123</>:<>ContentF</>}{props.conditionA === 'Default'?<>4mb</>:props.conditionB === 'Complete'?<>20mb</>:<>9mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<>20mb</>:<>9mb</>:<>4mb</>}{props.conditionA === 'Default'?props.conditionB === 'Complete'?<div>complete</div>:<>9mb</>:props.conditionC === 'Complete'?<>dff</>:<div>complete else</div>}</div>)});
 
 export default ShowWithOtherValues;
 
@@ -8626,6 +8869,28 @@ export const MyBasicComponent = component$((props: any) => {
 });
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > store-async-function 1`] = `
+"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const arrowFunction = async function arrowFunction() {
+  return Promise.resolve();
+};
+export const namedFunction = async function namedFunction() {
+  return Promise.resolve();
+};
+export const fetchUsers = async function fetchUsers() {
+  return Promise.resolve();
+};
+export const StringLiteralStore = component$((props: any) => {
+  const state: any = {};
+
+  return <div></div>;
+});
+
+export default StringLiteralStore;
 "
 `;
 
@@ -8899,10 +9164,14 @@ export const UseTargetComponent = component$((props: any) => {
     const prefix = \\"q\\";
     return prefix + \\"foo\\";
   });
-  const state = useStore<any>({ lastName: \\"bar\\" });
+  const state = useStore<any>({ foo: \\"bar\\", lastName: \\"bar\\" });
   useVisibleTask$(() => {
+    console.log(state.foo);
+    state.foo = \\"bar\\";
     console.log(\\"qwik\\");
     state.lastName = \\"baz\\";
+    console.log(state.foo);
+    state.foo = \\"baz\\";
   });
 
   return <div>{name.value}</div>;

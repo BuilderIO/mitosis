@@ -8,6 +8,7 @@ exports[`Styles > class and CSS are merged 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "css": {
+          "bindingType": "expression",
           "code": "{
   padding: '10px'
 }",
@@ -62,34 +63,71 @@ exports[`Styles > class and className are merged 1`] = `
   "children": [
     {
       "@type": "@builder.io/mitosis/node",
-      "bindings": {
-        "css": {
-          "code": "{
-  padding: '10px'
-}",
-          "type": "single",
-        },
-      },
+      "bindings": {},
       "children": [
         {
           "@type": "@builder.io/mitosis/node",
           "bindings": {},
-          "children": [],
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      ",
+              },
+              "scope": {},
+            },
+          ],
+          "meta": {},
+          "name": "MyComp",
+          "properties": {
+            "class": "test",
+            "className": "test2",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "css": {
+              "bindingType": "expression",
+              "code": "{
+  padding: '10px'
+}",
+              "type": "single",
+            },
+          },
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      ",
+              },
+              "scope": {},
+            },
+          ],
           "meta": {},
           "name": "div",
           "properties": {
-            "_text": "
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    ",
+            "class": "test2 test",
           },
           "scope": {},
         },
       ],
       "meta": {},
       "name": "div",
-      "properties": {
-        "class": "test2 test",
-      },
+      "properties": {},
       "scope": {},
     },
   ],
@@ -102,7 +140,15 @@ exports[`Styles > class and className are merged 1`] = `
     "onEvent": [],
     "onMount": [],
   },
-  "imports": [],
+  "imports": [
+    {
+      "importKind": "value",
+      "imports": {
+        "MyComp": "default",
+      },
+      "path": "./my-component.lite",
+    },
+  ],
   "inputs": [],
   "meta": {},
   "name": "MyBasicComponent",
@@ -120,6 +166,7 @@ exports[`Styles > className and CSS are merged 1`] = `
       "@type": "@builder.io/mitosis/node",
       "bindings": {
         "css": {
+          "bindingType": "expression",
           "code": "{
   padding: '10px'
 }",
