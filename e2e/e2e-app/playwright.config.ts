@@ -11,6 +11,7 @@ export const targets: { packageName: PackageName; port: number }[] = (
     { packageName: 'e2e-qwik' },
     { packageName: 'e2e-react' },
     { packageName: 'e2e-solid' },
+    { packageName: 'e2e-stencil' },
     { packageName: 'e2e-svelte' },
     { packageName: 'e2e-vue3' },
   ] as const

@@ -56,7 +56,9 @@ test.describe('e2e', () => {
 
     test('script tag', async ({ page, packageName }) => {
       if (
-        ['e2e-solid', 'e2e-react', 'e2e-angular', 'e2e-qwik', 'e2e-svelte'].includes(packageName)
+        ['e2e-solid', 'e2e-react', 'e2e-angular', 'e2e-qwik', 'e2e-stencil', 'e2e-svelte'].includes(
+          packageName,
+        )
       ) {
         test.skip();
       }
