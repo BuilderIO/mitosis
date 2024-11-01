@@ -1,5 +1,63 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Vue > jsx > Javascript Test > Advanced 1`] = `
+"<template>
+  <main>
+    <template :key=\\"i\\" v-for=\\"(person, i) in names\\">
+      <div>{{ i }}: {{ person }}</div> </template
+    ><template :key=\\"index\\" v-for=\\"(person, index) in names\\">
+      <span>{{ person }}</span> </template
+    ><template :key=\\"index\\" v-for=\\"(_, index) in names\\">
+      <br /> </template
+    ><template
+      :key=\\"ee\\"
+      v-for=\\"(_, ee) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <pre>{{ ee }}</pre></template
+    ><template
+      :key=\\"index\\"
+      v-for=\\"(_, index) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <p>{{ index }}</p> </template
+    ><template :key=\\"index\\" v-for=\\"(person, index) in names\\">
+      <span>{{ person }}{{ index }}</span> </template
+    ><template
+      :key=\\"count\\"
+      v-for=\\"(person, count) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <span>{{ person }}{{ count }}</span> </template
+    ><template :key=\\"i\\" v-for=\\"(person, i) in names\\">
+      <span>{{ person }}{{ i }}</span> </template
+    ><template
+      :key=\\"index\\"
+      v-for=\\"(person, index) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <span>{{ person }}{{ index }}</span>
+    </template>
+  </main>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"my-basic-for-show-component\\",
+
+  data() {
+    return { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+  },
+});
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > AdvancedRef 1`] = `
 "<template>
   <div>
@@ -1234,7 +1292,7 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > Image State 1`] = `
 "<template>
   <div>
-    <template :key=\\"index\\" v-for=\\"(item, index) in images\\">
+    <template :key=\\"itemIndex\\" v-for=\\"(item, itemIndex) in images\\">
       <img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" />
     </template>
   </div>
@@ -1917,16 +1975,24 @@ export default defineComponent({
 
 exports[`Vue > jsx > Javascript Test > class + ClassName + css 1`] = `
 "<template>
-  <div class=\\"test2 test div\\">
-    Hello! I can run in React, Vue, Solid, or Liquid!
+  <div>
+    <MyComp class=\\"test\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </MyComp>
+    <div class=\\"test2 test div\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
   </div>
 </template>
 
 <script>
 import { defineComponent } from \\"vue\\";
 
+import MyComp from \\"./my-component.vue\\";
+
 export default defineComponent({
   name: \\"my-basic-component\\",
+  components: { MyComp: MyComp },
 });
 </script>
 
@@ -2565,6 +2631,24 @@ export default defineComponent({
   created() {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
+  },
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > onInitPlain 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"on-init-plain\\",
+
+  created() {
+    console.log(\\"onInit\\");
   },
 });
 </script>"
@@ -3294,6 +3378,22 @@ exports[`Vue > jsx > Javascript Test > showExpressions 1`] = `
     </template>
 
     <template v-else> 4mb </template>
+
+    <template v-if=\\"conditionA === 'Default'\\">
+      <template v-if=\\"conditionB === 'Complete'\\">
+        <div>complete</div>
+      </template>
+
+      <template v-else> 9mb </template>
+    </template>
+
+    <template v-else>
+      <template v-if=\\"conditionC === 'Complete'\\"> dff </template>
+
+      <template v-else>
+        <div>complete else</div>
+      </template>
+    </template>
   </div>
 </template>
 
@@ -3303,7 +3403,7 @@ import { defineComponent } from \\"vue\\";
 export default defineComponent({
   name: \\"show-with-other-values\\",
 
-  props: [\\"conditionA\\", \\"conditionB\\"],
+  props: [\\"conditionA\\", \\"conditionB\\", \\"conditionC\\"],
 });
 </script>"
 `;
@@ -3311,7 +3411,7 @@ export default defineComponent({
 exports[`Vue > jsx > Javascript Test > showWithFor 1`] = `
 "<template>
   <template v-if=\\"conditionA\\">
-    <template :key=\\"idx\\" v-for=\\"(item, index) in items\\">
+    <template :key=\\"idx\\" v-for=\\"(item, idx) in items\\">
       <div>{{ item }}</div>
     </template>
   </template>
@@ -3469,6 +3569,32 @@ import { defineComponent } from \\"vue\\";
 
 export default defineComponent({
   name: \\"my-basic-component\\",
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > store-async-function 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"string-literal-store\\",
+
+  methods: {
+    arrowFunction: async function arrowFunction() {
+      return Promise.resolve();
+    },
+    namedFunction: async function namedFunction() {
+      return Promise.resolve();
+    },
+    fetchUsers: async function fetchUsers() {
+      return Promise.resolve();
+    },
+  },
 });
 </script>"
 `;
@@ -3789,10 +3915,13 @@ export default defineComponent({
   name: \\"use-target-component\\",
 
   data() {
-    return { lastName: \\"bar\\" };
+    return { lastName: \\"bar\\", foo: \\"bar\\" };
   },
 
-  mounted() {},
+  mounted() {
+    console.log(this.foo);
+    this.foo = \\"bar\\";
+  },
 
   computed: {
     name() {
@@ -3840,6 +3969,64 @@ export default defineComponent({
 
   data() {
     return { name: \\"PatrickJS\\" };
+  },
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > Advanced 1`] = `
+"<template>
+  <main>
+    <template :key=\\"i\\" v-for=\\"(person, i) in names\\">
+      <div>{{ i }}: {{ person }}</div> </template
+    ><template :key=\\"index\\" v-for=\\"(person, index) in names\\">
+      <span>{{ person }}</span> </template
+    ><template :key=\\"index\\" v-for=\\"(_, index) in names\\">
+      <br /> </template
+    ><template
+      :key=\\"ee\\"
+      v-for=\\"(_, ee) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <pre>{{ ee }}</pre></template
+    ><template
+      :key=\\"index\\"
+      v-for=\\"(_, index) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <p>{{ index }}</p> </template
+    ><template :key=\\"index\\" v-for=\\"(person, index) in names\\">
+      <span>{{ person }}{{ index }}</span> </template
+    ><template
+      :key=\\"count\\"
+      v-for=\\"(person, count) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <span>{{ person }}{{ count }}</span> </template
+    ><template :key=\\"i\\" v-for=\\"(person, i) in names\\">
+      <span>{{ person }}{{ i }}</span> </template
+    ><template
+      :key=\\"index\\"
+      v-for=\\"(person, index) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <span>{{ person }}{{ index }}</span>
+    </template>
+  </main>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"my-basic-for-show-component\\",
+
+  data() {
+    return { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
   },
 });
 </script>"
@@ -5204,7 +5391,7 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > Image State 1`] = `
 "<template>
   <div>
-    <template :key=\\"index\\" v-for=\\"(item, index) in images\\">
+    <template :key=\\"itemIndex\\" v-for=\\"(item, itemIndex) in images\\">
       <img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" />
     </template>
   </div>
@@ -6021,16 +6208,24 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > class + ClassName + css 1`] = `
 "<template>
-  <div class=\\"test2 test div\\">
-    Hello! I can run in React, Vue, Solid, or Liquid!
+  <div>
+    <MyComp class=\\"test\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </MyComp>
+    <div class=\\"test2 test div\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
   </div>
 </template>
 
 <script lang=\\"ts\\">
 import { defineComponent } from \\"vue\\";
 
+import MyComp from \\"./my-component.vue\\";
+
 export default defineComponent({
   name: \\"my-basic-component\\",
+  components: { MyComp: MyComp },
 });
 </script>
 
@@ -6726,6 +6921,24 @@ export default defineComponent({
   created() {
     this.name = defaultValues.name || this.name;
     console.log(\\"set defaults with props\\");
+  },
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > onInitPlain 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"on-init-plain\\",
+
+  created() {
+    console.log(\\"onInit\\");
   },
 });
 </script>"
@@ -7529,6 +7742,22 @@ exports[`Vue > jsx > Typescript Test > showExpressions 1`] = `
     </template>
 
     <template v-else> 4mb </template>
+
+    <template v-if=\\"conditionA === 'Default'\\">
+      <template v-if=\\"conditionB === 'Complete'\\">
+        <div>complete</div>
+      </template>
+
+      <template v-else> 9mb </template>
+    </template>
+
+    <template v-else>
+      <template v-if=\\"conditionC === 'Complete'\\"> dff </template>
+
+      <template v-else>
+        <div>complete else</div>
+      </template>
+    </template>
   </div>
 </template>
 
@@ -7543,7 +7772,7 @@ interface Props {
 export default defineComponent({
   name: \\"show-with-other-values\\",
 
-  props: [\\"conditionA\\", \\"conditionB\\"],
+  props: [\\"conditionA\\", \\"conditionB\\", \\"conditionC\\"],
 });
 </script>"
 `;
@@ -7551,7 +7780,7 @@ export default defineComponent({
 exports[`Vue > jsx > Typescript Test > showWithFor 1`] = `
 "<template>
   <template v-if=\\"conditionA\\">
-    <template :key=\\"idx\\" v-for=\\"(item, index) in items\\">
+    <template :key=\\"idx\\" v-for=\\"(item, idx) in items\\">
       <div>{{ item }}</div>
     </template>
   </template>
@@ -7731,6 +7960,32 @@ import { defineComponent } from \\"vue\\";
 
 export default defineComponent({
   name: \\"my-basic-component\\",
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > store-async-function 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"string-literal-store\\",
+
+  methods: {
+    arrowFunction: async function arrowFunction() {
+      return Promise.resolve();
+    },
+    namedFunction: async function namedFunction() {
+      return Promise.resolve();
+    },
+    fetchUsers: async function fetchUsers() {
+      return Promise.resolve();
+    },
+  },
 });
 </script>"
 `;
@@ -8067,10 +8322,13 @@ export default defineComponent({
   name: \\"use-target-component\\",
 
   data() {
-    return { lastName: \\"bar\\" };
+    return { lastName: \\"bar\\", foo: \\"bar\\" };
   },
 
-  mounted() {},
+  mounted() {
+    console.log(this.foo);
+    this.foo = \\"bar\\";
+  },
 
   computed: {
     name() {

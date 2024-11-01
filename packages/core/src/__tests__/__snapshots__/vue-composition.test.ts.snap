@@ -1,5 +1,58 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Vue > jsx > Javascript Test > Advanced 1`] = `
+"<template>
+  <main>
+    <template :key=\\"i\\" v-for=\\"(person, i) in names\\">
+      <div>{{ i }}: {{ person }}</div> </template
+    ><template :key=\\"index\\" v-for=\\"(person, index) in names\\">
+      <span>{{ person }}</span> </template
+    ><template :key=\\"index\\" v-for=\\"(_, index) in names\\">
+      <br /> </template
+    ><template
+      :key=\\"ee\\"
+      v-for=\\"(_, ee) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <pre>{{ ee }}</pre></template
+    ><template
+      :key=\\"index\\"
+      v-for=\\"(_, index) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <p>{{ index }}</p> </template
+    ><template :key=\\"index\\" v-for=\\"(person, index) in names\\">
+      <span>{{ person }}{{ index }}</span> </template
+    ><template
+      :key=\\"count\\"
+      v-for=\\"(person, count) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <span>{{ person }}{{ count }}</span> </template
+    ><template :key=\\"i\\" v-for=\\"(person, i) in names\\">
+      <span>{{ person }}{{ i }}</span> </template
+    ><template
+      :key=\\"index\\"
+      v-for=\\"(person, index) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <span>{{ person }}{{ index }}</span>
+    </template>
+  </main>
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const name = ref(\\"PatrickJS\\");
+const names = ref([\\"Steve\\", \\"PatrickJS\\"]);
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > AdvancedRef 1`] = `
 "<template>
   <div>
@@ -1065,7 +1118,7 @@ function isBrowser() {
 exports[`Vue > jsx > Javascript Test > Image State 1`] = `
 "<template>
   <div>
-    <template :key=\\"index\\" v-for=\\"(item, index) in images\\">
+    <template :key=\\"itemIndex\\" v-for=\\"(item, itemIndex) in images\\">
       <img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" />
     </template>
   </div>
@@ -1604,12 +1657,19 @@ watch(
 
 exports[`Vue > jsx > Javascript Test > class + ClassName + css 1`] = `
 "<template>
-  <div class=\\"test2 test div\\">
-    Hello! I can run in React, Vue, Solid, or Liquid!
+  <div>
+    <MyComp class=\\"test\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </MyComp>
+    <div class=\\"test2 test div\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
   </div>
 </template>
 
-
+<script setup>
+import MyComp from \\"./my-component.vue\\";
+</script>
 
 <style scoped>
 .div {
@@ -2085,6 +2145,16 @@ const name = ref(\\"\\");
 
 name.value = defaultValues.name || props.name;
 console.log(\\"set defaults with props\\");
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > onInitPlain 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script setup>
+console.log(\\"onInit\\");
 </script>"
 `;
 
@@ -2675,18 +2745,34 @@ exports[`Vue > jsx > Javascript Test > showExpressions 1`] = `
     </template>
 
     <template v-else> 4mb </template>
+
+    <template v-if=\\"conditionA === 'Default'\\">
+      <template v-if=\\"conditionB === 'Complete'\\">
+        <div>complete</div>
+      </template>
+
+      <template v-else> 9mb </template>
+    </template>
+
+    <template v-else>
+      <template v-if=\\"conditionC === 'Complete'\\"> dff </template>
+
+      <template v-else>
+        <div>complete else</div>
+      </template>
+    </template>
   </div>
 </template>
 
 <script setup>
-const props = defineProps([\\"conditionA\\", \\"conditionB\\"]);
+const props = defineProps([\\"conditionA\\", \\"conditionB\\", \\"conditionC\\"]);
 </script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > showWithFor 1`] = `
 "<template>
   <template v-if=\\"conditionA\\">
-    <template :key=\\"idx\\" v-for=\\"(item, index) in items\\">
+    <template :key=\\"idx\\" v-for=\\"(item, idx) in items\\">
       <div>{{ item }}</div>
     </template>
   </template>
@@ -2792,6 +2878,24 @@ exports[`Vue > jsx > Javascript Test > spreadProps 1`] = `
 "<template>
   <input v-bind=\\"$props\\" />
 </template>"
+`;
+
+exports[`Vue > jsx > Javascript Test > store-async-function 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script setup>
+async function arrowFunction() {
+  return Promise.resolve();
+}
+async function namedFunction() {
+  return Promise.resolve();
+}
+async function fetchUsers() {
+  return Promise.resolve();
+}
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > string-literal-store 1`] = `
@@ -3011,8 +3115,12 @@ exports[`Vue > jsx > Javascript Test > useTarget 1`] = `
 import { computed, onMounted, ref } from \\"vue\\";
 
 const lastName = ref(\\"bar\\");
+const foo = ref(\\"bar\\");
 
-onMounted(() => {});
+onMounted(() => {
+  console.log(foo);
+  foo.value = \\"bar\\";
+});
 
 const name = computed(() => {
   const prefix = \\"v\\";
@@ -3045,6 +3153,59 @@ exports[`Vue > jsx > Remove Internal mitosis package 1`] = `
 import { ref } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > Advanced 1`] = `
+"<template>
+  <main>
+    <template :key=\\"i\\" v-for=\\"(person, i) in names\\">
+      <div>{{ i }}: {{ person }}</div> </template
+    ><template :key=\\"index\\" v-for=\\"(person, index) in names\\">
+      <span>{{ person }}</span> </template
+    ><template :key=\\"index\\" v-for=\\"(_, index) in names\\">
+      <br /> </template
+    ><template
+      :key=\\"ee\\"
+      v-for=\\"(_, ee) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <pre>{{ ee }}</pre></template
+    ><template
+      :key=\\"index\\"
+      v-for=\\"(_, index) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <p>{{ index }}</p> </template
+    ><template :key=\\"index\\" v-for=\\"(person, index) in names\\">
+      <span>{{ person }}{{ index }}</span> </template
+    ><template
+      :key=\\"count\\"
+      v-for=\\"(person, count) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <span>{{ person }}{{ count }}</span> </template
+    ><template :key=\\"i\\" v-for=\\"(person, i) in names\\">
+      <span>{{ person }}{{ i }}</span> </template
+    ><template
+      :key=\\"index\\"
+      v-for=\\"(person, index) in Array.from({
+        length: 10,
+      })\\"
+    >
+      <span>{{ person }}{{ index }}</span>
+    </template>
+  </main>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+const name = ref(\\"PatrickJS\\");
+const names = ref([\\"Steve\\", \\"PatrickJS\\"]);
 </script>"
 `;
 
@@ -4211,7 +4372,7 @@ function isBrowser() {
 exports[`Vue > jsx > Typescript Test > Image State 1`] = `
 "<template>
   <div>
-    <template :key=\\"index\\" v-for=\\"(item, index) in images\\">
+    <template :key=\\"itemIndex\\" v-for=\\"(item, itemIndex) in images\\">
       <img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" />
     </template>
   </div>
@@ -4851,12 +5012,19 @@ watch(
 
 exports[`Vue > jsx > Typescript Test > class + ClassName + css 1`] = `
 "<template>
-  <div class=\\"test2 test div\\">
-    Hello! I can run in React, Vue, Solid, or Liquid!
+  <div>
+    <MyComp class=\\"test\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </MyComp>
+    <div class=\\"test2 test div\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
   </div>
 </template>
 
-
+<script setup lang=\\"ts\\">
+import MyComp from \\"./my-component.vue\\";
+</script>
 
 <style scoped>
 .div {
@@ -5389,6 +5557,16 @@ const name = ref(\\"\\");
 
 name.value = defaultValues.name || props.name;
 console.log(\\"set defaults with props\\");
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > onInitPlain 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script setup lang=\\"ts\\">
+console.log(\\"onInit\\");
 </script>"
 `;
 
@@ -6053,6 +6231,22 @@ exports[`Vue > jsx > Typescript Test > showExpressions 1`] = `
     </template>
 
     <template v-else> 4mb </template>
+
+    <template v-if=\\"conditionA === 'Default'\\">
+      <template v-if=\\"conditionB === 'Complete'\\">
+        <div>complete</div>
+      </template>
+
+      <template v-else> 9mb </template>
+    </template>
+
+    <template v-else>
+      <template v-if=\\"conditionC === 'Complete'\\"> dff </template>
+
+      <template v-else>
+        <div>complete else</div>
+      </template>
+    </template>
   </div>
 </template>
 
@@ -6069,7 +6263,7 @@ const props = defineProps<Props>();
 exports[`Vue > jsx > Typescript Test > showWithFor 1`] = `
 "<template>
   <template v-if=\\"conditionA\\">
-    <template :key=\\"idx\\" v-for=\\"(item, index) in items\\">
+    <template :key=\\"idx\\" v-for=\\"(item, idx) in items\\">
       <div>{{ item }}</div>
     </template>
   </template>
@@ -6197,6 +6391,24 @@ exports[`Vue > jsx > Typescript Test > spreadProps 1`] = `
 "<template>
   <input v-bind=\\"$props\\" />
 </template>"
+`;
+
+exports[`Vue > jsx > Typescript Test > store-async-function 1`] = `
+"<template>
+  <div></div>
+</template>
+
+<script setup lang=\\"ts\\">
+async function arrowFunction() {
+  return Promise.resolve();
+}
+async function namedFunction() {
+  return Promise.resolve();
+}
+async function fetchUsers() {
+  return Promise.resolve();
+}
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > string-literal-store 1`] = `
@@ -6432,8 +6644,12 @@ exports[`Vue > jsx > Typescript Test > useTarget 1`] = `
 import { computed, onMounted, ref } from \\"vue\\";
 
 const lastName = ref(\\"bar\\");
+const foo = ref(\\"bar\\");
 
-onMounted(() => {});
+onMounted(() => {
+  console.log(foo);
+  foo.value = \\"bar\\";
+});
 
 const name = computed(() => {
   const prefix = \\"v\\";

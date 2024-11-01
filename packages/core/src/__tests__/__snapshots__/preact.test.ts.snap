@@ -1711,12 +1711,18 @@ export default MyBasicOnUpdateReturnComponent;
 exports[`Preact > jsx > Javascript Test > class + ClassName + css 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
+import MyComp from \\"./my-component\\";
 
 function MyBasicComponent(props) {
   return (
     <Fragment>
-      <div className=\\"test2 test div\\">
-        Hello! I can run in React, Vue, Solid, or Liquid!
+      <div>
+        <MyComp className=\\"test\\" className=\\"test2\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </MyComp>
+        <div className=\\"test2 test div\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </div>
       </div>
       <style jsx>{\`
         .div {
@@ -2320,6 +2326,25 @@ function OnInit(props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > onInitPlain 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useRef } from \\"preact/hooks\\";
+
+function OnInitPlain(props) {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    console.log(\\"onInit\\");
+    hasInitialized.current = true;
+  }
+
+  return <div />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -2986,6 +3011,19 @@ function ShowWithOtherValues(props) {
       ) : (
         <Fragment>4mb</Fragment>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <Fragment>
+          {props.conditionB === \\"Complete\\" ? (
+            <div>complete</div>
+          ) : (
+            <Fragment>9mb</Fragment>
+          )}
+        </Fragment>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <Fragment>dff</Fragment>
+      ) : (
+        <div>complete else</div>
+      )}
     </div>
   );
 }
@@ -3134,6 +3172,30 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > store-async-function 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function StringLiteralStore(props) {
+  async function arrowFunction() {
+    return Promise.resolve();
+  }
+
+  async function namedFunction() {
+    return Promise.resolve();
+  }
+
+  async function fetchUsers() {
+    return Promise.resolve();
+  }
+
+  return <div />;
+}
+
+export default StringLiteralStore;
 "
 `;
 
@@ -3391,7 +3453,12 @@ function UseTargetComponent(props) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return <div>{name()}</div>;
 }
@@ -5409,12 +5476,18 @@ export default MyBasicOnUpdateReturnComponent;
 exports[`Preact > jsx > Typescript Test > class + ClassName + css 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
+import MyComp from \\"./my-component\\";
 
 function MyBasicComponent(props: any) {
   return (
     <Fragment>
-      <div className=\\"test2 test div\\">
-        Hello! I can run in React, Vue, Solid, or Liquid!
+      <div>
+        <MyComp className=\\"test\\" className=\\"test2\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </MyComp>
+        <div className=\\"test2 test div\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </div>
       </div>
       <style jsx>{\`
         .div {
@@ -6076,6 +6149,25 @@ function OnInit(props: Props) {
 }
 
 export default OnInit;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > onInitPlain 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useRef } from \\"preact/hooks\\";
+
+function OnInitPlain(props: any) {
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    console.log(\\"onInit\\");
+    hasInitialized.current = true;
+  }
+
+  return <div />;
+}
+
+export default OnInitPlain;
 "
 `;
 
@@ -6821,6 +6913,19 @@ function ShowWithOtherValues(props: Props) {
       ) : (
         <Fragment>4mb</Fragment>
       )}
+      {props.conditionA === \\"Default\\" ? (
+        <Fragment>
+          {props.conditionB === \\"Complete\\" ? (
+            <div>complete</div>
+          ) : (
+            <Fragment>9mb</Fragment>
+          )}
+        </Fragment>
+      ) : props.conditionC === \\"Complete\\" ? (
+        <Fragment>dff</Fragment>
+      ) : (
+        <div>complete else</div>
+      )}
     </div>
   );
 }
@@ -6991,6 +7096,30 @@ function MyBasicComponent(props: any) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > store-async-function 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function StringLiteralStore(props: any) {
+  async function arrowFunction() {
+    return Promise.resolve();
+  }
+
+  async function namedFunction() {
+    return Promise.resolve();
+  }
+
+  async function fetchUsers() {
+    return Promise.resolve();
+  }
+
+  return <div />;
+}
+
+export default StringLiteralStore;
 "
 `;
 
@@ -7262,7 +7391,12 @@ function UseTargetComponent(props: any) {
 
   const [lastName, setLastName] = useState(() => \\"bar\\");
 
-  useEffect(() => {}, []);
+  const [foo, setFoo] = useState(() => \\"bar\\");
+
+  useEffect(() => {
+    console.log(foo);
+    setFoo(\\"bar\\");
+  }, []);
 
   return <div>{name()}</div>;
 }

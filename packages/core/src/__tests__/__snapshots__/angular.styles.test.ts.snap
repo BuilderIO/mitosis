@@ -1,5 +1,73 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > Advanced 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-show-component\\",
+  template: \`
+    <main>
+      <ng-container *ngFor=\\"let person of names; index as i\\">
+        <div>{{i}} : {{person}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names\\">
+        <span>{{person}}</span>
+      </ng-container>
+      <ng-container *ngFor=\\"let _ of names\\"><br /></ng-container>
+      <ng-container
+        *ngFor=\\"let _ of Array.from({
+          length: 10
+        }); index as ee\\"
+      >
+        <pre>{{ee}}</pre>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let _ of Array.from({
+          length: 10
+        })\\"
+      >
+        <p>{{index}}</p>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as index\\">
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as count\\"
+      >
+        <span>{{person}} {{count}}</span>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as i\\">
+        <span>{{person}} {{i}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as index\\"
+      >
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+    </main>
+  \`,
+})
+export default class MyBasicForShowComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+}
+
+@NgModule({
+  declarations: [MyBasicForShowComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForShowComponent],
+})
+export class MyBasicForShowComponentModule {}
+"
+`;
+
 exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > AdvancedRef 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -730,7 +798,7 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"column\\",
   template: \`
     <div class=\\"builder-columns div\\">
-      <ng-container *ngFor=\\"let column of columns; let index = index\\">
+      <ng-container *ngFor=\\"let column of columns; index as index\\">
         <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
       </ng-container>
     </div>
@@ -1127,7 +1195,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
+          *ngFor=\\"let block of builderBlock?.children; index as index; trackBy: trackByBlock0\\"
         >
           <builder-block-component
             [block]=\\"block\\"
@@ -1593,7 +1661,7 @@ import { Component } from \\"@angular/core\\";
   selector: \\"img-state-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
+      <ng-container *ngFor=\\"let item of images; index as itemIndex\\">
         <ng-container>
           <img class=\\"custom-class\\" [attr.src]=\\"item\\" />
         </ng-container>
@@ -2085,7 +2153,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.name]=\\"name\\"
       #elRef0
     >
-      <ng-container *ngFor=\\"let option of options; let index = index\\">
+      <ng-container *ngFor=\\"let option of options; index as index\\">
         <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
@@ -2302,7 +2370,7 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         </button>
       </ng-container>
       <ng-container
-        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
+        *ngFor=\\"let review of reviews; index as index; trackBy: trackByReview0\\"
       >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
@@ -3063,8 +3131,13 @@ import { Component } from \\"@angular/core\\";
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
-    <div class=\\"test2 test div\\">
-      Hello! I can run in React, Vue, Solid, or Liquid!
+    <div>
+      <my-comp class=\\"test\\" className=\\"test2\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </my-comp>
+      <div class=\\"test2 test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
     </div>
   \`,
   styles: [
@@ -3079,7 +3152,7 @@ export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
-  imports: [CommonModule],
+  imports: [CommonModule, MyCompModule],
   exports: [MyBasicComponent],
 })
 export class MyBasicComponentModule {}
@@ -4198,6 +4271,33 @@ export class OnInitModule {}
 "
 `;
 
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > onInitPlain 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"on-init-plain\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class OnInitPlain {
+  ngOnInit() {
+    console.log(\\"onInit\\");
+  }
+}
+
+@NgModule({
+  declarations: [OnInitPlain],
+  imports: [CommonModule],
+  exports: [OnInitPlain],
+})
+export class OnInitPlainModule {}
+"
+`;
+
 exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > onMount 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -4585,7 +4685,7 @@ import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
         <ng-container
-          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
+          *ngFor=\\"let data of repeatItemData; index as index; trackBy: trackByData0\\"
         >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
@@ -5125,12 +5225,25 @@ import { Component, Input } from \\"@angular/core\\";
         <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">
+          <div>complete</div>
+        </ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
+        <ng-container *ngIf=\\"conditionC === 'Complete'\\">dff</ng-container>
+        <ng-container *ngIf=\\"!(conditionC === 'Complete')\\">
+          <div>complete else</div>
+        </ng-container>
+      </ng-container>
     </div>
   \`,
 })
 export default class ShowWithOtherValues {
   @Input() conditionA;
   @Input() conditionB;
+  @Input() conditionC;
 }
 
 @NgModule({
@@ -5153,7 +5266,7 @@ import { Component, Input } from \\"@angular/core\\";
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
       <ng-container
-        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
+        *ngFor=\\"let item of items; index as idx; trackBy: trackByItem0\\"
       >
         <div>{{item}}</div>
       </ng-container>
@@ -5555,6 +5668,39 @@ export default class MyComponent {
   exports: [MyComponent],
 })
 export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > store-async-function 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"string-literal-store\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class StringLiteralStore {
+  arrowFunction = async function arrowFunction() {
+    return Promise.resolve();
+  };
+  namedFunction = async function namedFunction() {
+    return Promise.resolve();
+  };
+  fetchUsers = async function fetchUsers() {
+    return Promise.resolve();
+  };
+}
+
+@NgModule({
+  declarations: [StringLiteralStore],
+  imports: [CommonModule],
+  exports: [StringLiteralStore],
+})
+export class StringLiteralStoreModule {}
 "
 `;
 
@@ -6100,9 +6246,12 @@ export default class UseTargetComponent {
     return prefix + \\"foo\\";
   }
   lastName = \\"bar\\";
+  foo = \\"bar\\";
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
+      console.log(this.foo);
+      this.foo = \\"bar\\";
     }
   }
 }
@@ -6171,6 +6320,74 @@ export default class MyBasicComponent {
   exports: [MyBasicComponent],
 })
 export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > Advanced 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-show-component\\",
+  template: \`
+    <main>
+      <ng-container *ngFor=\\"let person of names; index as i\\">
+        <div>{{i}} : {{person}}</div>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names\\">
+        <span>{{person}}</span>
+      </ng-container>
+      <ng-container *ngFor=\\"let _ of names\\"><br /></ng-container>
+      <ng-container
+        *ngFor=\\"let _ of Array.from({
+          length: 10
+        }); index as ee\\"
+      >
+        <pre>{{ee}}</pre>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let _ of Array.from({
+          length: 10
+        })\\"
+      >
+        <p>{{index}}</p>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as index\\">
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as count\\"
+      >
+        <span>{{person}} {{count}}</span>
+      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as i\\">
+        <span>{{person}} {{i}}</span>
+      </ng-container>
+      <ng-container
+        *ngFor=\\"let person of Array.from({
+          length: 10
+        }); index as index\\"
+      >
+        <span>{{person}} {{index}}</span>
+      </ng-container>
+    </main>
+  \`,
+})
+export default class MyBasicForShowComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+}
+
+@NgModule({
+  declarations: [MyBasicForShowComponent],
+  imports: [CommonModule],
+  exports: [MyBasicForShowComponent],
+})
+export class MyBasicForShowComponentModule {}
 "
 `;
 
@@ -6963,7 +7180,7 @@ export interface ColumnProps {
   selector: \\"column\\",
   template: \`
     <div class=\\"builder-columns div\\">
-      <ng-container *ngFor=\\"let column of columns; let index = index\\">
+      <ng-container *ngFor=\\"let column of columns; index as index\\">
         <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
       </ng-container>
     </div>
@@ -7408,7 +7625,7 @@ import {
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
         <ng-container
-          *ngFor=\\"let block of builderBlock?.children; let index = index; trackBy: trackByBlock0\\"
+          *ngFor=\\"let block of builderBlock?.children; index as index; trackBy: trackByBlock0\\"
         >
           <builder-block-component
             [block]=\\"block\\"
@@ -7900,7 +8117,7 @@ import { Component } from \\"@angular/core\\";
   selector: \\"img-state-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
+      <ng-container *ngFor=\\"let item of images; index as itemIndex\\">
         <ng-container>
           <img class=\\"custom-class\\" [attr.src]=\\"item\\" />
         </ng-container>
@@ -8453,7 +8670,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.name]=\\"name\\"
       #elRef0
     >
-      <ng-container *ngFor=\\"let option of options; let index = index\\">
+      <ng-container *ngFor=\\"let option of options; index as index\\">
         <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
@@ -8691,7 +8908,7 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         </button>
       </ng-container>
       <ng-container
-        *ngFor=\\"let review of reviews; let index = index; trackBy: trackByReview0\\"
+        *ngFor=\\"let review of reviews; index as index; trackBy: trackByReview0\\"
       >
         <div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
@@ -9515,8 +9732,13 @@ import { Component } from \\"@angular/core\\";
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
-    <div class=\\"test2 test div\\">
-      Hello! I can run in React, Vue, Solid, or Liquid!
+    <div>
+      <my-comp class=\\"test\\" className=\\"test2\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </my-comp>
+      <div class=\\"test2 test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
     </div>
   \`,
   styles: [
@@ -9531,7 +9753,7 @@ export default class MyBasicComponent {}
 
 @NgModule({
   declarations: [MyBasicComponent],
-  imports: [CommonModule],
+  imports: [CommonModule, MyCompModule],
   exports: [MyBasicComponent],
 })
 export class MyBasicComponentModule {}
@@ -10716,6 +10938,33 @@ export class OnInitModule {}
 "
 `;
 
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > onInitPlain 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"on-init-plain\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class OnInitPlain {
+  ngOnInit() {
+    console.log(\\"onInit\\");
+  }
+}
+
+@NgModule({
+  declarations: [OnInitPlain],
+  imports: [CommonModule],
+  exports: [OnInitPlain],
+})
+export class OnInitPlainModule {}
+"
+`;
+
 exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > onMount 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -11157,7 +11406,7 @@ import type { RepeatData } from \\"./types.js\\";
       </ng-container>
       <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
         <ng-container
-          *ngFor=\\"let data of repeatItemData; let index = index; trackBy: trackByData0\\"
+          *ngFor=\\"let data of repeatItemData; index as index; trackBy: trackByData0\\"
         >
           <render-repeated-block
             [repeatContext]=\\"data.context\\"
@@ -11722,12 +11971,25 @@ interface Props {
         <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
       </ng-container>
       <ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">
+        <ng-container *ngIf=\\"conditionB === 'Complete'\\">
+          <div>complete</div>
+        </ng-container>
+        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
+      </ng-container>
+      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
+        <ng-container *ngIf=\\"conditionC === 'Complete'\\">dff</ng-container>
+        <ng-container *ngIf=\\"!(conditionC === 'Complete')\\">
+          <div>complete else</div>
+        </ng-container>
+      </ng-container>
     </div>
   \`,
 })
 export default class ShowWithOtherValues {
   @Input() conditionA!: Props[\\"conditionA\\"];
   @Input() conditionB!: Props[\\"conditionB\\"];
+  @Input() conditionC!: Props[\\"conditionC\\"];
 }
 
 @NgModule({
@@ -11755,7 +12017,7 @@ interface Props {
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
       <ng-container
-        *ngFor=\\"let item of items; let idx = index; trackBy: trackByItem0\\"
+        *ngFor=\\"let item of items; index as idx; trackBy: trackByItem0\\"
       >
         <div>{{item}}</div>
       </ng-container>
@@ -12181,6 +12443,39 @@ export default class MyComponent {
   exports: [MyComponent],
 })
 export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > store-async-function 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"string-literal-store\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class StringLiteralStore {
+  arrowFunction = async function arrowFunction() {
+    return Promise.resolve();
+  };
+  namedFunction = async function namedFunction() {
+    return Promise.resolve();
+  };
+  fetchUsers = async function fetchUsers() {
+    return Promise.resolve();
+  };
+}
+
+@NgModule({
+  declarations: [StringLiteralStore],
+  imports: [CommonModule],
+  exports: [StringLiteralStore],
+})
+export class StringLiteralStoreModule {}
 "
 `;
 
@@ -12741,9 +13036,12 @@ export default class UseTargetComponent {
     return prefix + \\"foo\\";
   }
   lastName = \\"bar\\";
+  foo = \\"bar\\";
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
+      console.log(this.foo);
+      this.foo = \\"bar\\";
     }
   }
 }

@@ -361,12 +361,12 @@ export const blockToAngular = ({
         type: 'method',
       };
 
-      str += `<ng-container *ngFor="let ${forName} of ${json.bindings.each?.code}${
-        indexName ? `; let ${indexName} = index` : ''
+      str += `<ng-container *ngFor="let ${forName ?? '_'} of ${json.bindings.each?.code}${
+        indexName ? `; index as ${indexName}` : ''
       }; trackBy: ${trackByFnName}">`;
     } else {
-      str += `<ng-container *ngFor="let ${forName} of ${json.bindings.each?.code}${
-        indexName ? `; let ${indexName} = index` : ''
+      str += `<ng-container *ngFor="let ${forName ?? '_'} of ${json.bindings.each?.code}${
+        indexName ? `; index as ${indexName}` : ''
       }">`;
     }
     str += json.children
@@ -1030,7 +1030,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             `@ViewChild('${refName}') ${refName}${options.typescript ? '!: ElementRef' : ''}`,
         )
         .join('\n')}
-      
+
       ${Array.from(dynamicComponents)
         .map(
           (component) =>

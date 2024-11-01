@@ -52,8 +52,10 @@ const NODE_MAPPERS: {
   },
   For(_json, options) {
     const json = _json as ForNode;
-    const keyValue = json.bindings.key || { code: 'index', type: 'single' };
-    const forValue = `(${json.scope.forName}, index) in ${json.bindings.each?.code}`;
+    const keyValue = json.bindings.key || { code: json.scope.indexName ?? 'index', type: 'single' };
+    const forValue = `(${json.scope.forName ?? '_'}, ${json.scope.indexName ?? 'index'}) in ${
+      json.bindings.each?.code
+    }`;
 
     // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
     return `<template :key="${encodeQuotes(keyValue?.code || 'index')}" v-for="${encodeQuotes(

@@ -68,21 +68,24 @@ function emitStateMethods(
       case 'method':
       case 'function':
         let code = stateValue.code;
-        let prefixIdx = 0;
-        if (stateValue.type === 'function') {
-          prefixIdx += 'function '.length;
+        const isAsync = code.startsWith('async');
+        if (!isAsync) {
+          let prefixIdx = 0;
+          if (stateValue.type === 'function') {
+            prefixIdx += 'function '.length;
+          }
+          code = code.substring(prefixIdx);
+          code = convertMethodToFunction(code, methodMap, lexicalArgs).replace(
+            '(',
+            `(${lexicalArgs.join(',')},`,
+          );
         }
-        code = code.substring(prefixIdx);
-        code = convertMethodToFunction(code, methodMap, lexicalArgs).replace(
-          '(',
-          `(${lexicalArgs.join(',')},`,
-        );
         const functionName = code.split(/\(/)[0];
         if (!file.options.isTypeScript) {
           // Erase type information
           code = convertTypeScriptToJS(code);
         }
-        file.exportConst(functionName, 'function ' + code, true);
+        file.exportConst(isAsync ? key : functionName, isAsync ? code : 'function ' + code, true);
         continue;
 
       case 'property':

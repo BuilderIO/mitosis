@@ -53,8 +53,8 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
 
   if (checkIsForNode(json)) {
     return `\${${processBinding(json.bindings.each?.code as string)}?.map((${
-      json.scope.forName
-    }, index) => (
+      json.scope.forName ?? '_'
+    }, ${json.scope.indexName ?? 'index'}) => (
       html\`${json.children
         .filter(filterEmptyTextNodes)
         .map((item) => blockToLit(item, options))
@@ -138,7 +138,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
     let css = collectCss(json);
 
     const domRefs = getRefs(json);
-    mapRefs(component, (refName) => `this.${camelCase(refName)}`);
+    mapRefs(json, (refName) => `this.${camelCase(refName)}`);
 
     if (options.plugins) {
       json = runPostJsonPlugins({ json, plugins: options.plugins });
@@ -249,15 +249,15 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
           `,
         )
         .join('\n')}
-    
-  
+
+
       ${Array.from(props)
         .map((item) => `@property() ${item}: any`)
         .join('\n')}
 
         ${dataString}
         ${methodsString}
-      
+
         ${
           json.hooks.onMount.length === 0
             ? ''
@@ -271,11 +271,11 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
         ${
           !json.hooks.onUpdate?.length
             ? ''
-            : `updated() { 
-              ${json.hooks.onUpdate.map((hook) => processBinding(hook.code)).join('\n\n')} 
+            : `updated() {
+              ${json.hooks.onUpdate.map((hook) => processBinding(hook.code)).join('\n\n')}
             }`
         }
-    
+
       render() {
         return html\`
           ${options.useShadowDom || !css.length ? '' : `<style>${css}</style>`}

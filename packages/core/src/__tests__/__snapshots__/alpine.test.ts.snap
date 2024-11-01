@@ -1,5 +1,78 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Alpine.js > jsx > Javascript Test > Advanced 1`] = `
+"<main x-data=\\"myBasicForShowComponent()\\">
+  <template x-for=\\"person in names\\">
+    <div>
+      <span x-html=\\"i\\"></span>
+      :
+      <span x-html=\\"person\\"></span>
+    </div>
+  </template>
+  <template x-for=\\"person in names\\">
+    <span><span x-html=\\"person\\"></span></span>
+  </template>
+  <template x-for=\\"undefined in names\\">
+    <br />
+  </template>
+  <template
+    x-for=\\"_ in Array.from({
+  length: 10
+})\\"
+  >
+    <pre><span x-html=\\"ee\\"></span></pre>
+  </template>
+  <template
+    x-for=\\"undefined in Array.from({
+  length: 10
+})\\"
+  >
+    <p><span x-html=\\"index\\"></span></p>
+  </template>
+  <template x-for=\\"person in names\\">
+    <span>
+      <span x-html=\\"person\\"></span>
+      <span x-html=\\"index\\"></span>
+    </span>
+  </template>
+  <template
+    x-for=\\"person in Array.from({
+  length: 10
+})\\"
+  >
+    <span>
+      <span x-html=\\"person\\"></span>
+      <span x-html=\\"count\\"></span>
+    </span>
+  </template>
+  <template x-for=\\"person in names\\">
+    <span>
+      <span x-html=\\"person\\"></span>
+      <span x-html=\\"i\\"></span>
+    </span>
+  </template>
+  <template
+    x-for=\\"person in Array.from({
+  length: 10
+})\\"
+  >
+    <span>
+      <span x-html=\\"person\\"></span>
+      <span x-html=\\"index\\"></span>
+    </span>
+  </template>
+</main>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicForShowComponent\\", () => ({
+      name: \\"PatrickJS\\",
+      names: [\\"Steve\\", \\"PatrickJS\\"],
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > AdvancedRef 1`] = `
 "<style>
   .input {
@@ -1500,8 +1573,13 @@ exports[`Alpine.js > jsx > Javascript Test > class + ClassName + css 1`] = `
     padding: 10px;
   }
 </style>
-<div class=\\"test2 test div\\" x-data=\\"myBasicComponent()\\">
-  Hello! I can run in React, Vue, Solid, or Liquid!
+<div x-data=\\"myBasicComponent()\\">
+  <MyComp class=\\"test\\" className=\\"test2\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </MyComp>
+  <div class=\\"test2 test div\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
 </div>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
@@ -1912,6 +1990,16 @@ exports[`Alpine.js > jsx > Javascript Test > onInit 1`] = `
     Alpine.data(\\"onInit\\", () => ({
       name: \\"\\",
     }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > onInitPlain 1`] = `
+"<div x-data=\\"onInitPlain()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onInitPlain\\", () => ({}));
   });
 </script>
 "
@@ -2438,6 +2526,11 @@ exports[`Alpine.js > jsx > Javascript Test > showExpressions 1`] = `
   <template x-if=\\"conditionA === 'Default'\\">
     <template x-if=\\"conditionB === 'Complete'\\">20mb</template>
   </template>
+  <template x-if=\\"conditionA === 'Default'\\">
+    <template x-if=\\"conditionB === 'Complete'\\">
+      <div>complete</div>
+    </template>
+  </template>
 </div>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
@@ -2531,6 +2624,26 @@ exports[`Alpine.js > jsx > Javascript Test > spreadProps 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > store-async-function 1`] = `
+"<div x-data=\\"stringLiteralStore()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"stringLiteralStore\\", () => ({
+      arrowFunction: async function arrowFunction() {
+        return Promise.resolve();
+      },
+      namedFunction: async function namedFunction() {
+        return Promise.resolve();
+      },
+      fetchUsers: async function fetchUsers() {
+        return Promise.resolve();
+      },
+    }));
   });
 </script>
 "
@@ -2756,8 +2869,12 @@ exports[`Alpine.js > jsx > Javascript Test > useTarget 1`] = `
       },
 
       lastName: \\"bar\\",
+      foo: \\"bar\\",
 
-      init() {},
+      init() {
+        console.log(this.foo);
+        this.foo = \\"bar\\";
+      },
     }));
   });
 </script>
@@ -2793,6 +2910,79 @@ exports[`Alpine.js > jsx > Remove Internal mitosis package 1`] = `
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myBasicComponent\\", () => ({
       name: \\"PatrickJS\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > Advanced 1`] = `
+"<main x-data=\\"myBasicForShowComponent()\\">
+  <template x-for=\\"person in names\\">
+    <div>
+      <span x-html=\\"i\\"></span>
+      :
+      <span x-html=\\"person\\"></span>
+    </div>
+  </template>
+  <template x-for=\\"person in names\\">
+    <span><span x-html=\\"person\\"></span></span>
+  </template>
+  <template x-for=\\"undefined in names\\">
+    <br />
+  </template>
+  <template
+    x-for=\\"_ in Array.from({
+  length: 10
+})\\"
+  >
+    <pre><span x-html=\\"ee\\"></span></pre>
+  </template>
+  <template
+    x-for=\\"undefined in Array.from({
+  length: 10
+})\\"
+  >
+    <p><span x-html=\\"index\\"></span></p>
+  </template>
+  <template x-for=\\"person in names\\">
+    <span>
+      <span x-html=\\"person\\"></span>
+      <span x-html=\\"index\\"></span>
+    </span>
+  </template>
+  <template
+    x-for=\\"person in Array.from({
+  length: 10
+})\\"
+  >
+    <span>
+      <span x-html=\\"person\\"></span>
+      <span x-html=\\"count\\"></span>
+    </span>
+  </template>
+  <template x-for=\\"person in names\\">
+    <span>
+      <span x-html=\\"person\\"></span>
+      <span x-html=\\"i\\"></span>
+    </span>
+  </template>
+  <template
+    x-for=\\"person in Array.from({
+  length: 10
+})\\"
+  >
+    <span>
+      <span x-html=\\"person\\"></span>
+      <span x-html=\\"index\\"></span>
+    </span>
+  </template>
+</main>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myBasicForShowComponent\\", () => ({
+      name: \\"PatrickJS\\",
+      names: [\\"Steve\\", \\"PatrickJS\\"],
     }));
   });
 </script>
@@ -4288,8 +4478,13 @@ exports[`Alpine.js > jsx > Typescript Test > class + ClassName + css 1`] = `
     padding: 10px;
   }
 </style>
-<div class=\\"test2 test div\\" x-data=\\"myBasicComponent()\\">
-  Hello! I can run in React, Vue, Solid, or Liquid!
+<div x-data=\\"myBasicComponent()\\">
+  <MyComp class=\\"test\\" className=\\"test2\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </MyComp>
+  <div class=\\"test2 test div\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
 </div>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
@@ -4700,6 +4895,16 @@ exports[`Alpine.js > jsx > Typescript Test > onInit 1`] = `
     Alpine.data(\\"onInit\\", () => ({
       name: \\"\\",
     }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > onInitPlain 1`] = `
+"<div x-data=\\"onInitPlain()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onInitPlain\\", () => ({}));
   });
 </script>
 "
@@ -5229,6 +5434,11 @@ exports[`Alpine.js > jsx > Typescript Test > showExpressions 1`] = `
   <template x-if=\\"conditionA === 'Default'\\">
     <template x-if=\\"conditionB === 'Complete'\\">20mb</template>
   </template>
+  <template x-if=\\"conditionA === 'Default'\\">
+    <template x-if=\\"conditionB === 'Complete'\\">
+      <div>complete</div>
+    </template>
+  </template>
 </div>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
@@ -5322,6 +5532,26 @@ exports[`Alpine.js > jsx > Typescript Test > spreadProps 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > store-async-function 1`] = `
+"<div x-data=\\"stringLiteralStore()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"stringLiteralStore\\", () => ({
+      arrowFunction: async function arrowFunction() {
+        return Promise.resolve();
+      },
+      namedFunction: async function namedFunction() {
+        return Promise.resolve();
+      },
+      fetchUsers: async function fetchUsers() {
+        return Promise.resolve();
+      },
+    }));
   });
 </script>
 "
@@ -5547,8 +5777,12 @@ exports[`Alpine.js > jsx > Typescript Test > useTarget 1`] = `
       },
 
       lastName: \\"bar\\",
+      foo: \\"bar\\",
 
-      init() {},
+      init() {
+        console.log(this.foo);
+        this.foo = \\"bar\\";
+      },
     }));
   });
 </script>

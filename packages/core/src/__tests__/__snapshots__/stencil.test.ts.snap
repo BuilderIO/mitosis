@@ -1,5 +1,74 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Stencil > jsx > Javascript Test > Advanced 1`] = `
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-for-show-component\\",
+})
+export class MyBasicForShowComponent {
+  @State() name = \\"PatrickJS\\";
+  @State() names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  render() {
+    return (
+      <main>
+        {this.names?.map((person, i) => (
+          <div>
+            {i}:{person}
+          </div>
+        ))}
+        {this.names?.map((person) => (
+          <span>{person}</span>
+        ))}
+        {this.names?.map((item) => (
+          <br />
+        ))}
+        {Array.from({
+          length: 10,
+        })?.map((_, ee) => (
+          <pre>{ee}</pre>
+        ))}
+        {Array.from({
+          length: 10,
+        })?.map((item) => (
+          <p>{index}</p>
+        ))}
+        {this.names?.map((person, index) => (
+          <span>
+            {person}
+            {index}
+          </span>
+        ))}
+        {Array.from({
+          length: 10,
+        })?.map((person, count) => (
+          <span>
+            {person}
+            {count}
+          </span>
+        ))}
+        {this.names?.map((person, i) => (
+          <span>
+            {person}
+            {i}
+          </span>
+        ))}
+        {Array.from({
+          length: 10,
+        })?.map((person, index) => (
+          <span>
+            {person}
+            {index}
+          </span>
+        ))}
+      </main>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > AdvancedRef 1`] = `
 "import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
 
@@ -1962,7 +2031,9 @@ export class MyBasicOnUpdateReturnComponent {
 `;
 
 exports[`Stencil > jsx > Javascript Test > class + ClassName + css 1`] = `
-"import { Component, h, Fragment } from \\"@stencil/core\\";
+"import { MyComp } from \\"./my-component.lite\\";
+
+import { Component, h, Fragment } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-component\\",
@@ -1976,8 +2047,13 @@ exports[`Stencil > jsx > Javascript Test > class + ClassName + css 1`] = `
 export class MyBasicComponent {
   render() {
     return (
-      <div class=\\"test2 test div\\">
-        Hello! I can run in React, Vue, Solid, or Liquid!
+      <div>
+        <my-comp class=\\"test test2\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </my-comp>
+        <div class=\\"test2 test div\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </div>
       </div>
     );
   }
@@ -2518,6 +2594,20 @@ export class OnInit {
         {this.name}
       </div>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > onInitPlain 1`] = `
+"import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"on-init-plain\\",
+})
+export class OnInitPlain {
+  render() {
+    return <div></div>;
   }
 }
 "
@@ -3204,6 +3294,30 @@ export class MyBasicComponent {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > store-async-function 1`] = `
+"import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"string-literal-store\\",
+})
+export class StringLiteralStore {
+  arrowFunction = async function arrowFunction() {
+    return Promise.resolve();
+  };
+  namedFunction = async function namedFunction() {
+    return Promise.resolve();
+  };
+  fetchUsers = async function fetchUsers() {
+    return Promise.resolve();
+  };
+
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > string-literal-store 1`] = `
 "import { Component, h, Fragment, State } from \\"@stencil/core\\";
 
@@ -3484,13 +3598,17 @@ exports[`Stencil > jsx > Javascript Test > useTarget 1`] = `
 })
 export class UseTargetComponent {
   @State() lastName = \\"bar\\";
+  @State() foo = \\"bar\\";
 
   get name() {
     const prefix = \\"st\\";
     return prefix + \\"foo\\";
   }
 
-  componentDidLoad() {}
+  componentDidLoad() {
+    console.log(this.foo);
+    this.foo = \\"bar\\";
+  }
 
   render() {
     return <div>{this.name}</div>;
@@ -3536,6 +3654,75 @@ export class MyBasicComponent {
         Hello
         {this.name}! I can run in React, Qwik, Vue, Solid, or Liquid!
       </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > Advanced 1`] = `
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-for-show-component\\",
+})
+export class MyBasicForShowComponent {
+  @State() name = \\"PatrickJS\\";
+  @State() names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  render() {
+    return (
+      <main>
+        {this.names?.map((person, i) => (
+          <div>
+            {i}:{person}
+          </div>
+        ))}
+        {this.names?.map((person) => (
+          <span>{person}</span>
+        ))}
+        {this.names?.map((item) => (
+          <br />
+        ))}
+        {Array.from({
+          length: 10,
+        })?.map((_, ee) => (
+          <pre>{ee}</pre>
+        ))}
+        {Array.from({
+          length: 10,
+        })?.map((item) => (
+          <p>{index}</p>
+        ))}
+        {this.names?.map((person, index) => (
+          <span>
+            {person}
+            {index}
+          </span>
+        ))}
+        {Array.from({
+          length: 10,
+        })?.map((person, count) => (
+          <span>
+            {person}
+            {count}
+          </span>
+        ))}
+        {this.names?.map((person, i) => (
+          <span>
+            {person}
+            {i}
+          </span>
+        ))}
+        {Array.from({
+          length: 10,
+        })?.map((person, index) => (
+          <span>
+            {person}
+            {index}
+          </span>
+        ))}
+      </main>
     );
   }
 }
@@ -5763,7 +5950,9 @@ export class MyBasicOnUpdateReturnComponent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > class + ClassName + css 1`] = `
-"import { Component, h, Fragment } from \\"@stencil/core\\";
+"import { MyComp } from \\"./my-component.lite\\";
+
+import { Component, h, Fragment } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-component\\",
@@ -5777,8 +5966,13 @@ exports[`Stencil > jsx > Typescript Test > class + ClassName + css 1`] = `
 export class MyBasicComponent {
   render() {
     return (
-      <div class=\\"test2 test div\\">
-        Hello! I can run in React, Vue, Solid, or Liquid!
+      <div>
+        <my-comp class=\\"test test2\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </my-comp>
+        <div class=\\"test2 test div\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </div>
       </div>
     );
   }
@@ -6371,6 +6565,20 @@ export class OnInit {
         {this.name}
       </div>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > onInitPlain 1`] = `
+"import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"on-init-plain\\",
+})
+export class OnInitPlain {
+  render() {
+    return <div></div>;
   }
 }
 "
@@ -7136,6 +7344,30 @@ export class MyBasicComponent {
 "
 `;
 
+exports[`Stencil > jsx > Typescript Test > store-async-function 1`] = `
+"import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"string-literal-store\\",
+})
+export class StringLiteralStore {
+  arrowFunction = async function arrowFunction() {
+    return Promise.resolve();
+  };
+  namedFunction = async function namedFunction() {
+    return Promise.resolve();
+  };
+  fetchUsers = async function fetchUsers() {
+    return Promise.resolve();
+  };
+
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Typescript Test > string-literal-store 1`] = `
 "import { Component, h, Fragment, State } from \\"@stencil/core\\";
 
@@ -7432,13 +7664,17 @@ exports[`Stencil > jsx > Typescript Test > useTarget 1`] = `
 })
 export class UseTargetComponent {
   @State() lastName = \\"bar\\";
+  @State() foo = \\"bar\\";
 
   get name() {
     const prefix = \\"st\\";
     return prefix + \\"foo\\";
   }
 
-  componentDidLoad() {}
+  componentDidLoad() {
+    console.log(this.foo);
+    this.foo = \\"bar\\";
+  }
 
   render() {
     return <div>{this.name}</div>;
