@@ -310,7 +310,7 @@ exports[`Svelte > jsx > Javascript Test > BasicRef 1`] = `
 
   function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    inputRef?.focus();
   }
 
   function lowerCaseName() {
@@ -1137,6 +1137,19 @@ exports[`Svelte > jsx > Javascript Test > InputParent 1`] = `
 />"
 `;
 
+exports[`Svelte > jsx > Javascript Test > NestedStore 1`] = `
+"<script>
+  let _id = \\"abc\\";
+
+  let _messageId = _id + \\"-message\\";
+</script>
+
+<div id={_id}>
+  Test
+  <p id={_messageId}>Message</p>
+</div>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > RawText 1`] = `
 "<script>
   export let attributes;
@@ -1430,6 +1443,33 @@ exports[`Svelte > jsx > Javascript Test > Textarea 1`] = `
 </script>
 
 <textarea {...attributes} {placeholder} {name} {value} {defaultValue} />"
+`;
+
+exports[`Svelte > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"<script>
+  import { afterUpdate } from \\"svelte\\";
+
+  export let onChange;
+
+  function _do(id) {
+    _active = !!id;
+
+    if (onChange) {
+      onChange(_active);
+    }
+  }
+
+  let _id = \\"abc\\";
+  let _active = false;
+
+  afterUpdate(() => {
+    if (_do) {
+      _do(_id);
+    }
+  });
+</script>
+
+<div>Test</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > Video 1`] = `
@@ -2511,6 +2551,26 @@ exports[`Svelte > jsx > Javascript Test > self-referencing component with childr
 </div>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > setState 1`] = `
+"<script>
+  import { writable } from \\"svelte/store\\";
+
+  function someFn() {
+    $n[0] = \\"123\\";
+  }
+
+  let n = writable([\\"123\\"]);
+</script>
+
+<div>
+  <button
+    on:click={(event) => {
+      someFn();
+    }}>Click me</button
+  >
+</div>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > showExpressions 1`] = `
 "<script>
   export let conditionA;
@@ -3285,7 +3345,7 @@ exports[`Svelte > jsx > Typescript Test > BasicRef 1`] = `
 
   function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    inputRef?.focus();
   }
 
   function lowerCaseName() {
@@ -4272,6 +4332,26 @@ exports[`Svelte > jsx > Typescript Test > InputParent 1`] = `
 />"
 `;
 
+exports[`Svelte > jsx > Typescript Test > NestedStore 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type MyStore = {
+    _id?: string;
+    _messageId?: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  let _id = \\"abc\\";
+
+  let _messageId = _id + \\"-message\\";
+</script>
+
+<div id={_id}>
+  Test
+  <p id={_messageId}>Message</p>
+</div>"
+`;
+
 exports[`Svelte > jsx > Typescript Test > RawText 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
   export interface RawTextProps {
@@ -4670,6 +4750,45 @@ exports[`Svelte > jsx > Typescript Test > Textarea 1`] = `
 </script>
 
 <textarea {...attributes} {placeholder} {name} {value} {defaultValue} />"
+`;
+
+exports[`Svelte > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type MyProps = {
+    onChange?: (active: boolean) => void;
+  };
+
+  type MyStore = {
+    _id?: string;
+    _active?: boolean;
+    _do?: (id?: string) => void;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import { afterUpdate } from \\"svelte\\";
+
+  export let onChange: MyProps[\\"onChange\\"] = undefined;
+
+  function _do(id?: string) {
+    _active = !!id;
+
+    if (onChange) {
+      onChange(_active);
+    }
+  }
+
+  let _id = \\"abc\\";
+  let _active = false;
+
+  afterUpdate(() => {
+    if (_do) {
+      _do(_id);
+    }
+  });
+</script>
+
+<div>Test</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > Video 1`] = `
@@ -5978,6 +6097,26 @@ exports[`Svelte > jsx > Typescript Test > self-referencing component with childr
   {#if name === \\"Batman\\"}
     <svelte:self name=\\"Bruce\\"><div>Wayne</div></svelte:self>
   {/if}
+</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > setState 1`] = `
+"<script lang=\\"ts\\">
+  import { writable } from \\"svelte/store\\";
+
+  function someFn() {
+    $n[0] = \\"123\\";
+  }
+
+  let n = writable([\\"123\\"]);
+</script>
+
+<div>
+  <button
+    on:click={(event) => {
+      someFn();
+    }}>Click me</button
+  >
 </div>"
 `;
 

@@ -1999,7 +1999,7 @@ exports[`Parse JSX > Javascript > BasicRef 1`] = `
     "onBlur": {
       "code": "function onBlur() {
   // Maintain focus
-  inputRef.focus();
+  inputRef?.focus();
 }",
       "type": "function",
     },
@@ -4108,6 +4108,97 @@ exports[`Parse JSX > Javascript > InputParent 1`] = `
 }
 `;
 
+exports[`Parse JSX > Javascript > NestedStore 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "id": {
+          "bindingType": "expression",
+          "code": "state._id",
+          "type": "single",
+        },
+      },
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "
+      Test
+      ",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "id": {
+              "bindingType": "expression",
+              "code": "state._messageId",
+              "type": "single",
+            },
+          },
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "Message",
+              },
+              "scope": {},
+            },
+          ],
+          "meta": {},
+          "name": "p",
+          "properties": {},
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "NestedStore",
+  "refs": {},
+  "state": {
+    "_id": {
+      "code": "\\"abc\\"",
+      "propertyType": "normal",
+      "type": "property",
+    },
+    "_messageId": {
+      "code": "state._id + \\"-message\\"",
+      "propertyType": "normal",
+      "type": "property",
+    },
+  },
+  "subComponents": [],
+}
+`;
+
 exports[`Parse JSX > Javascript > RawText 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -5356,6 +5447,80 @@ exports[`Parse JSX > Javascript > Textarea 1`] = `
   "name": "Textarea",
   "refs": {},
   "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Parse JSX > Javascript > UseValueAndFnFromStore 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "Test",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+    "onUpdate": [
+      {
+        "code": "if (state._do) {
+  state._do(state._id);
+}",
+        "deps": "",
+      },
+    ],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "UseValueAndFnFromStore",
+  "refs": {},
+  "state": {
+    "_active": {
+      "code": "false",
+      "propertyType": "normal",
+      "type": "property",
+    },
+    "_do": {
+      "code": "_do(id) {
+  state._active = !!id;
+
+  if (props.onChange) {
+    props.onChange(state._active);
+  }
+}",
+      "type": "method",
+    },
+    "_id": {
+      "code": "'abc'",
+      "propertyType": "normal",
+      "type": "property",
+    },
+  },
   "subComponents": [],
 }
 `;
@@ -9526,6 +9691,79 @@ exports[`Parse JSX > Javascript > self-referencing component with children 1`] =
   "name": "MyComponent",
   "refs": {},
   "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Parse JSX > Javascript > setState 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "onClick": {
+              "bindingType": "function",
+              "code": "state.someFn()",
+              "type": "single",
+            },
+          },
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "Click me",
+              },
+              "scope": {},
+            },
+          ],
+          "meta": {},
+          "name": "button",
+          "properties": {},
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "SetState",
+  "refs": {},
+  "state": {
+    "n": {
+      "code": "['123']",
+      "propertyType": "reactive",
+      "type": "property",
+    },
+    "someFn": {
+      "code": "someFn() {
+  state.n.value[0] = '123';
+}",
+      "type": "method",
+    },
+  },
   "subComponents": [],
 }
 `;
@@ -14091,11 +14329,11 @@ exports[`Parse JSX > Typescript > BasicRef 1`] = `
   "refs": {
     "inputNoArgRef": {
       "argument": "null",
-      "typeParameter": "HTMLLabelElement",
+      "typeParameter": "HTMLLabelElement | null",
     },
     "inputRef": {
       "argument": "null",
-      "typeParameter": "HTMLInputElement",
+      "typeParameter": "HTMLInputElement | null",
     },
   },
   "state": {
@@ -14113,7 +14351,7 @@ exports[`Parse JSX > Typescript > BasicRef 1`] = `
     "onBlur": {
       "code": "function onBlur() {
   // Maintain focus
-  inputRef.focus();
+  inputRef?.focus();
 }",
       "type": "function",
     },
@@ -16388,6 +16626,105 @@ exports[`Parse JSX > Typescript > InputParent 1`] = `
 }
 `;
 
+exports[`Parse JSX > Typescript > NestedStore 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "id": {
+          "bindingType": "expression",
+          "code": "state._id",
+          "type": "single",
+        },
+      },
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "
+      Test
+      ",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "id": {
+              "bindingType": "expression",
+              "code": "state._messageId",
+              "type": "single",
+            },
+          },
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "Message",
+              },
+              "scope": {},
+            },
+          ],
+          "meta": {},
+          "name": "p",
+          "properties": {},
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "NestedStore",
+  "refs": {},
+  "state": {
+    "_id": {
+      "code": "\\"abc\\"",
+      "propertyType": "normal",
+      "type": "property",
+      "typeParameter": "MyStore[\\"_id\\"]",
+    },
+    "_messageId": {
+      "code": "state._id + \\"-message\\"",
+      "propertyType": "normal",
+      "type": "property",
+      "typeParameter": "MyStore[\\"_messageId\\"]",
+    },
+  },
+  "subComponents": [],
+  "types": [
+    "type MyStore = {
+  _id?: string;
+  _messageId?: string;
+}",
+  ],
+}
+`;
+
 exports[`Parse JSX > Typescript > RawText 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -17730,6 +18067,94 @@ exports[`Parse JSX > Typescript > Textarea 1`] = `
   value?: string;
   defaultValue?: string;
   placeholder?: string;
+}",
+  ],
+}
+`;
+
+exports[`Parse JSX > Typescript > UseValueAndFnFromStore 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "Test",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+    "onUpdate": [
+      {
+        "code": "if (state._do) {
+  state._do(state._id);
+}",
+        "deps": "",
+      },
+    ],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "UseValueAndFnFromStore",
+  "propsTypeRef": "MyProps",
+  "refs": {},
+  "state": {
+    "_active": {
+      "code": "false",
+      "propertyType": "normal",
+      "type": "property",
+      "typeParameter": "MyStore[\\"_active\\"]",
+    },
+    "_do": {
+      "code": "_do(id?: string) {
+  state._active = !!id;
+
+  if (props.onChange) {
+    props.onChange(state._active);
+  }
+}",
+      "type": "method",
+      "typeParameter": "MyStore[\\"_do\\"]",
+    },
+    "_id": {
+      "code": "'abc'",
+      "propertyType": "normal",
+      "type": "property",
+      "typeParameter": "MyStore[\\"_id\\"]",
+    },
+  },
+  "subComponents": [],
+  "types": [
+    "type MyProps = {
+  onChange?: (active: boolean) => void;
+}",
+    "type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
 }",
   ],
 }
@@ -22151,6 +22576,79 @@ exports[`Parse JSX > Typescript > self-referencing component with children 1`] =
   "propsTypeRef": "any",
   "refs": {},
   "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Parse JSX > Typescript > setState 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "onClick": {
+              "bindingType": "function",
+              "code": "state.someFn()",
+              "type": "single",
+            },
+          },
+          "children": [
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {
+                "_text": "Click me",
+              },
+              "scope": {},
+            },
+          ],
+          "meta": {},
+          "name": "button",
+          "properties": {},
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "SetState",
+  "refs": {},
+  "state": {
+    "n": {
+      "code": "['123']",
+      "propertyType": "reactive",
+      "type": "property",
+    },
+    "someFn": {
+      "code": "someFn() {
+  state.n.value[0] = '123';
+}",
+      "type": "method",
+    },
+  },
   "subComponents": [],
 }
 `;

@@ -1237,7 +1237,7 @@ exports[`Html > jsx > Javascript Test > BasicRef 1`] = `
       name: \\"PatrickJS\\",
       onBlur: function onBlur() {
         // Maintain focus
-        inputRef.focus();
+        inputRef?.focus();
       },
       lowerCaseName: function lowerCaseName() {
         return state.name.toLowerCase();
@@ -2530,6 +2530,55 @@ exports[`Html > jsx > Javascript Test > InputParent 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > NestedStore 1`] = `
+"<div data-el=\\"div-1\\">
+  Test
+
+  <p data-el=\\"p-1\\">Message</p>
+</div>
+<script>
+  (() => {
+    const state = { _id: \\"abc\\", _messageId: state._id + \\"-message\\" };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        el.setAttribute(\\"id\\", state._id);
+      });
+
+      document.querySelectorAll(\\"[data-el='p-1']\\").forEach((el) => {
+        el.setAttribute(\\"id\\", state._messageId);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > RawText 1`] = `
 "<span data-el=\\"span-1\\"></span>
 <script>
@@ -3416,6 +3465,11 @@ exports[`Html > jsx > Javascript Test > Textarea 1`] = `
     update();
   })();
 </script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"<div>Test</div>
 "
 `;
 
@@ -5936,6 +5990,58 @@ exports[`Html > jsx > Javascript Test > self-referencing component with children
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > setState 1`] = `
+"<div><button data-el=\\"button-1\\">Click me</button></div>
+<script>
+  (() => {
+    const state = {
+      n: [\\"123\\"],
+      someFn() {
+        state.n[0] = \\"123\\";
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'click' event on button-1
+    function onButton1Click(event) {
+      state.someFn();
+    }
+
+    // Update with initial state on first load
+    update();
   })();
 </script>
 "
@@ -8486,7 +8592,7 @@ exports[`Html > jsx > Typescript Test > BasicRef 1`] = `
       name: \\"PatrickJS\\",
       onBlur: function onBlur() {
         // Maintain focus
-        inputRef.focus();
+        inputRef?.focus();
       },
       lowerCaseName: function lowerCaseName() {
         return state.name.toLowerCase();
@@ -9779,6 +9885,55 @@ exports[`Html > jsx > Typescript Test > InputParent 1`] = `
 "
 `;
 
+exports[`Html > jsx > Typescript Test > NestedStore 1`] = `
+"<div data-el=\\"div-1\\">
+  Test
+
+  <p data-el=\\"p-1\\">Message</p>
+</div>
+<script>
+  (() => {
+    const state = { _id: \\"abc\\", _messageId: state._id + \\"-message\\" };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        el.setAttribute(\\"id\\", state._id);
+      });
+
+      document.querySelectorAll(\\"[data-el='p-1']\\").forEach((el) => {
+        el.setAttribute(\\"id\\", state._messageId);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Typescript Test > RawText 1`] = `
 "<span data-el=\\"span-1\\"></span>
 <script>
@@ -10665,6 +10820,11 @@ exports[`Html > jsx > Typescript Test > Textarea 1`] = `
     update();
   })();
 </script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"<div>Test</div>
 "
 `;
 
@@ -13188,6 +13348,58 @@ exports[`Html > jsx > Typescript Test > self-referencing component with children
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > setState 1`] = `
+"<div><button data-el=\\"button-1\\">Click me</button></div>
+<script>
+  (() => {
+    const state = {
+      n: [\\"123\\"],
+      someFn() {
+        state.n[0] = \\"123\\";
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'click' event on button-1
+    function onButton1Click(event) {
+      state.someFn();
+    }
+
+    // Update with initial state on first load
+    update();
   })();
 </script>
 "

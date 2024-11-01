@@ -333,7 +333,7 @@ function MyBasicRefComponent(props) {
 
   function onBlur() {
     // Maintain focus
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }
 
   function lowerCaseName() {
@@ -1203,6 +1203,29 @@ export default Stepper;
 "
 `;
 
+exports[`Taro > jsx > Javascript Test > NestedStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function NestedStore(props) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_messageId, set_messageId] = useState(() => _id + \\"-message\\");
+
+  return (
+    <View id={_id}>
+      Test
+      <View id={_messageId}>Message</View>
+    </View>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`Taro > jsx > Javascript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 import { Text } from \\"@tarojs/components\\";
@@ -1507,6 +1530,38 @@ function Textarea(props) {
 }
 
 export default Textarea;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function UseValueAndFnFromStore(props) {
+  const [_id, set_id] = useState(() => \\"abc\\");
+
+  const [_active, set_active] = useState(() => false);
+
+  function _do(id) {
+    set_active(!!id);
+
+    if (props.onChange) {
+      props.onChange(_active);
+    }
+  }
+
+  useEffect(() => {
+    if (_do) {
+      _do(_id);
+    }
+  });
+
+  return <View>Test</View>;
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 
@@ -2958,6 +3013,30 @@ export default MyComponent;
 "
 `;
 
+exports[`Taro > jsx > Javascript Test > setState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Button, Text } from \\"@tarojs/components\\";
+
+function SetState(props) {
+  const [n, setN] = useState(() => [\\"123\\"]);
+
+  function someFn() {
+    n[0] = \\"123\\";
+  }
+
+  return (
+    <View>
+      <Button onClick={(event) => someFn()}>Click me</Button>
+    </View>
+  );
+}
+
+export default SetState;
+"
+`;
+
 exports[`Taro > jsx > Javascript Test > showExpressions 1`] = `
 "import * as React from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
@@ -3823,13 +3902,13 @@ export interface Props {
 import { View, Input, Text } from \\"@tarojs/components\\";
 
 function MyBasicRefComponent(props: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement | null>(null);
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   function onBlur() {
     // Maintain focus
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }
 
   function lowerCaseName() {
@@ -4837,6 +4916,36 @@ export default Stepper;
 "
 `;
 
+exports[`Taro > jsx > Typescript Test > NestedStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+import { View, Text } from \\"@tarojs/components\\";
+
+function NestedStore(props: any) {
+  const [_id, set_id] = useState<MyStore[\\"_id\\"]>(() => \\"abc\\");
+
+  const [_messageId, set_messageId] = useState<MyStore[\\"_messageId\\"]>(
+    () => _id + \\"-message\\"
+  );
+
+  return (
+    <View id={_id}>
+      Test
+      <View id={_messageId}>Message</View>
+    </View>
+  );
+}
+
+export default NestedStore;
+"
+`;
+
 exports[`Taro > jsx > Typescript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 
@@ -5211,6 +5320,47 @@ function Textarea(props: TextareaProps) {
 }
 
 export default Textarea;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+import { View, Text } from \\"@tarojs/components\\";
+
+function UseValueAndFnFromStore(props: MyProps) {
+  const [_id, set_id] = useState<MyStore[\\"_id\\"]>(() => \\"abc\\");
+
+  const [_active, set_active] = useState<MyStore[\\"_active\\"]>(() => false);
+
+  function _do(id?: string): ReturnType<MyStore[\\"_do\\"]> {
+    set_active(!!id);
+
+    if (props.onChange) {
+      props.onChange(_active);
+    }
+  }
+
+  useEffect(() => {
+    if (_do) {
+      _do(_id);
+    }
+  });
+
+  return <View>Test</View>;
+}
+
+export default UseValueAndFnFromStore;
 "
 `;
 
@@ -6839,6 +6989,30 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > setState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import { View, Button, Text } from \\"@tarojs/components\\";
+
+function SetState(props: any) {
+  const [n, setN] = useState(() => [\\"123\\"]);
+
+  function someFn() {
+    n[0] = \\"123\\";
+  }
+
+  return (
+    <View>
+      <Button onClick={(event) => someFn()}>Click me</Button>
+    </View>
+  );
+}
+
+export default SetState;
 "
 `;
 

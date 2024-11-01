@@ -380,7 +380,7 @@ exports[`Alpine.js > jsx > Javascript Test > BasicRef 1`] = `
       name: \\"PatrickJS\\",
       onBlur: function onBlur() {
         // Maintain focus
-        this.$refs.inputRef.focus();
+        this.$refs.inputRef?.focus();
       },
       lowerCaseName: function lowerCaseName() {
         return this.name.toLowerCase();
@@ -1143,6 +1143,23 @@ exports[`Alpine.js > jsx > Javascript Test > InputParent 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > NestedStore 1`] = `
+"<div x-data=\\"nestedStore()\\" x-bind:id=\\"_id\\">
+  Test
+
+  <p x-bind:id=\\"_messageId\\">Message</p>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"nestedStore\\", () => ({
+      _id: \\"abc\\",
+      _messageId: this._id + \\"-message\\",
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > RawText 1`] = `
 "<span
   x-data=\\"rawText()\\"
@@ -1400,6 +1417,33 @@ exports[`Alpine.js > jsx > Javascript Test > Textarea 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"textarea\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"<div x-data=\\"useValueAndFnFromStore()\\" x-effect=\\"onUpdate\\">Test</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"useValueAndFnFromStore\\", () => ({
+      _id: \\"abc\\",
+      _active: false,
+
+      _do(id) {
+        this._active = !!id;
+
+        if (props.onChange) {
+          props.onChange(this._active);
+        }
+      },
+
+      onUpdate() {
+        if (this._do) {
+          this._do(this._id);
+        }
+      },
+    }));
   });
 </script>
 "
@@ -2505,6 +2549,22 @@ exports[`Alpine.js > jsx > Javascript Test > self-referencing component with chi
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > setState 1`] = `
+"<div x-data=\\"setState()\\"><button x-on:click=\\"someFn()\\">Click me</button></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"setState\\", () => ({
+      n: [\\"123\\"],
+
+      someFn() {
+        this.n[0] = \\"123\\";
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > showExpressions 1`] = `
 "<div x-data=\\"showWithOtherValues()\\">
   <template x-if=\\"conditionA\\">Content0</template>
@@ -3296,7 +3356,7 @@ exports[`Alpine.js > jsx > Typescript Test > BasicRef 1`] = `
       name: \\"PatrickJS\\",
       onBlur: function onBlur() {
         // Maintain focus
-        this.$refs.inputRef.focus();
+        this.$refs.inputRef?.focus();
       },
       lowerCaseName: function lowerCaseName() {
         return this.name.toLowerCase();
@@ -4048,6 +4108,23 @@ exports[`Alpine.js > jsx > Typescript Test > InputParent 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Typescript Test > NestedStore 1`] = `
+"<div x-data=\\"nestedStore()\\" x-bind:id=\\"_id\\">
+  Test
+
+  <p x-bind:id=\\"_messageId\\">Message</p>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"nestedStore\\", () => ({
+      _id: \\"abc\\",
+      _messageId: this._id + \\"-message\\",
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Typescript Test > RawText 1`] = `
 "<span
   x-data=\\"rawText()\\"
@@ -4305,6 +4382,33 @@ exports[`Alpine.js > jsx > Typescript Test > Textarea 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"textarea\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"<div x-data=\\"useValueAndFnFromStore()\\" x-effect=\\"onUpdate\\">Test</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"useValueAndFnFromStore\\", () => ({
+      _id: \\"abc\\",
+      _active: false,
+
+      _do(id?: string) {
+        this._active = !!id;
+
+        if (props.onChange) {
+          props.onChange(this._active);
+        }
+      },
+
+      onUpdate() {
+        if (this._do) {
+          this._do(this._id);
+        }
+      },
+    }));
   });
 </script>
 "
@@ -5408,6 +5512,22 @@ exports[`Alpine.js > jsx > Typescript Test > self-referencing component with chi
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > setState 1`] = `
+"<div x-data=\\"setState()\\"><button x-on:click=\\"someFn()\\">Click me</button></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"setState\\", () => ({
+      n: [\\"123\\"],
+
+      someFn() {
+        this.n[0] = \\"123\\";
+      },
+    }));
   });
 </script>
 "

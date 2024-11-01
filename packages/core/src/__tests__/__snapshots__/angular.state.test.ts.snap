@@ -687,7 +687,7 @@ export default class MyBasicRefComponent {
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.nativeElement.focus();
+    this.inputRef.nativeElement?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -2154,6 +2154,47 @@ export class StepperModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > NestedStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"nested-store\\",
+  template: \`
+    <div [attr.id]=\\"_id\\">
+      Test
+
+      <p [attr.id]=\\"_messageId\\">Message</p>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class NestedStore {
+  _id = \\"abc\\";
+  _messageId = null;
+
+  ngOnInit() {
+    this._messageId = this._id + \\"-message\\";
+  }
+}
+
+@NgModule({
+  declarations: [NestedStore],
+  imports: [CommonModule],
+  exports: [NestedStore],
+})
+export class NestedStoreModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > RawText 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -3000,6 +3041,56 @@ export default class Textarea {
   exports: [Textarea],
 })
 export class TextareaModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Output, EventEmitter, Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"use-value-and-fn-from-store\\",
+  template: \`
+    <div>Test</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class UseValueAndFnFromStore {
+  @Output() onChange = new EventEmitter();
+
+  _id = \\"abc\\";
+  _active = false;
+  _do(id) {
+    this._active = !!id;
+
+    if (this.onChange) {
+      this.onChange.emit(this._active);
+    }
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      if (this._do) {
+        this._do(this._id);
+      }
+    }
+  }
+}
+
+@NgModule({
+  declarations: [UseValueAndFnFromStore],
+  imports: [CommonModule],
+  exports: [UseValueAndFnFromStore],
+})
+export class UseValueAndFnFromStoreModule {}
 "
 `;
 
@@ -5960,6 +6051,41 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > setState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"set-state\\",
+  template: \`
+    <div><button (click)=\\"someFn()\\">Click me</button></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class SetState {
+  n = [\\"123\\"];
+  someFn() {
+    this.n[0] = \\"123\\";
+  }
+}
+
+@NgModule({
+  declarations: [SetState],
+  imports: [CommonModule],
+  exports: [SetState],
+})
+export class SetStateModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > showExpressions 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -8027,7 +8153,7 @@ export default class MyBasicRefComponent {
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.nativeElement.focus();
+    this.inputRef.nativeElement?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -9647,6 +9773,52 @@ export class StepperModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > NestedStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+type MyStore = {
+  _id?: string;
+  _messageId?: string;
+};
+
+@Component({
+  selector: \\"nested-store\\",
+  template: \`
+    <div [attr.id]=\\"_id\\">
+      Test
+
+      <p [attr.id]=\\"_messageId\\">Message</p>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class NestedStore {
+  _id: MyStore[\\"_id\\"] = \\"abc\\";
+  _messageId: MyStore[\\"_messageId\\"] = null;
+
+  ngOnInit() {
+    this._messageId = this._id + \\"-message\\";
+  }
+}
+
+@NgModule({
+  declarations: [NestedStore],
+  imports: [CommonModule],
+  exports: [NestedStore],
+})
+export class NestedStoreModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > RawText 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -10568,6 +10740,65 @@ export default class Textarea {
   exports: [Textarea],
 })
 export class TextareaModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Output, EventEmitter, Component, SimpleChanges } from \\"@angular/core\\";
+
+type MyProps = {
+  onChange?: (active: boolean) => void;
+};
+type MyStore = {
+  _id?: string;
+  _active?: boolean;
+  _do?: (id?: string) => void;
+};
+
+@Component({
+  selector: \\"use-value-and-fn-from-store\\",
+  template: \`
+    <div>Test</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class UseValueAndFnFromStore {
+  @Output() onChange = new EventEmitter();
+
+  _id: MyStore[\\"_id\\"] = \\"abc\\";
+  _active: MyStore[\\"_active\\"] = false;
+  _do(id?: string): ReturnType<MyStore[\\"_do\\"]> {
+    this._active = !!id;
+
+    if (this.onChange) {
+      this.onChange.emit(this._active);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      if (this._do) {
+        this._do(this._id);
+      }
+    }
+  }
+}
+
+@NgModule({
+  declarations: [UseValueAndFnFromStore],
+  imports: [CommonModule],
+  exports: [UseValueAndFnFromStore],
+})
+export class UseValueAndFnFromStoreModule {}
 "
 `;
 
@@ -13708,6 +13939,41 @@ export default class MyComponent {
   exports: [MyComponent],
 })
 export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > setState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"set-state\\",
+  template: \`
+    <div><button (click)=\\"someFn()\\">Click me</button></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class SetState {
+  n = [\\"123\\"];
+  someFn() {
+    this.n[0] = \\"123\\";
+  }
+}
+
+@NgModule({
+  declarations: [SetState],
+  imports: [CommonModule],
+  exports: [SetState],
+})
+export class SetStateModule {}
 "
 `;
 
