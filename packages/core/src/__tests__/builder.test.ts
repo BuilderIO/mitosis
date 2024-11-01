@@ -637,6 +637,32 @@ describe('Builder', () => {
       'world',
     );
   });
+
+  test.fails('do not transform scoped variable to match state var', () => {
+    const content = {
+      data: {
+        tsCode: 'useStore({\n  errors: {},\n  foo() {\n    const errors = {};\n  }\n});',
+        jsCode: 'Object.assign(state, {\n  errors: {},\n foo() {\n    const errors = {};\n  }\n});',
+        blocks: [],
+      },
+    };
+    const mitosisJson = builderContentToMitosisComponent(content);
+    expect(mitosisJson.state).toMatchInlineSnapshot(`
+      {
+        "errors": {
+          "code": "{}",
+          "propertyType": "normal",
+          "type": "property",
+        },
+        "foo": {
+          "code": "foo() {
+        const state.errors = {};
+      }",
+          "type": "method",
+        },
+      }
+    `);
+  });
 });
 
 const bindingJson = {
