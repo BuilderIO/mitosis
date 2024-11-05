@@ -143,10 +143,15 @@ const consolidateClassBindings = (item: MitosisNode) => {
  * e.g.
  *   text -> state.text
  *   setText(...) -> state.text = ...
+ *
+ * This also applies to components that use both useState and useStore.
+ * e.g.
+ * const [foo, setFoo] = useState(1)
+ * const store = useStore({
+ *   bar() { return foo } // becomes bar() { return state.foo }
+ * })`
  */
-export function mapStateIdentifiers(json: MitosisComponent) {
-  const stateProperties = Object.keys(json.state);
-
+export function mapStateIdentifiers(json: MitosisComponent, stateProperties: string[]) {
   const plugin = createCodeProcessorPlugin(
     () => (code) => mapStateIdentifiersInExpression(code, stateProperties),
   );

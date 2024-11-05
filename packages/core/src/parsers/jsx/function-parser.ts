@@ -23,6 +23,7 @@ const { types } = babel;
 export const componentFunctionToJson = (
   node: babel.types.FunctionDeclaration,
   context: Context,
+  useStateValues: string[],
 ): JSONOrNode => {
   const hooks: MitosisComponent['hooks'] = {
     onMount: [],
@@ -254,6 +255,8 @@ export const componentFunctionToJson = (
                 type: 'property',
                 propertyType,
               };
+
+              useStateValues.push(varName);
             }
 
             // Typescript Parameter
