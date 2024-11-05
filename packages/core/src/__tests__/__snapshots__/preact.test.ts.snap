@@ -1125,7 +1125,9 @@ function ImgStateComponent(props) {
   return (
     <div>
       {images?.map((item, itemIndex) => (
-        <img className=\\"custom-class\\" src={item} key={itemIndex} />
+        <Fragment>
+          <img className=\\"custom-class\\" src={item} key={itemIndex} />
+        </Fragment>
       ))}
     </div>
   );
@@ -1632,6 +1634,26 @@ export default MyComponent;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > basicForFragment 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function BasicForFragment(props) {
+  return (
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <Fragment>
+          <div>{option}</div>
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+export default BasicForFragment;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -1911,7 +1933,9 @@ function ComponentWithContext(props) {
           },
         }}
       >
-        <Fragment>{foo.value}</Fragment>
+        <Fragment>
+          <Fragment>{foo.value}</Fragment>
+        </Fragment>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -4866,7 +4890,9 @@ function ImgStateComponent(props: any) {
   return (
     <div>
       {images?.map((item, itemIndex) => (
-        <img className=\\"custom-class\\" src={item} key={itemIndex} />
+        <Fragment>
+          <img className=\\"custom-class\\" src={item} key={itemIndex} />
+        </Fragment>
       ))}
     </div>
   );
@@ -5511,6 +5537,26 @@ export default MyComponent;
 "
 `;
 
+exports[`Preact > jsx > Typescript Test > basicForFragment 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function BasicForFragment(props: any) {
+  return (
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <Fragment>
+          <div>{option}</div>
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+export default BasicForFragment;
+"
+`;
+
 exports[`Preact > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -5811,7 +5857,9 @@ function ComponentWithContext(props: ComponentWithContextProps) {
           },
         }}
       >
-        <Fragment>{foo.value}</Fragment>
+        <Fragment>
+          <Fragment>{foo.value}</Fragment>
+        </Fragment>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -7273,14 +7321,14 @@ type Props = {
 function MyBasicComponent(props: Props) {
   useEffect(() => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
-  }, [props.id, props.foo.bar.baz]);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
 
   return (
     <Fragment>
       <div className=\\"test div\\">
         {props.id}
-        {props.foo.bar.baz}
+        {props.foo.value.bar.baz}
       </div>
       <style jsx>{\`
         .div {

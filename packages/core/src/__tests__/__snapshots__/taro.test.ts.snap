@@ -1117,7 +1117,9 @@ function ImgStateComponent(props) {
   return (
     <View>
       {images?.map((item, itemIndex) => (
-        <Image source={{ uri: item }} key={itemIndex} />
+        <>
+          <Image source={{ uri: item }} key={itemIndex} />
+        </>
       ))}
     </View>
   );
@@ -1622,6 +1624,26 @@ export default MyComponent;
 "
 `;
 
+exports[`Taro > jsx > Javascript Test > basicForFragment 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function BasicForFragment(props) {
+  return (
+    <View>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`key-\${option}\`}>
+          <View>{option}</View>
+        </React.Fragment>
+      ))}
+    </View>
+  );
+}
+
+export default BasicForFragment;
+"
+`;
+
 exports[`Taro > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -1910,7 +1932,9 @@ function ComponentWithContext(props) {
           },
         }}
       >
-        <>{foo.value}</>
+        <>
+          <>{foo.value}</>
+        </>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -4833,7 +4857,9 @@ function ImgStateComponent(props: any) {
   return (
     <View>
       {images?.map((item, itemIndex) => (
-        <Image source={{ uri: item }} key={itemIndex} />
+        <>
+          <Image source={{ uri: item }} key={itemIndex} />
+        </>
       ))}
     </View>
   );
@@ -5481,6 +5507,26 @@ export default MyComponent;
 "
 `;
 
+exports[`Taro > jsx > Typescript Test > basicForFragment 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function BasicForFragment(props: any) {
+  return (
+    <View>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`key-\${option}\`}>
+          <View>{option}</View>
+        </React.Fragment>
+      ))}
+    </View>
+  );
+}
+
+export default BasicForFragment;
+"
+`;
+
 exports[`Taro > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -5792,7 +5838,9 @@ function ComponentWithContext(props: ComponentWithContextProps) {
           },
         }}
       >
-        <>{foo.value}</>
+        <>
+          <>{foo.value}</>
+        </>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -7230,14 +7278,14 @@ import { View, Text } from \\"@tarojs/components\\";
 function MyBasicComponent(props: Props) {
   useEffect(() => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
-  }, [props.id, props.foo.bar.baz]);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
 
   return (
     <>
       <View className=\\"view\\">
         {props.id}
-        {props.foo.bar.baz}
+        {props.foo.value.bar.baz}
       </View>
       <style jsx>{\`
         .view {

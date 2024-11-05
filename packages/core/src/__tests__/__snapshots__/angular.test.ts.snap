@@ -6276,6 +6276,83 @@ export default class MyComponent {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > basicForFragment 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"basic-for-fragment\\",
+  template: \`
+    <div>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class BasicForFragment {
+  trackByOption0(_, option) {
+    return \`key-\${option}\`;
+  }
+}
+
+@NgModule({
+  declarations: [BasicForFragment],
+  imports: [CommonModule],
+  exports: [BasicForFragment],
+})
+export class BasicForFragmentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > basicForFragment 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"basic-for-fragment\\",
+  template: \`
+    <div>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class BasicForFragment {
+  trackByOption0(_, option) {
+    return \`key-\${option}\`;
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -20444,6 +20521,83 @@ export default class MyComponent {
 "
 `;
 
+exports[`Angular > jsx > Typescript Test > basicForFragment 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"basic-for-fragment\\",
+  template: \`
+    <div>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class BasicForFragment {
+  trackByOption0(_, option) {
+    return \`key-\${option}\`;
+  }
+}
+
+@NgModule({
+  declarations: [BasicForFragment],
+  imports: [CommonModule],
+  exports: [BasicForFragment],
+})
+export class BasicForFragmentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > basicForFragment 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"basic-for-fragment\\",
+  template: \`
+    <div>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class BasicForFragment {
+  trackByOption0(_, option) {
+    return \`key-\${option}\`;
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -26099,7 +26253,7 @@ type Props = {
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
-    <div class=\\"test div\\">{{id}} {{foo.bar.baz}}</div>
+    <div class=\\"test div\\">{{id}} {{foo.value.bar.baz}}</div>
   \`,
   styles: [
     \`
@@ -26119,7 +26273,7 @@ export default class MyBasicComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"props.id changed\\", this.id);
-      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
     }
   }
 }
@@ -26149,7 +26303,7 @@ type Props = {
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
-    <div class=\\"test div\\">{{id}} {{foo.bar.baz}}</div>
+    <div class=\\"test div\\">{{id}} {{foo.value.bar.baz}}</div>
   \`,
   styles: [
     \`
@@ -26171,7 +26325,7 @@ export default class MyBasicComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"props.id changed\\", this.id);
-      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
     }
   }
 }

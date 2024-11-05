@@ -2101,6 +2101,34 @@ export default class MyComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > basicForFragment 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"basic-for-fragment\\")
+export default class BasicForFragment extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+
+          <div>
+          \${[\\"a\\", \\"b\\", \\"c\\"]?.map(
+            (option, index) => html\`<my-fragment
+        .key=\\"\${\`key-\${option}\`}\\"
+        ><div>\${option}</div></my-fragment
+      >\`
+          )}
+        </div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -6842,6 +6870,34 @@ export default class MyComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Typescript Test > basicForFragment 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"basic-for-fragment\\")
+export default class BasicForFragment extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+
+          <div>
+          \${[\\"a\\", \\"b\\", \\"c\\"]?.map(
+            (option, index) => html\`<my-fragment
+        .key=\\"\${\`key-\${option}\`}\\"
+        ><div>\${option}</div></my-fragment
+      >\`
+          )}
+        </div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -8875,7 +8931,7 @@ export default class MyBasicComponent extends LitElement {
 
   updated() {
     console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
   }
 
   render() {
@@ -8884,7 +8940,7 @@ export default class MyBasicComponent extends LitElement {
   padding: 10px;
 }
 </style>
-          <div>\${this.id} \${this.foo.bar.baz}</div>
+          <div>\${this.id} \${this.foo.value.bar.baz}</div>
 
         \`;
   }

@@ -284,6 +284,29 @@ export default function MyComponent(props) {
 
 Many frameworks do not support manipulating or iterating over it directly, unlike frameworks such as React or Vue.
 
+### Fragment
+
+Some frameworks (e.g. react) requires a `key` on a wrapping tag in some cases.
+
+````tsx
+import { For, Fragment } from '@builder.io/mitosis';
+
+export default function BasicForFragment() {
+  return (
+    <div>
+      <For each={['a', 'b', 'c']}>
+        {(option) => (
+          <Fragment key={`key-${option}`}>
+            <span>{option}</span>
+          </Fragment>
+        )}
+      </For>
+    </div>
+  );
+}
+
+````
+
 ### Slot
 
 When you want to register a named slot you do so using a prop.

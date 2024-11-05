@@ -1117,7 +1117,9 @@ function ImgStateComponent(props) {
   return (
     <div>
       {images?.map((item, itemIndex) => (
-        <img className=\\"custom-class\\" src={item} key={itemIndex} />
+        <>
+          <img className=\\"custom-class\\" src={item} key={itemIndex} />
+        </>
       ))}
     </div>
   );
@@ -1612,6 +1614,25 @@ export default MyComponent;
 "
 `;
 
+exports[`RSC > jsx > Javascript Test > basicForFragment 1`] = `
+"import * as React from \\"react\\";
+
+function BasicForFragment(props) {
+  return (
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`key-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+export default BasicForFragment;
+"
+`;
+
 exports[`RSC > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -1892,7 +1913,9 @@ function ComponentWithContext(props) {
           },
         }}
       >
-        <>{foo.value}</>
+        <>
+          <>{foo.value}</>
+        </>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -4484,7 +4507,9 @@ function ImgStateComponent(props: any) {
   return (
     <div>
       {images?.map((item, itemIndex) => (
-        <img className=\\"custom-class\\" src={item} key={itemIndex} />
+        <>
+          <img className=\\"custom-class\\" src={item} key={itemIndex} />
+        </>
       ))}
     </div>
   );
@@ -5117,6 +5142,25 @@ export default MyComponent;
 "
 `;
 
+exports[`RSC > jsx > Typescript Test > basicForFragment 1`] = `
+"import * as React from \\"react\\";
+
+function BasicForFragment(props: any) {
+  return (
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`key-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+export default BasicForFragment;
+"
+`;
+
 exports[`RSC > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -5418,7 +5462,9 @@ function ComponentWithContext(props: ComponentWithContextProps) {
           },
         }}
       >
-        <>{foo.value}</>
+        <>
+          <>{foo.value}</>
+        </>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -6532,14 +6578,14 @@ type Props = {
 function MyBasicComponent(props: Props) {
   useEffect(() => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
-  }, [props.id, props.foo.bar.baz]);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
 
   return (
     <>
       <div className=\\"test div\\">
         {props.id}
-        {props.foo.bar.baz}
+        {props.foo.value.bar.baz}
       </div>
       <style jsx>{\`
         .div {

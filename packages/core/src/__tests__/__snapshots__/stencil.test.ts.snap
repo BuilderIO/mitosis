@@ -1950,6 +1950,28 @@ export class MyComponent {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > basicForFragment 1`] = `
+"import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"basic-for-fragment\\",
+})
+export class BasicForFragment {
+  render() {
+    return (
+      <div>
+        {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+          <Fragment key={\`key-\${option}\`}>
+            <div>{option}</div>
+          </Fragment>
+        ))}
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
 
@@ -5985,6 +6007,28 @@ export class MyComponent {
 "
 `;
 
+exports[`Stencil > jsx > Typescript Test > basicForFragment 1`] = `
+"import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"basic-for-fragment\\",
+})
+export class BasicForFragment {
+  render() {
+    return (
+      <div>
+        {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+          <Fragment key={\`key-\${option}\`}>
+            <div>{option}</div>
+          </Fragment>
+        ))}
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
 
@@ -7523,14 +7567,14 @@ export class MyBasicComponent {
 
   componentDidUpdate() {
     console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
   }
 
   render() {
     return (
       <div class=\\"test div\\">
         {this.id}
-        {this.foo.bar.baz}
+        {this.foo.value.bar.baz}
       </div>
     );
   }

@@ -1533,6 +1533,14 @@ exports[`Svelte > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
 <div>Hello {name}</div>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > basicForFragment 1`] = `
+"<div>
+  {#each [\\"a\\", \\"b\\", \\"c\\"] as option (\`key-\${option}\`)}
+    <div>{option}</div>
+  {/each}
+</div>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "<script>
   export let actions;
@@ -4903,6 +4911,17 @@ exports[`Svelte > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 <div>Hello {name}</div>"
 `;
 
+exports[`Svelte > jsx > Typescript Test > basicForFragment 1`] = `
+"<script lang=\\"ts\\">
+</script>
+
+<div>
+  {#each [\\"a\\", \\"b\\", \\"c\\"] as option (\`key-\${option}\`)}
+    <div>{option}</div>
+  {/each}
+</div>"
+`;
+
 exports[`Svelte > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "<script lang=\\"ts\\">
   export let actions;
@@ -6365,13 +6384,13 @@ exports[`Svelte > jsx > Typescript Test > signalsOnUpdate 1`] = `
 
   function onUpdateFn_0(..._args: any[]) {
     console.log(\\"props.id changed\\", id);
-    console.log(\\"props.foo.value.bar.baz changed\\", $foo.bar.baz);
+    console.log(\\"props.foo.value.bar.baz changed\\", foo.value.bar.baz);
   }
-  $: onUpdateFn_0_foo_bar_baz = $foo.bar.baz;
-  $: onUpdateFn_0(...[id, onUpdateFn_0_foo_bar_baz]);
+
+  $: onUpdateFn_0(...[id, foo.value.bar.baz]);
 </script>
 
-<div class=\\"test div\\">{id}{$foo.bar.baz}</div>
+<div class=\\"test div\\">{id}{foo.value.bar.baz}</div>
 
 <style>
   .div {

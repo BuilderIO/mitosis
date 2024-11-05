@@ -68,10 +68,10 @@ const NODE_MAPPERS: {
     return `<>{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}</>`;
   },
   Fragment(json, options, component) {
-    const wrap = wrapInFragment(json) || isRootTextNode(json);
-    return `${wrap ? getFragment('open', options) : ''}${json.children
+    const wrap = json.name === 'Fragment' || wrapInFragment(json) || isRootTextNode(json);
+    return `${wrap ? getFragment('open', options, json) : ''}${json.children
       .map((item) => blockToReact(item, options, component, wrap))
-      .join('\n')}${wrap ? getFragment('close', options) : ''}`;
+      .join('\n')}${wrap ? getFragment('close', options, json) : ''}`;
   },
   For(_json, options, component, insideJsx) {
     const json = _json as ForNode;

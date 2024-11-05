@@ -1415,7 +1415,9 @@ function ImgStateComponent(props) {
   return (
     <View>
       {images?.map((item, itemIndex) => (
-        <Image source={{ uri: item }} key={itemIndex} />
+        <>
+          <Image source={{ uri: item }} key={itemIndex} />
+        </>
       ))}
     </View>
   );
@@ -2143,6 +2145,40 @@ export default MyComponent;
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > basicForFragment 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+
+function BasicForFragment(props) {
+  return (
+    <View>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`key-\${option}\`}>
+          <View>
+            <Text>{option}</Text>
+          </View>
+        </React.Fragment>
+      ))}
+    </View>
+  );
+}
+
+export default BasicForFragment;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -2531,7 +2567,9 @@ function ComponentWithContext(props) {
         }}
       >
         <>
-          <Text>{foo.value}</Text>
+          <>
+            <Text>{foo.value}</Text>
+          </>
         </>
       </Context1.Provider>
     </Context2.Provider>
@@ -6601,7 +6639,9 @@ function ImgStateComponent(props: any) {
   return (
     <View>
       {images?.map((item, itemIndex) => (
-        <Image source={{ uri: item }} key={itemIndex} />
+        <>
+          <Image source={{ uri: item }} key={itemIndex} />
+        </>
       ))}
     </View>
   );
@@ -7467,6 +7507,40 @@ export default MyComponent;
 "
 `;
 
+exports[`React Native > jsx > Typescript Test > basicForFragment 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+
+function BasicForFragment(props: any) {
+  return (
+    <View>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`key-\${option}\`}>
+          <View>
+            <Text>{option}</Text>
+          </View>
+        </React.Fragment>
+      ))}
+    </View>
+  );
+}
+
+export default BasicForFragment;
+"
+`;
+
 exports[`React Native > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -7876,7 +7950,9 @@ function ComponentWithContext(props: ComponentWithContextProps) {
         }}
       >
         <>
-          <Text>{foo.value}</Text>
+          <>
+            <Text>{foo.value}</Text>
+          </>
         </>
       </Context1.Provider>
     </Context2.Provider>
@@ -10025,13 +10101,13 @@ type Props = {
 function MyBasicComponent(props: Props) {
   useEffect(() => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
-  }, [props.id, props.foo.bar.baz]);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
 
   return (
     <View style={styles.view1}>
       <Text>{props.id}</Text>
-      <Text>{props.foo.bar.baz}</Text>
+      <Text>{props.foo.value.bar.baz}</Text>
     </View>
   );
 }

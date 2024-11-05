@@ -1894,6 +1894,24 @@ export default defineComponent({
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > basicForFragment 1`] = `
+"<template>
+  <div>
+    <template :key=\\"\`key-\${option}\`\\" v-for=\\"(option, index) in ['a', 'b', 'c']\\">
+      <div>{{ option }}</div>
+    </template>
+  </div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"basic-for-fragment\\",
+});
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "<template>
   <component :is=\\"TagNameGetter\\">
@@ -6264,6 +6282,24 @@ export default defineComponent({
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > basicForFragment 1`] = `
+"<template>
+  <div>
+    <template :key=\\"\`key-\${option}\`\\" v-for=\\"(option, index) in ['a', 'b', 'c']\\">
+      <div>{{ option }}</div>
+    </template>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"basic-for-fragment\\",
+});
+</script>"
+`;
+
 exports[`Vue > jsx > Typescript Test > basicForNoTagReference 1`] = `
 "<template>
   <component :is=\\"TagNameGetter\\">
@@ -8152,7 +8188,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > signalsOnUpdate 1`] = `
 "<template>
-  <div class=\\"test div\\">{{ id }}{{ foo.bar.baz }}</div>
+  <div class=\\"test div\\">{{ id }}{{ foo.value.bar.baz }}</div>
 </template>
 
 <script lang=\\"ts\\">
@@ -8176,7 +8212,7 @@ export default defineComponent({
     onUpdateHook0: {
       handler() {
         console.log(\\"props.id changed\\", this.id);
-        console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+        console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
       },
       immediate: true,
     },
@@ -8186,7 +8222,7 @@ export default defineComponent({
     onUpdateHook0() {
       return {
         0: this.id,
-        1: this.foo.bar.baz,
+        1: this.foo.value.bar.baz,
       };
     },
   },
