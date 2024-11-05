@@ -7,7 +7,14 @@ import { isSlotProperty } from '@/helpers/slots';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { checkIsForNode, ForNode, MitosisNode } from '@/types/mitosis-node';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
-import { closeFrag, getFragment, openFrag, processBinding, wrapInFragment } from './helpers';
+import {
+  closeFrag,
+  getFragment,
+  isFragmentWithKey,
+  openFrag,
+  processBinding,
+  wrapInFragment,
+} from './helpers';
 import { updateStateSettersInCode } from './state';
 import { ToReactOptions } from './types';
 
@@ -68,7 +75,7 @@ const NODE_MAPPERS: {
     return `<>{${slotProp} ${hasChildren ? `|| (${renderChildren()})` : ''}}</>`;
   },
   Fragment(json, options, component) {
-    const wrap = json.name === 'Fragment' || wrapInFragment(json) || isRootTextNode(json);
+    const wrap = isFragmentWithKey(json) || wrapInFragment(json) || isRootTextNode(json);
     return `${wrap ? getFragment('open', options, json) : ''}${json.children
       .map((item) => blockToReact(item, options, component, wrap))
       .join('\n')}${wrap ? getFragment('close', options, json) : ''}`;

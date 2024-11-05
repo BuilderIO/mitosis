@@ -21,13 +21,14 @@ export const processBinding = (str: string, options: ToReactOptions) => {
 
 export const openFrag = (options: ToReactOptions) => getFragment('open', options);
 export const closeFrag = (options: ToReactOptions) => getFragment('close', options);
+export const isFragmentWithKey = (node?: MitosisNode): boolean =>
+  node?.name === 'Fragment' && !!node?.bindings['key'];
 export function getFragment(type: 'open' | 'close', options: ToReactOptions, node?: MitosisNode) {
   let tag = '';
-  if (node?.name === 'Fragment' && node.bindings['key']) {
-    // TODO: Is there another output which cannot use "React.Fragment"??
+  if (node && node.bindings && isFragmentWithKey(node)) {
     tag = options.preact ? 'Fragment' : 'React.Fragment';
     if (type === 'open') {
-      tag += ` key={${node.bindings['key'].code}}`;
+      tag += ` key={${node.bindings['key']?.code}}`;
     }
   } else if (options.preact) {
     tag = 'Fragment';
