@@ -638,19 +638,84 @@ describe('Builder', () => {
     );
   });
 
-  test.fails('do not transform scoped variable to match state var', () => {
+  test.only('do not transform scoped variable to match state var', () => {
+    const code = dedent`
+      import { useState, useStore } from "@builder.io/mitosis";
+      
+      export default function MyComponent(props) {
+        const [name, setName] = useState("Steve");
+        const state = useStore({
+          foo: true,
+          bar() {
+            console.log(name);
+          }
+        });
+      
+        return (
+          <div></div>
+        );
+      }
+    `;
+
+    const content = parseJsx(code);
+    //const mitosisJson = builderContentToMitosisComponent(content);
+    expect(content.state).toMatchInlineSnapshot(`
+      {
+        "bar": {
+          "code": "bar() {
+        console.log(state.name);
+      }",
+          "type": "method",
+        },
+        "foo": {
+          "code": "true",
+          "propertyType": "normal",
+          "type": "property",
+        },
+        "name": {
+          "code": "\\"Steve\\"",
+          "propertyType": "normal",
+          "type": "property",
+        },
+      }
+    `);
+  });
+
+  test.only('do not transform scoped variable to match state var', () => {
     const content = {
       data: {
-        tsCode:
-          'useStore({\n  errors: {},\n  foo() {\n    const errors = {}; console.log(errors); }\n});',
-        jsCode:
-          'Object.assign(state, {\n  errors: {},\n foo() {\n    const errors = {}; console.log(errors); }\n});',
+        tsCode: `useStore({
+          errors: {},
+          foo() {
+            const errors = {}; console.log(errors);
+          },
+          bar(errors) {
+            console.log(errors);
+          },
+          baz() {
+            const { errors } = someFunction();
+          }
+        });`,
         blocks: [],
       },
     };
     const mitosisJson = builderContentToMitosisComponent(content);
     expect(mitosisJson.state).toMatchInlineSnapshot(`
       {
+        "bar": {
+          "code": "bar(errors) {
+        console.log(errors);
+      }",
+          "type": "method",
+        },
+        "baz": {
+          "code": "baz() {
+        const {
+          errors
+        } = someFunction();
+      }",
+          "type": "method",
+        },
         "errors": {
           "code": "{}",
           "propertyType": "normal",
@@ -658,8 +723,8 @@ describe('Builder', () => {
         },
         "foo": {
           "code": "foo() {
-        const state.errors = {};
-        console.log(state.errors);
+        const errors = {};
+        console.log(errors);
       }",
           "type": "method",
         },
@@ -667,12 +732,10 @@ describe('Builder', () => {
     `);
   });
 
-  test.fails('do not transform destructured variable to match state', () => {
+  test.only('do not transform destructured variable to match state', () => {
     const content = {
       data: {
         tsCode: 'useStore({\n  errors: {},\n foo() {\n const { errors } = someFn(); }\n});',
-        jsCode:
-          'Object.assign(state, {\n  errors: {},\n foo() {\n const { errors } = someFn(); }\n});',
         blocks: [],
       },
     };
@@ -687,7 +750,7 @@ describe('Builder', () => {
         "foo": {
           "code": "foo() {
         const {
-          errors: state.errors
+          errors
         } = someFn();
       }",
           "type": "method",
