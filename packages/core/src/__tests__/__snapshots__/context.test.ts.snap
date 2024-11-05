@@ -447,26 +447,22 @@ function RenderBlock(props) {
   const ComponentRefRef = componentRef();
 
   return (
-    <>
-      <TagNameRef {...properties()} style={css()}>
-        <BlockStyles block={useBlock()} />
-        {componentRef() ? (
-          <ComponentRefRef
-            {...componentOptions()}
-            children={useBlock().children}
-          />
-        ) : null}
-        {!componentRef() &&
-        useBlock().children &&
-        useBlock().children.length ? (
-          <>
-            {useBlock().children?.map((child, index) => (
-              <RenderBlock index={index} block={child} />
-            ))}
-          </>
-        ) : null}
-      </TagNameRef>
-    </>
+    <TagNameRef {...properties()} style={css()}>
+      <BlockStyles block={useBlock()} />
+      {componentRef() ? (
+        <ComponentRefRef
+          {...componentOptions()}
+          children={useBlock().children}
+        />
+      ) : null}
+      {!componentRef() && useBlock().children && useBlock().children.length ? (
+        <>
+          {useBlock().children?.map((child, index) => (
+            <RenderBlock index={index} block={child} />
+          ))}
+        </>
+      ) : null}
+    </TagNameRef>
   );
 }
 
@@ -605,9 +601,7 @@ function ComponentWithContext(props) {
           },
         }}
       >
-        <>
-          <>{foo.value}</>
-        </>
+        <>{foo.value}</>
       </Context1.Provider>
     </Context2.Provider>
   );
@@ -655,9 +649,7 @@ function ComponentWithContext(props) {
         }}
       >
         <>
-          <>
-            <Text>{foo.value}</Text>
-          </>
+          <Text>{foo.value}</Text>
         </>
       </Context1.Provider>
     </Context2.Provider>
