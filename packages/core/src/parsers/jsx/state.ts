@@ -259,7 +259,7 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
         item.params,
         item.body as BlockStatement,
         false,
-        item.async,
+        true,
       );
 
       return {
