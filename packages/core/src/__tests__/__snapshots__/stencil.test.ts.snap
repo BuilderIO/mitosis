@@ -108,7 +108,7 @@ export class MyBasicRefComponent {
               class=\\"input\\"
               ref={(el) => (this.inputRef = el)}
               value={this.name}
-              onBlur={(event) => onBlur()}
+              onBlur={(event) => this.onBlur()}
               onChange={(event) => (this.name = event.target.value)}
             />
             <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
@@ -121,7 +121,7 @@ export class MyBasicRefComponent {
           </Fragment>
         ) : null}
         Hello
-        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {this.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
     );
@@ -231,7 +231,7 @@ export class MyBasicComponent {
       <div>
         {myService.method(\\"hello\\") + this.name}
         Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onChange={() => onChange} />
+        <input onChange={() => this.onChange} />
       </div>
     );
   }
@@ -468,7 +468,7 @@ export class MyBasicRefComponent {
               class=\\"input\\"
               ref={(el) => (this.inputRef = el)}
               value={this.name}
-              onBlur={(event) => onBlur()}
+              onBlur={(event) => this.onBlur()}
               onChange={(event) => (this.name = event.target.value)}
             />
             <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
@@ -481,7 +481,7 @@ export class MyBasicRefComponent {
           </Fragment>
         ) : null}
         Hello
-        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {this.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
     );
@@ -508,7 +508,9 @@ export class MyBasicRefAssignmentComponent {
   render() {
     return (
       <div>
-        <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
+        <button onClick={async (evt) => await this.handlerClick(evt)}>
+          Click
+        </button>
       </div>
     );
   }
@@ -1232,7 +1234,7 @@ export class Image {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && isBrowser();
+    return !!this.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -2937,13 +2939,13 @@ export class OnUpdate {
   bar = function bar() {};
   zoo = function zoo() {
     const params = {
-      cb: bar,
+      cb: this.bar,
     };
   };
 
   componentDidUpdate() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 
@@ -3912,7 +3914,7 @@ export class MyBasicRefComponent {
               class=\\"input\\"
               ref={(el) => (this.inputRef = el)}
               value={this.name}
-              onBlur={(event) => onBlur()}
+              onBlur={(event) => this.onBlur()}
               onChange={(event) => (this.name = event.target.value)}
             />
             <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
@@ -3925,7 +3927,7 @@ export class MyBasicRefComponent {
           </Fragment>
         ) : null}
         Hello
-        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {this.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
     );
@@ -4039,7 +4041,7 @@ export class MyBasicComponent {
       <div>
         {myService.method(\\"hello\\") + this.name}
         Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onChange={() => onChange} />
+        <input onChange={() => this.onChange} />
       </div>
     );
   }
@@ -4290,7 +4292,7 @@ export class MyBasicRefComponent {
               class=\\"input\\"
               ref={(el) => (this.inputRef = el)}
               value={this.name}
-              onBlur={(event) => onBlur()}
+              onBlur={(event) => this.onBlur()}
               onChange={(event) => (this.name = event.target.value)}
             />
             <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
@@ -4303,7 +4305,7 @@ export class MyBasicRefComponent {
           </Fragment>
         ) : null}
         Hello
-        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {this.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
     );
@@ -4334,7 +4336,9 @@ export class MyBasicRefAssignmentComponent {
   render() {
     return (
       <div>
-        <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
+        <button onClick={async (evt) => await this.handlerClick(evt)}>
+          Click
+        </button>
       </div>
     );
   }
@@ -5157,7 +5161,7 @@ export class Image {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && isBrowser();
+    return !!this.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -7104,13 +7108,13 @@ export class OnUpdate {
   bar = function bar() {};
   zoo = function zoo() {
     const params = {
-      cb: bar,
+      cb: this.bar,
     };
   };
 
   componentDidUpdate() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 

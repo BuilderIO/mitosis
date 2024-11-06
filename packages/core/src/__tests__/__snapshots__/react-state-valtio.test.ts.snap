@@ -33,7 +33,7 @@ function MyBasicRefComponent(props) {
               className=\\"input\\"
               ref={inputRef}
               value={state.name}
-              onBlur={(event) => onBlur()}
+              onBlur={(event) => state.onBlur()}
               onChange={(event) => (state.name = event.target.value)}
             />
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
@@ -46,7 +46,7 @@ function MyBasicRefComponent(props) {
           </>
         ) : null}
         Hello
-        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
       <style jsx>{\`
@@ -138,7 +138,7 @@ function MyBasicComponent(props) {
       <div>
         {myService.method(\\"hello\\") + state.name}
         Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onChange={(event) => onChange} />
+        <input onChange={(event) => state.onChange} />
       </div>
     </Injector.Provider>
   );
@@ -346,7 +346,7 @@ function MyBasicRefComponent(props) {
               className=\\"input\\"
               ref={inputRef}
               value={state.name}
-              onBlur={(event) => onBlur()}
+              onBlur={(event) => state.onBlur()}
               onChange={(event) => (state.name = event.target.value)}
             />
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
@@ -359,7 +359,7 @@ function MyBasicRefComponent(props) {
           </>
         ) : null}
         Hello
-        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
       <style jsx>{\`
@@ -393,7 +393,9 @@ function MyBasicRefAssignmentComponent(props) {
 
   return (
     <div>
-      <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
+      <button onClick={async (evt) => await state.handlerClick(evt)}>
+        Click
+      </button>
     </div>
   );
 }
@@ -1038,7 +1040,7 @@ function Image(props) {
     },
     useLazyLoading() {
       // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && isBrowser();
+      return !!props.lazy && state.isBrowser();
     },
     isBrowser: function isBrowser() {
       return (
@@ -2637,14 +2639,14 @@ function OnUpdate(props) {
     bar: function bar() {},
     zoo: function zoo() {
       const params = {
-        cb: bar,
+        cb: state.bar,
       };
     },
   });
 
   useEffect(() => {
-    foo({
-      someOption: bar,
+    state.foo({
+      someOption: state.bar,
     });
   });
 
@@ -3596,7 +3598,7 @@ function MyBasicRefComponent(props: Props) {
               className=\\"input\\"
               ref={inputRef}
               value={state.name}
-              onBlur={(event) => onBlur()}
+              onBlur={(event) => state.onBlur()}
               onChange={(event) => (state.name = event.target.value)}
             />
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
@@ -3609,7 +3611,7 @@ function MyBasicRefComponent(props: Props) {
           </>
         ) : null}
         Hello
-        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
       <style jsx>{\`
@@ -3704,7 +3706,7 @@ function MyBasicComponent(props: any) {
       <div>
         {myService.method(\\"hello\\") + state.name}
         Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onChange={(event) => onChange} />
+        <input onChange={(event) => state.onChange} />
       </div>
     </Injector.Provider>
   );
@@ -3924,7 +3926,7 @@ function MyBasicRefComponent(props: Props) {
               className=\\"input\\"
               ref={inputRef}
               value={state.name}
-              onBlur={(event) => onBlur()}
+              onBlur={(event) => state.onBlur()}
               onChange={(event) => (state.name = event.target.value)}
             />
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
@@ -3937,7 +3939,7 @@ function MyBasicRefComponent(props: Props) {
           </>
         ) : null}
         Hello
-        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
       <style jsx>{\`
@@ -3974,7 +3976,9 @@ function MyBasicRefAssignmentComponent(props: Props) {
 
   return (
     <div>
-      <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
+      <button onClick={async (evt) => await state.handlerClick(evt)}>
+        Click
+      </button>
     </div>
   );
 }
@@ -4709,7 +4713,7 @@ function Image(props: ImageProps) {
     },
     useLazyLoading() {
       // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && isBrowser();
+      return !!props.lazy && state.isBrowser();
     },
     isBrowser: function isBrowser() {
       return (
@@ -6542,14 +6546,14 @@ function OnUpdate(props: any) {
     bar: function bar() {},
     zoo: function zoo() {
       const params = {
-        cb: bar,
+        cb: state.bar,
       };
     },
   });
 
   useEffect(() => {
-    foo({
-      someOption: bar,
+    state.foo({
+      someOption: state.bar,
     });
   });
 

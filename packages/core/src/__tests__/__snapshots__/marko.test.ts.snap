@@ -131,17 +131,17 @@ exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `
 }
 
 style {
-  .input-f70caf26 {
+  .input-218fa7c6 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-f70caf26\\"
+      class=\\"input-218fa7c6\\"
       key=\\"inputRef\\"
       value=(state.name)
-      on-blur((event) => onBlur())
+      on-blur((event) => component.onBlur())
       on-input((event) => state.name = event.target.value)
     />
     <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
@@ -150,8 +150,8 @@ style {
       <option value=\\"86\\">GR 86</option>
     </select></if>
 
-  Hello \${lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or Web
-  Component!
+  Hello \${component.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
+  Web Component!
 </div>"
 `;
 
@@ -232,7 +232,7 @@ class {
   \${myService.method('hello') + state.name} Hello! I can run in React, Vue,
   Solid, or Liquid!
 
-  <input on-input((event) => onChange) />
+  <input on-input((event) => component.onChange) />
 </div>"
 `;
 
@@ -370,17 +370,17 @@ exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
 }
 
 style {
-  .input-5e4c5a16 {
+  .input-6a578c15 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-5e4c5a16\\"
+      class=\\"input-6a578c15\\"
       key=\\"inputRef\\"
       value=(state.name)
-      on-blur((event) => onBlur())
+      on-blur((event) => component.onBlur())
       on-input((event) => state.name = event.target.value)
     />
     <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
@@ -389,8 +389,8 @@ style {
       <option value=\\"86\\">GR 86</option>
     </select></if>
 
-  Hello \${lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or Web
-  Component!
+  Hello \${component.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
+  Web Component!
 </div>"
 `;
 
@@ -404,7 +404,9 @@ exports[`Marko > jsx > Javascript Test > BasicRefAssignment 1`] = `
 }
 
 <div>
-  <button on-click(async (evt) => await handlerClick(evt))>Click</button>
+  <button on-click(async (evt) => await component.handlerClick(evt))>
+    Click
+  </button>
 </div>"
 `;
 
@@ -971,7 +973,7 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.input.lazy && isBrowser();
+    return !!this.input.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -1019,7 +1021,7 @@ exports[`Marko > jsx > Javascript Test > Image 1`] = `
 }
 
 style {
-  .img-491c9a71 {
+  .img-3747ab04 {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -1032,7 +1034,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-491c9a71')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-3747ab04')
         src=(input.image)
         on-load((event) => component.setLoaded())
         srcset=(input.srcset)
@@ -2018,13 +2020,13 @@ exports[`Marko > jsx > Javascript Test > referencingFunInsideHook 1`] = `
   bar = function bar() {};
   zoo = function zoo() {
     const params = {
-      cb: bar,
+      cb: this.bar,
     };
   };
 
   onRender() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 }
@@ -2772,17 +2774,17 @@ exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
 }
 
 style {
-  .input-d9ecc20a {
+  .input-c72441a0 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-d9ecc20a\\"
+      class=\\"input-c72441a0\\"
       key=\\"inputRef\\"
       value=(state.name)
-      on-blur((event) => onBlur())
+      on-blur((event) => component.onBlur())
       on-input((event) => state.name = event.target.value)
     />
     <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
@@ -2791,8 +2793,8 @@ style {
       <option value=\\"86\\">GR 86</option>
     </select></if>
 
-  Hello \${lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or Web
-  Component!
+  Hello \${component.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
+  Web Component!
 </div>"
 `;
 
@@ -2873,7 +2875,7 @@ class {
   \${myService.method('hello') + state.name} Hello! I can run in React, Vue,
   Solid, or Liquid!
 
-  <input on-input((event) => onChange) />
+  <input on-input((event) => component.onChange) />
 </div>"
 `;
 
@@ -3011,17 +3013,17 @@ exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
 }
 
 style {
-  .input-4649dbf2 {
+  .input-e2a52cdc {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-4649dbf2\\"
+      class=\\"input-e2a52cdc\\"
       key=\\"inputRef\\"
       value=(state.name)
-      on-blur((event) => onBlur())
+      on-blur((event) => component.onBlur())
       on-input((event) => state.name = event.target.value)
     />
     <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
@@ -3030,8 +3032,8 @@ style {
       <option value=\\"86\\">GR 86</option>
     </select></if>
 
-  Hello \${lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or Web
-  Component!
+  Hello \${component.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
+  Web Component!
 </div>"
 `;
 
@@ -3045,7 +3047,9 @@ exports[`Marko > jsx > Typescript Test > BasicRefAssignment 1`] = `
 }
 
 <div>
-  <button on-click(async (evt) => await handlerClick(evt))>Click</button>
+  <button on-click(async (evt) => await component.handlerClick(evt))>
+    Click
+  </button>
 </div>"
 `;
 
@@ -3623,7 +3627,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.input.lazy && isBrowser();
+    return !!this.input.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -3671,7 +3675,7 @@ exports[`Marko > jsx > Typescript Test > Image 1`] = `
 }
 
 style {
-  .img-1108d8b8 {
+  .img-b8232e4e {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -3684,7 +3688,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-1108d8b8')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-b8232e4e')
         src=(input.image)
         on-load((event) => component.setLoaded())
         srcset=(input.srcset)
@@ -4673,13 +4677,13 @@ exports[`Marko > jsx > Typescript Test > referencingFunInsideHook 1`] = `
   bar = function bar() {};
   zoo = function zoo() {
     const params = {
-      cb: bar,
+      cb: this.bar,
     };
   };
 
   onRender() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 }

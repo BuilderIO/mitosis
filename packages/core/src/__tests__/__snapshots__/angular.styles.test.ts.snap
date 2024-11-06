@@ -4789,14 +4789,14 @@ export default class OnUpdate {
   bar = function bar() {};
   zoo = function zoo() {
     const params = {
-      cb: bar,
+      cb: this.bar,
     };
   };
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.foo({
-        someOption: bar,
+        someOption: this.bar,
       });
     }
   }
@@ -5799,14 +5799,16 @@ export default class MyComponent {
   subtract() {
     return this.someCompute - this.someOtherVal;
   }
-  someCompute = add(1, 2);
+  someCompute = null;
   someOtherVal = null;
   sf = null;
 
   ngOnInit() {
+    this.someCompute = this.add(1, 2);
+
     this.someOtherVal = this.val;
 
-    this.sf = add(this.val, 34);
+    this.sf = this.add(this.val, 34);
   }
 }
 
@@ -11704,14 +11706,14 @@ export default class OnUpdate {
   bar = function bar() {};
   zoo = function zoo() {
     const params = {
-      cb: bar,
+      cb: this.bar,
     };
   };
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.foo({
-        someOption: bar,
+        someOption: this.bar,
       });
     }
   }
@@ -12780,14 +12782,16 @@ export default class MyComponent {
   subtract() {
     return this.someCompute - this.someOtherVal;
   }
-  someCompute = add(1, 2);
+  someCompute = null;
   someOtherVal = null;
   sf = null;
 
   ngOnInit() {
+    this.someCompute = this.add(1, 2);
+
     this.someOtherVal = this.val;
 
-    this.sf = add(this.val, 34);
+    this.sf = this.add(this.val, 34);
   }
 }
 

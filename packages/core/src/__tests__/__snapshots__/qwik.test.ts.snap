@@ -1925,7 +1925,7 @@ export const MyBasicComponent = component$((props) => {
     <div>
       {myService.method(\\"hello\\") + state.name}
       Hello! I can run in React, Vue, Solid, or Liquid!
-      <input onChange$={$((event) => onChange)} />
+      <input onChange$={$((event) => state.onChange)} />
     </div>
   );
 });
@@ -2147,7 +2147,7 @@ export const MyBasicRefComponent = component$((props) => {
             class=\\"input-MyBasicRefComponent\\"
             ref={inputRef}
             value={state.name}
-            onBlur$={$((event) => onBlur())}
+            onBlur$={$((event) => state.onBlur())}
             onChange$={$((event) => (state.name = event.target.value))}
           />
           <label for=\\"cars\\" ref={inputNoArgRef}>
@@ -2160,7 +2160,8 @@ export const MyBasicRefComponent = component$((props) => {
         </Fragment>
       ) : null}
       Hello
-      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
+      {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+      Component!
     </div>
   );
 });
@@ -2194,7 +2195,9 @@ export const MyBasicRefAssignmentComponent = component$((props) => {
 
   return (
     <div>
-      <button onClick$={$((event) => await handlerClick(evt))}>Click</button>
+      <button onClick$={$((event) => await state.handlerClick(evt))}>
+        Click
+      </button>
     </div>
   );
 });
@@ -2907,7 +2910,7 @@ export const useLazyLoading = function useLazyLoading(
   pictureRef
 ) {
   // TODO: Add more checks here, like testing for real web browsers
-  return !!props.lazy && isBrowser();
+  return !!props.lazy && state.isBrowser();
 };
 export const isBrowser = function isBrowser(props, state, pictureRef) {
   return (
@@ -4413,14 +4416,14 @@ export const foo = function foo(props, state, params) {};
 export const bar = function bar(props, state) {};
 export const zoo = function zoo(props, state) {
   const params = {
-    cb: bar,
+    cb: state.bar,
   };
 };
 export const OnUpdate = component$((props) => {
   const state = {};
   useTask$(({ track }) => {
-    foo({
-      someOption: bar,
+    state.foo({
+      someOption: state.bar,
     });
   });
 
@@ -5534,7 +5537,7 @@ export const MyBasicComponent = component$((props: any) => {
     <div>
       {myService.method(\\"hello\\") + state.name}
       Hello! I can run in React, Vue, Solid, or Liquid!
-      <input onChange$={$((event) => onChange)} />
+      <input onChange$={$((event) => state.onChange)} />
     </div>
   );
 });
@@ -5773,7 +5776,7 @@ export const MyBasicRefComponent = component$((props: Props) => {
             class=\\"input-MyBasicRefComponent\\"
             ref={inputRef}
             value={state.name}
-            onBlur$={$((event) => onBlur())}
+            onBlur$={$((event) => state.onBlur())}
             onChange$={$((event) => (state.name = event.target.value))}
           />
           <label for=\\"cars\\" ref={inputNoArgRef}>
@@ -5786,7 +5789,8 @@ export const MyBasicRefComponent = component$((props: Props) => {
         </Fragment>
       ) : null}
       Hello
-      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
+      {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+      Component!
     </div>
   );
 });
@@ -5823,7 +5827,9 @@ export const MyBasicRefAssignmentComponent = component$((props: Props) => {
 
   return (
     <div>
-      <button onClick$={$((event) => await handlerClick(evt))}>Click</button>
+      <button onClick$={$((event) => await state.handlerClick(evt))}>
+        Click
+      </button>
     </div>
   );
 });
@@ -6624,7 +6630,7 @@ export const useLazyLoading = function useLazyLoading(
   pictureRef
 ) {
   // TODO: Add more checks here, like testing for real web browsers
-  return !!props.lazy && isBrowser();
+  return !!props.lazy && state.isBrowser();
 };
 export const isBrowser = function isBrowser(props, state, pictureRef) {
   return (
@@ -8347,14 +8353,14 @@ export const foo = function foo(props, state, params) {};
 export const bar = function bar(props, state) {};
 export const zoo = function zoo(props, state) {
   const params = {
-    cb: bar,
+    cb: state.bar,
   };
 };
 export const OnUpdate = component$((props: any) => {
   const state: any = {};
   useTask$(({ track }) => {
-    foo({
-      someOption: bar,
+    state.foo({
+      someOption: state.bar,
     });
   });
 

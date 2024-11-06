@@ -98,7 +98,7 @@ export default class MyBasicRefComponent extends LitElement {
             this.showInput
               ? html\`<my-fragment
            ><input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
-                  onBlur()}
+                  this.onBlur()}
            @change=\${(event) => (this.name = event.target.value)} />
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
            <select name=\\"cars\\" id=\\"cars\\">
@@ -107,8 +107,8 @@ export default class MyBasicRefComponent extends LitElement {
            </select></my-fragment
          >\`
               : null
-          } Hello \${lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
-          Web Component!
+          } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
+          Solid, or Web Component!
         </div>
 
         \`;
@@ -227,7 +227,7 @@ export default class MyBasicComponent extends LitElement {
           \${
             myService.method(\\"hello\\") + this.name
           } Hello! I can run in React, Vue,
-          Solid, or Liquid! <input @change=\${(event) => onChange} />
+          Solid, or Liquid! <input @change=\${(event) => this.onChange} />
         </div>
 
         \`;
@@ -500,7 +500,7 @@ export default class MyBasicRefComponent extends LitElement {
             this.showInput
               ? html\`<my-fragment
            ><input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
-                  onBlur()}
+                  this.onBlur()}
            @change=\${(event) => (this.name = event.target.value)} />
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
            <select name=\\"cars\\" id=\\"cars\\">
@@ -509,8 +509,8 @@ export default class MyBasicRefComponent extends LitElement {
            </select></my-fragment
          >\`
               : null
-          } Hello \${lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
-          Web Component!
+          } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
+          Solid, or Web Component!
         </div>
 
         \`;
@@ -539,7 +539,7 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
     return html\`
 
           <div ><button  @click=\${async (evt) =>
-            await handlerClick(evt)} >Click</button></div>
+            await this.handlerClick(evt)} >Click</button></div>
         \`;
   }
 }
@@ -1284,7 +1284,7 @@ export default class Image extends LitElement {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && isBrowser();
+    return !!this.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -3330,13 +3330,13 @@ export default class OnUpdate extends LitElement {
   bar = function bar() {};
   zoo = function zoo() {
     const params = {
-      cb: bar,
+      cb: this.bar,
     };
   };
 
   updated() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 
@@ -4621,7 +4621,7 @@ export default class MyBasicRefComponent extends LitElement {
             this.showInput
               ? html\`<my-fragment
            ><input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
-                  onBlur()}
+                  this.onBlur()}
            @change=\${(event) => (this.name = event.target.value)} />
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
            <select name=\\"cars\\" id=\\"cars\\">
@@ -4630,8 +4630,8 @@ export default class MyBasicRefComponent extends LitElement {
            </select></my-fragment
          >\`
               : null
-          } Hello \${lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
-          Web Component!
+          } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
+          Solid, or Web Component!
         </div>
 
         \`;
@@ -4754,7 +4754,7 @@ export default class MyBasicComponent extends LitElement {
           \${
             myService.method(\\"hello\\") + this.name
           } Hello! I can run in React, Vue,
-          Solid, or Liquid! <input @change=\${(event) => onChange} />
+          Solid, or Liquid! <input @change=\${(event) => this.onChange} />
         </div>
 
         \`;
@@ -5041,7 +5041,7 @@ export default class MyBasicRefComponent extends LitElement {
             this.showInput
               ? html\`<my-fragment
            ><input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
-                  onBlur()}
+                  this.onBlur()}
            @change=\${(event) => (this.name = event.target.value)} />
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
            <select name=\\"cars\\" id=\\"cars\\">
@@ -5050,8 +5050,8 @@ export default class MyBasicRefComponent extends LitElement {
            </select></my-fragment
          >\`
               : null
-          } Hello \${lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
-          Web Component!
+          } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
+          Solid, or Web Component!
         </div>
 
         \`;
@@ -5084,7 +5084,7 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
     return html\`
 
           <div ><button  @click=\${async (evt) =>
-            await handlerClick(evt)} >Click</button></div>
+            await this.handlerClick(evt)} >Click</button></div>
         \`;
   }
 }
@@ -5931,7 +5931,7 @@ export default class Image extends LitElement {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && isBrowser();
+    return !!this.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -8224,13 +8224,13 @@ export default class OnUpdate extends LitElement {
   bar = function bar() {};
   zoo = function zoo() {
     const params = {
-      cb: bar,
+      cb: this.bar,
     };
   };
 
   updated() {
-    foo({
-      someOption: bar,
+    this.foo({
+      someOption: this.bar,
     });
   }
 

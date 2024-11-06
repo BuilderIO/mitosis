@@ -1175,7 +1175,7 @@ Object.assign(state, {
   },
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && isBrowser();
+    return !!props.lazy && state.isBrowser();
   },
   isBrowser: function isBrowser() {
     return (
@@ -1218,7 +1218,7 @@ useStore({
   },
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && isBrowser();
+    return !!props.lazy && state.isBrowser();
   },
   isBrowser: function isBrowser() {
     return (
@@ -1269,7 +1269,7 @@ export default function MyComponent(props) {
     },
     useLazyLoading() {
       // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && isBrowser();
+      return !!props.lazy && state.isBrowser();
     },
     isBrowser: function isBrowser() {
       return (
@@ -3542,7 +3542,7 @@ exports[`Builder > async bindings 1`] = `
           {
             "@type": "@builder.io/sdk:Element",
             "actions": {
-              "click": "(async () => await handlerClick(event))()",
+              "click": "(async () => await state.handlerClick(event))()",
             },
             "bindings": {},
             "children": [
@@ -3560,7 +3560,7 @@ exports[`Builder > async bindings 1`] = `
             ],
             "code": {
               "actions": {
-                "click": "(async () => await handlerClick(event))()",
+                "click": "(async () => await state.handlerClick(event))()",
               },
               "bindings": {},
             },
@@ -3610,7 +3610,7 @@ export default function MyComponent(props) {
 
   return (
     <div>
-      <button onClick={async (event) => await handlerClick(event)}>
+      <button onClick={async (event) => await state.handlerClick(event)}>
         Click
       </button>
     </div>
