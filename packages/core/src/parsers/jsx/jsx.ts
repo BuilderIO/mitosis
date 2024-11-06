@@ -66,7 +66,7 @@ export function parseJsx(
         presets: [typescriptBabelPreset],
       })?.code as string);
 
-  const useStateValues: string[] = [];
+  const stateToScope: string[] = [];
 
   const output = babel.transform(jsxToUse, {
     configFile: false,
@@ -149,7 +149,7 @@ export function parseJsx(
                     };
                   },
                 });
-                path.replaceWith(jsonToAst(componentFunctionToJson(node, context, useStateValues)));
+                path.replaceWith(jsonToAst(componentFunctionToJson(node, context, stateToScope)));
               }
             }
           },
@@ -201,7 +201,7 @@ export function parseJsx(
 
   const mitosisComponent: MitosisComponent = tryParseJson(stringifiedMitosisComponent);
 
-  mapStateIdentifiers(mitosisComponent, useStateValues);
+  mapStateIdentifiers(mitosisComponent, stateToScope);
   extractContextComponents(mitosisComponent);
 
   mitosisComponent.subComponents = subComponentFunctions.map((item) => parseJsx(item, options));
