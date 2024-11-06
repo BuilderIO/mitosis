@@ -2717,6 +2717,68 @@ export class SmileReviewsModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > StoreShadowVars 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <ng-container></ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > StoreWithState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <ng-container></ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  foo = false;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > Submit 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -5301,14 +5363,14 @@ export default class OnUpdate {
   bar = function bar() {};
   zoo = function zoo() {
     const params = {
-      cb: this.bar,
+      cb: bar,
     };
   };
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
       this.foo({
-        someOption: this.bar,
+        someOption: bar,
       });
     }
   }
@@ -6421,16 +6483,14 @@ export default class MyComponent {
   subtract() {
     return this.someCompute - this.someOtherVal;
   }
-  someCompute = null;
+  someCompute = add(1, 2);
   someOtherVal = null;
   sf = null;
 
   ngOnInit() {
-    this.someCompute = this.add(1, 2);
-
     this.someOtherVal = this.val;
 
-    this.sf = this.add(this.val, 34);
+    this.sf = add(this.val, 34);
   }
 }
 
@@ -10184,6 +10244,68 @@ export class SmileReviewsModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > StoreShadowVars 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <ng-container></ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > StoreWithState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <ng-container></ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  foo = false;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > Submit 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -12948,14 +13070,14 @@ export default class OnUpdate {
   bar = function bar() {};
   zoo = function zoo() {
     const params = {
-      cb: this.bar,
+      cb: bar,
     };
   };
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       this.foo({
-        someOption: this.bar,
+        someOption: bar,
       });
     }
   }
@@ -14135,16 +14257,14 @@ export default class MyComponent {
   subtract() {
     return this.someCompute - this.someOtherVal;
   }
-  someCompute = null;
+  someCompute = add(1, 2);
   someOtherVal = null;
   sf = null;
 
   ngOnInit() {
-    this.someCompute = this.add(1, 2);
-
     this.someOtherVal = this.val;
 
-    this.sf = this.add(this.val, 34);
+    this.sf = add(this.val, 34);
   }
 }
 

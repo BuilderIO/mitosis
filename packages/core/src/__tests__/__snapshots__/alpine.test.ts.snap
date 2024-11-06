@@ -1023,7 +1023,7 @@ exports[`Alpine.js > jsx > Javascript Test > Image 1`] = `
 
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!props.lazy && this.isBrowser();
+        return !!props.lazy && isBrowser();
       },
 
       isBrowser: function isBrowser() {
@@ -1375,6 +1375,28 @@ showReviewPrompt = false\\"
             this.reviews = data.data;
           });
       },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > StoreShadowVars 1`] = `
+"<div x-data=\\"myComponent()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > StoreWithState 1`] = `
+"<div x-data=\\"myComponent()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      foo: false,
     }));
   });
 </script>
@@ -2240,13 +2262,13 @@ exports[`Alpine.js > jsx > Javascript Test > referencingFunInsideHook 1`] = `
       bar: function bar() {},
       zoo: function zoo() {
         const params = {
-          cb: this.bar,
+          cb: bar,
         };
       },
 
       onUpdate() {
-        this.foo({
-          someOption: this.bar,
+        foo({
+          someOption: bar,
         });
       },
     }));
@@ -4014,7 +4036,7 @@ exports[`Alpine.js > jsx > Typescript Test > Image 1`] = `
 
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!props.lazy && this.isBrowser();
+        return !!props.lazy && isBrowser();
       },
 
       isBrowser: function isBrowser() {
@@ -4366,6 +4388,28 @@ showReviewPrompt = false\\"
             this.reviews = data.data;
           });
       },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > StoreShadowVars 1`] = `
+"<div x-data=\\"myComponent()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > StoreWithState 1`] = `
+"<div x-data=\\"myComponent()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      foo: false,
     }));
   });
 </script>
@@ -5231,13 +5275,13 @@ exports[`Alpine.js > jsx > Typescript Test > referencingFunInsideHook 1`] = `
       bar: function bar() {},
       zoo: function zoo() {
         const params = {
-          cb: this.bar,
+          cb: bar,
         };
       },
 
       onUpdate() {
-        this.foo({
-          someOption: this.bar,
+        foo({
+          someOption: bar,
         });
       },
     }));

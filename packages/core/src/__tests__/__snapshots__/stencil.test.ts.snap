@@ -108,7 +108,7 @@ export class MyBasicRefComponent {
               class=\\"input\\"
               ref={(el) => (this.inputRef = el)}
               value={this.name}
-              onBlur={(event) => this.onBlur()}
+              onBlur={(event) => onBlur()}
               onChange={(event) => (this.name = event.target.value)}
             />
             <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
@@ -121,7 +121,7 @@ export class MyBasicRefComponent {
           </Fragment>
         ) : null}
         Hello
-        {this.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
     );
@@ -231,7 +231,7 @@ export class MyBasicComponent {
       <div>
         {myService.method(\\"hello\\") + this.name}
         Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onChange={() => this.onChange} />
+        <input onChange={() => onChange} />
       </div>
     );
   }
@@ -468,7 +468,7 @@ export class MyBasicRefComponent {
               class=\\"input\\"
               ref={(el) => (this.inputRef = el)}
               value={this.name}
-              onBlur={(event) => this.onBlur()}
+              onBlur={(event) => onBlur()}
               onChange={(event) => (this.name = event.target.value)}
             />
             <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
@@ -481,7 +481,7 @@ export class MyBasicRefComponent {
           </Fragment>
         ) : null}
         Hello
-        {this.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
     );
@@ -508,9 +508,7 @@ export class MyBasicRefAssignmentComponent {
   render() {
     return (
       <div>
-        <button onClick={async (evt) => await this.handlerClick(evt)}>
-          Click
-        </button>
+        <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
       </div>
     );
   }
@@ -1234,7 +1232,7 @@ export class Image {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && this.isBrowser();
+    return !!this.lazy && isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -1758,6 +1756,36 @@ export class SmileReviews {
         ))}
       </div>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > StoreShadowVars 1`] = `
+"import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export class MyComponent {
+  render() {
+    return <Fragment></Fragment>;
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > StoreWithState 1`] = `
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export class MyComponent {
+  @State() foo = false;
+
+  render() {
+    return <Fragment></Fragment>;
   }
 }
 "
@@ -2909,13 +2937,13 @@ export class OnUpdate {
   bar = function bar() {};
   zoo = function zoo() {
     const params = {
-      cb: this.bar,
+      cb: bar,
     };
   };
 
   componentDidUpdate() {
-    this.foo({
-      someOption: this.bar,
+    foo({
+      someOption: bar,
     });
   }
 
@@ -3884,7 +3912,7 @@ export class MyBasicRefComponent {
               class=\\"input\\"
               ref={(el) => (this.inputRef = el)}
               value={this.name}
-              onBlur={(event) => this.onBlur()}
+              onBlur={(event) => onBlur()}
               onChange={(event) => (this.name = event.target.value)}
             />
             <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
@@ -3897,7 +3925,7 @@ export class MyBasicRefComponent {
           </Fragment>
         ) : null}
         Hello
-        {this.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
     );
@@ -4011,7 +4039,7 @@ export class MyBasicComponent {
       <div>
         {myService.method(\\"hello\\") + this.name}
         Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onChange={() => this.onChange} />
+        <input onChange={() => onChange} />
       </div>
     );
   }
@@ -4262,7 +4290,7 @@ export class MyBasicRefComponent {
               class=\\"input\\"
               ref={(el) => (this.inputRef = el)}
               value={this.name}
-              onBlur={(event) => this.onBlur()}
+              onBlur={(event) => onBlur()}
               onChange={(event) => (this.name = event.target.value)}
             />
             <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
@@ -4275,7 +4303,7 @@ export class MyBasicRefComponent {
           </Fragment>
         ) : null}
         Hello
-        {this.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
     );
@@ -4306,9 +4334,7 @@ export class MyBasicRefAssignmentComponent {
   render() {
     return (
       <div>
-        <button onClick={async (evt) => await this.handlerClick(evt)}>
-          Click
-        </button>
+        <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
       </div>
     );
   }
@@ -5131,7 +5157,7 @@ export class Image {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && this.isBrowser();
+    return !!this.lazy && isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -5737,6 +5763,36 @@ export class SmileReviews {
         ))}
       </div>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > StoreShadowVars 1`] = `
+"import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export class MyComponent {
+  render() {
+    return <Fragment></Fragment>;
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > StoreWithState 1`] = `
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export class MyComponent {
+  @State() foo = false;
+
+  render() {
+    return <Fragment></Fragment>;
   }
 }
 "
@@ -7048,13 +7104,13 @@ export class OnUpdate {
   bar = function bar() {};
   zoo = function zoo() {
     const params = {
-      cb: this.bar,
+      cb: bar,
     };
   };
 
   componentDidUpdate() {
-    this.foo({
-      someOption: this.bar,
+    foo({
+      someOption: bar,
     });
   }
 

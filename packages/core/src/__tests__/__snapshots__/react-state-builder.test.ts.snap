@@ -32,7 +32,7 @@ function MyBasicRefComponent(props) {
               className=\\"input\\"
               ref={inputRef}
               value={state.name}
-              onBlur={(event) => state.onBlur()}
+              onBlur={(event) => onBlur()}
               onChange={(event) => (state.name = event.target.value)}
             />
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
@@ -45,7 +45,7 @@ function MyBasicRefComponent(props) {
           </>
         ) : null}
         Hello
-        {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
       <style jsx>{\`
@@ -135,7 +135,7 @@ function MyBasicComponent(props) {
       <div>
         {myService.method(\\"hello\\") + state.name}
         Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onChange={(event) => state.onChange} />
+        <input onChange={(event) => onChange} />
       </div>
     </Injector.Provider>
   );
@@ -341,7 +341,7 @@ function MyBasicRefComponent(props) {
               className=\\"input\\"
               ref={inputRef}
               value={state.name}
-              onBlur={(event) => state.onBlur()}
+              onBlur={(event) => onBlur()}
               onChange={(event) => (state.name = event.target.value)}
             />
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
@@ -354,7 +354,7 @@ function MyBasicRefComponent(props) {
           </>
         ) : null}
         Hello
-        {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
       <style jsx>{\`
@@ -387,9 +387,7 @@ function MyBasicRefAssignmentComponent(props) {
 
   return (
     <div>
-      <button onClick={async (evt) => await state.handlerClick(evt)}>
-        Click
-      </button>
+      <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
     </div>
   );
 }
@@ -1031,7 +1029,7 @@ function Image(props) {
     },
     useLazyLoading() {
       // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && state.isBrowser();
+      return !!props.lazy && isBrowser();
     },
     isBrowser: function isBrowser() {
       return (
@@ -1489,6 +1487,33 @@ function SmileReviews(props) {
 }
 
 export default SmileReviews;
+"
+`;
+
+exports[`React - stateType: builder > jsx > Javascript Test > StoreShadowVars 1`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props) {
+  const state = useBuilderState({});
+
+  return <></>;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React - stateType: builder > jsx > Javascript Test > StoreWithState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+
+function MyComponent(props) {
+  const state = useBuilderState({ foo: false });
+
+  return <></>;
+}
+
+export default MyComponent;
 "
 `;
 
@@ -2646,14 +2671,14 @@ function OnUpdate(props) {
     bar: function bar() {},
     zoo: function zoo() {
       const params = {
-        cb: state.bar,
+        cb: bar,
       };
     },
   });
 
   useEffect(() => {
-    state.foo({
-      someOption: state.bar,
+    foo({
+      someOption: bar,
     });
   });
 
@@ -3641,7 +3666,7 @@ function MyBasicRefComponent(props: Props) {
               className=\\"input\\"
               ref={inputRef}
               value={state.name}
-              onBlur={(event) => state.onBlur()}
+              onBlur={(event) => onBlur()}
               onChange={(event) => (state.name = event.target.value)}
             />
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
@@ -3654,7 +3679,7 @@ function MyBasicRefComponent(props: Props) {
           </>
         ) : null}
         Hello
-        {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
       <style jsx>{\`
@@ -3748,7 +3773,7 @@ function MyBasicComponent(props: any) {
       <div>
         {myService.method(\\"hello\\") + state.name}
         Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onChange={(event) => state.onChange} />
+        <input onChange={(event) => onChange} />
       </div>
     </Injector.Provider>
   );
@@ -3968,7 +3993,7 @@ function MyBasicRefComponent(props: Props) {
               className=\\"input\\"
               ref={inputRef}
               value={state.name}
-              onBlur={(event) => state.onBlur()}
+              onBlur={(event) => onBlur()}
               onChange={(event) => (state.name = event.target.value)}
             />
             <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
@@ -3981,7 +4006,7 @@ function MyBasicRefComponent(props: Props) {
           </>
         ) : null}
         Hello
-        {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
       <style jsx>{\`
@@ -4018,9 +4043,7 @@ function MyBasicRefAssignmentComponent(props: Props) {
 
   return (
     <div>
-      <button onClick={async (evt) => await state.handlerClick(evt)}>
-        Click
-      </button>
+      <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
     </div>
   );
 }
@@ -4759,7 +4782,7 @@ function Image(props: ImageProps) {
     },
     useLazyLoading() {
       // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && state.isBrowser();
+      return !!props.lazy && isBrowser();
     },
     isBrowser: function isBrowser() {
       return (
@@ -5296,6 +5319,33 @@ function SmileReviews(props: SmileReviewsProps) {
 }
 
 export default SmileReviews;
+"
+`;
+
+exports[`React - stateType: builder > jsx > Typescript Test > StoreShadowVars 1`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props: any) {
+  const state = useBuilderState({});
+
+  return <></>;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React - stateType: builder > jsx > Typescript Test > StoreWithState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+
+function MyComponent(props: any) {
+  const state = useBuilderState({ foo: false });
+
+  return <></>;
+}
+
+export default MyComponent;
 "
 `;
 
@@ -6620,14 +6670,14 @@ function OnUpdate(props: any) {
     bar: function bar() {},
     zoo: function zoo() {
       const params = {
-        cb: state.bar,
+        cb: bar,
       };
     },
   });
 
   useEffect(() => {
-    state.foo({
-      someOption: state.bar,
+    foo({
+      someOption: bar,
     });
   });
 

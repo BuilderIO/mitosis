@@ -137,6 +137,8 @@ const UseValueAndFnFromStore = getRawFile('./data/store/use-value-and-fn-from-st
 const StringLiteralStore = getRawFile('./data/store/string-literal-store.raw.tsx');
 const StringLiteralStoreKebab = getRawFile('./data/store/string-literal-store-kebab.raw.tsx');
 const StoreAsyncFunction = getRawFile('./data/store-async-function.raw.tsx');
+const StoreShadowVars = getRawFile('./data/store/store-shadow-vars.raw.tsx');
+const StoreWithState = getRawFile('./data/store/store-with-state.raw.tsx');
 
 /**
  * Use TestsWithFailFor when you want to write a test that you know will fail
@@ -256,6 +258,8 @@ const BASIC_TESTS: Tests = {
   getterState,
   eventInputAndChange,
   NestedStore,
+  StoreShadowVars,
+  StoreWithState,
   UseValueAndFnFromStore,
   'store-async-function': StoreAsyncFunction,
   'string-literal-store': StringLiteralStore,

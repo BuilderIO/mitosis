@@ -98,7 +98,7 @@ export default class MyBasicRefComponent extends LitElement {
             this.showInput
               ? html\`<my-fragment
            ><input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
-                  this.onBlur()}
+                  onBlur()}
            @change=\${(event) => (this.name = event.target.value)} />
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
            <select name=\\"cars\\" id=\\"cars\\">
@@ -107,8 +107,8 @@ export default class MyBasicRefComponent extends LitElement {
            </select></my-fragment
          >\`
               : null
-          } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
-          Solid, or Web Component!
+          } Hello \${lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
+          Web Component!
         </div>
 
         \`;
@@ -227,7 +227,7 @@ export default class MyBasicComponent extends LitElement {
           \${
             myService.method(\\"hello\\") + this.name
           } Hello! I can run in React, Vue,
-          Solid, or Liquid! <input @change=\${(event) => this.onChange} />
+          Solid, or Liquid! <input @change=\${(event) => onChange} />
         </div>
 
         \`;
@@ -500,7 +500,7 @@ export default class MyBasicRefComponent extends LitElement {
             this.showInput
               ? html\`<my-fragment
            ><input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
-                  this.onBlur()}
+                  onBlur()}
            @change=\${(event) => (this.name = event.target.value)} />
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
            <select name=\\"cars\\" id=\\"cars\\">
@@ -509,8 +509,8 @@ export default class MyBasicRefComponent extends LitElement {
            </select></my-fragment
          >\`
               : null
-          } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
-          Solid, or Web Component!
+          } Hello \${lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
+          Web Component!
         </div>
 
         \`;
@@ -539,7 +539,7 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
     return html\`
 
           <div ><button  @click=\${async (evt) =>
-            await this.handlerClick(evt)} >Click</button></div>
+            await handlerClick(evt)} >Click</button></div>
         \`;
   }
 }
@@ -1284,7 +1284,7 @@ export default class Image extends LitElement {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && this.isBrowser();
+    return !!this.lazy && isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -1868,6 +1868,50 @@ export default class SmileReviews extends LitElement {
        <div >\${review.author}</div>
        <div >\${review.reviewMessage}</div></div></div>\`
         )}</div>
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > StoreShadowVars 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+
+          <my-fragment></my-fragment>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > StoreWithState 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() foo = false;
+
+  render() {
+    return html\`
+
+          <my-fragment></my-fragment>
+
         \`;
   }
 }
@@ -3286,13 +3330,13 @@ export default class OnUpdate extends LitElement {
   bar = function bar() {};
   zoo = function zoo() {
     const params = {
-      cb: this.bar,
+      cb: bar,
     };
   };
 
   updated() {
-    this.foo({
-      someOption: this.bar,
+    foo({
+      someOption: bar,
     });
   }
 
@@ -4577,7 +4621,7 @@ export default class MyBasicRefComponent extends LitElement {
             this.showInput
               ? html\`<my-fragment
            ><input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
-                  this.onBlur()}
+                  onBlur()}
            @change=\${(event) => (this.name = event.target.value)} />
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
            <select name=\\"cars\\" id=\\"cars\\">
@@ -4586,8 +4630,8 @@ export default class MyBasicRefComponent extends LitElement {
            </select></my-fragment
          >\`
               : null
-          } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
-          Solid, or Web Component!
+          } Hello \${lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
+          Web Component!
         </div>
 
         \`;
@@ -4710,7 +4754,7 @@ export default class MyBasicComponent extends LitElement {
           \${
             myService.method(\\"hello\\") + this.name
           } Hello! I can run in React, Vue,
-          Solid, or Liquid! <input @change=\${(event) => this.onChange} />
+          Solid, or Liquid! <input @change=\${(event) => onChange} />
         </div>
 
         \`;
@@ -4997,7 +5041,7 @@ export default class MyBasicRefComponent extends LitElement {
             this.showInput
               ? html\`<my-fragment
            ><input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
-                  this.onBlur()}
+                  onBlur()}
            @change=\${(event) => (this.name = event.target.value)} />
            <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
            <select name=\\"cars\\" id=\\"cars\\">
@@ -5006,8 +5050,8 @@ export default class MyBasicRefComponent extends LitElement {
            </select></my-fragment
          >\`
               : null
-          } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
-          Solid, or Web Component!
+          } Hello \${lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
+          Web Component!
         </div>
 
         \`;
@@ -5040,7 +5084,7 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
     return html\`
 
           <div ><button  @click=\${async (evt) =>
-            await this.handlerClick(evt)} >Click</button></div>
+            await handlerClick(evt)} >Click</button></div>
         \`;
   }
 }
@@ -5887,7 +5931,7 @@ export default class Image extends LitElement {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && this.isBrowser();
+    return !!this.lazy && isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -6553,6 +6597,50 @@ export default class SmileReviews extends LitElement {
        <div >\${review.author}</div>
        <div >\${review.reviewMessage}</div></div></div>\`
         )}</div>
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > StoreShadowVars 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+
+          <my-fragment></my-fragment>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > StoreWithState 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() foo = false;
+
+  render() {
+    return html\`
+
+          <my-fragment></my-fragment>
+
         \`;
   }
 }
@@ -8136,13 +8224,13 @@ export default class OnUpdate extends LitElement {
   bar = function bar() {};
   zoo = function zoo() {
     const params = {
-      cb: this.bar,
+      cb: bar,
     };
   };
 
   updated() {
-    this.foo({
-      someOption: this.bar,
+    foo({
+      someOption: bar,
     });
   }
 
