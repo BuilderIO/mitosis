@@ -211,6 +211,7 @@ export const componentFunctionToJson = (
           code: generate(item).code,
           type: 'function',
         };
+        useStateValues.push(item.id.name);
       }
     }
 
@@ -255,9 +256,9 @@ export const componentFunctionToJson = (
                 type: 'property',
                 propertyType,
               };
-
-              useStateValues.push(varName);
             }
+
+            useStateValues.push(varName);
 
             // Typescript Parameter
             if (types.isTSTypeParameterInstantiation(init.typeParameters)) {
