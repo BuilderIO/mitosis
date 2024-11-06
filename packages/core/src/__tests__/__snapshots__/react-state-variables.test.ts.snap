@@ -955,10 +955,16 @@ export default SmileReviews;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > StoreShadowVars 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 
 function MyComponent(props) {
-  return <></>;
+  const errors = {};
+  const foo = function foo(errors) {
+    return errors;
+  };
+
+  return <>{foo(errors)}</>;
 }
 
 export default MyComponent;
@@ -971,8 +977,11 @@ import * as React from \\"react\\";
 
 function MyComponent(props) {
   const foo = false;
+  const bar = function bar() {
+    return foo;
+  };
 
-  return <></>;
+  return <>{bar()}</>;
 }
 
 export default MyComponent;
@@ -3800,10 +3809,16 @@ export default SmileReviews;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > StoreShadowVars 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 
 function MyComponent(props: any) {
-  return <></>;
+  const errors = {};
+  const foo = function foo(errors) {
+    return errors;
+  };
+
+  return <>{foo(errors)}</>;
 }
 
 export default MyComponent;
@@ -3816,8 +3831,11 @@ import * as React from \\"react\\";
 
 function MyComponent(props: any) {
   const foo = false;
+  const bar = function bar() {
+    return foo;
+  };
 
-  return <></>;
+  return <>{bar()}</>;
 }
 
 export default MyComponent;

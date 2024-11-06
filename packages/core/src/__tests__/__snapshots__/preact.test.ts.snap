@@ -1482,9 +1482,16 @@ export default SmileReviews;
 exports[`Preact > jsx > Javascript Test > StoreShadowVars 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
 function MyComponent(props) {
-  return <Fragment></Fragment>;
+  const [errors, setErrors] = useState(() => ({}));
+
+  function foo(errors) {
+    return errors;
+  }
+
+  return <Fragment>{foo(errors)}</Fragment>;
 }
 
 export default MyComponent;
@@ -1499,7 +1506,11 @@ import { useState } from \\"preact/hooks\\";
 function MyComponent(props) {
   const [foo, setFoo] = useState(() => false);
 
-  return <Fragment></Fragment>;
+  function bar() {
+    return foo;
+  }
+
+  return <Fragment>{bar()}</Fragment>;
 }
 
 export default MyComponent;
@@ -5331,9 +5342,16 @@ export default SmileReviews;
 exports[`Preact > jsx > Typescript Test > StoreShadowVars 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
 function MyComponent(props: any) {
-  return <Fragment></Fragment>;
+  const [errors, setErrors] = useState(() => ({}));
+
+  function foo(errors) {
+    return errors;
+  }
+
+  return <Fragment>{foo(errors)}</Fragment>;
 }
 
 export default MyComponent;
@@ -5348,7 +5366,11 @@ import { useState } from \\"preact/hooks\\";
 function MyComponent(props: any) {
   const [foo, setFoo] = useState(() => false);
 
-  return <Fragment></Fragment>;
+  function bar() {
+    return foo;
+  }
+
+  return <Fragment>{bar()}</Fragment>;
 }
 
 export default MyComponent;

@@ -1424,10 +1424,18 @@ export default function SmileReviews(props) {
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > StoreShadowVars 1`] = `
-"import { Fragment } from \\"@components\\";
+"import { useStore } from \\"@builder.io/mitosis\\";
+import { Fragment } from \\"@components\\";
 
 export default function MyComponent(props) {
-  return [<Fragment />];
+  const state = useStore({
+    errors: {},
+    foo(errors) {
+      return errors;
+    },
+  });
+
+  return [<Fragment>{state.foo(state.errors)}</Fragment>];
 }
 "
 `;
@@ -1437,9 +1445,14 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 import { Fragment } from \\"@components\\";
 
 export default function MyComponent(props) {
-  const state = useStore({ foo: false });
+  const state = useStore({
+    foo: false,
+    bar() {
+      return state.foo;
+    },
+  });
 
-  return [<Fragment />];
+  return [<Fragment>{state.bar()}</Fragment>];
 }
 "
 `;
@@ -4597,10 +4610,18 @@ export default function SmileReviews(props) {
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > StoreShadowVars 1`] = `
-"import { Fragment } from \\"@components\\";
+"import { useStore } from \\"@builder.io/mitosis\\";
+import { Fragment } from \\"@components\\";
 
 export default function MyComponent(props) {
-  return [<Fragment />];
+  const state = useStore({
+    errors: {},
+    foo(errors) {
+      return errors;
+    },
+  });
+
+  return [<Fragment>{state.foo(state.errors)}</Fragment>];
 }
 "
 `;
@@ -4610,9 +4631,14 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 import { Fragment } from \\"@components\\";
 
 export default function MyComponent(props) {
-  const state = useStore({ foo: false });
+  const state = useStore({
+    foo: false,
+    bar() {
+      return state.foo;
+    },
+  });
 
-  return [<Fragment />];
+  return [<Fragment>{state.bar()}</Fragment>];
 }
 "
 `;
@@ -8486,10 +8512,18 @@ export default function SmileReviews(props) {
 `;
 
 exports[`Mitosis, format: legacy > jsx > Javascript Test > StoreShadowVars 1`] = `
-"import { Fragment } from \\"@components\\";
+"import { useStore } from \\"@builder.io/mitosis\\";
+import { Fragment } from \\"@components\\";
 
 export default function MyComponent(props) {
-  return <Fragment />;
+  const state = useStore({
+    errors: {},
+    foo(errors) {
+      return errors;
+    },
+  });
+
+  return <Fragment>{state.foo(state.errors)}</Fragment>;
 }
 "
 `;
@@ -8499,9 +8533,14 @@ exports[`Mitosis, format: legacy > jsx > Javascript Test > StoreWithState 1`] = 
 import { Fragment } from \\"@components\\";
 
 export default function MyComponent(props) {
-  const state = useStore({ foo: false });
+  const state = useStore({
+    foo: false,
+    bar() {
+      return state.foo;
+    },
+  });
 
-  return <Fragment />;
+  return <Fragment>{state.bar()}</Fragment>;
 }
 "
 `;
@@ -11714,10 +11753,18 @@ export default function SmileReviews(props) {
 `;
 
 exports[`Mitosis, format: legacy > jsx > Typescript Test > StoreShadowVars 1`] = `
-"import { Fragment } from \\"@components\\";
+"import { useStore } from \\"@builder.io/mitosis\\";
+import { Fragment } from \\"@components\\";
 
 export default function MyComponent(props) {
-  return <Fragment />;
+  const state = useStore({
+    errors: {},
+    foo(errors) {
+      return errors;
+    },
+  });
+
+  return <Fragment>{state.foo(state.errors)}</Fragment>;
 }
 "
 `;
@@ -11727,9 +11774,14 @@ exports[`Mitosis, format: legacy > jsx > Typescript Test > StoreWithState 1`] = 
 import { Fragment } from \\"@components\\";
 
 export default function MyComponent(props) {
-  const state = useStore({ foo: false });
+  const state = useStore({
+    foo: false,
+    bar() {
+      return state.foo;
+    },
+  });
 
-  return <Fragment />;
+  return <Fragment>{state.bar()}</Fragment>;
 }
 "
 `;
@@ -15761,10 +15813,18 @@ export default SmileReviews;
 `;
 
 exports[`Mitosis, format: react > jsx > Javascript Test > StoreShadowVars 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 function MyComponent(props) {
-  return <></>;
+  const [errors, setErrors] = useState(() => ({}));
+
+  function foo(errors) {
+    return errors;
+  }
+
+  return <>{foo(errors)}</>;
 }
 
 export default MyComponent;
@@ -15779,7 +15839,11 @@ import { useState } from \\"react\\";
 function MyComponent(props) {
   const [foo, setFoo] = useState(() => false);
 
-  return <></>;
+  function bar() {
+    return foo;
+  }
+
+  return <>{bar()}</>;
 }
 
 export default MyComponent;
@@ -19381,10 +19445,18 @@ export default SmileReviews;
 `;
 
 exports[`Mitosis, format: react > jsx > Typescript Test > StoreShadowVars 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 function MyComponent(props) {
-  return <></>;
+  const [errors, setErrors] = useState(() => ({}));
+
+  function foo(errors) {
+    return errors;
+  }
+
+  return <>{foo(errors)}</>;
 }
 
 export default MyComponent;
@@ -19399,7 +19471,11 @@ import { useState } from \\"react\\";
 function MyComponent(props) {
   const [foo, setFoo] = useState(() => false);
 
-  return <></>;
+  function bar() {
+    return foo;
+  }
+
+  return <>{bar()}</>;
 }
 
 export default MyComponent;

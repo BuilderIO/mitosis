@@ -6659,7 +6659,12 @@ class MyComponent extends HTMLElement {
     super();
     const self = this;
 
-    this.state = {};
+    this.state = {
+      errors: {},
+      foo(errors) {
+        return errors;
+      },
+    };
     if (!this.props) {
       this.props = {};
     }
@@ -6682,7 +6687,9 @@ class MyComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      \`;
+      <template data-el=\\"div-my-component-1\\">
+        <!-- state.foo(state.errors) -->
+      </template>\`;
     this.pendingUpdate = true;
 
     this.render();
@@ -6711,7 +6718,13 @@ class MyComponent extends HTMLElement {
     this.updateBindings();
   }
 
-  updateBindings() {}
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='div-my-component-1']\\")
+      .forEach((el) => {
+        this.renderTextNode(el, this.state.foo(this.state.errors));
+      });
+  }
 
   // Helper to render content
   renderTextNode(el, text) {
@@ -6747,7 +6760,12 @@ class MyComponent extends HTMLElement {
     super();
     const self = this;
 
-    this.state = { foo: false };
+    this.state = {
+      foo: false,
+      bar() {
+        return self.state.foo;
+      },
+    };
     if (!this.props) {
       this.props = {};
     }
@@ -6770,7 +6788,7 @@ class MyComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      \`;
+      <template data-el=\\"div-my-component-1\\"><!-- state.bar() --></template>\`;
     this.pendingUpdate = true;
 
     this.render();
@@ -6799,7 +6817,13 @@ class MyComponent extends HTMLElement {
     this.updateBindings();
   }
 
-  updateBindings() {}
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='div-my-component-1']\\")
+      .forEach((el) => {
+        this.renderTextNode(el, this.state.bar());
+      });
+  }
 
   // Helper to render content
   renderTextNode(el, text) {
@@ -22998,7 +23022,12 @@ class MyComponent extends HTMLElement {
     super();
     const self = this;
 
-    this.state = {};
+    this.state = {
+      errors: {},
+      foo(errors) {
+        return errors;
+      },
+    };
     if (!this.props) {
       this.props = {};
     }
@@ -23021,7 +23050,9 @@ class MyComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      \`;
+      <template data-el=\\"div-my-component-1\\">
+        <!-- state.foo(state.errors) -->
+      </template>\`;
     this.pendingUpdate = true;
 
     this.render();
@@ -23050,7 +23081,13 @@ class MyComponent extends HTMLElement {
     this.updateBindings();
   }
 
-  updateBindings() {}
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='div-my-component-1']\\")
+      .forEach((el) => {
+        this.renderTextNode(el, this.state.foo(this.state.errors));
+      });
+  }
 
   // Helper to render content
   renderTextNode(el, text) {
@@ -23086,7 +23123,12 @@ class MyComponent extends HTMLElement {
     super();
     const self = this;
 
-    this.state = { foo: false };
+    this.state = {
+      foo: false,
+      bar() {
+        return self.state.foo;
+      },
+    };
     if (!this.props) {
       this.props = {};
     }
@@ -23109,7 +23151,7 @@ class MyComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      \`;
+      <template data-el=\\"div-my-component-1\\"><!-- state.bar() --></template>\`;
     this.pendingUpdate = true;
 
     this.render();
@@ -23138,7 +23180,13 @@ class MyComponent extends HTMLElement {
     this.updateBindings();
   }
 
-  updateBindings() {}
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='div-my-component-1']\\")
+      .forEach((el) => {
+        this.renderTextNode(el, this.state.bar());
+      });
+  }
 
   // Helper to render content
   renderTextNode(el, text) {

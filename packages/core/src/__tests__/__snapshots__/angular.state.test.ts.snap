@@ -2798,33 +2798,12 @@ export class SmileReviewsModule {}
 `;
 
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > StoreShadowVars 1`] = `
-"import { NgModule } from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"unknown: Unexpected token, expected \\",\\" (1:25)
 
-import { Component } from \\"@angular/core\\";
-
-@Component({
-  selector: \\"my-component\\",
-  template: \`
-    <ng-container></ng-container>
-  \`,
-  styles: [
-    \`
-      :host {
-        display: contents;
-      }
-    \`,
-  ],
-})
-export default class MyComponent {}
-
-@NgModule({
-  declarations: [MyComponent],
-  imports: [CommonModule],
-  exports: [MyComponent],
-})
-export class MyComponentModule {}
-"
+> 1 | let _ = function foo(this.errors) {
+    |                          ^
+  2 |   return this.errors;
+  3 | }"
 `;
 
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > StoreWithState 1`] = `
@@ -2836,7 +2815,7 @@ import { Component } from \\"@angular/core\\";
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <ng-container></ng-container>
+    <ng-container>{{node_0_div}}</ng-container>
   \`,
   styles: [
     \`
@@ -2848,6 +2827,20 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MyComponent {
   foo = false;
+  bar() {
+    return this.foo;
+  }
+  node_0_div = null;
+
+  ngOnInit() {
+    this.node_0_div = this.bar();
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = this.bar();
+    }
+  }
 }
 
 @NgModule({
@@ -10580,45 +10573,24 @@ export class SmileReviewsModule {}
 `;
 
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > StoreShadowVars 1`] = `
-"import { NgModule } from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"unknown: Unexpected token, expected \\",\\" (1:25)
 
-import { Component } from \\"@angular/core\\";
-
-@Component({
-  selector: \\"my-component\\",
-  template: \`
-    <ng-container></ng-container>
-  \`,
-  styles: [
-    \`
-      :host {
-        display: contents;
-      }
-    \`,
-  ],
-})
-export default class MyComponent {}
-
-@NgModule({
-  declarations: [MyComponent],
-  imports: [CommonModule],
-  exports: [MyComponent],
-})
-export class MyComponentModule {}
-"
+> 1 | let _ = function foo(this.errors) {
+    |                          ^
+  2 |   return this.errors;
+  3 | }"
 `;
 
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > StoreWithState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component } from \\"@angular/core\\";
+import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <ng-container></ng-container>
+    <ng-container>{{node_0_div}}</ng-container>
   \`,
   styles: [
     \`
@@ -10630,6 +10602,20 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MyComponent {
   foo = false;
+  bar() {
+    return this.foo;
+  }
+  node_0_div = null;
+
+  ngOnInit() {
+    this.node_0_div = this.bar();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_div = this.bar();
+    }
+  }
 }
 
 @NgModule({

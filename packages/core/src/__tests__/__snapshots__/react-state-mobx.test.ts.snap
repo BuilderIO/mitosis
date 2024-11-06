@@ -1526,10 +1526,19 @@ export default observedSmileReviews;
 `;
 
 exports[`React - stateType: mobx > jsx > Javascript Test > StoreShadowVars 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
 
 function MyComponent(props) {
-  return <></>;
+  const state = useLocalObservable(() => ({
+    errors: {},
+    foo(errors) {
+      return errors;
+    },
+  }));
+
+  return <>{state.foo(state.errors)}</>;
 }
 
 const observedMyComponent = observer(MyComponent);
@@ -1543,9 +1552,14 @@ import * as React from \\"react\\";
 import { useLocalObservable, observer } from \\"mobx-react-lite\\";
 
 function MyComponent(props) {
-  const state = useLocalObservable(() => ({ foo: false }));
+  const state = useLocalObservable(() => ({
+    foo: false,
+    bar() {
+      return state.foo;
+    },
+  }));
 
-  return <></>;
+  return <>{state.bar()}</>;
 }
 
 const observedMyComponent = observer(MyComponent);
@@ -5394,10 +5408,19 @@ export default observedSmileReviews;
 `;
 
 exports[`React - stateType: mobx > jsx > Typescript Test > StoreShadowVars 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
 
 function MyComponent(props: any) {
-  return <></>;
+  const state = useLocalObservable(() => ({
+    errors: {},
+    foo(errors) {
+      return errors;
+    },
+  }));
+
+  return <>{state.foo(state.errors)}</>;
 }
 
 const observedMyComponent = observer(MyComponent);
@@ -5411,9 +5434,14 @@ import * as React from \\"react\\";
 import { useLocalObservable, observer } from \\"mobx-react-lite\\";
 
 function MyComponent(props: any) {
-  const state = useLocalObservable(() => ({ foo: false }));
+  const state = useLocalObservable(() => ({
+    foo: false,
+    bar() {
+      return state.foo;
+    },
+  }));
 
-  return <></>;
+  return <>{state.bar()}</>;
 }
 
 const observedMyComponent = observer(MyComponent);

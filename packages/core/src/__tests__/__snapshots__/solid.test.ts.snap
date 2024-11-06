@@ -3403,10 +3403,18 @@ export default SmileReviews;
 `;
 
 exports[`Solid > jsx > Javascript Test > StoreShadowVars 1`] = `
-"function MyComponent(props) {
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function MyComponent(props) {
+  const [errors, setErrors] = createSignal({});
+
+  function foo(errors) {
+    return errors;
+  }
+
   return (
     <>
-      <></>
+      <>{foo(errors())}</>
     </>
   );
 }
@@ -3416,10 +3424,18 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > StoreShadowVars 2`] = `
-"function MyComponent(props) {
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function MyComponent(props) {
+  const [errors, setErrors] = createSignal({});
+
+  function foo(errors) {
+    return errors;
+  }
+
   return (
     <>
-      <></>
+      <>{foo(errors())}</>
     </>
   );
 }
@@ -3434,9 +3450,13 @@ exports[`Solid > jsx > Javascript Test > StoreWithState 1`] = `
 function MyComponent(props) {
   const [foo, setFoo] = createSignal(false);
 
+  function bar() {
+    return foo();
+  }
+
   return (
     <>
-      <></>
+      <>{bar()}</>
     </>
   );
 }
@@ -3451,9 +3471,13 @@ exports[`Solid > jsx > Javascript Test > StoreWithState 2`] = `
 function MyComponent(props) {
   const [foo, setFoo] = createSignal(false);
 
+  function bar() {
+    return foo();
+  }
+
   return (
     <>
-      <></>
+      <>{bar()}</>
     </>
   );
 }
@@ -11505,10 +11529,18 @@ export default SmileReviews;
 `;
 
 exports[`Solid > jsx > Typescript Test > StoreShadowVars 1`] = `
-"function MyComponent(props: any) {
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function MyComponent(props: any) {
+  const [errors, setErrors] = createSignal({});
+
+  function foo(errors) {
+    return errors;
+  }
+
   return (
     <>
-      <></>
+      <>{foo(errors())}</>
     </>
   );
 }
@@ -11518,10 +11550,18 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > StoreShadowVars 2`] = `
-"function MyComponent(props: any) {
+"import { createSignal, createMemo } from \\"solid-js\\";
+
+function MyComponent(props: any) {
+  const [errors, setErrors] = createSignal({});
+
+  function foo(errors) {
+    return errors;
+  }
+
   return (
     <>
-      <></>
+      <>{foo(errors())}</>
     </>
   );
 }
@@ -11536,9 +11576,13 @@ exports[`Solid > jsx > Typescript Test > StoreWithState 1`] = `
 function MyComponent(props: any) {
   const [foo, setFoo] = createSignal(false);
 
+  function bar() {
+    return foo();
+  }
+
   return (
     <>
-      <></>
+      <>{bar()}</>
     </>
   );
 }
@@ -11553,9 +11597,13 @@ exports[`Solid > jsx > Typescript Test > StoreWithState 2`] = `
 function MyComponent(props: any) {
   const [foo, setFoo] = createSignal(false);
 
+  function bar() {
+    return foo();
+  }
+
   return (
     <>
-      <></>
+      <>{bar()}</>
     </>
   );
 }

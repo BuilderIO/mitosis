@@ -1463,10 +1463,18 @@ export default SmileReviews;
 `;
 
 exports[`RSC > jsx > Javascript Test > StoreShadowVars 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 function MyComponent(props) {
-  return <></>;
+  const [errors, setErrors] = useState(() => ({}));
+
+  function foo(errors) {
+    return errors;
+  }
+
+  return <>{foo(errors)}</>;
 }
 
 export default MyComponent;
@@ -1481,7 +1489,11 @@ import { useState } from \\"react\\";
 function MyComponent(props) {
   const [foo, setFoo] = useState(() => false);
 
-  return <></>;
+  function bar() {
+    return foo;
+  }
+
+  return <>{bar()}</>;
 }
 
 export default MyComponent;
@@ -4937,10 +4949,18 @@ export default SmileReviews;
 `;
 
 exports[`RSC > jsx > Typescript Test > StoreShadowVars 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 function MyComponent(props: any) {
-  return <></>;
+  const [errors, setErrors] = useState(() => ({}));
+
+  function foo(errors) {
+    return errors;
+  }
+
+  return <>{foo(errors)}</>;
 }
 
 export default MyComponent;
@@ -4955,7 +4975,11 @@ import { useState } from \\"react\\";
 function MyComponent(props: any) {
   const [foo, setFoo] = useState(() => false);
 
-  return <></>;
+  function bar() {
+    return foo;
+  }
+
+  return <>{bar()}</>;
 }
 
 export default MyComponent;

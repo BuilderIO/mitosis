@@ -1884,10 +1884,16 @@ export default class MyComponent extends LitElement {
     return this;
   }
 
+  @state() errors = {};
+
+  foo(errors) {
+    return errors;
+  }
+
   render() {
     return html\`
 
-          <my-fragment></my-fragment>
+          <my-fragment>\${this.foo(this.errors)}</my-fragment>
 
         \`;
   }
@@ -1907,10 +1913,14 @@ export default class MyComponent extends LitElement {
 
   @state() foo = false;
 
+  bar() {
+    return this.foo;
+  }
+
   render() {
     return html\`
 
-          <my-fragment></my-fragment>
+          <my-fragment>\${this.bar()}</my-fragment>
 
         \`;
   }
@@ -6613,10 +6623,16 @@ export default class MyComponent extends LitElement {
     return this;
   }
 
+  @state() errors = {};
+
+  foo(errors) {
+    return errors;
+  }
+
   render() {
     return html\`
 
-          <my-fragment></my-fragment>
+          <my-fragment>\${this.foo(this.errors)}</my-fragment>
 
         \`;
   }
@@ -6636,10 +6652,14 @@ export default class MyComponent extends LitElement {
 
   @state() foo = false;
 
+  bar() {
+    return this.foo;
+  }
+
   render() {
     return html\`
 
-          <my-fragment></my-fragment>
+          <my-fragment>\${this.bar()}</my-fragment>
 
         \`;
   }

@@ -1488,10 +1488,19 @@ export default SmileReviews;
 `;
 
 exports[`React - stateType: valtio > jsx > Javascript Test > StoreShadowVars 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalProxy } from \\"valtio/utils\\";
 
 function MyComponent(props) {
-  return <></>;
+  const state = useLocalProxy({
+    errors: {},
+    foo(errors) {
+      return errors;
+    },
+  });
+
+  return <>{state.foo(state.errors)}</>;
 }
 
 export default MyComponent;
@@ -1504,9 +1513,14 @@ import * as React from \\"react\\";
 import { useLocalProxy } from \\"valtio/utils\\";
 
 function MyComponent(props) {
-  const state = useLocalProxy({ foo: false });
+  const state = useLocalProxy({
+    foo: false,
+    bar() {
+      return state.foo;
+    },
+  });
 
-  return <></>;
+  return <>{state.bar()}</>;
 }
 
 export default MyComponent;
@@ -5238,10 +5252,19 @@ export default SmileReviews;
 `;
 
 exports[`React - stateType: valtio > jsx > Typescript Test > StoreShadowVars 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalProxy } from \\"valtio/utils\\";
 
 function MyComponent(props: any) {
-  return <></>;
+  const state = useLocalProxy({
+    errors: {},
+    foo(errors) {
+      return errors;
+    },
+  });
+
+  return <>{state.foo(state.errors)}</>;
 }
 
 export default MyComponent;
@@ -5254,9 +5277,14 @@ import * as React from \\"react\\";
 import { useLocalProxy } from \\"valtio/utils\\";
 
 function MyComponent(props: any) {
-  const state = useLocalProxy({ foo: false });
+  const state = useLocalProxy({
+    foo: false,
+    bar() {
+      return state.foo;
+    },
+  });
 
-  return <></>;
+  return <>{state.bar()}</>;
 }
 
 export default MyComponent;

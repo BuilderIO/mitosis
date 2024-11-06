@@ -1493,12 +1493,18 @@ export default SmileReviews;
 `;
 
 exports[`React - stateType: builder > jsx > Javascript Test > StoreShadowVars 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 
 function MyComponent(props) {
-  const state = useBuilderState({});
+  const state = useBuilderState({
+    errors: {},
+    foo(errors) {
+      return errors;
+    },
+  });
 
-  return <></>;
+  return <>{state.foo(state.errors)}</>;
 }
 
 export default MyComponent;
@@ -1510,9 +1516,14 @@ exports[`React - stateType: builder > jsx > Javascript Test > StoreWithState 1`]
 import * as React from \\"react\\";
 
 function MyComponent(props) {
-  const state = useBuilderState({ foo: false });
+  const state = useBuilderState({
+    foo: false,
+    bar() {
+      return state.foo;
+    },
+  });
 
-  return <></>;
+  return <>{state.bar()}</>;
 }
 
 export default MyComponent;
@@ -5327,12 +5338,18 @@ export default SmileReviews;
 `;
 
 exports[`React - stateType: builder > jsx > Typescript Test > StoreShadowVars 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 
 function MyComponent(props: any) {
-  const state = useBuilderState({});
+  const state = useBuilderState({
+    errors: {},
+    foo(errors) {
+      return errors;
+    },
+  });
 
-  return <></>;
+  return <>{state.foo(state.errors)}</>;
 }
 
 export default MyComponent;
@@ -5344,9 +5361,14 @@ exports[`React - stateType: builder > jsx > Typescript Test > StoreWithState 1`]
 import * as React from \\"react\\";
 
 function MyComponent(props: any) {
-  const state = useBuilderState({ foo: false });
+  const state = useBuilderState({
+    foo: false,
+    bar() {
+      return state.foo;
+    },
+  });
 
-  return <></>;
+  return <>{state.bar()}</>;
 }
 
 export default MyComponent;

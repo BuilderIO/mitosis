@@ -1,12 +1,12 @@
 import { useStore } from '@builder.io/mitosis';
 
 export default function MyComponent() {
-  useStore({
+  const state = useStore({
     errors: {},
     foo(errors) {
       return errors;
     },
   });
 
-  return <></>;
+  return <>{state.foo(state.errors)}</>;
 }
