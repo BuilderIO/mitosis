@@ -273,7 +273,17 @@ const processStateObjectSlice = (item: ObjectMethod | ObjectProperty): StateValu
       };
     }
 
-    const n = getCleanedStateCode(parseCode({ ...item, returnType: null }));
+    const method = objectMethod(
+      item.kind,
+      item.key,
+      item.params,
+      item.body,
+      false,
+      false,
+      item.async,
+    );
+
+    const n = getCleanedStateCode(parseCode({ ...method, returnType: null }));
 
     const isGetter = item.kind === 'get';
 
