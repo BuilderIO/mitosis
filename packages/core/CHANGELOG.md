@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.5.17
+
+### Patch Changes
+
+- e430a68: [CICD] regenerate test snapshots on fail to download them into local environment
+- b5ddfa3: [Vue] fix: ref wasn't imported when using `useRef` hook without using `useState`
+
+  [Vue] fix: Composition api always use `ref()` wihtout any class -> we don't need this., but we always use `.value`
+
+  [Vue] fix: `ref` could be `null` for `useRef` see: https://vuejs.org/guide/essentials/template-refs.html#accessing-the-refs
+
+  [All] fix: replace `this.` expression in `useState` with `state.` to resolve correct `stripStateAndPropsRefs()` function inside all generators
+
+- 068be0d: [Angular, Lit, Stencil, HTML] fix: remove mapping onChange to input event
+
 ## 0.5.16
 
 ### Patch Changes
