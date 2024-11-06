@@ -137,6 +137,7 @@ const UseValueAndFnFromStore = getRawFile('./data/store/use-value-and-fn-from-st
 const StringLiteralStore = getRawFile('./data/store/string-literal-store.raw.tsx');
 const StringLiteralStoreKebab = getRawFile('./data/store/string-literal-store-kebab.raw.tsx');
 const StoreAsyncFunction = getRawFile('./data/store-async-function.raw.tsx');
+const StoreComment = getRawFile('./data/store/store-comment.raw.tsx');
 
 /**
  * Use TestsWithFailFor when you want to write a test that you know will fail
@@ -257,6 +258,7 @@ const BASIC_TESTS: Tests = {
   eventInputAndChange,
   NestedStore,
   UseValueAndFnFromStore,
+  StoreComment,
   'store-async-function': StoreAsyncFunction,
   'string-literal-store': StringLiteralStore,
   'string-literal-store-kebab': {
