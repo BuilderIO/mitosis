@@ -2755,12 +2755,39 @@ export class SmileReviewsModule {}
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > StoreShadowVars 1`] = `
-"unknown: Unexpected token, expected \\",\\" (1:25)
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
 
-> 1 | let _ = function foo(this.errors) {
-    |                          ^
-  2 |   return this.errors;
-  3 | }"
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <ng-container>{{foo(errors)}}</ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  errors = {};
+  foo(errors) {
+    return errors;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > StoreWithState 1`] = `
@@ -4612,12 +4639,12 @@ export default class MultipleOnUpdateWithDeps {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+      console.log(\\"Runs when a or b changes\\", this.a, this.b);
 
       if (this.a === \\"a\\") {
         this.a = \\"b\\";
       }
-      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      console.log(\\"Runs when c or d changes\\", this.c, this.d);
 
       if (this.a === \\"a\\") {
         this.a = \\"b\\";
@@ -5174,12 +5201,7 @@ export default class OnUpdateWithDeps {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      console.log(
-        \\"Runs when this.a, this.b or size changes\\",
-        this.a,
-        this.b,
-        this.size
-      );
+      console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
     }
   }
 }
@@ -5565,7 +5587,7 @@ export default class RenderBlock {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-          Could not find a registered this.component named \\"\${componentName}\\".
+          Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
@@ -5618,8 +5640,8 @@ export default class RenderBlock {
         ...getBlockComponentOptions(this.useBlock),
 
         /**
-         * These this.attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the this.component itself directly.
+         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the component itself directly.
          */
         ...(this.shouldWrap
           ? {}
@@ -5714,7 +5736,7 @@ export default class RenderBlock {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the this.component tag
+      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;
@@ -10389,12 +10411,39 @@ export class SmileReviewsModule {}
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > StoreShadowVars 1`] = `
-"unknown: Unexpected token, expected \\",\\" (1:25)
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
 
-> 1 | let _ = function foo(this.errors) {
-    |                          ^
-  2 |   return this.errors;
-  3 | }"
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <ng-container>{{foo(errors)}}</ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  errors = {};
+  foo(errors) {
+    return errors;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > StoreWithState 1`] = `
@@ -12371,12 +12420,12 @@ export default class MultipleOnUpdateWithDeps {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+      console.log(\\"Runs when a or b changes\\", this.a, this.b);
 
       if (this.a === \\"a\\") {
         this.a = \\"b\\";
       }
-      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      console.log(\\"Runs when c or d changes\\", this.c, this.d);
 
       if (this.a === \\"a\\") {
         this.a = \\"b\\";
@@ -12952,12 +13001,7 @@ export default class OnUpdateWithDeps {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      console.log(
-        \\"Runs when this.a, this.b or size changes\\",
-        this.a,
-        this.b,
-        this.size
-      );
+      console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
     }
   }
 }
@@ -13394,7 +13438,7 @@ export default class RenderBlock {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-          Could not find a registered this.component named \\"\${componentName}\\".
+          Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
@@ -13447,8 +13491,8 @@ export default class RenderBlock {
         ...getBlockComponentOptions(this.useBlock),
 
         /**
-         * These this.attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the this.component itself directly.
+         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the component itself directly.
          */
         ...(this.shouldWrap
           ? {}
@@ -13543,7 +13587,7 @@ export default class RenderBlock {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the this.component tag
+      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;
