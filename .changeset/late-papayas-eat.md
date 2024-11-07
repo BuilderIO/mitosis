@@ -2,4 +2,4 @@
 '@builder.io/mitosis': patch
 ---
 
-identifiers are not incorrectly scoped to state
+shadowed variables in state methods are not scoped to state in all generators
