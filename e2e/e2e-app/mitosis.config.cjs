@@ -19,6 +19,29 @@ module.exports = {
   ],
   commonOptions: {
     typescript: true,
+    explicitBuildFileExtensions: {
+      '.md': /.*(docs\.lite\.tsx)$/g,
+    },
+    plugins: [
+      () => ({
+        code: {
+          post: (code, json) => {
+            if (json.meta?.useMetadata?.docs) {
+              return (
+                `# ${json.name} - ${json.pluginData?.target}\n\n` +
+                `${JSON.stringify(json.meta?.useMetadata?.docs)}\n\n` +
+                'This is the content:\n' +
+                '````\n' +
+                code +
+                '\n````'
+              );
+            }
+
+            return code;
+          },
+        },
+      }),
+    ],
   },
   options: {
     angular: {
