@@ -3434,6 +3434,48 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > basicForFragment 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"basic-for-fragment\\",
+  template: \`
+    <div>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class BasicForFragment {
+  trackByOption0(_, option) {
+    return \`key-\${option}\`;
+  }
+}
+
+@NgModule({
+  declarations: [BasicForFragment],
+  imports: [CommonModule],
+  exports: [BasicForFragment],
+})
+export class BasicForFragmentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -11244,6 +11286,48 @@ export default class MyComponent {
   exports: [MyComponent],
 })
 export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > basicForFragment 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"basic-for-fragment\\",
+  template: \`
+    <div>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class BasicForFragment {
+  trackByOption0(_, option) {
+    return \`key-\${option}\`;
+  }
+}
+
+@NgModule({
+  declarations: [BasicForFragment],
+  imports: [CommonModule],
+  exports: [BasicForFragment],
+})
+export class BasicForFragmentModule {}
 "
 `;
 

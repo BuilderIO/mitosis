@@ -12,9 +12,10 @@ const getRawFile = async (filePath: string) => {
 type RawFile = ReturnType<typeof getRawFile>;
 
 const getterState = getRawFile('./data/blocks/getter-state.raw.tsx');
-const advancedFor = getRawFile('./data/advanced-for.raw.tsx');
+const advancedFor = getRawFile('./data/for/advanced-for.raw.tsx');
 
-const basicForShow = getRawFile('./data/basic-for-show.raw.tsx');
+const basicForFragment = getRawFile('./data/for/basic-for-fragment.raw.tsx');
+const basicForShow = getRawFile('./data/for/basic-for-show.raw.tsx');
 const basicBooleanAttribute = getRawFile('./data/basic-boolean-attribute.raw.tsx');
 const basicOnMountUpdate = getRawFile('./data/basic-onMount-update.raw.tsx');
 const basicContext = getRawFile('./data/basic-context.raw.tsx');
@@ -30,8 +31,8 @@ const basic = getRawFile('./data/basic.raw.tsx');
 const basicAttribute = getRawFile('./data/basic-attribute.raw.tsx');
 const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw.tsx');
 const basicChildComponent = getRawFile('./data/basic-child-component.raw.tsx');
-const basicFor = getRawFile('./data/basic-for.raw.tsx');
-const basicForNoTagReference = getRawFile('./data/basic-for-no-tag-reference.raw.tsx');
+const basicFor = getRawFile('./data/for/basic-for.raw.tsx');
+const basicForNoTagReference = getRawFile('./data/for/basic-for-no-tag-reference.raw.tsx');
 const basicRef = getRawFile('./data/basic-ref.raw.tsx');
 const basicForwardRef = getRawFile('./data/basic-forwardRef.raw.tsx');
 const basicForwardRefMetadata = getRawFile('./data/basic-forwardRef-metadata.raw.tsx');
@@ -183,6 +184,7 @@ const BASIC_TESTS: Tests = {
   BasicRefAssignment: basicRefAssignment,
   BasicChildComponent: basicChildComponent,
   BasicFor: basicFor,
+  basicForFragment,
   basicForNoTagReference: basicForNoTagReference,
   Input: inputBlock,
   InputParent: inputParentBlock,
