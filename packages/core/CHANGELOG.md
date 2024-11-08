@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.5.18
+
+### Patch Changes
+
+- 697c307: do not crash with comment before method in store
+- 6f6db62: [React] Refactor how `react` handles mitosis `Fragment`.
+
+  Using `import { Fragment } from '@builder.io/mitosis';
+` and `<Fragment key={option}>` in mitosis, generates an empty fragment in `react` target: `<>`. With this improvement the generated output will be `<React.Fragment key={`key-${option}`}>`. This will help to avoid issues with same keys e.g. inside for loops.
+
+- e90df53: [Solid] Fix: handle Fragment with `key` prop
+
 ## 0.5.17
 
 ### Patch Changes
