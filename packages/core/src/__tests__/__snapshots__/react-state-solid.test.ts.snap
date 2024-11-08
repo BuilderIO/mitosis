@@ -1499,6 +1499,46 @@ export default StringLiteralStore;
 "
 `;
 
+exports[`React - stateType: solid > jsx > Javascript Test > StoreShadowVars 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useMutable } from \\"react-solid-state\\";
+
+function MyComponent(props) {
+  const state = useMutable({
+    errors: {},
+    foo(errors) {
+      return errors;
+    },
+  });
+
+  return <>{state.foo(state.errors)}</>;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React - stateType: solid > jsx > Javascript Test > StoreWithState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useMutable } from \\"react-solid-state\\";
+
+function MyComponent(props) {
+  const state = useMutable({
+    foo: false,
+    bar() {
+      return state.foo;
+    },
+  });
+
+  return <>{state.bar()}</>;
+}
+
+export default MyComponent;
+"
+`;
+
 exports[`React - stateType: solid > jsx > Javascript Test > Submit 1`] = `
 "import * as React from \\"react\\";
 
@@ -1647,6 +1687,25 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`React - stateType: solid > jsx > Javascript Test > basicForFragment 1`] = `
+"import * as React from \\"react\\";
+
+function BasicForFragment(props) {
+  return (
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`key-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+export default BasicForFragment;
 "
 `;
 
@@ -5235,6 +5294,46 @@ export default StringLiteralStore;
 "
 `;
 
+exports[`React - stateType: solid > jsx > Typescript Test > StoreShadowVars 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useMutable } from \\"react-solid-state\\";
+
+function MyComponent(props: any) {
+  const state = useMutable({
+    errors: {},
+    foo(errors) {
+      return errors;
+    },
+  });
+
+  return <>{state.foo(state.errors)}</>;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`React - stateType: solid > jsx > Typescript Test > StoreWithState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useMutable } from \\"react-solid-state\\";
+
+function MyComponent(props: any) {
+  const state = useMutable({
+    foo: false,
+    bar() {
+      return state.foo;
+    },
+  });
+
+  return <>{state.bar()}</>;
+}
+
+export default MyComponent;
+"
+`;
+
 exports[`React - stateType: solid > jsx > Typescript Test > Submit 1`] = `
 "import * as React from \\"react\\";
 
@@ -5438,6 +5537,25 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`React - stateType: solid > jsx > Typescript Test > basicForFragment 1`] = `
+"import * as React from \\"react\\";
+
+function BasicForFragment(props: any) {
+  return (
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`key-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+export default BasicForFragment;
 "
 `;
 
