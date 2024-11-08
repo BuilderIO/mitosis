@@ -1594,6 +1594,23 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > basicForFragment 1`] = `
+"import { For, Fragment } from \\"@components\\";
+
+export default function BasicForFragment(props) {
+  return [
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"].map((option, index) => (
+        <Fragment key={\`key-\${option}\`}>
+          <div>{option}</div>
+        </Fragment>
+      ))}
+    </div>,
+  ];
+}
+"
+`;
+
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "import { useStore } from \\"@builder.io/mitosis\\";
 import { For } from \\"@components\\";
@@ -4842,6 +4859,23 @@ export default function MyComponent(props) {
     <div>
       Hello
       {state.name}
+    </div>,
+  ];
+}
+"
+`;
+
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > basicForFragment 1`] = `
+"import { For, Fragment } from \\"@components\\";
+
+export default function BasicForFragment(props) {
+  return [
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"].map((option, index) => (
+        <Fragment key={\`key-\${option}\`}>
+          <div>{option}</div>
+        </Fragment>
+      ))}
     </div>,
   ];
 }
@@ -8706,6 +8740,26 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Mitosis, format: legacy > jsx > Javascript Test > basicForFragment 1`] = `
+"import { For } from \\"@builder.io/mitosis\\";
+import { Fragment } from \\"@components\\";
+
+export default function BasicForFragment(props) {
+  return (
+    <div>
+      <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
+        {(option, index) => (
+          <Fragment key={\`key-\${option}\`}>
+            <div>{option}</div>
+          </Fragment>
+        )}
+      </For>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Mitosis, format: legacy > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "import { useStore, For } from \\"@builder.io/mitosis\\";
 
@@ -12009,6 +12063,26 @@ export default function MyComponent(props) {
     <div>
       Hello
       {state.name}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Mitosis, format: legacy > jsx > Typescript Test > basicForFragment 1`] = `
+"import { For } from \\"@builder.io/mitosis\\";
+import { Fragment } from \\"@components\\";
+
+export default function BasicForFragment(props) {
+  return (
+    <div>
+      <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
+        {(option, index) => (
+          <Fragment key={\`key-\${option}\`}>
+            <div>{option}</div>
+          </Fragment>
+        )}
+      </For>
     </div>
   );
 }
@@ -16065,6 +16139,25 @@ export default MyComponent;
 "
 `;
 
+exports[`Mitosis, format: react > jsx > Javascript Test > basicForFragment 1`] = `
+"import * as React from \\"react\\";
+
+function BasicForFragment(props) {
+  return (
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`key-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+export default BasicForFragment;
+"
+`;
+
 exports[`Mitosis, format: react > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -19711,6 +19804,25 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Mitosis, format: react > jsx > Typescript Test > basicForFragment 1`] = `
+"import * as React from \\"react\\";
+
+function BasicForFragment(props) {
+  return (
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`key-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+export default BasicForFragment;
 "
 `;
 

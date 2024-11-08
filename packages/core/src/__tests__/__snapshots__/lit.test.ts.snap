@@ -2180,6 +2180,34 @@ export default class MyComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > basicForFragment 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"basic-for-fragment\\")
+export default class BasicForFragment extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+
+          <div>
+          \${[\\"a\\", \\"b\\", \\"c\\"]?.map(
+            (option, index) => html\`<my-fragment
+        .key=\\"\${\`key-\${option}\`}\\"
+        ><div>\${option}</div></my-fragment
+      >\`
+          )}
+        </div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > basicForNoTagReference 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -6993,6 +7021,34 @@ export default class MyComponent extends LitElement {
     return html\`
 
           <div>Hello \${this.name}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > basicForFragment 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"basic-for-fragment\\")
+export default class BasicForFragment extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+
+          <div>
+          \${[\\"a\\", \\"b\\", \\"c\\"]?.map(
+            (option, index) => html\`<my-fragment
+        .key=\\"\${\`key-\${option}\`}\\"
+        ><div>\${option}</div></my-fragment
+      >\`
+          )}
+        </div>
 
         \`;
   }
