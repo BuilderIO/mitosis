@@ -19,7 +19,7 @@ import { initializeOptions } from '@/helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
 import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { renderPreComponent } from '@/helpers/render-imports';
-import { replaceIdentifiers } from '@/helpers/replace-identifiers';
+import { replaceIdentifiers, replaceNodes } from '@/helpers/replace-identifiers';
 import { isSlotProperty, stripSlotPrefix, toKebabSlot } from '@/helpers/slots';
 import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import {
@@ -39,6 +39,7 @@ import { hashCodeAsString } from '@/symbols/symbol-processor';
 import { BaseHook, MitosisComponent } from '@/types/mitosis-component';
 import { Binding, MitosisNode, checkIsForNode } from '@/types/mitosis-node';
 import { TranspilerGenerator } from '@/types/transpiler';
+import * as babel from '@babel/core';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { isString, kebabCase, uniq } from 'lodash';
 import traverse from 'neotraverse/legacy';
@@ -60,6 +61,8 @@ import {
   DEFAULT_ANGULAR_OPTIONS,
   ToAngularOptions,
 } from './types';
+
+const { types } = babel;
 
 const mappers: {
   [key: string]: (
@@ -542,18 +545,32 @@ const traverseToGetAllDynamicComponents = (
   };
 };
 
+/**
+ * Prefixes state identifiers with this.
+ * e.g. state.foo --> this.foo
+ */
+const prefixState = (code: string): string => {
+  return replaceNodes({
+    code,
+    nodeMaps: [
+      {
+        from: types.identifier('state'),
+        to: types.thisExpression(),
+      },
+    ],
+  }).trim();
+};
+
 const processAngularCode =
   ({
     contextVars,
     outputVars,
     domRefs,
-    stateVars,
     replaceWith,
   }: {
     contextVars: string[];
     outputVars: string[];
     domRefs: string[];
-    stateVars?: string[];
     replaceWith?: string;
   }) =>
   (code: string) =>
@@ -562,8 +579,12 @@ const processAngularCode =
         contextVars,
         domRefs,
         outputVars,
-        stateVars,
       }),
+      /**
+       * Only prefix state that is in the Angular class component.
+       * Do not prefix state referenced in the template
+       */
+      replaceWith === 'this' ? prefixState : (x) => x,
       (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
     );
 
@@ -738,7 +759,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     const metaOutputVars: string[] = (useMetadata?.outputs as string[]) || [];
 
     const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
-    const stateVars = Object.keys(json?.state || {});
 
     const options = initializeOptions({
       target: 'angular',
@@ -757,7 +777,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
                 contextVars,
                 outputVars,
                 domRefs: Array.from(getRefs(json)),
-                stateVars,
               }),
               (code) => {
                 const allMethodNames = Object.entries(json.state)
@@ -923,7 +942,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           contextVars,
           outputVars,
           domRefs: Array.from(domRefs),
-          stateVars,
         })(value);
       },
     });
@@ -1062,7 +1080,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
                   contextVars,
                   outputVars,
                   domRefs: Array.from(domRefs),
-                  stateVars,
                 })(argument)}`
               : ''
           };`;

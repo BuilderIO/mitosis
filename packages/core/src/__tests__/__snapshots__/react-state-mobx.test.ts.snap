@@ -1541,6 +1541,48 @@ export default observedStringLiteralStore;
 "
 `;
 
+exports[`React - stateType: mobx > jsx > Javascript Test > StoreShadowVars 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
+
+function MyComponent(props) {
+  const state = useLocalObservable(() => ({
+    errors: {},
+    foo(errors) {
+      return errors;
+    },
+  }));
+
+  return <>{state.foo(state.errors)}</>;
+}
+
+const observedMyComponent = observer(MyComponent);
+export default observedMyComponent;
+"
+`;
+
+exports[`React - stateType: mobx > jsx > Javascript Test > StoreWithState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
+
+function MyComponent(props) {
+  const state = useLocalObservable(() => ({
+    foo: false,
+    bar() {
+      return state.foo;
+    },
+  }));
+
+  return <>{state.bar()}</>;
+}
+
+const observedMyComponent = observer(MyComponent);
+export default observedMyComponent;
+"
+`;
+
 exports[`React - stateType: mobx > jsx > Javascript Test > Submit 1`] = `
 "import * as React from \\"react\\";
 
@@ -5414,6 +5456,48 @@ function StringLiteralStore(props: any) {
 
 const observedStringLiteralStore = observer(StringLiteralStore);
 export default observedStringLiteralStore;
+"
+`;
+
+exports[`React - stateType: mobx > jsx > Typescript Test > StoreShadowVars 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
+
+function MyComponent(props: any) {
+  const state = useLocalObservable(() => ({
+    errors: {},
+    foo(errors) {
+      return errors;
+    },
+  }));
+
+  return <>{state.foo(state.errors)}</>;
+}
+
+const observedMyComponent = observer(MyComponent);
+export default observedMyComponent;
+"
+`;
+
+exports[`React - stateType: mobx > jsx > Typescript Test > StoreWithState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
+
+function MyComponent(props: any) {
+  const state = useLocalObservable(() => ({
+    foo: false,
+    bar() {
+      return state.foo;
+    },
+  }));
+
+  return <>{state.bar()}</>;
+}
+
+const observedMyComponent = observer(MyComponent);
+export default observedMyComponent;
 "
 `;
 
