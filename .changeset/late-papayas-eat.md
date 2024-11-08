@@ -2,4 +2,5 @@
 '@builder.io/mitosis': patch
 ---
 
-shadowed variables in state methods are not scoped to state in all generators
+[All] Fix: scope renaming of state methods to not include shadow variables
+[Angular]: Update `state.*` -> `this.*` transform to new AST transform approach
