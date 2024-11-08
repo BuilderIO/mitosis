@@ -53,6 +53,11 @@ PS: don't worry about failing imports in the raw test TSX files. These are not a
 - run `yarn ci:build` to build all packages
 - run `yarn ci:e2e` to run the integration tests against all servers
 
+#### Create new e2e project for another target
+
+If you want to create a new project inside ``e2e``. You should name the folder `e2e-XXX` where `XXX` should be replaced with the target. 
+Make sure that you change the ``name`` inside `package.json` of this project to `@builder.io/e2e-XXX`. Additionally, you need to add `private: true` to `package.json` to avoid publishing the project.
+
 ### Test your changes
 
 From there, you can keep iterating until the snapshots look as expected, and the integration tests pass!

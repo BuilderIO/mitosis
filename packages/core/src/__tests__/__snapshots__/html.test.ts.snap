@@ -3368,6 +3368,124 @@ exports[`Html > jsx > Javascript Test > StoreComment 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > StoreShadowVars 1`] = `
+"<template data-el=\\"div-1\\"><!-- state.foo(state.errors) --></template>
+<script>
+  (() => {
+    const state = {
+      errors: {},
+      foo(errors) {
+        return errors;
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.foo(state.errors));
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > StoreWithState 1`] = `
+"<template data-el=\\"div-1\\"><!-- state.bar() --></template>
+<script>
+  (() => {
+    const state = {
+      foo: false,
+      bar() {
+        return state.foo;
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.bar());
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > Submit 1`] = `
 "<button type=\\"submit\\" data-el=\\"button-1\\">
   <template data-el=\\"div-1\\"><!-- props.text --></template>
@@ -3650,6 +3768,124 @@ exports[`Html > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > basicForFragment 1`] = `
+"<div>
+  <template data-el=\\"for\\">
+    <div>
+      <template data-el=\\"div-1\\"><!-- option --></template>
+    </div>
+  </template>
+</div>
+<script>
+  (() => {
+    const state = {};
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
+        let array = [\\"a\\", \\"b\\", \\"c\\"];
+        renderLoop(el, array, \\"option\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+        renderTextNode(el, option);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
+    // Helper to render loops
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
+      for (let [index, value] of array.entries()) {
+        const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
+        children.forEach((child) => {
+          if (itemName !== undefined) {
+            scope[itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            scope[itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            scope[collectionName] = array;
+          }
+          child.scope = scope;
+          if (template.context) {
+            child.context = template.context;
+          }
+          this.nodesToDestroy.push(child);
+          collection.unshift(child);
+        });
+        collection.forEach((child) => template.after(child));
+      }
+    }
+
+    function getScope(el, name) {
+      do {
+        let value = el?.scope?.[name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
     }
   })();
 </script>
@@ -10845,6 +11081,124 @@ exports[`Html > jsx > Typescript Test > StoreComment 1`] = `
 "
 `;
 
+exports[`Html > jsx > Typescript Test > StoreShadowVars 1`] = `
+"<template data-el=\\"div-1\\"><!-- state.foo(state.errors) --></template>
+<script>
+  (() => {
+    const state = {
+      errors: {},
+      foo(errors) {
+        return errors;
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.foo(state.errors));
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > StoreWithState 1`] = `
+"<template data-el=\\"div-1\\"><!-- state.bar() --></template>
+<script>
+  (() => {
+    const state = {
+      foo: false,
+      bar() {
+        return state.foo;
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.bar());
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Typescript Test > Submit 1`] = `
 "<button type=\\"submit\\" data-el=\\"button-1\\">
   <template data-el=\\"div-1\\"><!-- props.text --></template>
@@ -11127,6 +11481,124 @@ exports[`Html > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > basicForFragment 1`] = `
+"<div>
+  <template data-el=\\"for\\">
+    <div>
+      <template data-el=\\"div-1\\"><!-- option --></template>
+    </div>
+  </template>
+</div>
+<script>
+  (() => {
+    const state = {};
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
+        let array = [\\"a\\", \\"b\\", \\"c\\"];
+        renderLoop(el, array, \\"option\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+        renderTextNode(el, option);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
+    // Helper to render loops
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
+      for (let [index, value] of array.entries()) {
+        const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
+        children.forEach((child) => {
+          if (itemName !== undefined) {
+            scope[itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            scope[itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            scope[collectionName] = array;
+          }
+          child.scope = scope;
+          if (template.context) {
+            child.context = template.context;
+          }
+          this.nodesToDestroy.push(child);
+          collection.unshift(child);
+        });
+        collection.forEach((child) => template.after(child));
+      }
+    }
+
+    function getScope(el, name) {
+      do {
+        let value = el?.scope?.[name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
     }
   })();
 </script>

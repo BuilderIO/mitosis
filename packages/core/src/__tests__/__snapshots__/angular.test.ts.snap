@@ -5230,6 +5230,132 @@ export default class StringLiteralStore {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > StoreShadowVars 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <ng-container>{{foo(errors)}}</ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  errors = {};
+  foo(errors) {
+    return errors;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > StoreShadowVars 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <ng-container>{{foo(errors)}}</ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  errors = {};
+  foo(errors) {
+    return errors;
+  }
+}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > StoreWithState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <ng-container>{{bar()}}</ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  foo = false;
+  bar() {
+    return this.foo;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > StoreWithState 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <ng-container>{{bar()}}</ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  foo = false;
+  bar() {
+    return this.foo;
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > Submit 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -6330,6 +6456,83 @@ export default class MyComponent {
   }
   updateNameWithArrowFn(value) {
     this.name = value;
+  }
+}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > basicForFragment 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"basic-for-fragment\\",
+  template: \`
+    <div>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class BasicForFragment {
+  trackByOption0(_, option) {
+    return \`key-\${option}\`;
+  }
+}
+
+@NgModule({
+  declarations: [BasicForFragment],
+  imports: [CommonModule],
+  exports: [BasicForFragment],
+})
+export class BasicForFragmentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > basicForFragment 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"basic-for-fragment\\",
+  template: \`
+    <div>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class BasicForFragment {
+  trackByOption0(_, option) {
+    return \`key-\${option}\`;
   }
 }
 "
@@ -8546,12 +8749,12 @@ export default class MultipleOnUpdateWithDeps {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+      console.log(\\"Runs when a or b changes\\", this.a, this.b);
 
       if (this.a === \\"a\\") {
         this.a = \\"b\\";
       }
-      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      console.log(\\"Runs when c or d changes\\", this.c, this.d);
 
       if (this.a === \\"a\\") {
         this.a = \\"b\\";
@@ -8596,12 +8799,12 @@ export default class MultipleOnUpdateWithDeps {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+      console.log(\\"Runs when a or b changes\\", this.a, this.b);
 
       if (this.a === \\"a\\") {
         this.a = \\"b\\";
       }
-      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      console.log(\\"Runs when c or d changes\\", this.c, this.d);
 
       if (this.a === \\"a\\") {
         this.a = \\"b\\";
@@ -9562,12 +9765,7 @@ export default class OnUpdateWithDeps {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      console.log(
-        \\"Runs when this.a, this.b or size changes\\",
-        this.a,
-        this.b,
-        this.size
-      );
+      console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
     }
   }
 }
@@ -9608,12 +9806,7 @@ export default class OnUpdateWithDeps {
 
   ngOnChanges(changes) {
     if (typeof window !== \\"undefined\\") {
-      console.log(
-        \\"Runs when this.a, this.b or size changes\\",
-        this.a,
-        this.b,
-        this.size
-      );
+      console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
     }
   }
 }
@@ -10186,7 +10379,7 @@ export default class RenderBlock {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-          Could not find a registered this.component named \\"\${componentName}\\".
+          Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
@@ -10239,8 +10432,8 @@ export default class RenderBlock {
         ...getBlockComponentOptions(this.useBlock),
 
         /**
-         * These this.attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the this.component itself directly.
+         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the component itself directly.
          */
         ...(this.shouldWrap
           ? {}
@@ -10335,7 +10528,7 @@ export default class RenderBlock {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the this.component tag
+      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;
@@ -10485,7 +10678,7 @@ export default class RenderBlock {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-          Could not find a registered this.component named \\"\${componentName}\\".
+          Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
@@ -10538,8 +10731,8 @@ export default class RenderBlock {
         ...getBlockComponentOptions(this.useBlock),
 
         /**
-         * These this.attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the this.component itself directly.
+         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the component itself directly.
          */
         ...(this.shouldWrap
           ? {}
@@ -10634,7 +10827,7 @@ export default class RenderBlock {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the this.component tag
+      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;
@@ -19337,6 +19530,132 @@ export default class StringLiteralStore {
 "
 `;
 
+exports[`Angular > jsx > Typescript Test > StoreShadowVars 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <ng-container>{{foo(errors)}}</ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  errors = {};
+  foo(errors) {
+    return errors;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > StoreShadowVars 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <ng-container>{{foo(errors)}}</ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  errors = {};
+  foo(errors) {
+    return errors;
+  }
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > StoreWithState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <ng-container>{{bar()}}</ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  foo = false;
+  bar() {
+    return this.foo;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > StoreWithState 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <ng-container>{{bar()}}</ng-container>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  foo = false;
+  bar() {
+    return this.foo;
+  }
+}
+"
+`;
+
 exports[`Angular > jsx > Typescript Test > Submit 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -20557,6 +20876,83 @@ export default class MyComponent {
   }
   updateNameWithArrowFn(value) {
     this.name = value;
+  }
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > basicForFragment 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"basic-for-fragment\\",
+  template: \`
+    <div>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class BasicForFragment {
+  trackByOption0(_, option) {
+    return \`key-\${option}\`;
+  }
+}
+
+@NgModule({
+  declarations: [BasicForFragment],
+  imports: [CommonModule],
+  exports: [BasicForFragment],
+})
+export class BasicForFragmentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > basicForFragment 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"basic-for-fragment\\",
+  template: \`
+    <div>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class BasicForFragment {
+  trackByOption0(_, option) {
+    return \`key-\${option}\`;
   }
 }
 "
@@ -22899,12 +23295,12 @@ export default class MultipleOnUpdateWithDeps {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+      console.log(\\"Runs when a or b changes\\", this.a, this.b);
 
       if (this.a === \\"a\\") {
         this.a = \\"b\\";
       }
-      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      console.log(\\"Runs when c or d changes\\", this.c, this.d);
 
       if (this.a === \\"a\\") {
         this.a = \\"b\\";
@@ -22949,12 +23345,12 @@ export default class MultipleOnUpdateWithDeps {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+      console.log(\\"Runs when a or b changes\\", this.a, this.b);
 
       if (this.a === \\"a\\") {
         this.a = \\"b\\";
       }
-      console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+      console.log(\\"Runs when c or d changes\\", this.c, this.d);
 
       if (this.a === \\"a\\") {
         this.a = \\"b\\";
@@ -23949,12 +24345,7 @@ export default class OnUpdateWithDeps {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      console.log(
-        \\"Runs when this.a, this.b or size changes\\",
-        this.a,
-        this.b,
-        this.size
-      );
+      console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
     }
   }
 }
@@ -23999,12 +24390,7 @@ export default class OnUpdateWithDeps {
 
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
-      console.log(
-        \\"Runs when this.a, this.b or size changes\\",
-        this.a,
-        this.b,
-        this.size
-      );
+      console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
     }
   }
 }
@@ -24665,7 +25051,7 @@ export default class RenderBlock {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-          Could not find a registered this.component named \\"\${componentName}\\".
+          Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
@@ -24718,8 +25104,8 @@ export default class RenderBlock {
         ...getBlockComponentOptions(this.useBlock),
 
         /**
-         * These this.attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the this.component itself directly.
+         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the component itself directly.
          */
         ...(this.shouldWrap
           ? {}
@@ -24814,7 +25200,7 @@ export default class RenderBlock {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the this.component tag
+      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;
@@ -24977,7 +25363,7 @@ export default class RenderBlock {
     if (!ref) {
       // TODO: Public doc page with more info about this message
       console.warn(\`
-          Could not find a registered this.component named \\"\${componentName}\\".
+          Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
       return undefined;
     } else {
@@ -25030,8 +25416,8 @@ export default class RenderBlock {
         ...getBlockComponentOptions(this.useBlock),
 
         /**
-         * These this.attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the this.component itself directly.
+         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+         * they are provided to the component itself directly.
          */
         ...(this.shouldWrap
           ? {}
@@ -25126,7 +25512,7 @@ export default class RenderBlock {
     if (TARGET === \\"reactNative\\") {
       return RenderComponentWithContext;
     } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the this.component tag
+      // vue3 expects a string for the component tag
       return \\"RenderComponent\\";
     } else {
       return RenderComponent;

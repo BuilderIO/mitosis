@@ -57,7 +57,9 @@ export const blockToSolid = (
 
   let str = '';
 
-  if (json.name === 'Fragment') {
+  const isFragmentWithoutKey = json.name === 'Fragment' && !json.bindings.key;
+
+  if (isFragmentWithoutKey) {
     str += '<';
   } else {
     str += `<${json.name} `;
@@ -128,7 +130,7 @@ export const blockToSolid = (
       .join('\n');
   }
 
-  if (json.name === 'Fragment') {
+  if (isFragmentWithoutKey) {
     str += '</>';
   } else {
     str += `</${json.name}>`;

@@ -1496,6 +1496,44 @@ export default StringLiteralStore;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > StoreShadowVars 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function MyComponent(props) {
+  const [errors, setErrors] = useState(() => ({}));
+
+  function foo(errors) {
+    return errors;
+  }
+
+  return <Fragment>{foo(errors)}</Fragment>;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > StoreWithState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function MyComponent(props) {
+  const [foo, setFoo] = useState(() => false);
+
+  function bar() {
+    return foo;
+  }
+
+  return <Fragment>{bar()}</Fragment>;
+}
+
+export default MyComponent;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > Submit 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -1646,6 +1684,26 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > basicForFragment 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function BasicForFragment(props) {
+  return (
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <Fragment key={\`key-\${option}\`}>
+          <div>{option}</div>
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+export default BasicForFragment;
 "
 `;
 
@@ -5335,6 +5393,44 @@ export default StringLiteralStore;
 "
 `;
 
+exports[`Preact > jsx > Typescript Test > StoreShadowVars 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function MyComponent(props: any) {
+  const [errors, setErrors] = useState(() => ({}));
+
+  function foo(errors) {
+    return errors;
+  }
+
+  return <Fragment>{foo(errors)}</Fragment>;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > StoreWithState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function MyComponent(props: any) {
+  const [foo, setFoo] = useState(() => false);
+
+  function bar() {
+    return foo;
+  }
+
+  return <Fragment>{bar()}</Fragment>;
+}
+
+export default MyComponent;
+"
+`;
+
 exports[`Preact > jsx > Typescript Test > Submit 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -5542,6 +5638,26 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > basicForFragment 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function BasicForFragment(props: any) {
+  return (
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <Fragment key={\`key-\${option}\`}>
+          <div>{option}</div>
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+export default BasicForFragment;
 "
 `;
 

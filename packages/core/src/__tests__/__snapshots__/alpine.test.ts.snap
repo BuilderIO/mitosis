@@ -1395,6 +1395,38 @@ exports[`Alpine.js > jsx > Javascript Test > StoreComment 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > StoreShadowVars 1`] = `
+"<div x-data=\\"myComponent()\\"><span x-html=\\"foo(errors)\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      errors: {},
+
+      foo(errors) {
+        return errors;
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > StoreWithState 1`] = `
+"<div x-data=\\"myComponent()\\"><span x-html=\\"bar()\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      foo: false,
+
+      bar() {
+        return this.foo;
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > Submit 1`] = `
 "<button type=\\"submit\\" x-data=\\"submitButton()\\" x-bind=\\"attributes\\">
   <span x-html=\\"text\\"></span>
@@ -1511,6 +1543,22 @@ exports[`Alpine.js > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
         this.name = value;
       },
     }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > basicForFragment 1`] = `
+"<div x-data=\\"basicForFragment()\\">
+  <template x-for=\\"option in ['a', 'b', 'c']\\">
+    <div x-bind:key=\\"\`key-\${option}\`\\">
+      <div><span x-html=\\"option\\"></span></div>
+    </div>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"basicForFragment\\", () => ({}));
   });
 </script>
 "
@@ -4400,6 +4448,38 @@ exports[`Alpine.js > jsx > Typescript Test > StoreComment 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Typescript Test > StoreShadowVars 1`] = `
+"<div x-data=\\"myComponent()\\"><span x-html=\\"foo(errors)\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      errors: {},
+
+      foo(errors) {
+        return errors;
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > StoreWithState 1`] = `
+"<div x-data=\\"myComponent()\\"><span x-html=\\"bar()\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      foo: false,
+
+      bar() {
+        return this.foo;
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Typescript Test > Submit 1`] = `
 "<button type=\\"submit\\" x-data=\\"submitButton()\\" x-bind=\\"attributes\\">
   <span x-html=\\"text\\"></span>
@@ -4516,6 +4596,22 @@ exports[`Alpine.js > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
         this.name = value;
       },
     }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > basicForFragment 1`] = `
+"<div x-data=\\"basicForFragment()\\">
+  <template x-for=\\"option in ['a', 'b', 'c']\\">
+    <div x-bind:key=\\"\`key-\${option}\`\\">
+      <div><span x-html=\\"option\\"></span></div>
+    </div>
+  </template>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"basicForFragment\\", () => ({}));
   });
 </script>
 "
