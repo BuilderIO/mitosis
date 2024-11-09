@@ -1,4 +1,4 @@
-import { MitosisComponent, MitosisNode, OnEventHook, MitosisPlugin } from '..';
+import { MitosisComponent, MitosisNode, MitosisPlugin, OnEventHook } from '..';
 import { createSingleBinding } from './bindings';
 import { capitalize } from './capitalize';
 import { traverseNodes } from './traverse-nodes';
