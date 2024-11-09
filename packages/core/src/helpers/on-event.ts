@@ -1,4 +1,4 @@
-import { MitosisComponent, MitosisNode, OnEventHook, Plugin } from '..';
+import { MitosisComponent, MitosisNode, OnEventHook, MitosisPlugin } from '..';
 import { createSingleBinding } from './bindings';
 import { capitalize } from './capitalize';
 import { traverseNodes } from './traverse-nodes';
@@ -29,7 +29,7 @@ export const getOnEventHooksForNode = ({
  * Only works with frameworks that support custom events in their templates.
  */
 export const processOnEventHooksPlugin =
-  (args: { setBindings?: boolean; includeRootEvents?: boolean } = {}): Plugin =>
+  (args: { setBindings?: boolean; includeRootEvents?: boolean } = {}): MitosisPlugin =>
   () => ({
     json: {
       pre: (component) => {

@@ -18,6 +18,20 @@ In your directory's `mitosis.config.js`, you can provide a `plugins` array for e
 
 ```tsx
 export type Plugin = {
+  name?: stirng;
+  order?: number; // Sort plugins by number, no matter the position of the array
+  build?: {
+    // Happens before build
+    pre?: (targetContext: TargetContext) => void | Promise<void>;
+    // Happens after build
+    post?: (
+      targetContext: TargetContext,
+      files?: {
+        componentFiles: OutputFiles[];
+        nonComponentFiles: OutputFiles[];
+      },
+    ) => void | Promise<void>;
+  };
   json?: {
     // Happens before any modifiers
     pre?: (json: MitosisComponent) => MitosisComponent | void;
