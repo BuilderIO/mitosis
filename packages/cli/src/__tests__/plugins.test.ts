@@ -49,13 +49,13 @@ const testPlugins: MitosisPlugin[] = [
 
 describe('mitosis plugin test', () => {
   test('formatHook test mixPlugin', () => {
-    const plugins = sortPlugins(testPlugins).map((plugin) => plugin());
+    const plugins = sortPlugins([...testPlugins]).map((plugin) => plugin());
     expect(plugins).toEqual([
       {
         name: 'no-order',
         build: {
-          pre: beforeBuildSecond,
-          post: afterbuildSecond,
+          pre: beforeBuildNo,
+          post: afterbuildNo,
         },
       },
       {
