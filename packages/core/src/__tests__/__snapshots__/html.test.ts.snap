@@ -825,7 +825,10 @@ exports[`Html > jsx > Javascript Test > Basic Outputs 1`] = `
 `;
 
 exports[`Html > jsx > Javascript Test > Basic Outputs Meta 1`] = `
-"<div></div>
+"/** useMetadata: {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside
+component\\"} */
+
+<div></div>
 <script>
   (() => {
     const state = { name: \\"PatrickJS\\" };
@@ -4092,7 +4095,9 @@ exports[`Html > jsx > Javascript Test > basicForwardRef 1`] = `
 `;
 
 exports[`Html > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"<div>
+"/** useMetadata: {\\"forwardRef\\":\\"inputRef\\"} */
+
+<div>
   <input
     class=\\"input\\"
     data-el=\\"input-1\\"
@@ -4357,6 +4362,15 @@ exports[`Html > jsx > Javascript Test > classState 1`] = `
     update();
   })();
 </script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > complexMeta 1`] = `
+"/** useMetadata:
+{\\"x\\":\\"y\\",\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false}}
+*/
+
+<div></div>
 "
 `;
 
@@ -4878,6 +4892,83 @@ exports[`Html > jsx > Javascript Test > expressionState 1`] = `
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         renderTextNode(el, state.refToUse);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > figmaMeta 1`] = `
+"/** useMetadata:
+{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍
+Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon
+Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️
+Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️
+Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive
+State\\",\\"value\\":{\\"(Def)
+Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def)
+Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def)
+Auto Width\\":false,\\"Full Width\\":\\"full\\"}}} */
+
+<button data-el=\\"button-1\\">
+  <template data-el=\\"div-1\\"><!-- props.label --></template>
+</button>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.setAttribute(\\"data-icon\\", props.icon);
+
+        el.setAttribute(\\"data-disabled\\", props.interactiveState);
+
+        el.setAttribute(\\"data-width\\", props.width);
+
+        el.setAttribute(\\"data-size\\", props.size);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, props.label);
       });
 
       destroyAnyNodes();
@@ -8538,7 +8629,10 @@ exports[`Html > jsx > Typescript Test > Basic Outputs 1`] = `
 `;
 
 exports[`Html > jsx > Typescript Test > Basic Outputs Meta 1`] = `
-"<div></div>
+"/** useMetadata: {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside
+component\\"} */
+
+<div></div>
 <script>
   (() => {
     const state = { name: \\"PatrickJS\\" };
@@ -11805,7 +11899,9 @@ exports[`Html > jsx > Typescript Test > basicForwardRef 1`] = `
 `;
 
 exports[`Html > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"<div>
+"/** useMetadata: {\\"forwardRef\\":\\"inputRef\\"} */
+
+<div>
   <input
     class=\\"input\\"
     data-el=\\"input-1\\"
@@ -12070,6 +12166,15 @@ exports[`Html > jsx > Typescript Test > classState 1`] = `
     update();
   })();
 </script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > complexMeta 1`] = `
+"/** useMetadata:
+{\\"x\\":\\"y\\",\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false}}
+*/
+
+<div></div>
 "
 `;
 
@@ -12591,6 +12696,83 @@ exports[`Html > jsx > Typescript Test > expressionState 1`] = `
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         renderTextNode(el, state.refToUse);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > figmaMeta 1`] = `
+"/** useMetadata:
+{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍
+Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon
+Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️
+Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️
+Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive
+State\\",\\"value\\":{\\"(Def)
+Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def)
+Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def)
+Auto Width\\":false,\\"Full Width\\":\\"full\\"}}} */
+
+<button data-el=\\"button-1\\">
+  <template data-el=\\"div-1\\"><!-- props.label --></template>
+</button>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.setAttribute(\\"data-icon\\", props.icon);
+
+        el.setAttribute(\\"data-disabled\\", props.interactiveState);
+
+        el.setAttribute(\\"data-width\\", props.width);
+
+        el.setAttribute(\\"data-size\\", props.size);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, props.label);
       });
 
       destroyAnyNodes();

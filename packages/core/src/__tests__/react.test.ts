@@ -30,3 +30,15 @@ describe('React - stateType: useState', () => {
     expect(output).toMatchSnapshot();
   });
 });
+
+describe('React - only', () => {
+  runTestsForTarget({
+    options: {
+      stateType: 'useState',
+    },
+    target: 'react',
+    generator: componentToReact,
+    only: ['figmaMeta'],
+    logOutput: true,
+  });
+});

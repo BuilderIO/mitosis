@@ -300,7 +300,12 @@ export default class MyBasicOutputsComponent extends LitElement {
 `;
 
 exports[`Lit > jsx > Javascript Test > Basic Outputs Meta 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-outputs-component\\")
@@ -2282,7 +2287,12 @@ export default class MyBasicForwardRefComponent extends LitElement {
 `;
 
 exports[`Lit > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
+"/**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-forward-ref-component\\")
@@ -2482,6 +2492,34 @@ export default class MyBasicComponent extends LitElement {
           <div  class={state.classState + ' div'}  .style=\${this.styleState} >
               Hello! I can run in React, Vue, Solid, or Liquid!
             </div>
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false}}
+          */
+
+import { abc } from \\"./meta-sub\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"complex-meta-raw\\")
+export default class ComplexMetaRaw extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+
+          <div></div>
+
         \`;
   }
 }
@@ -2751,6 +2789,47 @@ export default class MyComponent extends LitElement {
     return html\`
 
           <div>\${this.refToUse}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Javascript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}
+          */
+
+import { outline } from \\"./data\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"figma-button\\")
+export default class FigmaButton extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() icon: any;
+  @property() interactiveState: any;
+  @property() width: any;
+  @property() size: any;
+  @property() label: any;
+
+  render() {
+    return html\`
+
+          <button
+          data-icon=\\"\${this.icon}\\"
+          data-disabled=\\"\${this.interactiveState}\\"
+          data-width=\\"\${this.width}\\"
+          data-size=\\"\${this.size}\\"
+        >
+          \${this.label}
+        </button>
 
         \`;
   }
@@ -4895,7 +4974,12 @@ export default class MyBasicOutputsComponent extends LitElement {
 `;
 
 exports[`Lit > jsx > Typescript Test > Basic Outputs Meta 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-outputs-component\\")
@@ -7135,7 +7219,12 @@ export default class MyBasicForwardRefComponent extends LitElement {
 `;
 
 exports[`Lit > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
+"/**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface Props {
@@ -7347,6 +7436,34 @@ export default class MyBasicComponent extends LitElement {
           <div  class={state.classState + ' div'}  .style=\${this.styleState} >
               Hello! I can run in React, Vue, Solid, or Liquid!
             </div>
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false}}
+          */
+
+import { abc } from \\"./meta-sub\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"complex-meta-raw\\")
+export default class ComplexMetaRaw extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+
+          <div></div>
+
         \`;
   }
 }
@@ -7646,6 +7763,47 @@ export default class MyComponent extends LitElement {
     return html\`
 
           <div>\${this.refToUse}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}
+          */
+
+import { outline } from \\"./data\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"figma-button\\")
+export default class FigmaButton extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() icon: any;
+  @property() interactiveState: any;
+  @property() width: any;
+  @property() size: any;
+  @property() label: any;
+
+  render() {
+    return html\`
+
+          <button
+          data-icon=\\"\${this.icon}\\"
+          data-disabled=\\"\${this.interactiveState}\\"
+          data-width=\\"\${this.width}\\"
+          data-size=\\"\${this.size}\\"
+        >
+          \${this.label}
+        </button>
 
         \`;
   }

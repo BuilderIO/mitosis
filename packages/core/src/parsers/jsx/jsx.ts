@@ -2,22 +2,21 @@ import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import { traverseNodes } from '@/helpers/traverse-nodes';
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import tsPlugin from '@babel/plugin-syntax-typescript';
 import tsPreset from '@babel/preset-typescript';
 import { pipe } from 'fp-ts/lib/function';
-import { HOOKS } from '../../constants/hooks';
-import { createMitosisComponent } from '../../helpers/create-mitosis-component';
-import { tryParseJson } from '../../helpers/json';
-import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
-import { getSignalImportName } from '../../helpers/signals';
-import { MitosisComponent } from '../../types/mitosis-component';
+import { HOOKS } from '@/constants/hooks';
+import { createMitosisComponent } from '@/helpers/create-mitosis-component';
+import { tryParseJson } from '@/helpers/json';
+import { stripNewlinesInStrings } from '@/helpers/replace-new-lines-in-strings';
+import { getSignalImportName } from '@/helpers/signals';
+import { MitosisComponent } from '@/types/mitosis-component';
 import { jsonToAst } from './ast';
 import { collectTypes, isTypeOrInterface } from './component-types';
 import { extractContextComponents } from './context';
 import { jsxElementToJson } from './element-parser';
 import { generateExports } from './exports';
 import { componentFunctionToJson } from './function-parser';
-import { isImportOrDefaultExport } from './helpers';
+import { babelDefaultTransform, babelStripTypes, isImportOrDefaultExport } from './helpers';
 import { collectModuleScopeHooks } from './hooks';
 import { getMagicString, getTargetId, getUseTargetStatements } from './hooks/use-target';
 import { handleImportDeclaration } from './imports';
@@ -25,7 +24,7 @@ import { undoPropsDestructure } from './props';
 import { findOptionalProps } from './props-types';
 import { findSignals } from './signals';
 import { mapStateIdentifiers } from './state';
-import { Context, ParseMitosisOptions } from './types';
+import { ParseMitosisOptions } from './types';
 
 const { types } = babel;
 
@@ -57,130 +56,112 @@ export function parseJsx(
     ..._options,
   };
 
-  const jsxToUse = options.typescript
-    ? jsx
-    : // strip typescript types by running through babel's TS preset.
-      (babel.transform(jsx, {
-        configFile: false,
-        babelrc: false,
-        presets: [typescriptBabelPreset],
-      })?.code as string);
-
   const stateToScope: string[] = [];
 
-  const output = babel.transform(jsxToUse, {
-    configFile: false,
-    babelrc: false,
-    comments: false,
-    plugins: [
-      [tsPlugin, { isTSX: true }],
-      (): babel.PluginObj<Context> => ({
-        visitor: {
-          JSXExpressionContainer(path, context) {
-            if (types.isJSXEmptyExpression(path.node.expression)) {
-              path.remove();
-            }
-          },
-          Program(path, context) {
-            if (context.builder) {
-              return;
-            }
+  const jsxToUse = babelStripTypes(jsx, !options.typescript);
 
-            beforeParse(path);
+  const output = babelDefaultTransform(jsxToUse, {
+    JSXExpressionContainer(path, context) {
+      if (types.isJSXEmptyExpression(path.node.expression)) {
+        path.remove();
+      }
+    },
+    Program(path, context) {
+      if (context.builder) {
+        return;
+      }
 
-            context.builder = {
-              component: createMitosisComponent(),
-            };
+      beforeParse(path);
 
-            const keepStatements = path.node.body.filter(
-              (statement) => isImportOrDefaultExport(statement) || isTypeOrInterface(statement),
-            );
+      context.builder = {
+        component: createMitosisComponent(),
+      };
 
-            context.builder.component.exports = generateExports(path);
+      context.builder.keepStatements = path.node.body.filter(
+        (statement) => isImportOrDefaultExport(statement) || isTypeOrInterface(statement),
+      );
 
-            subComponentFunctions = path.node.body
-              .filter(
-                (node) =>
-                  !types.isExportDefaultDeclaration(node) && types.isFunctionDeclaration(node),
-              )
-              .map((node) => `export default ${generate(node).code!}`);
+      context.builder.component.exports = generateExports(path);
 
-            const preComponentCode = pipe(
-              path.node.body.filter((statement) => !isImportOrDefaultExport(statement)),
-              collectModuleScopeHooks(context.builder.component, options),
-              types.program,
-              generate,
-              (generatorResult) => generatorResult.code,
-            );
+      subComponentFunctions = path.node.body
+        .filter(
+          (node) => !types.isExportDefaultDeclaration(node) && types.isFunctionDeclaration(node),
+        )
+        .map((node) => `export default ${generate(node).code!}`);
 
-            // TODO: support multiple? e.g. for others to add imports?
-            context.builder.component.hooks.preComponent = { code: preComponentCode };
+      const preComponentCode = pipe(
+        path,
+        collectModuleScopeHooks(context, options),
+        types.program,
+        generate,
+        (generatorResult) => generatorResult.code,
+      );
 
-            path.replaceWith(types.program(keepStatements));
-          },
-          FunctionDeclaration(path, context) {
-            const { node } = path;
-            if (types.isIdentifier(node.id)) {
-              const name = node.id.name;
-              if (name[0].toUpperCase() === name[0]) {
-                path.traverse({
-                  /**
-                   * Plugin to find all `useTarget()` assignment calls inside of the component function body
-                   * and replace them with a magic string.
-                   */
-                  CallExpression(path) {
-                    if (!types.isCallExpression(path.node)) return;
-                    if (!types.isIdentifier(path.node.callee)) return;
-                    if (path.node.callee.name !== HOOKS.TARGET) return;
+      // TODO: support multiple? e.g. for others to add imports?
+      context.builder.component.hooks.preComponent = { code: preComponentCode };
 
-                    const targetBlock = getUseTargetStatements(path);
+      path.replaceWith(types.program(context.builder.keepStatements));
+    },
+    FunctionDeclaration(path, context) {
+      const { node } = path;
+      if (types.isIdentifier(node.id)) {
+        const name = node.id.name;
+        if (name[0].toUpperCase() === name[0]) {
+          path.traverse({
+            /**
+             * Plugin to find all `useTarget()` assignment calls inside of the component function body
+             * and replace them with a magic string.
+             */
+            CallExpression(path) {
+              if (!types.isCallExpression(path.node)) return;
+              if (!types.isIdentifier(path.node.callee)) return;
+              if (path.node.callee.name !== HOOKS.TARGET) return;
 
-                    if (!targetBlock) return;
+              const targetBlock = getUseTargetStatements(path);
 
-                    const blockId = getTargetId(context.builder.component);
+              if (!targetBlock) return;
 
-                    // replace the useTarget() call with a magic string
-                    path.replaceWith(types.stringLiteral(getMagicString(blockId)));
+              const blockId = getTargetId(context.builder.component);
 
-                    // store the target block in the component
-                    context.builder.component.targetBlocks = {
-                      ...context.builder.component.targetBlocks,
-                      [blockId]: targetBlock,
-                    };
-                  },
-                });
-                path.replaceWith(jsonToAst(componentFunctionToJson(node, context, stateToScope)));
-              }
-            }
-          },
-          ImportDeclaration(path, context) {
-            handleImportDeclaration({ options, path, context });
-          },
-          ExportDefaultDeclaration(path) {
-            path.replaceWith(path.node.declaration);
-          },
-          JSXElement(path) {
-            const { node } = path;
-            path.replaceWith(jsonToAst(jsxElementToJson(node)));
-          },
-          ExportNamedDeclaration(path, context) {
-            const { node } = path;
-            if (
-              babel.types.isTSInterfaceDeclaration(node.declaration) ||
-              babel.types.isTSTypeAliasDeclaration(node.declaration)
-            ) {
-              collectTypes(path, context);
-            }
-          },
-          TSTypeAliasDeclaration(path, context) {
-            collectTypes(path, context);
-          },
-          TSInterfaceDeclaration(path, context) {
-            collectTypes(path, context);
-          },
-        },
-      }),
-    ],
+              // replace the useTarget() call with a magic string
+              path.replaceWith(types.stringLiteral(getMagicString(blockId)));
+
+              // store the target block in the component
+              context.builder.component.targetBlocks = {
+                ...context.builder.component.targetBlocks,
+                [blockId]: targetBlock,
+              };
+            },
+          });
+          path.replaceWith(jsonToAst(componentFunctionToJson(node, context, stateToScope)));
+        }
+      }
+    },
+    ImportDeclaration(path, context) {
+      handleImportDeclaration({ options, path, context });
+    },
+    ExportDefaultDeclaration(path) {
+      path.replaceWith(path.node.declaration);
+    },
+    JSXElement(path) {
+      const { node } = path;
+      path.replaceWith(jsonToAst(jsxElementToJson(node)));
+    },
+    ExportNamedDeclaration(path, context) {
+      const { node } = path;
+      if (
+        babel.types.isTSInterfaceDeclaration(node.declaration) ||
+        babel.types.isTSTypeAliasDeclaration(node.declaration)
+      ) {
+        collectTypes(path, context);
+      }
+    },
+    TSTypeAliasDeclaration(path, context) {
+      collectTypes(path, context);
+    },
+    TSInterfaceDeclaration(path, context) {
+      collectTypes(path, context);
+    },
   });
 
   if (!output || !output.code) {

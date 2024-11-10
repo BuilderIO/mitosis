@@ -2,8 +2,6 @@ import * as babel from '@babel/core';
 import { mapImportDeclarationToMitosisImport } from '../../helpers/mitosis-imports';
 import { Context, ParseMitosisOptions } from './types';
 
-const { types } = babel;
-
 export const handleImportDeclaration = ({
   options,
   path,

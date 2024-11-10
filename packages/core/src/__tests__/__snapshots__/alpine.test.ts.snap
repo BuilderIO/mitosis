@@ -241,7 +241,10 @@ exports[`Alpine.js > jsx > Javascript Test > Basic Outputs 1`] = `
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > Basic Outputs Meta 1`] = `
-"<div x-data=\\"myBasicOutputsComponent()\\"></div>
+"/** useMetadata: {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside
+component\\"} */
+
+<div x-data=\\"myBasicOutputsComponent()\\"></div>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myBasicOutputsComponent\\", () => ({
@@ -1616,7 +1619,9 @@ exports[`Alpine.js > jsx > Javascript Test > basicForwardRef 1`] = `
 `;
 
 exports[`Alpine.js > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"<style>
+"/** useMetadata: {\\"forwardRef\\":\\"inputRef\\"} */
+
+<style>
   .input {
     color: red;
   }
@@ -1770,6 +1775,20 @@ exports[`Alpine.js > jsx > Javascript Test > classState 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > complexMeta 1`] = `
+"/** useMetadata:
+{\\"x\\":\\"y\\",\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false}}
+*/
+
+<div x-data=\\"complexMetaRaw()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"complexMetaRaw\\", () => ({}));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > componentWithContext 1`] = `
 "<div x-data=\\"componentWithContext()\\">
   <div><span x-html=\\"foo.value\\"></span></div>
@@ -1903,6 +1922,35 @@ exports[`Alpine.js > jsx > Javascript Test > expressionState 1`] = `
         ? props.componentRef
         : null,
     }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Javascript Test > figmaMeta 1`] = `
+"/** useMetadata:
+{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍
+Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon
+Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️
+Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️
+Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive
+State\\",\\"value\\":{\\"(Def)
+Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def)
+Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def)
+Auto Width\\":false,\\"Full Width\\":\\"full\\"}}} */
+
+<button
+  x-data=\\"figmaButton()\\"
+  x-bind:data-icon=\\"icon\\"
+  x-bind:data-disabled=\\"interactiveState\\"
+  x-bind:data-width=\\"width\\"
+  x-bind:data-size=\\"size\\"
+>
+  <span x-html=\\"label\\"></span>
+</button>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"figmaButton\\", () => ({}));
   });
 </script>
 "
@@ -3305,7 +3353,10 @@ exports[`Alpine.js > jsx > Typescript Test > Basic Outputs 1`] = `
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > Basic Outputs Meta 1`] = `
-"<div x-data=\\"myBasicOutputsComponent()\\"></div>
+"/** useMetadata: {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside
+component\\"} */
+
+<div x-data=\\"myBasicOutputsComponent()\\"></div>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myBasicOutputsComponent\\", () => ({
@@ -4669,7 +4720,9 @@ exports[`Alpine.js > jsx > Typescript Test > basicForwardRef 1`] = `
 `;
 
 exports[`Alpine.js > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"<style>
+"/** useMetadata: {\\"forwardRef\\":\\"inputRef\\"} */
+
+<style>
   .input {
     color: red;
   }
@@ -4823,6 +4876,20 @@ exports[`Alpine.js > jsx > Typescript Test > classState 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Typescript Test > complexMeta 1`] = `
+"/** useMetadata:
+{\\"x\\":\\"y\\",\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false}}
+*/
+
+<div x-data=\\"complexMetaRaw()\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"complexMetaRaw\\", () => ({}));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Typescript Test > componentWithContext 1`] = `
 "<div x-data=\\"componentWithContext()\\">
   <div><span x-html=\\"foo.value\\"></span></div>
@@ -4956,6 +5023,35 @@ exports[`Alpine.js > jsx > Typescript Test > expressionState 1`] = `
         ? props.componentRef
         : null,
     }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > figmaMeta 1`] = `
+"/** useMetadata:
+{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍
+Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon
+Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️
+Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️
+Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive
+State\\",\\"value\\":{\\"(Def)
+Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def)
+Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def)
+Auto Width\\":false,\\"Full Width\\":\\"full\\"}}} */
+
+<button
+  x-data=\\"figmaButton()\\"
+  x-bind:data-icon=\\"icon\\"
+  x-bind:data-disabled=\\"interactiveState\\"
+  x-bind:data-width=\\"width\\"
+  x-bind:data-size=\\"size\\"
+>
+  <span x-html=\\"label\\"></span>
+</button>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"figmaButton\\", () => ({}));
   });
 </script>
 "

@@ -2,7 +2,7 @@ import { parseJsx } from '@/parsers/jsx';
 import { Target } from '@/types/config';
 import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
 import { describe, expect, test } from 'vitest';
-import { MitosisComponent, createTypescriptProject, parseSvelte } from '..';
+import { MitosisComponent, Plugin, createTypescriptProject, parseSvelte } from '..';
 
 const getRawFile = async (filePath: string) => {
   const code = await import(`${filePath}?raw`).then((x) => x.default as string);
@@ -19,6 +19,8 @@ const basicForShow = getRawFile('./data/for/basic-for-show.raw.tsx');
 const basicBooleanAttribute = getRawFile('./data/basic-boolean-attribute.raw.tsx');
 const basicOnMountUpdate = getRawFile('./data/basic-onMount-update.raw.tsx');
 const basicContext = getRawFile('./data/basic-context.raw.tsx');
+const complexMeta = getRawFile('./data/meta/sub/complex-meta.raw.tsx');
+const figmaMeta = getRawFile('./data/meta/figma/figma.raw.tsx');
 const basicOutputsMeta = getRawFile('./data/basic-outputs-meta.raw.tsx');
 const basicOutputs = getRawFile('./data/basic-outputs.raw.tsx');
 const subComponent = getRawFile('./data/sub-component.raw.tsx');
@@ -227,6 +229,8 @@ const BASIC_TESTS: Tests = {
   'onInit & onMount': onInitonMount,
   'Basic Context': basicContext,
   'Basic Outputs Meta': basicOutputsMeta,
+  complexMeta,
+  figmaMeta,
   'Basic Outputs': basicOutputs,
   className: classNameJsx,
   'Image State': imageState,
@@ -578,6 +582,24 @@ const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   ],
 };
 
+const metaDataPlugin: Plugin = () => ({
+  code: {
+    pre: (code: string, json: MitosisComponent) => {
+      if (json.meta.useMetadata) {
+        return `
+          /**
+          useMetadata:
+          ${JSON.stringify(json.meta.useMetadata)}
+          */
+          
+          ${code}`;
+      }
+
+      return code;
+    },
+  },
+});
+
 export const runTestsForJsx = () => {
   test('Remove Internal mitosis package', async () => {
     const component = parseJsx((await basicMitosis).code, {
@@ -597,8 +619,9 @@ export const runTestsForJsx = () => {
         Object.keys(tests).forEach((key) => {
           test(key, async () => {
             const singleTest = tests[key];
-            const t = isTestWithFailFor(singleTest) ? singleTest.file : singleTest;
-            const component = parseJsx((await t).code, config);
+            const testPromise = isTestWithFailFor(singleTest) ? singleTest.file : singleTest;
+            const t = await testPromise;
+            const component = parseJsx(t.code, { ...config, filePath: t.filePath });
             expect(component).toMatchSnapshot();
           });
         });
@@ -650,8 +673,14 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   only?: string[]; // Test only some tests based on key
 }) => {
   const configurations: { options: X; testName: string }[] = [
-    { options: { ...options, typescript: false }, testName: 'Javascript Test' },
-    { options: { ...options, typescript: true }, testName: 'Typescript Test' },
+    {
+      options: { ...options, typescript: false, plugins: [metaDataPlugin] },
+      testName: 'Javascript Test',
+    },
+    {
+      options: { ...options, typescript: true, plugins: [metaDataPlugin] },
+      testName: 'Typescript Test',
+    },
   ];
 
   type ParserConfig = {
@@ -675,6 +704,7 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                 }
               : {
                   typescript: false,
+                  filePath,
                 },
           ),
         testsArray: filterTests(JSX_TESTS_FOR_TARGET[target], only),
@@ -694,6 +724,7 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                 const t = await basicMitosis;
                 const component = parseJsx(t.code, {
                   compileAwayPackages: ['@dummy/custom-mitosis'],
+                  filePath: t.filePath,
                 });
                 const output = generator(options)({ component, path: t.filePath });
                 expect(output).toMatchSnapshot();

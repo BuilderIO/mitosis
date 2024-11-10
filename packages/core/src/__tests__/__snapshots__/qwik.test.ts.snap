@@ -1984,7 +1984,13 @@ export default MyBasicOutputsComponent;
 `;
 
 exports[`qwik > jsx > Javascript Test > Basic Outputs Meta 1`] = `
-"import {
+"
+          /**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+          
+          import {
   Fragment,
   component$,
   h,
@@ -3682,7 +3688,13 @@ export const STYLES = \`
 `;
 
 exports[`qwik > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"import {
+"
+          /**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+          
+          import {
   $,
   Fragment,
   component$,
@@ -3851,6 +3863,25 @@ export const STYLES = \`
 "
 `;
 
+exports[`qwik > jsx > Javascript Test > complexMeta 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false}}
+          */
+          
+          import { abc } from \\"./meta-sub\\";
+
+import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const ComplexMetaRaw = component$((props) => {
+  return <div></div>;
+});
+
+export default ComplexMetaRaw;
+"
+`;
+
 exports[`qwik > jsx > Javascript Test > contentState 1`] = `
 "import {
   Fragment,
@@ -4008,6 +4039,34 @@ export const MyComponent = component$((props) => {
 });
 
 export default MyComponent;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > figmaMeta 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}
+          */
+          
+          import { outline } from \\"./data\\";
+
+import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const FigmaButton = component$((props) => {
+  return (
+    <button
+      data-icon={props.icon}
+      data-disabled={props.interactiveState}
+      data-width={props.width}
+      data-size={props.size}
+    >
+      {props.label}
+    </button>
+  );
+});
+
+export default FigmaButton;
 "
 `;
 
@@ -5646,7 +5705,13 @@ export default MyBasicOutputsComponent;
 `;
 
 exports[`qwik > jsx > Typescript Test > Basic Outputs Meta 1`] = `
-"import {
+"
+          /**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+          
+          import {
   Fragment,
   component$,
   h,
@@ -7577,7 +7642,13 @@ export const STYLES = \`
 `;
 
 exports[`qwik > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"import {
+"
+          /**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+          
+          import {
   $,
   Fragment,
   component$,
@@ -7753,6 +7824,25 @@ export const STYLES = \`
   padding: 10px;
 }
 \`;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > complexMeta 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false}}
+          */
+          
+          import { abc } from \\"./meta-sub\\";
+
+import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const ComplexMetaRaw = component$((props: any) => {
+  return <div></div>;
+});
+
+export default ComplexMetaRaw;
 "
 `;
 
@@ -7932,6 +8022,34 @@ export const MyComponent = component$((props: any) => {
 });
 
 export default MyComponent;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > figmaMeta 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}
+          */
+          
+          import { outline } from \\"./data\\";
+
+import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const FigmaButton = component$((props: any) => {
+  return (
+    <button
+      data-icon={props.icon}
+      data-disabled={props.interactiveState}
+      data-width={props.width}
+      data-size={props.size}
+    >
+      {props.label}
+    </button>
+  );
+});
+
+export default FigmaButton;
 "
 `;
 

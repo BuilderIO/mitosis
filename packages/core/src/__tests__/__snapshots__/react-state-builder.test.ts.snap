@@ -194,7 +194,12 @@ export default MyBasicOutputsComponent;
 `;
 
 exports[`React - stateType: builder > jsx > Javascript Test > Basic Outputs Meta 1`] = `
-"\\"use client\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+\\"use client\\";
 import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
@@ -1784,7 +1789,12 @@ export default MyBasicForwardRefComponent;
 `;
 
 exports[`React - stateType: builder > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"\\"use client\\";
+"/**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+\\"use client\\";
 import * as React from \\"react\\";
 import { forwardRef } from \\"react\\";
 
@@ -1972,6 +1982,25 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`React - stateType: builder > jsx > Javascript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false}}
+          */
+
+import * as React from \\"react\\";
+import { abc } from \\"./meta-sub\\";
+
+function ComplexMetaRaw(props) {
+  const state = useBuilderState({});
+
+  return <div />;
+}
+
+export default ComplexMetaRaw;
 "
 `;
 
@@ -2226,6 +2255,34 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`React - stateType: builder > jsx > Javascript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}
+          */
+
+import * as React from \\"react\\";
+import { outline } from \\"./data\\";
+
+function FigmaButton(props) {
+  const state = useBuilderState({});
+
+  return (
+    <button
+      data-icon={props.icon}
+      data-disabled={props.interactiveState}
+      data-width={props.width}
+      data-size={props.size}
+    >
+      {props.label}
+    </button>
+  );
+}
+
+export default FigmaButton;
 "
 `;
 
@@ -3885,7 +3942,12 @@ export default MyBasicOutputsComponent;
 `;
 
 exports[`React - stateType: builder > jsx > Typescript Test > Basic Outputs Meta 1`] = `
-"\\"use client\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+\\"use client\\";
 import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
@@ -5726,7 +5788,12 @@ export default MyBasicForwardRefComponent;
 `;
 
 exports[`React - stateType: builder > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"\\"use client\\";
+"/**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+\\"use client\\";
 import * as React from \\"react\\";
 import { forwardRef } from \\"react\\";
 
@@ -5925,6 +5992,25 @@ function MyBasicComponent(props: any) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`React - stateType: builder > jsx > Typescript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false}}
+          */
+
+import * as React from \\"react\\";
+import { abc } from \\"./meta-sub\\";
+
+function ComplexMetaRaw(props: any) {
+  const state = useBuilderState({});
+
+  return <div />;
+}
+
+export default ComplexMetaRaw;
 "
 `;
 
@@ -6211,6 +6297,34 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`React - stateType: builder > jsx > Typescript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}
+          */
+
+import * as React from \\"react\\";
+import { outline } from \\"./data\\";
+
+function FigmaButton(props: any) {
+  const state = useBuilderState({});
+
+  return (
+    <button
+      data-icon={props.icon}
+      data-disabled={props.interactiveState}
+      data-width={props.width}
+      data-size={props.size}
+    >
+      {props.label}
+    </button>
+  );
+}
+
+export default FigmaButton;
 "
 `;
 

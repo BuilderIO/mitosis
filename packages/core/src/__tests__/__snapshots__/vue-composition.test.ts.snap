@@ -245,7 +245,10 @@ onMounted(() => {
 `;
 
 exports[`Vue > jsx > Javascript Test > Basic Outputs Meta 1`] = `
-"<template>
+"/** useMetadata: {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside
+component\\"} */
+
+<template>
   <div></div>
 </template>
 
@@ -1733,7 +1736,9 @@ const name = ref(\\"PatrickJS\\");
 `;
 
 exports[`Vue > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"<template>
+"/** useMetadata: {\\"forwardRef\\":\\"inputRef\\"} */
+
+<template>
   <div>
     <input
       class=\\"input\\"
@@ -1878,6 +1883,20 @@ const styleState = ref({
   padding: 10px;
 }
 </style>"
+`;
+
+exports[`Vue > jsx > Javascript Test > complexMeta 1`] = `
+"/** useMetadata:
+{\\"x\\":\\"y\\",\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false}}
+*/
+
+<template>
+  <div></div>
+</template>
+
+<script setup>
+import { abc } from \\"./meta-sub\\";
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > componentWithContext 1`] = `
@@ -2075,6 +2094,42 @@ const props = defineProps([\\"componentRef\\"]);
 const refToUse = ref(
   !(props.componentRef instanceof Function) ? props.componentRef : null
 );
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > figmaMeta 1`] = `
+"/** useMetadata:
+{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍
+Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon
+Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️
+Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️
+Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive
+State\\",\\"value\\":{\\"(Def)
+Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def)
+Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def)
+Auto Width\\":false,\\"Full Width\\":\\"full\\"}}} */
+
+<template>
+  <button
+    :data-icon=\\"icon\\"
+    :data-disabled=\\"interactiveState\\"
+    :data-width=\\"width\\"
+    :data-size=\\"size\\"
+  >
+    {{ label }}
+  </button>
+</template>
+
+<script setup>
+import { outline } from \\"./data\\";
+
+const props = defineProps([
+  \\"icon\\",
+  \\"interactiveState\\",
+  \\"width\\",
+  \\"size\\",
+  \\"label\\",
+]);
 </script>"
 `;
 
@@ -3600,7 +3655,10 @@ onMounted(() => {
 `;
 
 exports[`Vue > jsx > Typescript Test > Basic Outputs Meta 1`] = `
-"<template>
+"/** useMetadata: {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside
+component\\"} */
+
+<template>
   <div></div>
 </template>
 
@@ -5283,7 +5341,9 @@ const name = ref(\\"PatrickJS\\");
 `;
 
 exports[`Vue > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"<template>
+"/** useMetadata: {\\"forwardRef\\":\\"inputRef\\"} */
+
+<template>
   <div>
     <input
       class=\\"input\\"
@@ -5440,6 +5500,20 @@ const styleState = ref({
   padding: 10px;
 }
 </style>"
+`;
+
+exports[`Vue > jsx > Typescript Test > complexMeta 1`] = `
+"/** useMetadata:
+{\\"x\\":\\"y\\",\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false}}
+*/
+
+<template>
+  <div></div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { abc } from \\"./meta-sub\\";
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > componentWithContext 1`] = `
@@ -5667,6 +5741,42 @@ const props = defineProps([\\"componentRef\\"]);
 const refToUse = ref(
   !(props.componentRef instanceof Function) ? props.componentRef : null
 );
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > figmaMeta 1`] = `
+"/** useMetadata:
+{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍
+Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon
+Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️
+Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️
+Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive
+State\\",\\"value\\":{\\"(Def)
+Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def)
+Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def)
+Auto Width\\":false,\\"Full Width\\":\\"full\\"}}} */
+
+<template>
+  <button
+    :data-icon=\\"icon\\"
+    :data-disabled=\\"interactiveState\\"
+    :data-width=\\"width\\"
+    :data-size=\\"size\\"
+  >
+    {{ label }}
+  </button>
+</template>
+
+<script setup lang=\\"ts\\">
+import { outline } from \\"./data\\";
+
+const props = defineProps([
+  \\"icon\\",
+  \\"interactiveState\\",
+  \\"width\\",
+  \\"size\\",
+  \\"label\\",
+]);
 </script>"
 `;
 
