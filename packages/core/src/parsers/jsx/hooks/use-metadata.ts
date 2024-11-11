@@ -1,6 +1,6 @@
 import { mapImportDeclarationToMitosisImport } from '@/helpers/mitosis-imports';
 import { babelDefaultTransform, babelStripTypes, parseCodeJson } from '@/parsers/jsx/helpers';
-import { Context, ParseMitosisOptions } from '@/parsers/jsx/types';
+import { Context, ParseMitosisOptions, ResolvedImport } from '@/parsers/jsx/types';
 import { MitosisImport } from '@/types/mitosis-component';
 import * as babel from '@babel/core';
 import { NodePath } from '@babel/core';
@@ -10,6 +10,7 @@ import * as path from 'path';
 type ResolveData = {
   nodePath: NodePath<babel.types.Program>;
   currentFilePath?: string;
+  resolvedImports?: ResolvedImport[];
 };
 
 const getCodeFromImport = (
@@ -68,6 +69,7 @@ const resolve = ({
   nodePath,
   currentFilePath,
   valueToResolve,
+  resolvedImports,
 }: ResolveData & { valueToResolve: string }): Record<string, any> => {
   let result = {};
   const programNodes = nodePath.node.body;
@@ -76,6 +78,11 @@ const resolve = ({
       const importObject = mapImportDeclarationToMitosisImport(statement);
 
       if (Object.keys(importObject.imports).includes(valueToResolve)) {
+        if (resolvedImports) {
+          // We add this statement, to remove it from imports of generated file
+          resolvedImports.push({ path: importObject.path, value: valueToResolve });
+        }
+
         // In this case the variable was imported
         const { code, typescript, importFile } = getCodeFromImport(importObject, currentFilePath);
         if (code) {
@@ -127,6 +134,7 @@ const resolveObjectsRecursive = ({
   node,
   nodePath,
   currentFilePath,
+  resolvedImports,
 }: {
   node: babel.types.Node;
 } & ResolveData): Record<string, any> => {
@@ -140,7 +148,12 @@ const resolveObjectsRecursive = ({
           if (babel.types.isIdentifier(prop.value)) {
             const valueToResolve = prop.value.name;
             // In this case we have some variable defined in the same or another file
-            const resolved = resolve({ nodePath, currentFilePath, valueToResolve });
+            const resolved = resolve({
+              nodePath,
+              currentFilePath,
+              valueToResolve,
+              resolvedImports,
+            });
             result = {
               ...result,
               [objectKey]: { ...resolved },
@@ -188,8 +201,11 @@ export const resolveMetadata = ({
   options: ParseMitosisOptions;
 }): Record<string, any> => {
   if (context.cwd && options?.filePath) {
+    const resolvedImports: ResolvedImport[] = [];
     const currentFilePath = `${context.cwd}/${options.filePath}`;
-    return resolveObjectsRecursive({ node, nodePath, currentFilePath });
+    const metadata = resolveObjectsRecursive({ node, nodePath, currentFilePath, resolvedImports });
+    context.builder.resolvedImports = resolvedImports;
+    return metadata;
   }
 
   return {};

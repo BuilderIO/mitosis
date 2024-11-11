@@ -77,7 +77,7 @@ export function parseJsx(
         component: createMitosisComponent(),
       };
 
-      context.builder.keepStatements = path.node.body.filter(
+     const keepStatements = path.node.body.filter(
         (statement) => isImportOrDefaultExport(statement) || isTypeOrInterface(statement),
       );
 
@@ -100,7 +100,7 @@ export function parseJsx(
       // TODO: support multiple? e.g. for others to add imports?
       context.builder.component.hooks.preComponent = { code: preComponentCode };
 
-      path.replaceWith(types.program(context.builder.keepStatements));
+      path.replaceWith(types.program(keepStatements));
     },
     FunctionDeclaration(path, context) {
       const { node } = path;
