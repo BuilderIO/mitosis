@@ -1,15 +1,15 @@
+import { HOOKS } from '@/constants/hooks';
+import { createMitosisComponent } from '@/helpers/create-mitosis-component';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
+import { tryParseJson } from '@/helpers/json';
+import { stripNewlinesInStrings } from '@/helpers/replace-new-lines-in-strings';
+import { getSignalImportName } from '@/helpers/signals';
 import { traverseNodes } from '@/helpers/traverse-nodes';
+import { MitosisComponent } from '@/types/mitosis-component';
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import tsPreset from '@babel/preset-typescript';
 import { pipe } from 'fp-ts/lib/function';
-import { HOOKS } from '@/constants/hooks';
-import { createMitosisComponent } from '@/helpers/create-mitosis-component';
-import { tryParseJson } from '@/helpers/json';
-import { stripNewlinesInStrings } from '@/helpers/replace-new-lines-in-strings';
-import { getSignalImportName } from '@/helpers/signals';
-import { MitosisComponent } from '@/types/mitosis-component';
 import { jsonToAst } from './ast';
 import { collectTypes, isTypeOrInterface } from './component-types';
 import { extractContextComponents } from './context';
@@ -77,7 +77,7 @@ export function parseJsx(
         component: createMitosisComponent(),
       };
 
-     const keepStatements = path.node.body.filter(
+      const keepStatements = path.node.body.filter(
         (statement) => isImportOrDefaultExport(statement) || isTypeOrInterface(statement),
       );
 
