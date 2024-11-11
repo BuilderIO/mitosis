@@ -42,7 +42,7 @@ export const transformAttributeName = (name: string) => {
   return name;
 };
 
-export const babelStripTypes = (code: string, typescript: boolean): string =>
+export const babelStripTypes = (code: string, typescript?: boolean): string =>
   typescript
     ? (babel.transform(code, {
         configFile: false,

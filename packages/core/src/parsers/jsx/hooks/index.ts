@@ -1,11 +1,10 @@
 import { HOOKS } from '@/constants/hooks';
-import { tryParseJson } from '@/helpers/json';
 import { resolveMetadata } from '@/parsers/jsx/hooks/use-metadata';
 import { MitosisComponent } from '@/types/mitosis-component';
 import * as babel from '@babel/core';
 import { NodePath } from '@babel/core';
 import generate from '@babel/generator';
-import { parseCode } from '../helpers';
+import { parseCodeJson } from '../helpers';
 import { parseStateObjectToMitosisState } from '../state';
 import { Context, ParseMitosisOptions } from '../types';
 import { getHook } from './helpers';
@@ -47,12 +46,11 @@ export const collectModuleScopeHooks =
         if (metadataHooks.has(name)) {
           const metaDataObjectNode = hook.arguments[0];
 
-          const code = options.filePath
-            ? resolveMetadata({ context, node: metaDataObjectNode, nodePath: path, options })
-            : parseCode(metaDataObjectNode);
-          let json;
+          let json: any;
           try {
-            json = tryParseJson(code ?? '');
+            json = options.filePath
+              ? resolveMetadata({ context, node: metaDataObjectNode, nodePath: path, options })
+              : parseCodeJson(metaDataObjectNode);
           } catch (e) {
             // Meta data isn't simple json convert it to ast
             console.error(`Error parsing metadata hook ${name}`);
