@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.5.19
+
+### Patch Changes
+
+- e9cfef0: [All] Fix: scope renaming of state methods to not include shadow variables
+  [Angular]: Update `state.*` -> `this.*` transform to new AST transform approach
+
 ## 0.5.18
 
 ### Patch Changes
