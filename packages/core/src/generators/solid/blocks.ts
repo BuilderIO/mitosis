@@ -57,9 +57,9 @@ export const blockToSolid = (
 
   let str = '';
 
-  const isFragmentWithoutKey = json.name === 'Fragment' && !json.bindings.key;
+  const isFragment = json.name === 'Fragment';
 
-  if (isFragmentWithoutKey) {
+  if (isFragment) {
     str += '<';
   } else {
     str += `<${json.name} `;
@@ -70,16 +70,20 @@ export const blockToSolid = (
   }
 
   const classString = collectClassString(json, options);
-  if (classString) {
+  if (classString && !isFragment) {
     str += ` class=${classString} `;
   }
 
   for (const key in json.properties) {
+    if (isFragment) continue;
+
     const value = json.properties[key];
     const newKey = transformAttributeName(key);
     str += ` ${newKey}="${value}" `;
   }
   for (const key in json.bindings) {
+    if (isFragment) continue;
+
     const { code, arguments: cusArg = ['event'], type } = json.bindings[key]!;
     if (!code) continue;
 
@@ -130,7 +134,7 @@ export const blockToSolid = (
       .join('\n');
   }
 
-  if (isFragmentWithoutKey) {
+  if (isFragment) {
     str += '</>';
   } else {
     str += `</${json.name}>`;
