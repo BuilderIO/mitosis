@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.20
+
+### Patch Changes
+
+- 7ae4a01: Fix: Solid fragments rendering by removing all props
+
 ## 0.5.19
 
 ### Patch Changes
