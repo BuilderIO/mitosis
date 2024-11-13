@@ -3781,10 +3781,23 @@ exports[`Html > jsx > Javascript Test > basicForFragment 1`] = `
       <template data-el=\\"div-1\\"><!-- option --></template>
     </div>
   </template>
+
+  <template data-el=\\"for-2\\">
+    <div>
+      <template data-el=\\"div-2\\"><!-- option --></template>
+    </div>
+  </template>
+  <select data-dom-state=\\"select-1\\">
+    <template data-el=\\"for-3\\">
+      <option data-el=\\"option-1\\">
+        <template data-el=\\"div-3\\"><!-- option --></template>
+      </option>
+    </template>
+  </select>
 </div>
 <script>
   (() => {
-    const state = {};
+    const state = { id: \\"xyz\\" };
 
     let context = null;
     let nodesToDestroy = [];
@@ -3811,6 +3824,34 @@ exports[`Html > jsx > Javascript Test > basicForFragment 1`] = `
       });
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+        renderTextNode(el, option);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-2']\\").forEach((el) => {
+        let array = [\\"a\\", \\"b\\", \\"c\\"];
+        renderLoop(el, array, \\"option\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+        renderTextNode(el, option);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-3']\\").forEach((el) => {
+        let array = [\\"d\\", \\"e\\", \\"f\\"];
+        renderLoop(el, array, \\"option\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='option-1']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+
+        el.key = \`\${state.id}-\${option}\`;
+
+        el.value = option;
+      });
+
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
         const option = getScope(el, \\"option\\");
         renderTextNode(el, option);
       });
@@ -4899,149 +4940,6 @@ exports[`Html > jsx > Javascript Test > expressionState 1`] = `
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
-    }
-  })();
-</script>
-"
-`;
-
-exports[`Html > jsx > Javascript Test > forKeyState 1`] = `
-"<div>
-  <template data-el=\\"for\\">
-    <div>
-      <template data-el=\\"div-1\\"><!-- option --></template>
-    </div>
-  </template>
-  <select data-dom-state=\\"select-1\\">
-    <template data-el=\\"for-2\\">
-      <option data-el=\\"option-1\\">
-        <template data-el=\\"div-2\\"><!-- option --></template>
-      </option>
-    </template>
-  </select>
-</div>
-<script>
-  (() => {
-    const state = { id: \\"xyz\\" };
-
-    let context = null;
-    let nodesToDestroy = [];
-    let pendingUpdate = false;
-
-    function destroyAnyNodes() {
-      // destroy current view template refs before rendering again
-      nodesToDestroy.forEach((el) => el.remove());
-      nodesToDestroy = [];
-    }
-
-    // Function to update data bindings and loops
-    // call update() when you mutate state and need the updates to reflect
-    // in the dom
-    function update() {
-      if (pendingUpdate === true) {
-        return;
-      }
-      pendingUpdate = true;
-
-      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
-        let array = [\\"a\\", \\"b\\", \\"c\\"];
-        renderLoop(el, array, \\"option\\");
-      });
-
-      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
-        const option = getScope(el, \\"option\\");
-        renderTextNode(el, option);
-      });
-
-      document.querySelectorAll(\\"[data-el='for-2']\\").forEach((el) => {
-        let array = [\\"d\\", \\"e\\", \\"f\\"];
-        renderLoop(el, array, \\"option\\");
-      });
-
-      document.querySelectorAll(\\"[data-el='option-1']\\").forEach((el) => {
-        const option = getScope(el, \\"option\\");
-
-        el.key = \`\${state.id}-\${option}\`;
-
-        el.value = option;
-      });
-
-      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
-        const option = getScope(el, \\"option\\");
-        renderTextNode(el, option);
-      });
-
-      destroyAnyNodes();
-
-      pendingUpdate = false;
-    }
-
-    // Update with initial state on first load
-    update();
-
-    // Helper text DOM nodes
-    function renderTextNode(el, text) {
-      const textNode = document.createTextNode(text);
-      if (el?.scope) {
-        textNode.scope = el.scope;
-      }
-      if (el?.context) {
-        child.context = el.context;
-      }
-      el.after(textNode);
-      nodesToDestroy.push(el.nextSibling);
-    }
-
-    // Helper to render loops
-    function renderLoop(template, array, itemName, itemIndex, collectionName) {
-      const collection = [];
-      for (let [index, value] of array.entries()) {
-        const elementFragment = template.content.cloneNode(true);
-        const children = Array.from(elementFragment.childNodes);
-        const localScope = {};
-        let scope = localScope;
-        if (template?.scope) {
-          const getParent = {
-            get(target, prop, receiver) {
-              if (prop in target) {
-                return target[prop];
-              }
-              if (prop in template.scope) {
-                return template.scope[prop];
-              }
-              return target[prop];
-            },
-          };
-          scope = new Proxy(localScope, getParent);
-        }
-        children.forEach((child) => {
-          if (itemName !== undefined) {
-            scope[itemName] = value;
-          }
-          if (itemIndex !== undefined) {
-            scope[itemIndex] = index;
-          }
-          if (collectionName !== undefined) {
-            scope[collectionName] = array;
-          }
-          child.scope = scope;
-          if (template.context) {
-            child.context = template.context;
-          }
-          this.nodesToDestroy.push(child);
-          collection.unshift(child);
-        });
-        collection.forEach((child) => template.after(child));
-      }
-    }
-
-    function getScope(el, name) {
-      do {
-        let value = el?.scope?.[name];
-        if (value !== undefined) {
-          return value;
-        }
-      } while ((el = el.parentNode));
     }
   })();
 </script>
@@ -11637,10 +11535,23 @@ exports[`Html > jsx > Typescript Test > basicForFragment 1`] = `
       <template data-el=\\"div-1\\"><!-- option --></template>
     </div>
   </template>
+
+  <template data-el=\\"for-2\\">
+    <div>
+      <template data-el=\\"div-2\\"><!-- option --></template>
+    </div>
+  </template>
+  <select data-dom-state=\\"select-1\\">
+    <template data-el=\\"for-3\\">
+      <option data-el=\\"option-1\\">
+        <template data-el=\\"div-3\\"><!-- option --></template>
+      </option>
+    </template>
+  </select>
 </div>
 <script>
   (() => {
-    const state = {};
+    const state = { id: \\"xyz\\" };
 
     let context = null;
     let nodesToDestroy = [];
@@ -11667,6 +11578,34 @@ exports[`Html > jsx > Typescript Test > basicForFragment 1`] = `
       });
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+        renderTextNode(el, option);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-2']\\").forEach((el) => {
+        let array = [\\"a\\", \\"b\\", \\"c\\"];
+        renderLoop(el, array, \\"option\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+        renderTextNode(el, option);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-3']\\").forEach((el) => {
+        let array = [\\"d\\", \\"e\\", \\"f\\"];
+        renderLoop(el, array, \\"option\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='option-1']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+
+        el.key = \`\${state.id}-\${option}\`;
+
+        el.value = option;
+      });
+
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
         const option = getScope(el, \\"option\\");
         renderTextNode(el, option);
       });
@@ -12755,149 +12694,6 @@ exports[`Html > jsx > Typescript Test > expressionState 1`] = `
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
-    }
-  })();
-</script>
-"
-`;
-
-exports[`Html > jsx > Typescript Test > forKeyState 1`] = `
-"<div>
-  <template data-el=\\"for\\">
-    <div>
-      <template data-el=\\"div-1\\"><!-- option --></template>
-    </div>
-  </template>
-  <select data-dom-state=\\"select-1\\">
-    <template data-el=\\"for-2\\">
-      <option data-el=\\"option-1\\">
-        <template data-el=\\"div-2\\"><!-- option --></template>
-      </option>
-    </template>
-  </select>
-</div>
-<script>
-  (() => {
-    const state = { id: \\"xyz\\" };
-
-    let context = null;
-    let nodesToDestroy = [];
-    let pendingUpdate = false;
-
-    function destroyAnyNodes() {
-      // destroy current view template refs before rendering again
-      nodesToDestroy.forEach((el) => el.remove());
-      nodesToDestroy = [];
-    }
-
-    // Function to update data bindings and loops
-    // call update() when you mutate state and need the updates to reflect
-    // in the dom
-    function update() {
-      if (pendingUpdate === true) {
-        return;
-      }
-      pendingUpdate = true;
-
-      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
-        let array = [\\"a\\", \\"b\\", \\"c\\"];
-        renderLoop(el, array, \\"option\\");
-      });
-
-      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
-        const option = getScope(el, \\"option\\");
-        renderTextNode(el, option);
-      });
-
-      document.querySelectorAll(\\"[data-el='for-2']\\").forEach((el) => {
-        let array = [\\"d\\", \\"e\\", \\"f\\"];
-        renderLoop(el, array, \\"option\\");
-      });
-
-      document.querySelectorAll(\\"[data-el='option-1']\\").forEach((el) => {
-        const option = getScope(el, \\"option\\");
-
-        el.key = \`\${state.id}-\${option}\`;
-
-        el.value = option;
-      });
-
-      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
-        const option = getScope(el, \\"option\\");
-        renderTextNode(el, option);
-      });
-
-      destroyAnyNodes();
-
-      pendingUpdate = false;
-    }
-
-    // Update with initial state on first load
-    update();
-
-    // Helper text DOM nodes
-    function renderTextNode(el, text) {
-      const textNode = document.createTextNode(text);
-      if (el?.scope) {
-        textNode.scope = el.scope;
-      }
-      if (el?.context) {
-        child.context = el.context;
-      }
-      el.after(textNode);
-      nodesToDestroy.push(el.nextSibling);
-    }
-
-    // Helper to render loops
-    function renderLoop(template, array, itemName, itemIndex, collectionName) {
-      const collection = [];
-      for (let [index, value] of array.entries()) {
-        const elementFragment = template.content.cloneNode(true);
-        const children = Array.from(elementFragment.childNodes);
-        const localScope = {};
-        let scope = localScope;
-        if (template?.scope) {
-          const getParent = {
-            get(target, prop, receiver) {
-              if (prop in target) {
-                return target[prop];
-              }
-              if (prop in template.scope) {
-                return template.scope[prop];
-              }
-              return target[prop];
-            },
-          };
-          scope = new Proxy(localScope, getParent);
-        }
-        children.forEach((child) => {
-          if (itemName !== undefined) {
-            scope[itemName] = value;
-          }
-          if (itemIndex !== undefined) {
-            scope[itemIndex] = index;
-          }
-          if (collectionName !== undefined) {
-            scope[collectionName] = array;
-          }
-          child.scope = scope;
-          if (template.context) {
-            child.context = template.context;
-          }
-          this.nodesToDestroy.push(child);
-          collection.unshift(child);
-        });
-        collection.forEach((child) => template.after(child));
-      }
-    }
-
-    function getScope(el, name) {
-      do {
-        let value = el?.scope?.[name];
-        if (value !== undefined) {
-          return value;
-        }
-      } while ((el = el.parentNode));
     }
   })();
 </script>
@@ -14967,7 +14763,7 @@ exports[`Html > jsx > Typescript Test > showWithRootText 1`] = `
 exports[`Html > jsx > Typescript Test > signalsOnUpdate 1`] = `
 "<div class=\\"test div\\">
   <template data-el=\\"div-1\\"><!-- props.id --></template>
-  <template data-el=\\"div-2\\"><!-- props.foo.bar.baz --></template>
+  <template data-el=\\"div-2\\"><!-- props.foo.value.bar.baz --></template>
 </div>
 <style>
   .div {
@@ -15002,13 +14798,13 @@ exports[`Html > jsx > Typescript Test > signalsOnUpdate 1`] = `
       });
 
       document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
-        renderTextNode(el, props.foo.bar.baz);
+        renderTextNode(el, props.foo.value.bar.baz);
       });
 
       destroyAnyNodes();
 
       console.log(\\"props.id changed\\", props.id);
-      console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+      console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
 
       pendingUpdate = false;
     }

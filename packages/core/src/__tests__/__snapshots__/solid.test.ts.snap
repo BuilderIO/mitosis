@@ -3827,9 +3827,11 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > basicForFragment 1`] = `
-"import { For } from \\"solid-js\\";
+"import { For, createSignal, createMemo } from \\"solid-js\\";
 
 function BasicForFragment(props) {
+  const [id, setId] = createSignal(\\"xyz\\");
+
   return (
     <>
       <div>
@@ -3843,6 +3845,28 @@ function BasicForFragment(props) {
             );
           }}
         </For>
+        <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
+          {(option, _index) => {
+            const index = _index();
+            return (
+              <>
+                <div>{option}</div>
+              </>
+            );
+          }}
+        </For>
+        <select>
+          <For each={[\\"d\\", \\"e\\", \\"f\\"]}>
+            {(option, _index) => {
+              const index = _index();
+              return (
+                <option key={\`\${id()}-\${option}\`} value={option}>
+                  {option}
+                </option>
+              );
+            }}
+          </For>
+        </select>
       </div>
     </>
   );
@@ -3853,9 +3877,11 @@ export default BasicForFragment;
 `;
 
 exports[`Solid > jsx > Javascript Test > basicForFragment 2`] = `
-"import { For } from \\"solid-js\\";
+"import { For, createSignal, createMemo } from \\"solid-js\\";
 
 function BasicForFragment(props) {
+  const [id, setId] = createSignal(\\"xyz\\");
+
   return (
     <>
       <div>
@@ -3869,6 +3895,28 @@ function BasicForFragment(props) {
             );
           }}
         </For>
+        <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
+          {(option, _index) => {
+            const index = _index();
+            return (
+              <>
+                <div>{option}</div>
+              </>
+            );
+          }}
+        </For>
+        <select>
+          <For each={[\\"d\\", \\"e\\", \\"f\\"]}>
+            {(option, _index) => {
+              const index = _index();
+              return (
+                <option key={\`\${id()}-\${option}\`} value={option}>
+                  {option}
+                </option>
+              );
+            }}
+          </For>
+        </select>
       </div>
     </>
   );
@@ -4825,86 +4873,6 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
-"
-`;
-
-exports[`Solid > jsx > Javascript Test > forKeyState 1`] = `
-"import { For, createSignal, createMemo } from \\"solid-js\\";
-
-function ForKeyState(props) {
-  const [id, setId] = createSignal(\\"xyz\\");
-
-  return (
-    <>
-      <div>
-        <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
-          {(option, _index) => {
-            const index = _index();
-            return (
-              <>
-                <div>{option}</div>
-              </>
-            );
-          }}
-        </For>
-        <select>
-          <For each={[\\"d\\", \\"e\\", \\"f\\"]}>
-            {(option, _index) => {
-              const index = _index();
-              return (
-                <option key={\`\${id()}-\${option}\`} value={option}>
-                  {option}
-                </option>
-              );
-            }}
-          </For>
-        </select>
-      </div>
-    </>
-  );
-}
-
-export default ForKeyState;
-"
-`;
-
-exports[`Solid > jsx > Javascript Test > forKeyState 2`] = `
-"import { For, createSignal, createMemo } from \\"solid-js\\";
-
-function ForKeyState(props) {
-  const [id, setId] = createSignal(\\"xyz\\");
-
-  return (
-    <>
-      <div>
-        <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
-          {(option, _index) => {
-            const index = _index();
-            return (
-              <>
-                <div>{option}</div>
-              </>
-            );
-          }}
-        </For>
-        <select>
-          <For each={[\\"d\\", \\"e\\", \\"f\\"]}>
-            {(option, _index) => {
-              const index = _index();
-              return (
-                <option key={\`\${id()}-\${option}\`} value={option}>
-                  {option}
-                </option>
-              );
-            }}
-          </For>
-        </select>
-      </div>
-    </>
-  );
-}
-
-export default ForKeyState;
 "
 `;
 
@@ -12235,9 +12203,11 @@ export default MyComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > basicForFragment 1`] = `
-"import { For } from \\"solid-js\\";
+"import { For, createSignal, createMemo } from \\"solid-js\\";
 
 function BasicForFragment(props: any) {
+  const [id, setId] = createSignal(\\"xyz\\");
+
   return (
     <>
       <div>
@@ -12251,6 +12221,28 @@ function BasicForFragment(props: any) {
             );
           }}
         </For>
+        <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
+          {(option, _index) => {
+            const index = _index();
+            return (
+              <>
+                <div>{option}</div>
+              </>
+            );
+          }}
+        </For>
+        <select>
+          <For each={[\\"d\\", \\"e\\", \\"f\\"]}>
+            {(option, _index) => {
+              const index = _index();
+              return (
+                <option key={\`\${id()}-\${option}\`} value={option}>
+                  {option}
+                </option>
+              );
+            }}
+          </For>
+        </select>
       </div>
     </>
   );
@@ -12261,9 +12253,11 @@ export default BasicForFragment;
 `;
 
 exports[`Solid > jsx > Typescript Test > basicForFragment 2`] = `
-"import { For } from \\"solid-js\\";
+"import { For, createSignal, createMemo } from \\"solid-js\\";
 
 function BasicForFragment(props: any) {
+  const [id, setId] = createSignal(\\"xyz\\");
+
   return (
     <>
       <div>
@@ -12277,6 +12271,28 @@ function BasicForFragment(props: any) {
             );
           }}
         </For>
+        <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
+          {(option, _index) => {
+            const index = _index();
+            return (
+              <>
+                <div>{option}</div>
+              </>
+            );
+          }}
+        </For>
+        <select>
+          <For each={[\\"d\\", \\"e\\", \\"f\\"]}>
+            {(option, _index) => {
+              const index = _index();
+              return (
+                <option key={\`\${id()}-\${option}\`} value={option}>
+                  {option}
+                </option>
+              );
+            }}
+          </For>
+        </select>
       </div>
     </>
   );
@@ -13327,86 +13343,6 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
-"
-`;
-
-exports[`Solid > jsx > Typescript Test > forKeyState 1`] = `
-"import { For, createSignal, createMemo } from \\"solid-js\\";
-
-function ForKeyState(props: any) {
-  const [id, setId] = createSignal(\\"xyz\\");
-
-  return (
-    <>
-      <div>
-        <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
-          {(option, _index) => {
-            const index = _index();
-            return (
-              <>
-                <div>{option}</div>
-              </>
-            );
-          }}
-        </For>
-        <select>
-          <For each={[\\"d\\", \\"e\\", \\"f\\"]}>
-            {(option, _index) => {
-              const index = _index();
-              return (
-                <option key={\`\${id()}-\${option}\`} value={option}>
-                  {option}
-                </option>
-              );
-            }}
-          </For>
-        </select>
-      </div>
-    </>
-  );
-}
-
-export default ForKeyState;
-"
-`;
-
-exports[`Solid > jsx > Typescript Test > forKeyState 2`] = `
-"import { For, createSignal, createMemo } from \\"solid-js\\";
-
-function ForKeyState(props: any) {
-  const [id, setId] = createSignal(\\"xyz\\");
-
-  return (
-    <>
-      <div>
-        <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
-          {(option, _index) => {
-            const index = _index();
-            return (
-              <>
-                <div>{option}</div>
-              </>
-            );
-          }}
-        </For>
-        <select>
-          <For each={[\\"d\\", \\"e\\", \\"f\\"]}>
-            {(option, _index) => {
-              const index = _index();
-              return (
-                <option key={\`\${id()}-\${option}\`} value={option}>
-                  {option}
-                </option>
-              );
-            }}
-          </For>
-        </select>
-      </div>
-    </>
-  );
-}
-
-export default ForKeyState;
 "
 `;
 
@@ -15790,25 +15726,27 @@ type Props = {
 
 function MyBasicComponent(props: Props) {
   const onUpdateFn_0_props_id = createMemo(() => props.id);
-  const onUpdateFn_0_props_foo_bar_baz = createMemo(() => props.foo.bar.baz);
+  const onUpdateFn_0_props_foo_value_bar_baz = createMemo(
+    () => props.foo.value.bar.baz
+  );
   function onUpdateFn_0() {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
   }
   createEffect(
     on(
-      () => [onUpdateFn_0_props_id(), onUpdateFn_0_props_foo_bar_baz()],
+      () => [onUpdateFn_0_props_id(), onUpdateFn_0_props_foo_value_bar_baz()],
       onUpdateFn_0
     )
   );
 
   return (
     <>
-      <div class=\\"test div-8c5e5900\\">
+      <div class=\\"test div-4105a7fa\\">
         {props.id}
-        {props.foo.bar.baz}
+        {props.foo.value.bar.baz}
       </div>
-      <style>{\`.div-8c5e5900 {
+      <style>{\`.div-4105a7fa {
   padding: 10px;
 }\`}</style>
     </>
@@ -15833,25 +15771,27 @@ type Props = {
 
 function MyBasicComponent(props: Props) {
   const onUpdateFn_0_props_id = createMemo(() => props.id);
-  const onUpdateFn_0_props_foo_bar_baz = createMemo(() => props.foo.bar.baz);
+  const onUpdateFn_0_props_foo_value_bar_baz = createMemo(
+    () => props.foo.value.bar.baz
+  );
   function onUpdateFn_0() {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
   }
   createEffect(
     on(
-      () => [onUpdateFn_0_props_id(), onUpdateFn_0_props_foo_bar_baz()],
+      () => [onUpdateFn_0_props_id(), onUpdateFn_0_props_foo_value_bar_baz()],
       onUpdateFn_0
     )
   );
 
   return (
     <>
-      <div class=\\"test div-8c5e5900\\">
+      <div class=\\"test div-4105a7fa\\">
         {props.id}
-        {props.foo.bar.baz}
+        {props.foo.value.bar.baz}
       </div>
-      <style>{\`.div-8c5e5900 {
+      <style>{\`.div-4105a7fa {
   padding: 10px;
 }\`}</style>
     </>

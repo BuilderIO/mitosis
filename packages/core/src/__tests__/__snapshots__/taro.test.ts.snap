@@ -1681,10 +1681,14 @@ export default MyComponent;
 `;
 
 exports[`Taro > jsx > Javascript Test > basicForFragment 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function BasicForFragment(props) {
+  const [id, setId] = useState(() => \\"xyz\\");
+
   return (
     <View>
       {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
@@ -1692,6 +1696,18 @@ function BasicForFragment(props) {
           <View>{option}</View>
         </React.Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${id}-\${option}\`}>
+          <View>{option}</View>
+        </React.Fragment>
+      ))}
+      <View>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <View key={\`\${id}-\${option}\`} value={option}>
+            {option}
+          </View>
+        ))}
+      </View>
     </View>
   );
 }
@@ -2206,37 +2222,6 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
-"
-`;
-
-exports[`Taro > jsx > Javascript Test > forKeyState 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useState } from \\"react\\";
-import { View, Text } from \\"@tarojs/components\\";
-
-function ForKeyState(props) {
-  const [id, setId] = useState(() => \\"xyz\\");
-
-  return (
-    <View>
-      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
-        <React.Fragment key={\`\${id}-\${option}\`}>
-          <View>{option}</View>
-        </React.Fragment>
-      ))}
-      <View>
-        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
-          <View key={\`\${id}-\${option}\`} value={option}>
-            {option}
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-}
-
-export default ForKeyState;
 "
 `;
 
@@ -5649,10 +5634,14 @@ export default MyComponent;
 `;
 
 exports[`Taro > jsx > Typescript Test > basicForFragment 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function BasicForFragment(props: any) {
+  const [id, setId] = useState(() => \\"xyz\\");
+
   return (
     <View>
       {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
@@ -5660,6 +5649,18 @@ function BasicForFragment(props: any) {
           <View>{option}</View>
         </React.Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${id}-\${option}\`}>
+          <View>{option}</View>
+        </React.Fragment>
+      ))}
+      <View>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <View key={\`\${id}-\${option}\`} value={option}>
+            {option}
+          </View>
+        ))}
+      </View>
     </View>
   );
 }
@@ -6226,37 +6227,6 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
-"
-`;
-
-exports[`Taro > jsx > Typescript Test > forKeyState 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useState } from \\"react\\";
-import { View, Text } from \\"@tarojs/components\\";
-
-function ForKeyState(props: any) {
-  const [id, setId] = useState(() => \\"xyz\\");
-
-  return (
-    <View>
-      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
-        <React.Fragment key={\`\${id}-\${option}\`}>
-          <View>{option}</View>
-        </React.Fragment>
-      ))}
-      <View>
-        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
-          <View key={\`\${id}-\${option}\`} value={option}>
-            {option}
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-}
-
-export default ForKeyState;
 "
 `;
 
@@ -7448,14 +7418,14 @@ import { View, Text } from \\"@tarojs/components\\";
 function MyBasicComponent(props: Props) {
   useEffect(() => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
-  }, [props.id, props.foo.bar.baz]);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
 
   return (
     <>
       <View className=\\"view\\">
         {props.id}
-        {props.foo.bar.baz}
+        {props.foo.value.bar.baz}
       </View>
       <style jsx>{\`
         .view {

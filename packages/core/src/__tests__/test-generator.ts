@@ -14,8 +14,6 @@ type RawFile = ReturnType<typeof getRawFile>;
 const getterState = getRawFile('./data/blocks/getter-state.raw.tsx');
 const advancedFor = getRawFile('./data/for/advanced-for.raw.tsx');
 
-const forKeyState = getRawFile('./data/for/for-key-state.raw.tsx');
-
 const basicForFragment = getRawFile('./data/for/basic-for-fragment.raw.tsx');
 const basicForShow = getRawFile('./data/for/basic-for-show.raw.tsx');
 const basicBooleanAttribute = getRawFile('./data/basic-boolean-attribute.raw.tsx');
@@ -267,7 +265,6 @@ const BASIC_TESTS: Tests = {
   StoreWithState,
   UseValueAndFnFromStore,
   StoreComment,
-  forKeyState,
   'store-async-function': StoreAsyncFunction,
   'string-literal-store': StringLiteralStore,
   'string-literal-store-kebab': {

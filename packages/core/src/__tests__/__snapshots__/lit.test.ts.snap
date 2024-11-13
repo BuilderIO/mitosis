@@ -2190,6 +2190,8 @@ export default class BasicForFragment extends LitElement {
     return this;
   }
 
+  @state() id = \\"xyz\\";
+
   render() {
     return html\`
 
@@ -2199,7 +2201,21 @@ export default class BasicForFragment extends LitElement {
         .key=\\"\${\`key-\${option}\`}\\"
         ><div>\${option}</div></my-fragment
       >\`
-          )}
+          )} \${[\\"a\\", \\"b\\", \\"c\\"]?.map(
+      (option, index) => html\`<my-fragment
+        .key=\\"\${\`\${this.id}-\${option}\`}\\"
+        ><div>\${option}</div></my-fragment
+      >\`
+    )}
+          <select>
+            \${[\\"d\\", \\"e\\", \\"f\\"]?.map(
+              (option, index) => html\`
+        <option .key=\\"\${\`\${this.id}-\${option}\`}\\" .value=\\"\${option}\\">
+          \${option}
+        </option>
+        \`
+            )}
+          </select>
         </div>
 
         \`;
@@ -2751,45 +2767,6 @@ export default class MyComponent extends LitElement {
     return html\`
 
           <div>\${this.refToUse}</div>
-
-        \`;
-  }
-}
-"
-`;
-
-exports[`Lit > jsx > Javascript Test > forKeyState 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-@customElement(\\"for-key-state\\")
-export default class ForKeyState extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
-
-  @state() id = \\"xyz\\";
-
-  render() {
-    return html\`
-
-          <div>
-          \${[\\"a\\", \\"b\\", \\"c\\"]?.map(
-            (option, index) => html\`<my-fragment
-        .key=\\"\${\`\${this.id}-\${option}\`}\\"
-        ><div>\${option}</div></my-fragment
-      >\`
-          )}
-          <select>
-            \${[\\"d\\", \\"e\\", \\"f\\"]?.map(
-              (option, index) => html\`
-        <option .key=\\"\${\`\${this.id}-\${option}\`}\\" .value=\\"\${option}\\">
-          \${option}
-        </option>
-        \`
-            )}
-          </select>
-        </div>
 
         \`;
   }
@@ -7077,6 +7054,8 @@ export default class BasicForFragment extends LitElement {
     return this;
   }
 
+  @state() id = \\"xyz\\";
+
   render() {
     return html\`
 
@@ -7086,7 +7065,21 @@ export default class BasicForFragment extends LitElement {
         .key=\\"\${\`key-\${option}\`}\\"
         ><div>\${option}</div></my-fragment
       >\`
-          )}
+          )} \${[\\"a\\", \\"b\\", \\"c\\"]?.map(
+      (option, index) => html\`<my-fragment
+        .key=\\"\${\`\${this.id}-\${option}\`}\\"
+        ><div>\${option}</div></my-fragment
+      >\`
+    )}
+          <select>
+            \${[\\"d\\", \\"e\\", \\"f\\"]?.map(
+              (option, index) => html\`
+        <option .key=\\"\${\`\${this.id}-\${option}\`}\\" .value=\\"\${option}\\">
+          \${option}
+        </option>
+        \`
+            )}
+          </select>
         </div>
 
         \`;
@@ -7685,45 +7678,6 @@ export default class MyComponent extends LitElement {
     return html\`
 
           <div>\${this.refToUse}</div>
-
-        \`;
-  }
-}
-"
-`;
-
-exports[`Lit > jsx > Typescript Test > forKeyState 1`] = `
-"import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-@customElement(\\"for-key-state\\")
-export default class ForKeyState extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
-
-  @state() id = \\"xyz\\";
-
-  render() {
-    return html\`
-
-          <div>
-          \${[\\"a\\", \\"b\\", \\"c\\"]?.map(
-            (option, index) => html\`<my-fragment
-        .key=\\"\${\`\${this.id}-\${option}\`}\\"
-        ><div>\${option}</div></my-fragment
-      >\`
-          )}
-          <select>
-            \${[\\"d\\", \\"e\\", \\"f\\"]?.map(
-              (option, index) => html\`
-        <option .key=\\"\${\`\${this.id}-\${option}\`}\\" .value=\\"\${option}\\">
-          \${option}
-        </option>
-        \`
-            )}
-          </select>
-        </div>
 
         \`;
   }
@@ -9167,7 +9121,7 @@ export default class MyBasicComponent extends LitElement {
 
   updated() {
     console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
   }
 
   render() {
@@ -9176,7 +9130,7 @@ export default class MyBasicComponent extends LitElement {
   padding: 10px;
 }
 </style>
-          <div>\${this.id} \${this.foo.bar.baz}</div>
+          <div>\${this.id} \${this.foo.value.bar.baz}</div>
 
         \`;
   }

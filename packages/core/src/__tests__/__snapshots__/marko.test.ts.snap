@@ -1455,12 +1455,26 @@ exports[`Marko > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
 `;
 
 exports[`Marko > jsx > Javascript Test > basicForFragment 1`] = `
-"class {}
+"class {
+  onCreate() {
+    this.state = { id: \\"xyz\\" };
+  }
+}
 
 <div>
   <for|option| of=(['a', 'b', 'c'])>
     <div>\${option}</div>
   </for>
+  <for|option| of=(['a', 'b', 'c'])>
+    <div>\${option}</div>
+  </for>
+  <select>
+    <for|option| of=(['d', 'e', 'f'])>
+      <option key=(\`\${state.id}-\${option}\`) value=(option)>
+        \${option}
+      </option>
+    </for>
+  </select>
 </div>"
 `;
 
@@ -1763,27 +1777,6 @@ exports[`Marko > jsx > Javascript Test > expressionState 1`] = `
 }
 
 <div>\${state.refToUse}</div>"
-`;
-
-exports[`Marko > jsx > Javascript Test > forKeyState 1`] = `
-"class {
-  onCreate() {
-    this.state = { id: \\"xyz\\" };
-  }
-}
-
-<div>
-  <for|option| of=(['a', 'b', 'c'])>
-    <div>\${option}</div>
-  </for>
-  <select>
-    <for|option| of=(['d', 'e', 'f'])>
-      <option key=(\`\${state.id}-\${option}\`) value=(option)>
-        \${option}
-      </option>
-    </for>
-  </select>
-</div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > getterState 1`] = `
@@ -4170,12 +4163,26 @@ exports[`Marko > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 `;
 
 exports[`Marko > jsx > Typescript Test > basicForFragment 1`] = `
-"class {}
+"class {
+  onCreate() {
+    this.state = { id: \\"xyz\\" };
+  }
+}
 
 <div>
   <for|option| of=(['a', 'b', 'c'])>
     <div>\${option}</div>
   </for>
+  <for|option| of=(['a', 'b', 'c'])>
+    <div>\${option}</div>
+  </for>
+  <select>
+    <for|option| of=(['d', 'e', 'f'])>
+      <option key=(\`\${state.id}-\${option}\`) value=(option)>
+        \${option}
+      </option>
+    </for>
+  </select>
 </div>"
 `;
 
@@ -4480,27 +4487,6 @@ exports[`Marko > jsx > Typescript Test > expressionState 1`] = `
 }
 
 <div>\${state.refToUse}</div>"
-`;
-
-exports[`Marko > jsx > Typescript Test > forKeyState 1`] = `
-"class {
-  onCreate() {
-    this.state = { id: \\"xyz\\" };
-  }
-}
-
-<div>
-  <for|option| of=(['a', 'b', 'c'])>
-    <div>\${option}</div>
-  </for>
-  <select>
-    <for|option| of=(['d', 'e', 'f'])>
-      <option key=(\`\${state.id}-\${option}\`) value=(option)>
-        \${option}
-      </option>
-    </for>
-  </select>
-</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > getterState 1`] = `
@@ -5222,16 +5208,19 @@ exports[`Marko > jsx > Typescript Test > signalsOnUpdate 1`] = `
 "class {
   onRender() {
     console.log(\\"props.id changed\\", this.input.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.input.foo.bar.baz);
+    console.log(
+      \\"props.foo.value.bar.baz changed\\",
+      this.input.foo.value.bar.baz
+    );
   }
 }
 
 style {
-  .div-8c5e5900 {
+  .div-4105a7fa {
     padding: 10px;
   }
 }
-<div class=\\"test div-8c5e5900\\">\${input.id} \${input.foo.bar.baz}</div>"
+<div class=\\"test div-4105a7fa\\">\${input.id} \${input.foo.value.bar.baz}</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > spreadAttrs 1`] = `

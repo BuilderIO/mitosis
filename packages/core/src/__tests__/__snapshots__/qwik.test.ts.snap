@@ -3590,9 +3590,11 @@ export default MyComponent;
 `;
 
 exports[`qwik > jsx > Javascript Test > basicForFragment 1`] = `
-"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export const BasicForFragment = component$((props) => {
+  const state = useStore({ id: \\"xyz\\" });
+
   return (
     <div>
       {([\\"a\\", \\"b\\", \\"c\\"] || []).map((option) => {
@@ -3602,6 +3604,22 @@ export const BasicForFragment = component$((props) => {
           </Fragment>
         );
       })}
+      {([\\"a\\", \\"b\\", \\"c\\"] || []).map((option) => {
+        return (
+          <Fragment key={\`\${state.id}-\${option}\`}>
+            <div>{option}</div>
+          </Fragment>
+        );
+      })}
+      <select>
+        {([\\"d\\", \\"e\\", \\"f\\"] || []).map((option) => {
+          return (
+            <option key={\`\${state.id}-\${option}\`} value={option}>
+              {option}
+            </option>
+          );
+        })}
+      </select>
     </div>
   );
 });
@@ -4008,38 +4026,6 @@ export const MyComponent = component$((props) => {
 });
 
 export default MyComponent;
-"
-`;
-
-exports[`qwik > jsx > Javascript Test > forKeyState 1`] = `
-"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
-
-export const ForKeyState = component$((props) => {
-  const state = useStore({ id: \\"xyz\\" });
-
-  return (
-    <div>
-      {([\\"a\\", \\"b\\", \\"c\\"] || []).map((option) => {
-        return (
-          <Fragment key={\`\${state.id}-\${option}\`}>
-            <div>{option}</div>
-          </Fragment>
-        );
-      })}
-      <select>
-        {([\\"d\\", \\"e\\", \\"f\\"] || []).map((option) => {
-          return (
-            <option key={\`\${state.id}-\${option}\`} value={option}>
-              {option}
-            </option>
-          );
-        })}
-      </select>
-    </div>
-  );
-});
-
-export default ForKeyState;
 "
 `;
 
@@ -7509,9 +7495,11 @@ export default MyComponent;
 `;
 
 exports[`qwik > jsx > Typescript Test > basicForFragment 1`] = `
-"import { Fragment, component$, h } from \\"@builder.io/qwik\\";
+"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
 export const BasicForFragment = component$((props: any) => {
+  const state = useStore<any>({ id: \\"xyz\\" });
+
   return (
     <div>
       {([\\"a\\", \\"b\\", \\"c\\"] || []).map((option) => {
@@ -7521,6 +7509,22 @@ export const BasicForFragment = component$((props: any) => {
           </Fragment>
         );
       })}
+      {([\\"a\\", \\"b\\", \\"c\\"] || []).map((option) => {
+        return (
+          <Fragment key={\`\${state.id}-\${option}\`}>
+            <div>{option}</div>
+          </Fragment>
+        );
+      })}
+      <select>
+        {([\\"d\\", \\"e\\", \\"f\\"] || []).map((option) => {
+          return (
+            <option key={\`\${state.id}-\${option}\`} value={option}>
+              {option}
+            </option>
+          );
+        })}
+      </select>
     </div>
   );
 });
@@ -7964,38 +7968,6 @@ export const MyComponent = component$((props: any) => {
 });
 
 export default MyComponent;
-"
-`;
-
-exports[`qwik > jsx > Typescript Test > forKeyState 1`] = `
-"import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
-
-export const ForKeyState = component$((props: any) => {
-  const state = useStore<any>({ id: \\"xyz\\" });
-
-  return (
-    <div>
-      {([\\"a\\", \\"b\\", \\"c\\"] || []).map((option) => {
-        return (
-          <Fragment key={\`\${state.id}-\${option}\`}>
-            <div>{option}</div>
-          </Fragment>
-        );
-      })}
-      <select>
-        {([\\"d\\", \\"e\\", \\"f\\"] || []).map((option) => {
-          return (
-            <option key={\`\${state.id}-\${option}\`} value={option}>
-              {option}
-            </option>
-          );
-        })}
-      </select>
-    </div>
-  );
-});
-
-export default ForKeyState;
 "
 `;
 
@@ -9090,15 +9062,15 @@ export const MyBasicComponent = component$((props: Props) => {
 
   useTask$(({ track }) => {
     track(() => props.id);
-    track(() => props.foo.bar.baz);
+    track(() => props.foo.value.bar.baz);
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
   });
 
   return (
     <div class=\\"test div-MyBasicComponent\\">
       {props.id}
-      {props.foo.bar.baz}
+      {props.foo.value.bar.baz}
     </div>
   );
 });

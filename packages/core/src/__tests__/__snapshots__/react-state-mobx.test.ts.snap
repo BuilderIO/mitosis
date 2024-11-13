@@ -1741,9 +1741,13 @@ export default observedMyComponent;
 `;
 
 exports[`React - stateType: mobx > jsx > Javascript Test > basicForFragment 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
 
 function BasicForFragment(props) {
+  const state = useLocalObservable(() => ({ id: \\"xyz\\" }));
+
   return (
     <div>
       {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
@@ -1751,6 +1755,18 @@ function BasicForFragment(props) {
           <div>{option}</div>
         </React.Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${state.id}-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${state.id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
@@ -2278,37 +2294,6 @@ function MyComponent(props) {
 
 const observedMyComponent = observer(MyComponent);
 export default observedMyComponent;
-"
-`;
-
-exports[`React - stateType: mobx > jsx > Javascript Test > forKeyState 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useLocalObservable, observer } from \\"mobx-react-lite\\";
-
-function ForKeyState(props) {
-  const state = useLocalObservable(() => ({ id: \\"xyz\\" }));
-
-  return (
-    <div>
-      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
-        <React.Fragment key={\`\${state.id}-\${option}\`}>
-          <div>{option}</div>
-        </React.Fragment>
-      ))}
-      <select>
-        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
-          <option key={\`\${state.id}-\${option}\`} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
-
-const observedForKeyState = observer(ForKeyState);
-export default observedForKeyState;
 "
 `;
 
@@ -5745,9 +5730,13 @@ export default observedMyComponent;
 `;
 
 exports[`React - stateType: mobx > jsx > Typescript Test > basicForFragment 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
 
 function BasicForFragment(props: any) {
+  const state = useLocalObservable(() => ({ id: \\"xyz\\" }));
+
   return (
     <div>
       {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
@@ -5755,6 +5744,18 @@ function BasicForFragment(props: any) {
           <div>{option}</div>
         </React.Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${state.id}-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${state.id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
@@ -6327,37 +6328,6 @@ function MyComponent(props: any) {
 
 const observedMyComponent = observer(MyComponent);
 export default observedMyComponent;
-"
-`;
-
-exports[`React - stateType: mobx > jsx > Typescript Test > forKeyState 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useLocalObservable, observer } from \\"mobx-react-lite\\";
-
-function ForKeyState(props: any) {
-  const state = useLocalObservable(() => ({ id: \\"xyz\\" }));
-
-  return (
-    <div>
-      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
-        <React.Fragment key={\`\${state.id}-\${option}\`}>
-          <div>{option}</div>
-        </React.Fragment>
-      ))}
-      <select>
-        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
-          <option key={\`\${state.id}-\${option}\`} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
-
-const observedForKeyState = observer(ForKeyState);
-export default observedForKeyState;
 "
 `;
 
@@ -7518,14 +7488,14 @@ type Props = {
 function MyBasicComponent(props: Props) {
   useEffect(() => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
-  }, [props.id, props.foo.bar.baz]);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
 
   return (
     <>
       <div className=\\"test div\\">
         {props.id}
-        {props.foo.bar.baz}
+        {props.foo.value.bar.baz}
       </div>
       <style jsx>{\`
         .div {

@@ -1568,10 +1568,23 @@ exports[`Svelte > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
 `;
 
 exports[`Svelte > jsx > Javascript Test > basicForFragment 1`] = `
-"<div>
+"<script>
+  let id = \\"xyz\\";
+</script>
+
+<div>
   {#each [\\"a\\", \\"b\\", \\"c\\"] as option (\`key-\${option}\`)}
     <div>{option}</div>
   {/each}
+
+  {#each [\\"a\\", \\"b\\", \\"c\\"] as option (\`\${id}-\${option}\`)}
+    <div>{option}</div>
+  {/each}
+  <select>
+    {#each [\\"d\\", \\"e\\", \\"f\\"] as option (\`\${id}-\${option}\`)}
+      <option value={option}>{option}</option>
+    {/each}
+  </select>
 </div>"
 `;
 
@@ -1915,23 +1928,6 @@ exports[`Svelte > jsx > Javascript Test > expressionState 1`] = `
 </script>
 
 <div>{refToUse}</div>"
-`;
-
-exports[`Svelte > jsx > Javascript Test > forKeyState 1`] = `
-"<script>
-  let id = \\"xyz\\";
-</script>
-
-<div>
-  {#each [\\"a\\", \\"b\\", \\"c\\"] as option (\`\${id}-\${option}\`)}
-    <div>{option}</div>
-  {/each}
-  <select>
-    {#each [\\"d\\", \\"e\\", \\"f\\"] as option (\`\${id}-\${option}\`)}
-      <option value={option}>{option}</option>
-    {/each}
-  </select>
-</div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > getterState 1`] = `
@@ -4998,12 +4994,22 @@ exports[`Svelte > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 
 exports[`Svelte > jsx > Typescript Test > basicForFragment 1`] = `
 "<script lang=\\"ts\\">
+  let id = \\"xyz\\";
 </script>
 
 <div>
   {#each [\\"a\\", \\"b\\", \\"c\\"] as option (\`key-\${option}\`)}
     <div>{option}</div>
   {/each}
+
+  {#each [\\"a\\", \\"b\\", \\"c\\"] as option (\`\${id}-\${option}\`)}
+    <div>{option}</div>
+  {/each}
+  <select>
+    {#each [\\"d\\", \\"e\\", \\"f\\"] as option (\`\${id}-\${option}\`)}
+      <option value={option}>{option}</option>
+    {/each}
+  </select>
 </div>"
 `;
 
@@ -5418,23 +5424,6 @@ exports[`Svelte > jsx > Typescript Test > expressionState 1`] = `
 </script>
 
 <div>{refToUse}</div>"
-`;
-
-exports[`Svelte > jsx > Typescript Test > forKeyState 1`] = `
-"<script lang=\\"ts\\">
-  let id = \\"xyz\\";
-</script>
-
-<div>
-  {#each [\\"a\\", \\"b\\", \\"c\\"] as option (\`\${id}-\${option}\`)}
-    <div>{option}</div>
-  {/each}
-  <select>
-    {#each [\\"d\\", \\"e\\", \\"f\\"] as option (\`\${id}-\${option}\`)}
-      <option value={option}>{option}</option>
-    {/each}
-  </select>
-</div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > getterState 1`] = `
@@ -6486,13 +6475,13 @@ exports[`Svelte > jsx > Typescript Test > signalsOnUpdate 1`] = `
 
   function onUpdateFn_0(..._args: any[]) {
     console.log(\\"props.id changed\\", id);
-    console.log(\\"props.foo.value.bar.baz changed\\", $foo.bar.baz);
+    console.log(\\"props.foo.value.bar.baz changed\\", foo.value.bar.baz);
   }
-  $: onUpdateFn_0_foo_bar_baz = $foo.bar.baz;
-  $: onUpdateFn_0(...[id, onUpdateFn_0_foo_bar_baz]);
+
+  $: onUpdateFn_0(...[id, foo.value.bar.baz]);
 </script>
 
-<div class=\\"test div\\">{id}{$foo.bar.baz}</div>
+<div class=\\"test div\\">{id}{foo.value.bar.baz}</div>
 
 <style>
   .div {

@@ -6478,6 +6478,20 @@ import { Component } from \\"@angular/core\\";
           <div>{{option}}</div>
         </ng-container>
       </ng-container>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption1\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+      <select>
+        <ng-container
+          *ngFor=\\"let option of ['d', 'e', 'f']; trackBy: trackByOption2\\"
+        >
+          <option [attr.value]=\\"option\\">{{option}}</option>
+        </ng-container>
+      </select>
     </div>
   \`,
   styles: [
@@ -6489,8 +6503,15 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class BasicForFragment {
+  id = \\"xyz\\";
   trackByOption0(_, option) {
     return \`key-\${option}\`;
+  }
+  trackByOption1(_, option) {
+    return \`\${this.id}-\${option}\`;
+  }
+  trackByOption2(_, option) {
+    return \`\${this.id}-\${option}\`;
   }
 }
 
@@ -6518,6 +6539,20 @@ import { CommonModule } from \\"@angular/common\\";
           <div>{{option}}</div>
         </ng-container>
       </ng-container>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption1\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+      <select>
+        <ng-container
+          *ngFor=\\"let option of ['d', 'e', 'f']; trackBy: trackByOption2\\"
+        >
+          <option [attr.value]=\\"option\\">{{option}}</option>
+        </ng-container>
+      </select>
     </div>
   \`,
   styles: [
@@ -6531,8 +6566,15 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class BasicForFragment {
+  id = \\"xyz\\";
   trackByOption0(_, option) {
     return \`key-\${option}\`;
+  }
+  trackByOption1(_, option) {
+    return \`\${this.id}-\${option}\`;
+  }
+  trackByOption2(_, option) {
+    return \`\${this.id}-\${option}\`;
   }
 }
 "
@@ -8437,105 +8479,6 @@ export default class MyComponent {
     this.refToUse = !(this.componentRef instanceof Function)
       ? this.componentRef
       : null;
-  }
-}
-"
-`;
-
-exports[`Angular > jsx > Javascript Test > forKeyState 1`] = `
-"import { NgModule } from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
-
-import { Component } from \\"@angular/core\\";
-
-@Component({
-  selector: \\"for-key-state\\",
-  template: \`
-    <div>
-      <ng-container
-        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
-      >
-        <ng-container>
-          <div>{{option}}</div>
-        </ng-container>
-      </ng-container>
-      <select>
-        <ng-container
-          *ngFor=\\"let option of ['d', 'e', 'f']; trackBy: trackByOption1\\"
-        >
-          <option [attr.value]=\\"option\\">{{option}}</option>
-        </ng-container>
-      </select>
-    </div>
-  \`,
-  styles: [
-    \`
-      :host {
-        display: contents;
-      }
-    \`,
-  ],
-})
-export default class ForKeyState {
-  id = \\"xyz\\";
-  trackByOption0(_, option) {
-    return \`\${this.id}-\${option}\`;
-  }
-  trackByOption1(_, option) {
-    return \`\${this.id}-\${option}\`;
-  }
-}
-
-@NgModule({
-  declarations: [ForKeyState],
-  imports: [CommonModule],
-  exports: [ForKeyState],
-})
-export class ForKeyStateModule {}
-"
-`;
-
-exports[`Angular > jsx > Javascript Test > forKeyState 2`] = `
-"import { Component } from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
-
-@Component({
-  selector: \\"for-key-state\\",
-  template: \`
-    <div>
-      <ng-container
-        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
-      >
-        <ng-container>
-          <div>{{option}}</div>
-        </ng-container>
-      </ng-container>
-      <select>
-        <ng-container
-          *ngFor=\\"let option of ['d', 'e', 'f']; trackBy: trackByOption1\\"
-        >
-          <option [attr.value]=\\"option\\">{{option}}</option>
-        </ng-container>
-      </select>
-    </div>
-  \`,
-  styles: [
-    \`
-      :host {
-        display: contents;
-      }
-    \`,
-  ],
-  standalone: true,
-  imports: [CommonModule],
-})
-export default class ForKeyState {
-  id = \\"xyz\\";
-  trackByOption0(_, option) {
-    return \`\${this.id}-\${option}\`;
-  }
-  trackByOption1(_, option) {
-    return \`\${this.id}-\${option}\`;
   }
 }
 "
@@ -20997,6 +20940,20 @@ import { Component } from \\"@angular/core\\";
           <div>{{option}}</div>
         </ng-container>
       </ng-container>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption1\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+      <select>
+        <ng-container
+          *ngFor=\\"let option of ['d', 'e', 'f']; trackBy: trackByOption2\\"
+        >
+          <option [attr.value]=\\"option\\">{{option}}</option>
+        </ng-container>
+      </select>
     </div>
   \`,
   styles: [
@@ -21008,8 +20965,15 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class BasicForFragment {
+  id = \\"xyz\\";
   trackByOption0(_, option) {
     return \`key-\${option}\`;
+  }
+  trackByOption1(_, option) {
+    return \`\${this.id}-\${option}\`;
+  }
+  trackByOption2(_, option) {
+    return \`\${this.id}-\${option}\`;
   }
 }
 
@@ -21037,6 +21001,20 @@ import { CommonModule } from \\"@angular/common\\";
           <div>{{option}}</div>
         </ng-container>
       </ng-container>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption1\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+      <select>
+        <ng-container
+          *ngFor=\\"let option of ['d', 'e', 'f']; trackBy: trackByOption2\\"
+        >
+          <option [attr.value]=\\"option\\">{{option}}</option>
+        </ng-container>
+      </select>
     </div>
   \`,
   styles: [
@@ -21050,8 +21028,15 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
 })
 export default class BasicForFragment {
+  id = \\"xyz\\";
   trackByOption0(_, option) {
     return \`key-\${option}\`;
+  }
+  trackByOption1(_, option) {
+    return \`\${this.id}-\${option}\`;
+  }
+  trackByOption2(_, option) {
+    return \`\${this.id}-\${option}\`;
   }
 }
 "
@@ -23060,105 +23045,6 @@ export default class MyComponent {
     this.refToUse = !(this.componentRef instanceof Function)
       ? this.componentRef
       : null;
-  }
-}
-"
-`;
-
-exports[`Angular > jsx > Typescript Test > forKeyState 1`] = `
-"import { NgModule } from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
-
-import { Component } from \\"@angular/core\\";
-
-@Component({
-  selector: \\"for-key-state\\",
-  template: \`
-    <div>
-      <ng-container
-        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
-      >
-        <ng-container>
-          <div>{{option}}</div>
-        </ng-container>
-      </ng-container>
-      <select>
-        <ng-container
-          *ngFor=\\"let option of ['d', 'e', 'f']; trackBy: trackByOption1\\"
-        >
-          <option [attr.value]=\\"option\\">{{option}}</option>
-        </ng-container>
-      </select>
-    </div>
-  \`,
-  styles: [
-    \`
-      :host {
-        display: contents;
-      }
-    \`,
-  ],
-})
-export default class ForKeyState {
-  id = \\"xyz\\";
-  trackByOption0(_, option) {
-    return \`\${this.id}-\${option}\`;
-  }
-  trackByOption1(_, option) {
-    return \`\${this.id}-\${option}\`;
-  }
-}
-
-@NgModule({
-  declarations: [ForKeyState],
-  imports: [CommonModule],
-  exports: [ForKeyState],
-})
-export class ForKeyStateModule {}
-"
-`;
-
-exports[`Angular > jsx > Typescript Test > forKeyState 2`] = `
-"import { Component } from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
-
-@Component({
-  selector: \\"for-key-state\\",
-  template: \`
-    <div>
-      <ng-container
-        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
-      >
-        <ng-container>
-          <div>{{option}}</div>
-        </ng-container>
-      </ng-container>
-      <select>
-        <ng-container
-          *ngFor=\\"let option of ['d', 'e', 'f']; trackBy: trackByOption1\\"
-        >
-          <option [attr.value]=\\"option\\">{{option}}</option>
-        </ng-container>
-      </select>
-    </div>
-  \`,
-  styles: [
-    \`
-      :host {
-        display: contents;
-      }
-    \`,
-  ],
-  standalone: true,
-  imports: [CommonModule],
-})
-export default class ForKeyState {
-  id = \\"xyz\\";
-  trackByOption0(_, option) {
-    return \`\${this.id}-\${option}\`;
-  }
-  trackByOption1(_, option) {
-    return \`\${this.id}-\${option}\`;
   }
 }
 "
@@ -26801,7 +26687,7 @@ type Props = {
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
-    <div class=\\"test div\\">{{id}} {{foo.bar.baz}}</div>
+    <div class=\\"test div\\">{{id}} {{foo.value.bar.baz}}</div>
   \`,
   styles: [
     \`
@@ -26821,7 +26707,7 @@ export default class MyBasicComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"props.id changed\\", this.id);
-      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
     }
   }
 }
@@ -26851,7 +26737,7 @@ type Props = {
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
-    <div class=\\"test div\\">{{id}} {{foo.bar.baz}}</div>
+    <div class=\\"test div\\">{{id}} {{foo.value.bar.baz}}</div>
   \`,
   styles: [
     \`
@@ -26873,7 +26759,7 @@ export default class MyBasicComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"props.id changed\\", this.id);
-      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
     }
   }
 }

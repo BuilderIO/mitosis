@@ -1595,9 +1595,12 @@ export default function MyComponent(props) {
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > basicForFragment 1`] = `
-"import { For, Fragment } from \\"@components\\";
+"import { useStore } from \\"@builder.io/mitosis\\";
+import { For, Fragment } from \\"@components\\";
 
 export default function BasicForFragment(props) {
+  const state = useStore({ id: \\"xyz\\" });
+
   return [
     <div>
       {[\\"a\\", \\"b\\", \\"c\\"].map((option, index) => (
@@ -1605,6 +1608,18 @@ export default function BasicForFragment(props) {
           <div>{option}</div>
         </Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"].map((option, index) => (
+        <Fragment key={\`\${state.id}-\${option}\`}>
+          <div>{option}</div>
+        </Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"].map((option, index) => (
+          <option key={\`\${state.id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>,
   ];
 }
@@ -1931,33 +1946,6 @@ export default function MyComponent(props) {
   });
 
   return [<div>{state.refToUse}</div>];
-}
-"
-`;
-
-exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > forKeyState 1`] = `
-"import { useStore } from \\"@builder.io/mitosis\\";
-import { For, Fragment } from \\"@components\\";
-
-export default function ForKeyState(props) {
-  const state = useStore({ id: \\"xyz\\" });
-
-  return [
-    <div>
-      {[\\"a\\", \\"b\\", \\"c\\"].map((option, index) => (
-        <Fragment key={\`\${state.id}-\${option}\`}>
-          <div>{option}</div>
-        </Fragment>
-      ))}
-      <select>
-        {[\\"d\\", \\"e\\", \\"f\\"].map((option, index) => (
-          <option key={\`\${state.id}-\${option}\`} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>,
-  ];
 }
 "
 `;
@@ -4893,9 +4881,12 @@ export default function MyComponent(props) {
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > basicForFragment 1`] = `
-"import { For, Fragment } from \\"@components\\";
+"import { useStore } from \\"@builder.io/mitosis\\";
+import { For, Fragment } from \\"@components\\";
 
 export default function BasicForFragment(props) {
+  const state = useStore({ id: \\"xyz\\" });
+
   return [
     <div>
       {[\\"a\\", \\"b\\", \\"c\\"].map((option, index) => (
@@ -4903,6 +4894,18 @@ export default function BasicForFragment(props) {
           <div>{option}</div>
         </Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"].map((option, index) => (
+        <Fragment key={\`\${state.id}-\${option}\`}>
+          <div>{option}</div>
+        </Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"].map((option, index) => (
+          <option key={\`\${state.id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>,
   ];
 }
@@ -5262,33 +5265,6 @@ export default function MyComponent(props) {
   });
 
   return [<div>{state.refToUse}</div>];
-}
-"
-`;
-
-exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > forKeyState 1`] = `
-"import { useStore } from \\"@builder.io/mitosis\\";
-import { For, Fragment } from \\"@components\\";
-
-export default function ForKeyState(props) {
-  const state = useStore({ id: \\"xyz\\" });
-
-  return [
-    <div>
-      {[\\"a\\", \\"b\\", \\"c\\"].map((option, index) => (
-        <Fragment key={\`\${state.id}-\${option}\`}>
-          <div>{option}</div>
-        </Fragment>
-      ))}
-      <select>
-        {[\\"d\\", \\"e\\", \\"f\\"].map((option, index) => (
-          <option key={\`\${state.id}-\${option}\`} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>,
-  ];
 }
 "
 `;
@@ -8795,10 +8771,12 @@ export default function MyComponent(props) {
 `;
 
 exports[`Mitosis, format: legacy > jsx > Javascript Test > basicForFragment 1`] = `
-"import { For } from \\"@builder.io/mitosis\\";
+"import { useStore, For } from \\"@builder.io/mitosis\\";
 import { Fragment } from \\"@components\\";
 
 export default function BasicForFragment(props) {
+  const state = useStore({ id: \\"xyz\\" });
+
   return (
     <div>
       <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
@@ -8808,6 +8786,22 @@ export default function BasicForFragment(props) {
           </Fragment>
         )}
       </For>
+      <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
+        {(option, index) => (
+          <Fragment key={\`\${state.id}-\${option}\`}>
+            <div>{option}</div>
+          </Fragment>
+        )}
+      </For>
+      <select>
+        <For each={[\\"d\\", \\"e\\", \\"f\\"]}>
+          {(option, index) => (
+            <option key={\`\${state.id}-\${option}\`} value={option}>
+              {option}
+            </option>
+          )}
+        </For>
+      </select>
     </div>
   );
 }
@@ -9135,37 +9129,6 @@ export default function MyComponent(props) {
   });
 
   return <div>{state.refToUse}</div>;
-}
-"
-`;
-
-exports[`Mitosis, format: legacy > jsx > Javascript Test > forKeyState 1`] = `
-"import { useStore, For } from \\"@builder.io/mitosis\\";
-import { Fragment } from \\"@components\\";
-
-export default function ForKeyState(props) {
-  const state = useStore({ id: \\"xyz\\" });
-
-  return (
-    <div>
-      <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
-        {(option, index) => (
-          <Fragment key={\`\${state.id}-\${option}\`}>
-            <div>{option}</div>
-          </Fragment>
-        )}
-      </For>
-      <select>
-        <For each={[\\"d\\", \\"e\\", \\"f\\"]}>
-          {(option, index) => (
-            <option key={\`\${state.id}-\${option}\`} value={option}>
-              {option}
-            </option>
-          )}
-        </For>
-      </select>
-    </div>
-  );
 }
 "
 `;
@@ -12155,10 +12118,12 @@ export default function MyComponent(props) {
 `;
 
 exports[`Mitosis, format: legacy > jsx > Typescript Test > basicForFragment 1`] = `
-"import { For } from \\"@builder.io/mitosis\\";
+"import { useStore, For } from \\"@builder.io/mitosis\\";
 import { Fragment } from \\"@components\\";
 
 export default function BasicForFragment(props) {
+  const state = useStore({ id: \\"xyz\\" });
+
   return (
     <div>
       <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
@@ -12168,6 +12133,22 @@ export default function BasicForFragment(props) {
           </Fragment>
         )}
       </For>
+      <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
+        {(option, index) => (
+          <Fragment key={\`\${state.id}-\${option}\`}>
+            <div>{option}</div>
+          </Fragment>
+        )}
+      </For>
+      <select>
+        <For each={[\\"d\\", \\"e\\", \\"f\\"]}>
+          {(option, index) => (
+            <option key={\`\${state.id}-\${option}\`} value={option}>
+              {option}
+            </option>
+          )}
+        </For>
+      </select>
     </div>
   );
 }
@@ -12530,37 +12511,6 @@ export default function MyComponent(props) {
   });
 
   return <div>{state.refToUse}</div>;
-}
-"
-`;
-
-exports[`Mitosis, format: legacy > jsx > Typescript Test > forKeyState 1`] = `
-"import { useStore, For } from \\"@builder.io/mitosis\\";
-import { Fragment } from \\"@components\\";
-
-export default function ForKeyState(props) {
-  const state = useStore({ id: \\"xyz\\" });
-
-  return (
-    <div>
-      <For each={[\\"a\\", \\"b\\", \\"c\\"]}>
-        {(option, index) => (
-          <Fragment key={\`\${state.id}-\${option}\`}>
-            <div>{option}</div>
-          </Fragment>
-        )}
-      </For>
-      <select>
-        <For each={[\\"d\\", \\"e\\", \\"f\\"]}>
-          {(option, index) => (
-            <option key={\`\${state.id}-\${option}\`} value={option}>
-              {option}
-            </option>
-          )}
-        </For>
-      </select>
-    </div>
-  );
 }
 "
 `;
@@ -16256,9 +16206,13 @@ export default MyComponent;
 `;
 
 exports[`Mitosis, format: react > jsx > Javascript Test > basicForFragment 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 function BasicForFragment(props) {
+  const [id, setId] = useState(() => \\"xyz\\");
+
   return (
     <div>
       {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
@@ -16266,6 +16220,18 @@ function BasicForFragment(props) {
           <div>{option}</div>
         </React.Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${id}-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
@@ -16746,36 +16712,6 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
-"
-`;
-
-exports[`Mitosis, format: react > jsx > Javascript Test > forKeyState 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useState } from \\"react\\";
-
-function ForKeyState(props) {
-  const [id, setId] = useState(() => \\"xyz\\");
-
-  return (
-    <div>
-      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
-        <React.Fragment key={\`\${id}-\${option}\`}>
-          <div>{option}</div>
-        </React.Fragment>
-      ))}
-      <select>
-        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
-          <option key={\`\${id}-\${option}\`} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
-
-export default ForKeyState;
 "
 `;
 
@@ -19954,9 +19890,13 @@ export default MyComponent;
 `;
 
 exports[`Mitosis, format: react > jsx > Typescript Test > basicForFragment 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 function BasicForFragment(props) {
+  const [id, setId] = useState(() => \\"xyz\\");
+
   return (
     <div>
       {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
@@ -19964,6 +19904,18 @@ function BasicForFragment(props) {
           <div>{option}</div>
         </React.Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${id}-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
@@ -20445,36 +20397,6 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
-"
-`;
-
-exports[`Mitosis, format: react > jsx > Typescript Test > forKeyState 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useState } from \\"react\\";
-
-function ForKeyState(props) {
-  const [id, setId] = useState(() => \\"xyz\\");
-
-  return (
-    <div>
-      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
-        <React.Fragment key={\`\${id}-\${option}\`}>
-          <div>{option}</div>
-        </React.Fragment>
-      ))}
-      <select>
-        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
-          <option key={\`\${id}-\${option}\`} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
-
-export default ForKeyState;
 "
 `;
 
@@ -21501,8 +21423,8 @@ import { useEffect } from \\"react\\";
 function MyBasicComponent(props) {
   useEffect(() => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
-  }, [props.id, props.foo.bar.baz]);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
 
   return (
     <div
@@ -21512,7 +21434,7 @@ function MyBasicComponent(props) {
       }}
     >
       {props.id}
-      {props.foo.bar.baz}
+      {props.foo.value.bar.baz}
     </div>
   );
 }
