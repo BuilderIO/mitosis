@@ -4463,6 +4463,59 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > forKeyState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"for-key-state\\",
+  template: \`
+    <div>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+      <select>
+        <ng-container
+          *ngFor=\\"let option of ['d', 'e', 'f']; trackBy: trackByOption1\\"
+        >
+          <option [attr.value]=\\"option\\">{{option}}</option>
+        </ng-container>
+      </select>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class ForKeyState {
+  id = \\"xyz\\";
+  trackByOption0(_, option) {
+    return \`\${this.id}-\${option}\`;
+  }
+  trackByOption1(_, option) {
+    return \`\${this.id}-\${option}\`;
+  }
+}
+
+@NgModule({
+  declarations: [ForKeyState],
+  imports: [CommonModule],
+  exports: [ForKeyState],
+})
+export class ForKeyStateModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > getterState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -12182,6 +12235,59 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > forKeyState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"for-key-state\\",
+  template: \`
+    <div>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+      <select>
+        <ng-container
+          *ngFor=\\"let option of ['d', 'e', 'f']; trackBy: trackByOption1\\"
+        >
+          <option [attr.value]=\\"option\\">{{option}}</option>
+        </ng-container>
+      </select>
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class ForKeyState {
+  id = \\"xyz\\";
+  trackByOption0(_, option) {
+    return \`\${this.id}-\${option}\`;
+  }
+  trackByOption1(_, option) {
+    return \`\${this.id}-\${option}\`;
+  }
+}
+
+@NgModule({
+  declarations: [ForKeyState],
+  imports: [CommonModule],
+  exports: [ForKeyState],
+})
+export class ForKeyStateModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > getterState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -14138,7 +14244,7 @@ type Props = {
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
-    <div class=\\"test div\\">{{id}} {{foo.bar.baz}}</div>
+    <div class=\\"test div\\">{{id}} {{foo.value.bar.baz}}</div>
   \`,
   styles: [
     \`
@@ -14158,7 +14264,7 @@ export default class MyBasicComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"props.id changed\\", this.id);
-      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
     }
   }
 }

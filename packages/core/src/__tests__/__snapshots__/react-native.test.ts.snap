@@ -2979,6 +2979,50 @@ export default MyComponent;
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > forKeyState 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function ForKeyState(props) {
+  const [id, setId] = useState(() => \\"xyz\\");
+
+  return (
+    <View>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${id}-\${option}\`}>
+          <View>
+            <Text>{option}</Text>
+          </View>
+        </React.Fragment>
+      ))}
+      <View>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <View key={\`\${id}-\${option}\`} value={option}>
+            <Text>{option}</Text>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+export default ForKeyState;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > getterState 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -8488,6 +8532,50 @@ export default MyComponent;
 "
 `;
 
+exports[`React Native > jsx > Typescript Test > forKeyState 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useState } from \\"react\\";
+
+function ForKeyState(props: any) {
+  const [id, setId] = useState(() => \\"xyz\\");
+
+  return (
+    <View>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${id}-\${option}\`}>
+          <View>
+            <Text>{option}</Text>
+          </View>
+        </React.Fragment>
+      ))}
+      <View>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <View key={\`\${id}-\${option}\`} value={option}>
+            <Text>{option}</Text>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+export default ForKeyState;
+"
+`;
+
 exports[`React Native > jsx > Typescript Test > getterState 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -10299,13 +10387,13 @@ type Props = {
 function MyBasicComponent(props: Props) {
   useEffect(() => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
-  }, [props.id, props.foo.bar.baz]);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
 
   return (
     <View style={styles.view1}>
       <Text>{props.id}</Text>
-      <Text>{props.foo.bar.baz}</Text>
+      <Text>{props.foo.value.bar.baz}</Text>
     </View>
   );
 }

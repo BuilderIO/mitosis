@@ -1908,6 +1908,31 @@ exports[`Alpine.js > jsx > Javascript Test > expressionState 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > forKeyState 1`] = `
+"<div x-data=\\"forKeyState()\\">
+  <template x-for=\\"option in ['a', 'b', 'c']\\">
+    <div x-bind:key=\\"\`\${id}-\${option}\`\\">
+      <div><span x-html=\\"option\\"></span></div>
+    </div>
+  </template>
+  <select>
+    <template x-for=\\"option in ['d', 'e', 'f']\\">
+      <option x-bind:key=\\"\`\${id}-\${option}\`\\" x-bind:value=\\"option\\">
+        <span x-html=\\"option\\"></span>
+      </option>
+    </template>
+  </select>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"forKeyState\\", () => ({
+      id: \\"xyz\\",
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > getterState 1`] = `
 "<div x-data=\\"button()\\">
   <p><span x-html=\\"foo2\\"></span></p>
@@ -4961,6 +4986,31 @@ exports[`Alpine.js > jsx > Typescript Test > expressionState 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Typescript Test > forKeyState 1`] = `
+"<div x-data=\\"forKeyState()\\">
+  <template x-for=\\"option in ['a', 'b', 'c']\\">
+    <div x-bind:key=\\"\`\${id}-\${option}\`\\">
+      <div><span x-html=\\"option\\"></span></div>
+    </div>
+  </template>
+  <select>
+    <template x-for=\\"option in ['d', 'e', 'f']\\">
+      <option x-bind:key=\\"\`\${id}-\${option}\`\\" x-bind:value=\\"option\\">
+        <span x-html=\\"option\\"></span>
+      </option>
+    </template>
+  </select>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"forKeyState\\", () => ({
+      id: \\"xyz\\",
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Typescript Test > getterState 1`] = `
 "<div x-data=\\"button()\\">
   <p><span x-html=\\"foo2\\"></span></p>
@@ -5793,7 +5843,7 @@ exports[`Alpine.js > jsx > Typescript Test > signalsOnUpdate 1`] = `
 </style>
 <div class=\\"test div\\" x-data=\\"myBasicComponent()\\">
   <span x-html=\\"id\\"></span>
-  <span x-html=\\"foo.bar.baz\\"></span>
+  <span x-html=\\"foo.value.bar.baz\\"></span>
 </div>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {

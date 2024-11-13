@@ -2212,6 +2212,36 @@ export default MyComponent;
 "
 `;
 
+exports[`React - stateType: valtio > jsx > Javascript Test > forKeyState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalProxy } from \\"valtio/utils\\";
+
+function ForKeyState(props) {
+  const state = useLocalProxy({ id: \\"xyz\\" });
+
+  return (
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${state.id}-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${state.id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+export default ForKeyState;
+"
+`;
+
 exports[`React - stateType: valtio > jsx > Javascript Test > getterState 1`] = `
 "import * as React from \\"react\\";
 import { useLocalProxy } from \\"valtio/utils\\";
@@ -6110,6 +6140,36 @@ export default MyComponent;
 "
 `;
 
+exports[`React - stateType: valtio > jsx > Typescript Test > forKeyState 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalProxy } from \\"valtio/utils\\";
+
+function ForKeyState(props: any) {
+  const state = useLocalProxy({ id: \\"xyz\\" });
+
+  return (
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${state.id}-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${state.id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+export default ForKeyState;
+"
+`;
+
 exports[`React - stateType: valtio > jsx > Typescript Test > getterState 1`] = `
 "import * as React from \\"react\\";
 import { useLocalProxy } from \\"valtio/utils\\";
@@ -7235,14 +7295,14 @@ type Props = {
 function MyBasicComponent(props: Props) {
   useEffect(() => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
-  }, [props.id, props.foo.bar.baz]);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
 
   return (
     <>
       <div className=\\"test div\\">
         {props.id}
-        {props.foo.bar.baz}
+        {props.foo.value.bar.baz}
       </div>
       <style jsx>{\`
         .div {

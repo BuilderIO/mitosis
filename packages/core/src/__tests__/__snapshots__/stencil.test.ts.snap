@@ -2523,6 +2523,37 @@ export class MyComponent {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > forKeyState 1`] = `
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"for-key-state\\",
+})
+export class ForKeyState {
+  @State() id = \\"xyz\\";
+
+  render() {
+    return (
+      <div>
+        {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+          <Fragment key={\`\${this.id}-\${option}\`}>
+            <div>{option}</div>
+          </Fragment>
+        ))}
+        <select>
+          {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+            <option key={\`\${this.id}-\${option}\`} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > getterState 1`] = `
 "import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
 
@@ -6685,6 +6716,37 @@ export class MyComponent {
 "
 `;
 
+exports[`Stencil > jsx > Typescript Test > forKeyState 1`] = `
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"for-key-state\\",
+})
+export class ForKeyState {
+  @State() id = \\"xyz\\";
+
+  render() {
+    return (
+      <div>
+        {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+          <Fragment key={\`\${this.id}-\${option}\`}>
+            <div>{option}</div>
+          </Fragment>
+        ))}
+        <select>
+          {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+            <option key={\`\${this.id}-\${option}\`} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Typescript Test > getterState 1`] = `
 "import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
 
@@ -7683,14 +7745,14 @@ export class MyBasicComponent {
 
   componentDidUpdate() {
     console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
   }
 
   render() {
     return (
       <div class=\\"test div\\">
         {this.id}
-        {this.foo.bar.baz}
+        {this.foo.value.bar.baz}
       </div>
     );
   }

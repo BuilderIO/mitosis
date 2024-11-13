@@ -2204,6 +2204,36 @@ export default MyComponent;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > forKeyState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function ForKeyState(props) {
+  const [id, setId] = useState(() => \\"xyz\\");
+
+  return (
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <Fragment key={\`\${id}-\${option}\`}>
+          <div>{option}</div>
+        </Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+export default ForKeyState;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > getterState 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -6206,6 +6236,36 @@ export default MyComponent;
 "
 `;
 
+exports[`Preact > jsx > Typescript Test > forKeyState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+function ForKeyState(props: any) {
+  const [id, setId] = useState(() => \\"xyz\\");
+
+  return (
+    <div>
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <Fragment key={\`\${id}-\${option}\`}>
+          <div>{option}</div>
+        </Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+export default ForKeyState;
+"
+`;
+
 exports[`Preact > jsx > Typescript Test > getterState 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -7423,14 +7483,14 @@ type Props = {
 function MyBasicComponent(props: Props) {
   useEffect(() => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
-  }, [props.id, props.foo.bar.baz]);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
 
   return (
     <Fragment>
       <div className=\\"test div\\">
         {props.id}
-        {props.foo.bar.baz}
+        {props.foo.value.bar.baz}
       </div>
       <style jsx>{\`
         .div {
