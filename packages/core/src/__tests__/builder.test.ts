@@ -602,7 +602,7 @@ describe('Builder', () => {
             component: {
               name: 'Columns',
               options: {
-                columns: [{ blocks: [] }],
+                columns: [{ blocks: [] }, { blocks: [], width: 50 }],
               },
             },
           },
@@ -622,7 +622,8 @@ describe('Builder', () => {
       export default function MyComponent(props) {
         return (
           <Columns>
-            <Column width={} />
+            <Column />
+            <Column width={50} />
           </Columns>
         );
       }
