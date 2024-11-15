@@ -593,7 +593,7 @@ describe('Builder', () => {
     expect(mitosis.trim()).toEqual(code.trim());
   });
 
-  test.only('do not generate empty expression for width on Column', () => {
+  test('do not generate empty expression for width on Column', () => {
     const content = {
       data: {
         blocks: [
