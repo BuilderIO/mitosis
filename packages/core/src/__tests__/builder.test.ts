@@ -648,6 +648,7 @@ describe('Builder', () => {
               'responsiveStyles.small.left': 'state.left',
               'responsiveStyles.small.top': 'state.top',
               'responsiveStyles.large.color': 'state.color',
+              'style.fontSize': 'state.fontSize',
             },
           },
         ],
@@ -659,7 +660,7 @@ describe('Builder', () => {
       {
         "style": {
           "bindingType": "expression",
-          "code": "{ '@media (max-width: 640px)': {\\"left\\":\\"state.left\\",\\"top\\":\\"state.top\\"}, '@media (max-width: 1200px)': {\\"color\\":\\"state.color\\"}, }",
+          "code": "{ fontSize: state.fontSize, '@media (max-width: 640px)': {\\"left\\":\\"state.left\\",\\"top\\":\\"state.top\\"}, '@media (max-width: 1200px)': {\\"color\\":\\"state.color\\"}, }",
           "type": "single",
         },
       }
@@ -671,6 +672,7 @@ describe('Builder', () => {
         return (
           <div
             style={{
+              fontSize: state.fontSize,
               \\"@media (max-width: 640px)\\": {
                 left: \\"state.left\\",
                 top: \\"state.top\\",
