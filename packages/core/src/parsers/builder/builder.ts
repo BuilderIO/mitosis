@@ -108,9 +108,8 @@ const getActionBindingsFromBlock = (
 
 const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosisOptions) => {
   const styleBindings: any = {};
-  let styleString = '';
-
   const responsiveStyles: Record<string, Record<string, string>> = {};
+  let styleString = '';
 
   if (block.bindings) {
     for (const key in block.bindings) {

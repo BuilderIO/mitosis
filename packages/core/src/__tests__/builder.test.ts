@@ -638,7 +638,7 @@ describe('Builder', () => {
     );
   });
 
-  test('preserves bound media query styles when converting to mitosis', () => {
+  test('preserve bound media query styles when converting to mitosis', () => {
     const content = {
       data: {
         blocks: [
