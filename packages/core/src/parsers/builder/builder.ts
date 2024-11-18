@@ -107,10 +107,10 @@ const getActionBindingsFromBlock = (
 };
 
 const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosisOptions) => {
-  let styleBindings: any = {};
+  const styleBindings: any = {};
   let styleString = '';
 
-  const responsiveStyles: Record<string, any> = {};
+  const responsiveStyles: Record<string, Record<string, string>> = {};
 
   if (block.bindings) {
     for (const key in block.bindings) {
@@ -147,13 +147,8 @@ const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosi
 
     // All binding values are strings, so stringify media query objects
     for (const key in responsiveStyles) {
-      responsiveStyles[key] = JSON.stringify(responsiveStyles[key]);
+      styleBindings[key] = JSON.stringify(responsiveStyles[key]);
     }
-
-    styleBindings = {
-      ...styleBindings,
-      ...responsiveStyles,
-    };
   }
 
   const styleKeys = Object.keys(styleBindings);
