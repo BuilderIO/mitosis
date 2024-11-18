@@ -637,6 +637,54 @@ describe('Builder', () => {
       'world',
     );
   });
+
+  test('preserves bound media query styles when converting to mitosis', () => {
+    const content = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            bindings: {
+              'responsiveStyles.small.left': 'state.left',
+              'responsiveStyles.small.top': 'state.top',
+              'responsiveStyles.large.color': 'state.color',
+            },
+          },
+        ],
+      },
+    };
+
+    const mitosis = builderContentToMitosisComponent(content);
+    expect(mitosis.children[0].bindings).toMatchInlineSnapshot(`
+      {
+        "style": {
+          "bindingType": "expression",
+          "code": "{ '@media (max-width: 640px)': {\\"left\\":\\"state.left\\",\\"top\\":\\"state.top\\"}, '@media (max-width: 1200px)': {\\"color\\":\\"state.color\\"}, }",
+          "type": "single",
+        },
+      }
+    `);
+
+    const jsx = componentToMitosis()({ component: mitosis });
+    expect(jsx).toMatchInlineSnapshot(`
+      "export default function MyComponent(props) {
+        return (
+          <div
+            style={{
+              \\"@media (max-width: 640px)\\": {
+                left: \\"state.left\\",
+                top: \\"state.top\\",
+              },
+              \\"@media (max-width: 1200px)\\": {
+                color: \\"state.color\\",
+              },
+            }}
+          />
+        );
+      }
+      "
+    `);
+  });
 });
 
 const bindingJson = {
