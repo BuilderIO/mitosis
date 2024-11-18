@@ -107,18 +107,53 @@ const getActionBindingsFromBlock = (
 };
 
 const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosisOptions) => {
-  const styleBindings: any = {};
+  let styleBindings: any = {};
   let styleString = '';
+
+  const responsiveStyles: Record<string, any> = {};
 
   if (block.bindings) {
     for (const key in block.bindings) {
-      if (key.includes('style') && key.includes('.')) {
+      if (!key.includes('.')) {
+        continue;
+      }
+      if (key.includes('style')) {
         const styleProperty = key.split('.')[1];
         styleBindings[styleProperty] = convertExportDefaultToReturn(
           block.code?.bindings?.[key] || block.bindings[key],
         );
+        /**
+         * responsiveStyles that are bound need to be merged into media queries.
+         * Example:
+         * responsiveStyles.large.color: "state.color"
+         * responsiveStyles.large.background: "state.background"
+         * Should get mapped to:
+         * @media (max-width: 1200px): {
+         *   color: "state.color",
+         *   background: "state.background"
+         * }
+         */
+      } else if (key.includes('responsiveStyles')) {
+        const [_, size, prop] = key.split('.');
+        const mediaKey = `@media (max-width: ${sizes[size as Size].max}px)`;
+
+        const objKey = `'${mediaKey}'`;
+        responsiveStyles[objKey] = {
+          ...responsiveStyles[objKey],
+          [prop]: block.bindings[key],
+        };
       }
     }
+
+    // All binding values are strings, so stringify media query objects
+    for (const key in responsiveStyles) {
+      responsiveStyles[key] = JSON.stringify(responsiveStyles[key]);
+    }
+
+    styleBindings = {
+      ...styleBindings,
+      ...responsiveStyles,
+    };
   }
 
   const styleKeys = Object.keys(styleBindings);
