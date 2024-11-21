@@ -347,9 +347,15 @@ const componentMappers: {
       block.component?.options.columns?.map((col: any, index: number) =>
         createMitosisNode({
           name: 'Column',
-          bindings: {
-            width: { code: col.width?.toString() },
-          },
+          /**
+           * If width if undefined, do not create a binding otherwise its JSX will
+           * be <Column width={} /> which is not valid due to the empty expression.
+           */
+          ...(col.width !== undefined && {
+            bindings: {
+              width: { code: col.width.toString() },
+            },
+          }),
           ...(col.link && {
             properties: {
               link: col.link,
