@@ -136,7 +136,11 @@ const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosi
         const [_, size, prop] = key.split('.');
         const mediaKey = `@media (max-width: ${sizes[size as Size].max}px)`;
 
-        const objKey = `'${mediaKey}'`;
+        /**
+         * The media query key has spaces/special characters so we need to ensure
+         * that the key is always a string otherwise there will be runtime errors.
+         */
+        const objKey = `"${mediaKey}"`;
         responsiveStyles[objKey] = {
           ...responsiveStyles[objKey],
           [prop]: block.bindings[key],
