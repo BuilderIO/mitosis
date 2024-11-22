@@ -593,6 +593,44 @@ describe('Builder', () => {
     expect(mitosis.trim()).toEqual(code.trim());
   });
 
+  test('do not generate empty expression for width on Column', () => {
+    const content = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            component: {
+              name: 'Columns',
+              options: {
+                columns: [{ blocks: [] }, { blocks: [], width: 50 }],
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    const mitosisJson = builderContentToMitosisComponent(content);
+
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: mitosisJson,
+    });
+
+    expect(mitosis).toMatchInlineSnapshot(`
+      "import { Columns, Column } from \\"@components\\";
+
+      export default function MyComponent(props) {
+        return (
+          <Columns>
+            <Column />
+            <Column width={50} />
+          </Columns>
+        );
+      }
+      "
+    `);
+  });
+
   test('nodes as props', () => {
     const content = {
       data: {
