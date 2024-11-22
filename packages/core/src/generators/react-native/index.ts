@@ -11,7 +11,7 @@ import { TranspilerGenerator } from '@/types/transpiler';
 import json5 from 'json5';
 import { camelCase, size } from 'lodash';
 import traverse from 'neotraverse/legacy';
-import { MitosisNode, Plugin } from '../..';
+import { MitosisNode, MitosisPlugin } from '../..';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
 import { ToReactOptions, componentToReact } from '../react';
 import { sanitizeReactNativeBlockStyles } from './sanitize-react-native-block-styles';
@@ -111,7 +111,7 @@ export const collectReactNativeStyles = (
  * Plugin that handles necessary transformations from React to React Native:
  * - Converts DOM tags to <View /> and <Text />
  */
-const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
+const PROCESS_REACT_NATIVE_PLUGIN: MitosisPlugin = () => ({
   json: {
     pre: (json: MitosisComponent) => {
       traverse(json).forEach((node) => {
@@ -150,7 +150,7 @@ const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
 /**
  * Removes React Native className and class properties from the JSON
  */
-const REMOVE_REACT_NATIVE_CLASSES_PLUGIN: Plugin = () => ({
+const REMOVE_REACT_NATIVE_CLASSES_PLUGIN: MitosisPlugin = () => ({
   json: {
     pre: (json: MitosisComponent) => {
       traverse(json).forEach(function (node) {
@@ -176,7 +176,7 @@ const REMOVE_REACT_NATIVE_CLASSES_PLUGIN: Plugin = () => ({
 /**
  * Converts class and className properties to twrnc style syntax
  */
-const TWRNC_STYLES_PLUGIN: Plugin = () => ({
+const TWRNC_STYLES_PLUGIN: MitosisPlugin = () => ({
   json: {
     post: (json: MitosisComponent) => {
       traverse(json).forEach(function (node) {
@@ -234,7 +234,7 @@ const TWRNC_STYLES_PLUGIN: Plugin = () => ({
  * Converts class and className properties to native-wind style syntax
  * Note: We only support the "with babel" setup: https://www.nativewind.dev/guides/babel
  */
-const NATIVE_WIND_STYLES_PLUGIN: Plugin = () => ({
+const NATIVE_WIND_STYLES_PLUGIN: MitosisPlugin = () => ({
   json: {
     post: (json: MitosisComponent) => {
       traverse(json).forEach(function (node) {

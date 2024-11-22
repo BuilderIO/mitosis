@@ -1,12 +1,12 @@
 import {
-  builderContentToMitosisComponent,
-  compileAwayBuilderComponents,
   GeneratorOptions,
   MitosisComponent,
+  MitosisPlugin,
+  Target,
+  builderContentToMitosisComponent,
+  compileAwayBuilderComponents,
   parseJsx,
   parseSvelte,
-  Plugin,
-  Target,
   targets,
 } from '@builder.io/mitosis';
 import { GluegunCommand } from 'gluegun';
@@ -44,7 +44,7 @@ const command: GluegunCommand = {
 
     const header = opts.header;
 
-    const plugins: Plugin[] = [];
+    const plugins: MitosisPlugin[] = [];
 
     if (!opts.builderComponents) {
       plugins.push(compileAwayBuilderComponents());
