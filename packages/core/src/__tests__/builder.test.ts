@@ -688,6 +688,11 @@ describe('Builder', () => {
               'responsiveStyles.large.color': 'state.color',
               'style.fontSize': 'state.fontSize',
             },
+            responsiveStyles: {
+              medium: {
+                color: 'red',
+              },
+            },
           },
         ],
       },
@@ -696,9 +701,14 @@ describe('Builder', () => {
     const mitosis = builderContentToMitosisComponent(content);
     expect(mitosis.children[0].bindings).toMatchInlineSnapshot(`
       {
+        "css": {
+          "bindingType": "expression",
+          "code": "{\\"@media (max-width: 991px)\\":{\\"color\\":\\"red\\"}}",
+          "type": "single",
+        },
         "style": {
           "bindingType": "expression",
-          "code": "{ fontSize: state.fontSize, \\"@media (max-width: 640px)\\": {\\"left\\":\\"state.left\\",\\"top\\":\\"state.top\\"}, \\"@media (max-width: 1200px)\\": {\\"color\\":\\"state.color\\"}, }",
+          "code": "{ fontSize: state.fontSize, \\"@media (max-width: 640px)\\": { left: state.left, top: state.top }, \\"@media (max-width: 1200px)\\": { color: state.color }, }",
           "type": "single",
         },
       }
@@ -712,11 +722,16 @@ describe('Builder', () => {
             style={{
               fontSize: state.fontSize,
               \\"@media (max-width: 640px)\\": {
-                left: \\"state.left\\",
-                top: \\"state.top\\",
+                left: state.left,
+                top: state.top,
               },
               \\"@media (max-width: 1200px)\\": {
-                color: \\"state.color\\",
+                color: state.color,
+              },
+            }}
+            css={{
+              \\"@media (max-width: 991px)\\": {
+                color: \\"red\\",
               },
             }}
           />
