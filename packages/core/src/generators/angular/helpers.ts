@@ -1,5 +1,6 @@
 import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
 import { type MitosisComponent } from '@/types/mitosis-component';
+import { MitosisNode } from '@/types/mitosis-node';
 
 export const HELPER_FUNCTIONS = (
   isTs?: boolean,
@@ -120,4 +121,17 @@ export const transformState = (json: MitosisComponent) => {
         }
       }
     });
+};
+
+/**
+ * Checks if the first child has a "key" attribute - used for "For" elements
+ * @param node The node which should be "For"
+ */
+export const hasFirstChildKeyAttribute = (node: MitosisNode): boolean => {
+  if (!node.children || node.children.length === 0) {
+    return false;
+  }
+
+  const firstChildBinding = node.children[0].bindings;
+  return Boolean(firstChildBinding && firstChildBinding.key?.code);
 };
