@@ -128,8 +128,8 @@ const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosi
          * responsiveStyles.large.background: "state.background"
          * Should get mapped to:
          * @media (max-width: 1200px): {
-         *   color: "state.color",
-         *   background: "state.background"
+         *   color: state.color,
+         *   background: state.background
          * }
          */
       } else if (key.includes('responsiveStyles')) {
@@ -148,9 +148,16 @@ const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosi
       }
     }
 
-    // All binding values are strings, so stringify media query objects
+    /**
+     * All binding values are strings, but we don't want to stringify the values
+     * within the style object otherwise the bindings will be evaluated as strings.
+     * As a result, do not use JSON.stringify here.
+     */
     for (const key in responsiveStyles) {
-      styleBindings[key] = JSON.stringify(responsiveStyles[key]);
+      const styles = Object.keys(responsiveStyles[key]);
+      const keyValues = styles.map((prop) => `${prop}: ${responsiveStyles[key][prop]}`);
+      const stringifiedObject = `{ ${keyValues.join(', ')} }`;
+      styleBindings[key] = stringifiedObject;
     }
   }
 

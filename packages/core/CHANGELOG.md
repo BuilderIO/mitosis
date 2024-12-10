@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.22
+
+### Patch Changes
+
+- d52fe59: [Builder]: bound media query styles are not converted to strings
+
 ## 0.5.21
 
 ### Patch Changes
