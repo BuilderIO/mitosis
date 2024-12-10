@@ -62,6 +62,8 @@ import {
   ToAngularOptions,
 } from './types';
 
+import { parse } from './selector-parser';
+
 const { types } = babel;
 
 const mappers: {
@@ -427,10 +429,49 @@ export const blockToAngular = ({
 
     str += `</ng-container>`;
   } else {
-    const elSelector = childComponents.find((impName) => impName === json.name)
-      ? kebabCase(json.name)
-      : json.name;
-    str += `<${elSelector} `;
+    let tagName,
+      id,
+      classes = [],
+      attributes;
+
+    const isComponent = childComponents.find((impName) => impName === json.name);
+
+    if (isComponent) {
+      const selector = json.meta.selector || blockOptions?.selector;
+      if (selector) {
+        try {
+          ({ tagName, id, classes, attributes } = parse(selector));
+        } catch {
+          tagName = kebabCase(json.name);
+        }
+      } else {
+        tagName = kebabCase(json.name);
+      }
+    } else {
+      tagName = json.name;
+    }
+
+    str += `<${tagName} `;
+
+    if (id) {
+      str += `#${id} `;
+    }
+
+    // TODO: merge with existing classes/bindings
+    if (classes.length) {
+      str += `class="${classes.join(' ')}" `;
+    }
+
+    // TODO: Merge with existing properties
+    if (attributes) {
+      Object.entries(attributes).forEach(([key, value]) => {
+        if (value) {
+          str += `${key}=${value} `;
+        } else {
+          str += `${key} `;
+        }
+      });
+    }
 
     for (const key in json.properties) {
       if (key.startsWith('$')) {
@@ -516,7 +557,7 @@ export const blockToAngular = ({
         .join('\n');
     }
 
-    str += `</${elSelector}>`;
+    str += `</${tagName}>`;
   }
   return str;
 };
