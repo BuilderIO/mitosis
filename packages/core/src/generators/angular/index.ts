@@ -461,7 +461,7 @@ export const blockToAngular = ({
     if (attributes) {
       Object.entries(attributes).forEach(([key, value]) => {
         if (value) {
-          str += `${key}=${value} `;
+          str += `${key}=${JSON.stringify(value)} `;
         } else {
           str += `${key} `;
         }
