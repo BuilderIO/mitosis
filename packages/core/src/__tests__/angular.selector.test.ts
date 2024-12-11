@@ -1,15 +1,15 @@
-import { parse } from '../../src/generators/angular/selector-parser.js';
+import { parse } from '../generators/angular/parse-selector';
 
 describe('Angular selectors', () => {
   test('should parse gnarly selectors', () => {
     expect(parse('ccc.c1#wat[co].c2[counter="cool"]#wat[x=\'y\'].c3')).toEqual({
-      tagName: 'ccc',
-      id: 'wat',
-      classes: ['c1', 'c2', 'c3'],
+      element: 'ccc',
+      classNames: ['c1', 'c2', 'c3'],
       attributes: {
-        co: undefined,
-        counter: '"cool"',
-        x: "'y'",
+        co: '',
+        counter: 'cool',
+        id: 'wat',
+        x: 'y',
       },
     });
   });

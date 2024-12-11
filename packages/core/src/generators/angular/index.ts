@@ -62,7 +62,7 @@ import {
   ToAngularOptions,
 } from './types';
 
-import { parse } from './selector-parser';
+import { parse } from './parse-selector';
 
 const { types } = babel;
 
@@ -429,9 +429,8 @@ export const blockToAngular = ({
 
     str += `</ng-container>`;
   } else {
-    let tagName,
-      id,
-      classes = [],
+    let element,
+      classNames: string[] = [],
       attributes;
 
     const isComponent = childComponents.find((impName) => impName === json.name);
@@ -440,26 +439,22 @@ export const blockToAngular = ({
       const selector = json.meta.selector || blockOptions?.selector;
       if (selector) {
         try {
-          ({ tagName, id, classes, attributes } = parse(selector));
+          ({ element, classNames, attributes } = parse(`${selector}`));
         } catch {
-          tagName = kebabCase(json.name);
+          element = kebabCase(json.name);
         }
       } else {
-        tagName = kebabCase(json.name);
+        element = kebabCase(json.name);
       }
     } else {
-      tagName = json.name;
+      element = json.name;
     }
 
-    str += `<${tagName} `;
-
-    if (id) {
-      str += `#${id} `;
-    }
+    str += `<${element} `;
 
     // TODO: merge with existing classes/bindings
-    if (classes.length) {
-      str += `class="${classes.join(' ')}" `;
+    if (classNames.length) {
+      str += `class="${classNames.join(' ')}" `;
     }
 
     // TODO: Merge with existing properties
@@ -557,7 +552,7 @@ export const blockToAngular = ({
         .join('\n');
     }
 
-    str += `</${tagName}>`;
+    str += `</${element}>`;
   }
   return str;
 };
