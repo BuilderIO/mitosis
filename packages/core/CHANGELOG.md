@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.23
+
+### Patch Changes
+
+- 772d6f5: Angular selector support in code generation
+
 ## 0.5.22
 
 ### Patch Changes
