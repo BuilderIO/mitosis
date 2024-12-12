@@ -13,4 +13,20 @@ describe('Angular selectors', () => {
       },
     });
   });
+
+  test('parsing multiple returns only the first', () => {
+    expect(parse('dropzone, [dropzone]')).toEqual({
+      element: 'dropzone',
+      classNames: [],
+      attributes: {},
+    });
+  });
+
+  test(':not parses but is unused', () => {
+    expect(parse('list-item:not(.foo)')).toEqual({
+      element: 'list-item',
+      classNames: [],
+      attributes: {},
+    });
+  });
 });
