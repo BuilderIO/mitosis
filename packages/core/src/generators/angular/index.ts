@@ -62,6 +62,8 @@ import {
   ToAngularOptions,
 } from './types';
 
+import { parse } from './parse-selector';
+
 const { types } = babel;
 
 const mappers: {
@@ -427,10 +429,44 @@ export const blockToAngular = ({
 
     str += `</ng-container>`;
   } else {
-    const elSelector = childComponents.find((impName) => impName === json.name)
-      ? kebabCase(json.name)
-      : json.name;
-    str += `<${elSelector} `;
+    let element,
+      classNames: string[] = [],
+      attributes;
+
+    const isComponent = childComponents.find((impName) => impName === json.name);
+
+    if (isComponent) {
+      const selector = json.meta.selector || blockOptions?.selector;
+      if (selector) {
+        try {
+          ({ element, classNames, attributes } = parse(`${selector}`));
+        } catch {
+          element = kebabCase(json.name);
+        }
+      } else {
+        element = kebabCase(json.name);
+      }
+    } else {
+      element = json.name;
+    }
+
+    str += `<${element} `;
+
+    // TODO: merge with existing classes/bindings
+    if (classNames.length) {
+      str += `class="${classNames.join(' ')}" `;
+    }
+
+    // TODO: Merge with existing properties
+    if (attributes) {
+      Object.entries(attributes).forEach(([key, value]) => {
+        if (value) {
+          str += `${key}=${JSON.stringify(value)} `;
+        } else {
+          str += `${key} `;
+        }
+      });
+    }
 
     for (const key in json.properties) {
       if (key.startsWith('$')) {
@@ -516,7 +552,7 @@ export const blockToAngular = ({
         .join('\n');
     }
 
-    str += `</${elSelector}>`;
+    str += `</${element}>`;
   }
   return str;
 };
