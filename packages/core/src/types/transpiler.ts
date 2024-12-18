@@ -33,4 +33,14 @@ export interface BaseTranspilerOptions {
    * Preserves explicit filename extensions in import statements.
    */
   explicitImportFileExtension?: boolean;
+  /**
+   * Can be used for cli builds. Preserves explicit filename extensions when regex matches, e.g.:
+   * {
+   *   explicitBuildFileExtension: {
+   *     ".ts":/*.figma.lite.tsx/g,
+   *     ".md":/*.docs.lite.tsx/g
+   *   }
+   * }
+   */
+  explicitBuildFileExtensions?: Record<string, RegExp>;
 }
