@@ -198,7 +198,12 @@ export default MyBasicOutputsComponent;
 `;
 
 exports[`Taro > jsx > Javascript Test > Basic Outputs Meta 1`] = `
-"\\"use client\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+\\"use client\\";
 import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 import { View } from \\"@tarojs/components\\";
@@ -1771,7 +1776,12 @@ export default MyBasicForwardRefComponent;
 `;
 
 exports[`Taro > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"\\"use client\\";
+"/**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+\\"use client\\";
 import * as React from \\"react\\";
 import { useState, forwardRef } from \\"react\\";
 import { View, Input } from \\"@tarojs/components\\";
@@ -1959,6 +1969,23 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false}}}
+          */
+
+import * as React from \\"react\\";
+import { View } from \\"@tarojs/components\\";
+
+function ComplexMetaRaw(props) {
+  return <View />;
+}
+
+export default ComplexMetaRaw;
 "
 `;
 
@@ -2206,6 +2233,32 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
+          */
+
+import * as React from \\"react\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
+
+function FigmaButton(props) {
+  return (
+    <Button
+      data-icon={props.icon}
+      data-disabled={props.interactiveState}
+      data-width={props.width}
+      data-size={props.size}
+    >
+      {props.label}
+    </Button>
+  );
+}
+
+export default FigmaButton;
 "
 `;
 
@@ -3874,7 +3927,12 @@ export default MyBasicOutputsComponent;
 `;
 
 exports[`Taro > jsx > Typescript Test > Basic Outputs Meta 1`] = `
-"\\"use client\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+\\"use client\\";
 import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 import { View } from \\"@tarojs/components\\";
@@ -5714,7 +5772,12 @@ export default MyBasicForwardRefComponent;
 `;
 
 exports[`Taro > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"\\"use client\\";
+"/**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+\\"use client\\";
 import * as React from \\"react\\";
 import { useState, forwardRef } from \\"react\\";
 
@@ -5914,6 +5977,23 @@ function MyBasicComponent(props: any) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false}}}
+          */
+
+import * as React from \\"react\\";
+import { View } from \\"@tarojs/components\\";
+
+function ComplexMetaRaw(props: any) {
+  return <View />;
+}
+
+export default ComplexMetaRaw;
 "
 `;
 
@@ -6195,6 +6275,32 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
+          */
+
+import * as React from \\"react\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
+
+function FigmaButton(props: any) {
+  return (
+    <Button
+      data-icon={props.icon}
+      data-disabled={props.interactiveState}
+      data-width={props.width}
+      data-size={props.size}
+    >
+      {props.label}
+    </Button>
+  );
+}
+
+export default FigmaButton;
 "
 `;
 
