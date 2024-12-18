@@ -1966,8 +1966,20 @@ exports[`Vue > jsx > Javascript Test > basicForFragment 1`] = `
 "<template>
   <div>
     <template :key=\\"\`key-\${option}\`\\" v-for=\\"(option, index) in ['a', 'b', 'c']\\">
-      <div>{{ option }}</div>
-    </template>
+      <div>{{ option }}</div> </template
+    ><template
+      :key=\\"\`\${id}-\${option}\`\\"
+      v-for=\\"(option, index) in ['a', 'b', 'c']\\"
+    >
+      <div>{{ option }}</div> </template
+    ><select>
+      <template
+        :key=\\"\`\${id}-\${option}\`\\"
+        v-for=\\"(option, index) in ['d', 'e', 'f']\\"
+      >
+        <option :value=\\"option\\">{{ option }}</option>
+      </template>
+    </select>
   </div>
 </template>
 
@@ -1976,6 +1988,10 @@ import { defineComponent } from \\"vue\\";
 
 export default defineComponent({
   name: \\"basic-for-fragment\\",
+
+  data() {
+    return { id: \\"xyz\\" };
+  },
 });
 </script>"
 `;
@@ -6422,8 +6438,20 @@ exports[`Vue > jsx > Typescript Test > basicForFragment 1`] = `
 "<template>
   <div>
     <template :key=\\"\`key-\${option}\`\\" v-for=\\"(option, index) in ['a', 'b', 'c']\\">
-      <div>{{ option }}</div>
-    </template>
+      <div>{{ option }}</div> </template
+    ><template
+      :key=\\"\`\${id}-\${option}\`\\"
+      v-for=\\"(option, index) in ['a', 'b', 'c']\\"
+    >
+      <div>{{ option }}</div> </template
+    ><select>
+      <template
+        :key=\\"\`\${id}-\${option}\`\\"
+        v-for=\\"(option, index) in ['d', 'e', 'f']\\"
+      >
+        <option :value=\\"option\\">{{ option }}</option>
+      </template>
+    </select>
   </div>
 </template>
 
@@ -6432,6 +6460,10 @@ import { defineComponent } from \\"vue\\";
 
 export default defineComponent({
   name: \\"basic-for-fragment\\",
+
+  data() {
+    return { id: \\"xyz\\" };
+  },
 });
 </script>"
 `;

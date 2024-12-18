@@ -52,6 +52,7 @@ import {
   addCodeToOnUpdate,
   getAppropriateTemplateFunctionKeys,
   getDefaultProps,
+  hasFirstChildKeyAttribute,
   makeReactiveState,
   transformState,
 } from './helpers';
@@ -351,7 +352,7 @@ export const blockToAngular = ({
     const forName = json.scope.forName;
 
     // Check if "key" is present for the first child of the for loop
-    if (json.children[0].bindings && json.children[0].bindings.key?.code) {
+    if (hasFirstChildKeyAttribute(json)) {
       const fnIndex = (root.meta?._trackByForIndex as number) || 0;
       const trackByFnName = `trackBy${
         forName ? forName.charAt(0).toUpperCase() + forName.slice(1) : ''
@@ -835,11 +836,15 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
                 node?.bindings[key]?.type === 'spread' &&
                 VALID_HTML_TAGS.includes(node.name.trim());
 
+              // If we have a For loop with "key" it will be transformed to
+              // trackOfXXX, we need to use "this" for state properties
+              const isKey = key === 'key';
+
               const newLocal = processAngularCode({
                 contextVars: [],
                 outputVars,
                 domRefs: [], // the template doesn't need the this keyword.
-                replaceWith: isSpreadAttributeBinding ? 'this' : undefined,
+                replaceWith: isKey || isSpreadAttributeBinding ? 'this' : undefined,
               })(code);
               return newLocal.replace(/"/g, '&quot;');
             };

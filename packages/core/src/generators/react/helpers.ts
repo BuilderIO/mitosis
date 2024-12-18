@@ -27,8 +27,9 @@ export function getFragment(type: 'open' | 'close', options: ToReactOptions, nod
   let tag = '';
   if (node && node.bindings && isFragmentWithKey(node)) {
     tag = options.preact ? 'Fragment' : 'React.Fragment';
-    if (type === 'open') {
-      tag += ` key={${node.bindings['key']?.code}}`;
+    const keyCode = node.bindings['key']?.code;
+    if (type === 'open' && keyCode) {
+      tag += ` key={${processBinding(keyCode, options)}}`;
     }
   } else if (options.preact) {
     tag = 'Fragment';
