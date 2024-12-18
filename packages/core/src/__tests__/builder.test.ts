@@ -593,6 +593,44 @@ describe('Builder', () => {
     expect(mitosis.trim()).toEqual(code.trim());
   });
 
+  test('do not generate empty expression for width on Column', () => {
+    const content = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            component: {
+              name: 'Columns',
+              options: {
+                columns: [{ blocks: [] }, { blocks: [], width: 50 }],
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    const mitosisJson = builderContentToMitosisComponent(content);
+
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: mitosisJson,
+    });
+
+    expect(mitosis).toMatchInlineSnapshot(`
+      "import { Columns, Column } from \\"@components\\";
+
+      export default function MyComponent(props) {
+        return (
+          <Columns>
+            <Column />
+            <Column width={50} />
+          </Columns>
+        );
+      }
+      "
+    `);
+  });
+
   test('nodes as props', () => {
     const content = {
       data: {
@@ -636,6 +674,56 @@ describe('Builder', () => {
     expect(json.data?.blocks?.[0]?.component?.options?.prop?.[0]?.component?.options.hello).toBe(
       'world',
     );
+  });
+
+  test('preserve bound media query styles when converting to mitosis', () => {
+    const content = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            bindings: {
+              'responsiveStyles.small.left': 'state.left',
+              'responsiveStyles.small.top': 'state.top',
+              'responsiveStyles.large.color': 'state.color',
+              'style.fontSize': 'state.fontSize',
+            },
+          },
+        ],
+      },
+    };
+
+    const mitosis = builderContentToMitosisComponent(content);
+    expect(mitosis.children[0].bindings).toMatchInlineSnapshot(`
+      {
+        "style": {
+          "bindingType": "expression",
+          "code": "{ fontSize: state.fontSize, \\"@media (max-width: 640px)\\": { left: state.left, top: state.top }, \\"@media (max-width: 1200px)\\": { color: state.color }, }",
+          "type": "single",
+        },
+      }
+    `);
+
+    const jsx = componentToMitosis()({ component: mitosis });
+    expect(jsx).toMatchInlineSnapshot(`
+      "export default function MyComponent(props) {
+        return (
+          <div
+            style={{
+              fontSize: state.fontSize,
+              \\"@media (max-width: 640px)\\": {
+                left: state.left,
+                top: state.top,
+              },
+              \\"@media (max-width: 1200px)\\": {
+                color: state.color,
+              },
+            }}
+          />
+        );
+      }
+      "
+    `);
   });
 });
 

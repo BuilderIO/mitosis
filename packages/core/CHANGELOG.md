@@ -1,5 +1,24 @@
 # Change Log
 
+## 0.5.23
+
+### Patch Changes
+
+- 772d6f5: Angular selector support in code generation
+
+## 0.5.22
+
+### Patch Changes
+
+- d52fe59: [Builder]: bound media query styles are not converted to strings
+
+## 0.5.21
+
+### Patch Changes
+
+- 73a55a3: [Builder]: Do not set width binding on Column if value is undefined
+- 10a168d: [Builder] preserve bound media query styles when converting to Mitosis
+
 ## 0.5.20
 
 ### Patch Changes

@@ -32,7 +32,7 @@ We need your help! If you found a bug, it's best to [create an issue](https://gi
 
 ## Developing for Core & Testing
 
-In `core`, we use vitest snapshots & integeration tests for test coverage. If you are solving a problem that is reproducible by a fiddle in [mitosis.builder.io/playground](/playground), we highly recommend the following flow:
+In `core`, we use vitest snapshots & integration tests for test coverage. If you are solving a problem that is reproducible by a fiddle in [mitosis.builder.io/playground](/playground), we highly recommend the following flow:
 
 ### Snapshot test
 
@@ -55,8 +55,8 @@ PS: don't worry about failing imports in the raw test TSX files. These are not a
 
 #### Create new e2e project for another target
 
-If you want to create a new project inside ``e2e``. You should name the folder `e2e-XXX` where `XXX` should be replaced with the target. 
-Make sure that you change the ``name`` inside `package.json` of this project to `@builder.io/e2e-XXX`. Additionally, you need to add `private: true` to `package.json` to avoid publishing the project.
+If you want to create a new project inside `e2e`. You should name the folder `e2e-XXX` where `XXX` should be replaced with the target.
+Make sure that you change the `name` inside `package.json` of this project to `@builder.io/e2e-XXX`. Additionally, you need to add `private: true` to `package.json` to avoid publishing the project.
 
 ### Test your changes
 
