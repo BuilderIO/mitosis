@@ -1,5 +1,43 @@
 # @builder.io/mitosis-cli
 
+## 0.5.24
+
+### Patch Changes
+
+- 995eb95: [All] Add new `explicitBuildFileExtensions` to `MitosisConfig`. This allows users to manage the extension of some components explicitly. This is very useful for plugins:
+
+  ```ts
+    /**
+     * Can be used for cli builds. Preserves explicit filename extensions when regex matches, e.g.:
+     * {
+     *   explicitBuildFileExtension: {
+     *     ".ts":/*.figma.lite.tsx/g,
+     *     ".md":/*.docs.lite.tsx/g
+     *   }
+     * }
+     */
+    explicitBuildFileExtensions?: Record<string, RegExp>;
+
+  ```
+
+  [All] Add new `pluginData` object to `MitosisComponent` which will be filled during build via cli. Users get some additional information to use them for plugins:
+
+  ```ts
+    /**
+     * This data is filled inside cli to provide more data for plugins
+     */
+  pluginData?: {
+      target?: Target;
+      path?: string;
+      outputDir?: string;
+      outputFilePath?: string;
+  };
+  ```
+
+- Updated dependencies [995eb95]
+- Updated dependencies [b387d21]
+  - @builder.io/mitosis@0.5.24
+
 ## 0.5.23
 
 ### Patch Changes
