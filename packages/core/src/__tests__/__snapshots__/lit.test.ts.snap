@@ -2190,6 +2190,8 @@ export default class BasicForFragment extends LitElement {
     return this;
   }
 
+  @state() id = \\"xyz\\";
+
   render() {
     return html\`
 
@@ -2199,7 +2201,21 @@ export default class BasicForFragment extends LitElement {
         .key=\\"\${\`key-\${option}\`}\\"
         ><div>\${option}</div></my-fragment
       >\`
-          )}
+          )} \${[\\"a\\", \\"b\\", \\"c\\"]?.map(
+      (option, index) => html\`<my-fragment
+        .key=\\"\${\`\${this.id}-\${option}\`}\\"
+        ><div>\${option}</div></my-fragment
+      >\`
+    )}
+          <select>
+            \${[\\"d\\", \\"e\\", \\"f\\"]?.map(
+              (option, index) => html\`
+        <option .key=\\"\${\`\${this.id}-\${option}\`}\\" .value=\\"\${option}\\">
+          \${option}
+        </option>
+        \`
+            )}
+          </select>
         </div>
 
         \`;
@@ -7038,6 +7054,8 @@ export default class BasicForFragment extends LitElement {
     return this;
   }
 
+  @state() id = \\"xyz\\";
+
   render() {
     return html\`
 
@@ -7047,7 +7065,21 @@ export default class BasicForFragment extends LitElement {
         .key=\\"\${\`key-\${option}\`}\\"
         ><div>\${option}</div></my-fragment
       >\`
-          )}
+          )} \${[\\"a\\", \\"b\\", \\"c\\"]?.map(
+      (option, index) => html\`<my-fragment
+        .key=\\"\${\`\${this.id}-\${option}\`}\\"
+        ><div>\${option}</div></my-fragment
+      >\`
+    )}
+          <select>
+            \${[\\"d\\", \\"e\\", \\"f\\"]?.map(
+              (option, index) => html\`
+        <option .key=\\"\${\`\${this.id}-\${option}\`}\\" .value=\\"\${option}\\">
+          \${option}
+        </option>
+        \`
+            )}
+          </select>
         </div>
 
         \`;
