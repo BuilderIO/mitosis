@@ -1668,9 +1668,13 @@ export default MyComponent;
 `;
 
 exports[`RSC > jsx > Javascript Test > basicForFragment 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 function BasicForFragment(props) {
+  const [id, setId] = useState(() => \\"xyz\\");
+
   return (
     <div>
       {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
@@ -1678,6 +1682,18 @@ function BasicForFragment(props) {
           <div>{option}</div>
         </React.Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${id}-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
@@ -5247,9 +5263,13 @@ export default MyComponent;
 `;
 
 exports[`RSC > jsx > Typescript Test > basicForFragment 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useState } from \\"react\\";
 
 function BasicForFragment(props: any) {
+  const [id, setId] = useState(() => \\"xyz\\");
+
   return (
     <div>
       {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
@@ -5257,6 +5277,18 @@ function BasicForFragment(props: any) {
           <div>{option}</div>
         </React.Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${id}-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

@@ -24,6 +24,21 @@ export const checkIsMitosisComponentFilePath = (filePath: string) =>
  */
 export const INPUT_EXTENSION_REGEX = /\.(svelte|(lite(\.tsx|\.jsx)?))/g;
 
+const getExplicitFileExtension = (
+  path: string,
+  explicitBuildFileExtensions?: Record<string, RegExp>,
+): string | undefined => {
+  if (explicitBuildFileExtensions) {
+    for (const [extension, regex] of Object.entries(explicitBuildFileExtensions)) {
+      const match = path.match(regex);
+      if (match) {
+        return extension;
+      }
+    }
+  }
+  return undefined;
+};
+
 export const renameComponentFile = ({
   path,
   target,
@@ -32,15 +47,22 @@ export const renameComponentFile = ({
   path: string;
   target: Target;
   options: MitosisConfig;
-}) =>
-  path.replace(
-    INPUT_EXTENSION_REGEX,
+}) => {
+  const explicitExtension = getExplicitFileExtension(
+    path,
+    options.options[target]?.explicitBuildFileExtensions,
+  );
+
+  const extension =
+    explicitExtension ??
     getComponentFileExtensionForTarget({
       type: 'filename',
       target,
       isTypescript: checkShouldOutputTypeScript({ options, target }),
-    }),
-  );
+    });
+
+  return path.replace(INPUT_EXTENSION_REGEX, extension);
+};
 
 /**
  * just like `INPUT_EXTENSION_REGEX`, but adds trailing quotes to the end of import paths.

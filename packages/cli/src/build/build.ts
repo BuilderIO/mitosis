@@ -354,6 +354,7 @@ async function buildAndOutputComponentFiles({
       path: overrideFilePath,
       target,
     });
+    const outputDir = `${options.dest}/${outputPath}`;
 
     debugTarget(`transpiling ${path}...`);
     let transpiled = '';
@@ -362,7 +363,14 @@ async function buildAndOutputComponentFiles({
       debugTarget(`override exists for ${path}: ${!!overrideFile}`);
     }
     try {
-      const component = shouldOutputTypescript ? typescriptMitosisJson : javascriptMitosisJson;
+      const component: MitosisComponent = shouldOutputTypescript
+        ? typescriptMitosisJson
+        : javascriptMitosisJson;
+
+      /**
+       * This will allow plugins to work additional data
+       */
+      component.pluginData = { outputFilePath, outputDir, path, target };
 
       transpiled = overrideFile ?? generator(options.options[target])({ path, component });
       debugTarget(`Success: transpiled ${path}. Output length: ${transpiled.length}`);
@@ -373,8 +381,6 @@ async function buildAndOutputComponentFiles({
     }
 
     transpiled = transformImports({ target, options })(transpiled);
-
-    const outputDir = `${options.dest}/${outputPath}`;
 
     await outputFile(`${outputDir}/${outputFilePath}`, transpiled);
     return { outputDir, outputFilePath };

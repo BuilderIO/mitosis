@@ -32,6 +32,9 @@ export interface OutputFiles {
 
 export type MitosisConfig = {
   generators?: generatorsOption;
+  /**
+   * Apply common options to all targets
+   */
   commonOptions?: Omit<BaseTranspilerOptions, 'experimental'>;
   /**
    * List of targets to compile to.
@@ -71,6 +74,7 @@ export type MitosisConfig = {
    *   react: {
    *     stateType: 'builder';
    *     stylesType: 'styled-jsx'
+   *     plugins: [myPlugin]
    *   }
    * }
    * ```

@@ -52,6 +52,7 @@ import {
   addCodeToOnUpdate,
   getAppropriateTemplateFunctionKeys,
   getDefaultProps,
+  hasFirstChildKeyAttribute,
   makeReactiveState,
   transformState,
 } from './helpers';
@@ -61,6 +62,8 @@ import {
   DEFAULT_ANGULAR_OPTIONS,
   ToAngularOptions,
 } from './types';
+
+import { parse } from './parse-selector';
 
 const { types } = babel;
 
@@ -349,7 +352,7 @@ export const blockToAngular = ({
     const forName = json.scope.forName;
 
     // Check if "key" is present for the first child of the for loop
-    if (json.children[0].bindings && json.children[0].bindings.key?.code) {
+    if (hasFirstChildKeyAttribute(json)) {
       const fnIndex = (root.meta?._trackByForIndex as number) || 0;
       const trackByFnName = `trackBy${
         forName ? forName.charAt(0).toUpperCase() + forName.slice(1) : ''
@@ -427,10 +430,44 @@ export const blockToAngular = ({
 
     str += `</ng-container>`;
   } else {
-    const elSelector = childComponents.find((impName) => impName === json.name)
-      ? kebabCase(json.name)
-      : json.name;
-    str += `<${elSelector} `;
+    let element,
+      classNames: string[] = [],
+      attributes;
+
+    const isComponent = childComponents.find((impName) => impName === json.name);
+
+    if (isComponent) {
+      const selector = json.meta.selector || blockOptions?.selector;
+      if (selector) {
+        try {
+          ({ element, classNames, attributes } = parse(`${selector}`));
+        } catch {
+          element = kebabCase(json.name);
+        }
+      } else {
+        element = kebabCase(json.name);
+      }
+    } else {
+      element = json.name;
+    }
+
+    str += `<${element} `;
+
+    // TODO: merge with existing classes/bindings
+    if (classNames.length) {
+      str += `class="${classNames.join(' ')}" `;
+    }
+
+    // TODO: Merge with existing properties
+    if (attributes) {
+      Object.entries(attributes).forEach(([key, value]) => {
+        if (value) {
+          str += `${key}=${JSON.stringify(value)} `;
+        } else {
+          str += `${key} `;
+        }
+      });
+    }
 
     for (const key in json.properties) {
       if (key.startsWith('$')) {
@@ -516,7 +553,7 @@ export const blockToAngular = ({
         .join('\n');
     }
 
-    str += `</${elSelector}>`;
+    str += `</${element}>`;
   }
   return str;
 };
@@ -799,11 +836,15 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
                 node?.bindings[key]?.type === 'spread' &&
                 VALID_HTML_TAGS.includes(node.name.trim());
 
+              // If we have a For loop with "key" it will be transformed to
+              // trackOfXXX, we need to use "this" for state properties
+              const isKey = key === 'key';
+
               const newLocal = processAngularCode({
                 contextVars: [],
                 outputVars,
                 domRefs: [], // the template doesn't need the this keyword.
-                replaceWith: isSpreadAttributeBinding ? 'this' : undefined,
+                replaceWith: isKey || isSpreadAttributeBinding ? 'this' : undefined,
               })(code);
               return newLocal.replace(/"/g, '&quot;');
             };
