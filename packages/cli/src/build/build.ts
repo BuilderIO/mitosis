@@ -316,7 +316,7 @@ export async function build(config?: MitosisConfig) {
       console.info(
         `Mitosis: ${targetContext.target}: generated ${x[1].length} components, ${x[0].length} regular files.`,
       );
-      await runBuildPlugins('pre', plugins)(targetContext, {
+      await runBuildPlugins('post', plugins)(targetContext, {
         componentFiles: x[1],
         nonComponentFiles: x[0],
       });
