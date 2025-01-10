@@ -1,7 +1,7 @@
 import { MitosisComponent } from '../types/mitosis-component';
-import { Plugin } from '../types/plugins';
+import { MitosisPlugin } from '../types/plugins';
 
-export type { Plugin };
+export type { MitosisPlugin };
 
 export const runPreJsonPlugins = ({
   json,
@@ -9,7 +9,7 @@ export const runPreJsonPlugins = ({
   options,
 }: {
   json: MitosisComponent;
-  plugins: Plugin[];
+  plugins: MitosisPlugin[];
   options?: any;
 }) => {
   let useJson = json;
@@ -28,7 +28,7 @@ export const runPostJsonPlugins = ({
   options,
 }: {
   json: MitosisComponent;
-  plugins: Plugin[];
+  plugins: MitosisPlugin[];
   options?: any;
 }) => {
   let useJson = json;
@@ -49,7 +49,7 @@ export const runPreCodePlugins = ({
 }: {
   json: MitosisComponent;
   code: string;
-  plugins: Plugin[];
+  plugins: MitosisPlugin[];
   options?: any;
 }) => {
   let string = code;
@@ -70,7 +70,7 @@ export const runPostCodePlugins = ({
 }: {
   json: MitosisComponent;
   code: string;
-  plugins: Plugin[];
+  plugins: MitosisPlugin[];
   options?: any;
 }) => {
   let string = code;

@@ -1,7 +1,7 @@
 import { prefixWithFunction } from '@/helpers/patterns';
-import { Plugin } from '../../modules/plugins';
+import { MitosisPlugin } from '../../modules/plugins';
 
-export const FUNCTION_HACK_PLUGIN: Plugin = () => ({
+export const FUNCTION_HACK_PLUGIN: MitosisPlugin = () => ({
   json: {
     pre: (json) => {
       for (const key in json.state) {

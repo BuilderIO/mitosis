@@ -1,7 +1,7 @@
-import type { ParseMitosisOptions } from '../parsers/jsx/types';
-import { targets } from '../targets';
+import type { ParseMitosisOptions } from '@/parsers/jsx';
+import { targets } from '@/targets';
 import type { MitosisComponent } from './mitosis-component';
-import { BaseTranspilerOptions } from './transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from './transpiler';
 export type Format = 'esm' | 'cjs';
 export type Language = 'js' | 'ts';
 interface TranspilerOptions {
@@ -18,6 +18,17 @@ export type GeneratorOptions = {
 export type generatorsOption = {
   [K in Target]: NonNullable<Targets[K]>;
 };
+
+export interface TargetContext {
+  target: Target;
+  generator: TranspilerGenerator<NonNullable<MitosisConfig['options'][Target]>>;
+  outputPath: string;
+}
+
+export interface OutputFiles {
+  outputDir: string;
+  outputFilePath: string;
+}
 
 export type MitosisConfig = {
   generators?: generatorsOption;

@@ -5,7 +5,7 @@ import {
 } from '../../parsers/jsx/hooks/use-target';
 import { Targets } from '../../targets';
 import { TargetBlockDefinition } from '../../types/mitosis-component';
-import { Plugin } from '../../types/plugins';
+import { MitosisPlugin } from '../../types/plugins';
 import { createSingleBinding } from '../bindings';
 import { createCodeProcessorPlugin } from './process-code';
 
@@ -25,7 +25,7 @@ const getBlockForTarget = ({
 /**
  * Processes `useTarget()` blocks for a given target.
  */
-export const processTargetBlocks = (target: Targets): Plugin => {
+export const processTargetBlocks = (target: Targets): MitosisPlugin => {
   const plugin = createCodeProcessorPlugin(
     (codeType, json, node) => (code, key) => {
       if (codeType === 'properties') {
