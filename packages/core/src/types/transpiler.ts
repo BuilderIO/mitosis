@@ -1,5 +1,5 @@
 import { MitosisComponent } from './mitosis-component';
-import { Plugin } from './plugins';
+import { MitosisPlugin } from './plugins';
 
 export interface TranspilerArgs {
   path?: string;
@@ -24,7 +24,7 @@ export interface BaseTranspilerOptions {
   /**
    * Mitosis Plugins to run during codegen.
    */
-  plugins?: Plugin[];
+  plugins?: MitosisPlugin[];
   /**
    * Enable `typescript` output
    */
