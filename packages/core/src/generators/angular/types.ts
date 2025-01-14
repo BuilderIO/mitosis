@@ -26,10 +26,19 @@ export const DEFAULT_ANGULAR_OPTIONS: ToAngularOptions = {
 };
 
 export type AngularMetadata = {
-  /* Mitosis uses `attr.XXX` as default see https://angular.io/guide/attribute-binding. 
-  If you want to skip some you can use the 'nativeAttributes'. */
+  /**
+   * Mitosis uses `attr.XXX` as default see https://angular.io/guide/attribute-binding.
+   * If you want to skip some you can use the 'nativeAttributes'.
+   */
   nativeAttributes?: string[];
-  /* Overwrite default selector for component. Default will be kebab case (MyComponent -> my-component) */
+  /**
+   * If you encounter some native events which aren't generated in lower-case.
+   * Create a new PR inside [event-handlers.ts](https://github.com/BuilderIO/mitosis/blob/main/packages/core/src/helpers/event-handlers.ts) to fix it for all.
+   */
+  nativeEvents?: string[];
+  /**
+   * Overwrite default selector for component. Default will be kebab case (MyComponent -> my-component)
+   */
   selector?: string;
 };
 

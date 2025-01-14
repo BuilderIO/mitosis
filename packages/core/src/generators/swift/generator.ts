@@ -1,4 +1,5 @@
 import { ToSwiftOptions } from '@/generators/swift/types';
+import { checkIsEvent } from '@/helpers/event-handlers';
 import traverse from 'neotraverse/legacy';
 import { dedent } from '../../helpers/dedent';
 import { fastClone } from '../../helpers/fast-clone';
@@ -149,7 +150,7 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
         continue;
       }
 
-      if (key.startsWith('on')) {
+      if (checkIsEvent(key)) {
         if (key === 'onClick') {
           continue;
         } else {

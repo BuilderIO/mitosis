@@ -63,6 +63,7 @@ import {
   ToAngularOptions,
 } from './types';
 
+import { checkIsBindingNativeEvent, checkIsEvent } from '@/helpers/event-handlers';
 import { parse } from './parse-selector';
 
 const { types } = babel;
@@ -226,10 +227,20 @@ const stringifyBinding =
     const { code, arguments: cusArgs = ['event'] } = binding!;
     // TODO: proper babel transform to replace. Util for this
 
-    if (keyToUse.startsWith('on')) {
+    if (checkIsEvent(keyToUse)) {
       const { event, value } = processEventBinding(keyToUse, code, node.name, cusArgs[0]);
-      // Angular events are all lowerCased
-      return ` (${event.toLowerCase()})="${value}"`;
+
+      // native events are all lowerCased
+      const lowerCaseEvent = event.toLowerCase();
+      const eventKey =
+        checkIsBindingNativeEvent(event) ||
+        blockOptions.nativeEvents?.find(
+          (nativeEvent) =>
+            nativeEvent === keyToUse || nativeEvent === event || nativeEvent === lowerCaseEvent,
+        )
+          ? lowerCaseEvent
+          : event;
+      return ` (${eventKey})="${value}"`;
     } else if (keyToUse === 'class') {
       return ` [class]="${code}" `;
     } else if (keyToUse === 'ref' || keyToUse === 'spreadRef') {
@@ -281,7 +292,7 @@ const handleNgOutletBindings = (node: MitosisNode, options: ToAngularOptions) =>
     let keyToUse = key.includes('-') ? `'${key}'` : key;
     keyToUse = keyToUse.replace('state.', '').replace('props.', '');
 
-    if (key.startsWith('on')) {
+    if (checkIsEvent(key)) {
       const { event, value } = processEventBinding(key, code, node.name, cusArgs[0]);
       allProps += `on${event.charAt(0).toUpperCase() + event.slice(1)}: ${value.replace(
         /\(.*?\)/g,
@@ -311,6 +322,7 @@ export const blockToAngular = ({
   options = {},
   blockOptions = {
     nativeAttributes: [],
+    nativeEvents: [],
   },
 }: {
   root: MitosisComponent;
@@ -659,7 +671,7 @@ const handleBindings = (
       if (item.name === 'For') continue;
       if (key === 'key') continue;
 
-      if (key.startsWith('on')) {
+      if (checkIsEvent(key)) {
         const { arguments: cusArgs = ['event'] } = item.bindings[key]!;
         const eventBindingName = `${generateNewBindingName(index, item.name)}_event`;
         if (
@@ -691,7 +703,7 @@ const handleBindings = (
         })`;
       }
     } else if (item.bindings[key]?.code) {
-      if (item.bindings[key]?.type !== 'spread' && !key.startsWith('on')) {
+      if (item.bindings[key]?.type !== 'spread' && !checkIsEvent(key)) {
         json.state[newBindingName] = { code: 'null', type: 'property' };
         makeReactiveState(
           json,
@@ -699,7 +711,7 @@ const handleBindings = (
           `this.${newBindingName} = ${item.bindings[key]!.code}`,
         );
         item.bindings[key]!.code = `state.${newBindingName}`;
-      } else if (key.startsWith('on')) {
+      } else if (checkIsEvent(key)) {
         const { arguments: cusArgs = ['event'] } = item.bindings[key]!;
         if (
           item.bindings[key]?.code.trim().startsWith('{') &&
@@ -941,6 +953,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           blockOptions: {
             childComponents,
             nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
+            nativeEvents: useMetadata?.angular?.nativeEvents ?? [],
           },
         });
         if (options.state === 'inline-with-wrappers') {
@@ -964,6 +977,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       {
         childComponents,
         nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
+        nativeEvents: useMetadata?.angular?.nativeEvents ?? [],
       },
     );
 

@@ -1,3 +1,4 @@
+import { checkIsEvent } from '@/helpers/event-handlers';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import isChildren from '@/helpers/is-children';
 import { isRootTextNode } from '@/helpers/is-root-text-node';
@@ -296,7 +297,7 @@ export const blockToReact = (
     }
     if (json.bindings[key]?.type === 'spread') {
       str += ` {...(${value})} `;
-    } else if (key.startsWith('on')) {
+    } else if (checkIsEvent(key)) {
       const asyncKeyword = json.bindings[key]?.async ? 'async ' : '';
       const { arguments: cusArgs = ['event'] } = json.bindings[key]!;
       const eventName = options.type === 'native' ? NATIVE_EVENT_MAPPER[key] || key : key;

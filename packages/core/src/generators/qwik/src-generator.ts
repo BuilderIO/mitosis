@@ -1,6 +1,7 @@
 import parserTypeScript from 'prettier/parser-typescript';
 import { format } from 'prettier/standalone';
 
+import { checkIsEvent } from '@/helpers/event-handlers';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { convertExportDefaultToReturn } from '../../parsers/builder';
 import { stableJSONserialize } from './helpers/stable-serialize';
@@ -424,7 +425,7 @@ export class SrcBuilder {
 }
 
 function isEvent(name: string): boolean {
-  return name.startsWith('on') && isUppercase(name.charAt(2)) && !name.endsWith('$');
+  return checkIsEvent(name) && isUppercase(name.charAt(2)) && !name.endsWith('$');
 }
 
 function isUppercase(ch: string): boolean {
