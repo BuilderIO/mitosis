@@ -19,6 +19,7 @@ import stamped from './data/blocks/stamped-io.raw.tsx?raw';
 import booleanContent from './data/builder/boolean.json?raw';
 import customComponentSlotPropertyContent from './data/builder/custom-component-slot-property.json?raw';
 import lazyLoadSection from './data/builder/lazy-load-section.json?raw';
+import localization from './data/builder/localization.json?raw';
 import slotsContent from './data/builder/slots.json?raw';
 import slots2Content from './data/builder/slots2.json?raw';
 import textBindings from './data/builder/text-bindings.json?raw';
@@ -471,6 +472,18 @@ describe('Builder', () => {
       component,
     });
     expect(mitosis).toMatchSnapshot();
+  });
+
+  test('localization', () => {
+    const originalBuilder = JSON.parse(localization);
+    const component = builderContentToMitosisComponent(originalBuilder);
+    const mitosisJsx = componentToMitosis()({ component });
+
+    expect(component).toMatchSnapshot();
+    expect(mitosisJsx).toMatchSnapshot();
+
+    const backToBuilder = componentToBuilder()({ component });
+    expect(backToBuilder).toMatchSnapshot();
   });
 
   test('preserve cssCode when converting', () => {

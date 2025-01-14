@@ -3991,6 +3991,294 @@ alert('hi');",
 }
 `;
 
+exports[`Builder > localization 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "<p>Time left: {state.timeLeft} seconds</p>",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "<p>hello default</p>",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {
+        "$loc-options-text": "{'@type':'@builder.io/core:LocalizedValue',Default:'<p>hello default</p>','es-AR':'<p>hello argentina</p>','fr-CA':'<p>hello france</p><p><br></p>'}",
+      },
+      "scope": {},
+    },
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [],
+      "meta": {},
+      "name": "Image",
+      "properties": {
+        "$tagName": undefined,
+      },
+      "scope": {},
+      "slots": {},
+    },
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [],
+      "meta": {},
+      "name": "CustomComponent",
+      "properties": {
+        "$tagName": undefined,
+      },
+      "scope": {},
+      "slots": {},
+    },
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "css": {
+          "bindingType": "expression",
+          "code": "{\\"display\\":\\"flex\\",\\"flexDirection\\":\\"column\\",\\"position\\":\\"relative\\",\\"flexShrink\\":\\"0\\",\\"boxSizing\\":\\"border-box\\",\\"marginTop\\":\\"20px\\",\\"cursor\\":\\"pointer\\",\\"pointerEvents\\":\\"auto\\"}",
+          "type": "single",
+        },
+        "scriptsClientOnly": {
+          "bindingType": "expression",
+          "code": "false",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "CustomCode",
+      "properties": {
+        "$loc-href": "{'@type':'@builder.io/core:LocalizedValue',Default:'http://builder.io'}",
+        "$loc-linkUrl": "{'@type':'@builder.io/core:LocalizedValue',Default:'http://builder.io'}",
+        "$tagName": "a",
+        "builderTag": "a",
+        "code": "<a>Link</a>
+",
+        "href": "http://builder.io",
+      },
+      "scope": {},
+      "slots": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": undefined,
+  "meta": {
+    "useMetadata": {
+      "httpRequests": undefined,
+    },
+  },
+  "name": "MyComponent",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+}
+`;
+
+exports[`Builder > localization 2`] = `
+"import { Image, CustomComponent, CustomCode } from \\"@components\\";
+
+export default function MyComponent(props) {
+  return (
+    <>
+      <div>
+        <p>Time left: {state.timeLeft} seconds</p>
+      </div>
+      <div $loc-options-text=\\"{'@type':'@builder.io/core:LocalizedValue',Default:'<p>hello default</p>','es-AR':'<p>hello argentina</p>','fr-CA':'<p>hello france</p><p><br></p>'}\\">
+        <p>hello default</p>
+      </div>
+      <Image />
+      <CustomComponent />
+      <CustomCode
+        $tagName=\\"a\\"
+        href=\\"http://builder.io\\"
+        $loc-href=\\"{'@type':'@builder.io/core:LocalizedValue',Default:'http://builder.io'}\\"
+        $loc-linkUrl=\\"{'@type':'@builder.io/core:LocalizedValue',Default:'http://builder.io'}\\"
+        code=\\"<a>Link</a>
+\\"
+        builderTag=\\"a\\"
+        scriptsClientOnly={false}
+        css={{
+          display: \\"flex\\",
+          flexDirection: \\"column\\",
+          position: \\"relative\\",
+          flexShrink: \\"0\\",
+          boxSizing: \\"border-box\\",
+          marginTop: \\"20px\\",
+          cursor: \\"pointer\\",
+          pointerEvents: \\"auto\\",
+        }}
+      />
+    </>
+  );
+}
+"
+`;
+
+exports[`Builder > localization 3`] = `
+{
+  "data": {
+    "blocks": [
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {},
+        "children": [
+          {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": {},
+            "component": {
+              "name": "Text",
+              "options": {
+                "text": "<p>Time left: {{state.timeLeft}} seconds</p>",
+              },
+            },
+            "tagName": "span",
+          },
+        ],
+        "code": {
+          "actions": {},
+          "bindings": {},
+        },
+        "properties": {},
+        "tagName": "div",
+      },
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {},
+        "children": [
+          {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": {},
+            "component": {
+              "name": "Text",
+              "options": {
+                "text": "<p>hello default</p>",
+              },
+            },
+            "tagName": "span",
+          },
+        ],
+        "code": {
+          "actions": {},
+          "bindings": {},
+        },
+        "properties": {},
+        "tagName": "div",
+      },
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {},
+        "children": [],
+        "code": {
+          "actions": {},
+          "bindings": {},
+        },
+        "component": {
+          "name": "Image",
+          "options": {},
+        },
+      },
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {},
+        "children": [],
+        "code": {
+          "actions": {},
+          "bindings": {},
+        },
+        "component": {
+          "name": "CustomComponent",
+          "options": {},
+        },
+      },
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {
+          "component.options.scriptsClientOnly": "false",
+        },
+        "children": [],
+        "code": {
+          "actions": {},
+          "bindings": {
+            "component.options.scriptsClientOnly": "false",
+          },
+        },
+        "component": {
+          "name": "Custom Code",
+          "options": {
+            "builderTag": "a",
+            "code": "<a>Link</a>
+",
+            "href": "http://builder.io",
+            "scriptsClientOnly": false,
+          },
+        },
+        "responsiveStyles": {
+          "large": {
+            "boxSizing": "border-box",
+            "cursor": "pointer",
+            "display": "flex",
+            "flexDirection": "column",
+            "flexShrink": "0",
+            "marginTop": "20px",
+            "pointerEvents": "auto",
+            "position": "relative",
+          },
+        },
+      },
+    ],
+    "jsCode": "",
+    "tsCode": "",
+  },
+}
+`;
+
 exports[`Builder > nodes as props 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
