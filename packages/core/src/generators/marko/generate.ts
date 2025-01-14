@@ -2,6 +2,7 @@ import { SELF_CLOSING_HTML_TAGS } from '@/constants/html_tags';
 import { ToMarkoOptions } from '@/generators/marko/types';
 import { dashCase } from '@/helpers/dash-case';
 import { dedent } from '@/helpers/dedent';
+import { checkIsEvent } from '@/helpers/event-handlers';
 import { fastClone } from '@/helpers/fast-clone';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import { getRefs } from '@/helpers/get-refs';
@@ -90,7 +91,7 @@ const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): strin
       str += ` ...(${code}) `;
     } else if (key === 'ref') {
       str += ` key="${camelCase(code)}" `;
-    } else if (key.startsWith('on')) {
+    } else if (checkIsEvent(key)) {
       const asyncKeyword = async ? 'async ' : '';
       const useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
       str += ` ${dashCase(useKey)}=(${asyncKeyword}(${cusArgs.join(',')}) => ${processBinding(

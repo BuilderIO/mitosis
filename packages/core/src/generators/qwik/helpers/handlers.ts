@@ -1,3 +1,4 @@
+import { checkIsEvent } from '@/helpers/event-handlers';
 import { MitosisNode } from '../../../types/mitosis-node';
 import { renderUseLexicalScope } from '../component';
 import { arrowFnBlock, EmitFn, File, SrcBuilder } from '../src-generator';
@@ -61,5 +62,5 @@ function renderHandler(file: File, symbol: string, code: string) {
 }
 
 function isEventName(name: string) {
-  return name.startsWith('on') && name.charAt(2).toUpperCase() == name.charAt(2);
+  return checkIsEvent(name) && name.charAt(2).toUpperCase() == name.charAt(2);
 }
