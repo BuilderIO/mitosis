@@ -1,8 +1,6 @@
+import { mapImportDeclarationToMitosisImport } from '@/helpers/mitosis-imports';
 import * as babel from '@babel/core';
-import { mapImportDeclarationToMitosisImport } from '../../helpers/mitosis-imports';
 import { Context, ParseMitosisOptions } from './types';
-
-const { types } = babel;
 
 export const handleImportDeclaration = ({
   options,
@@ -24,7 +22,16 @@ export const handleImportDeclaration = ({
     return;
   }
   const importObject = mapImportDeclarationToMitosisImport(path.node);
-  context.builder.component.imports.push(importObject);
+  const resolvedImport = context.builder.resolvedImports?.find(
+    (rImport) => rImport.path === importObject.path,
+  );
+  if (resolvedImport) {
+    delete importObject.imports[resolvedImport.value];
+  }
+
+  if (Object.keys(importObject.imports).length > 0) {
+    context.builder.component.imports.push(importObject);
+  }
 
   path.remove();
 };

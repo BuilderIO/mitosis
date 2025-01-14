@@ -399,7 +399,12 @@ export class MyBasicOutputsComponentModule {}
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > Basic Outputs Meta 1`] = `
-"import { NgModule } from \\"@angular/core\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
@@ -3624,7 +3629,12 @@ export class MyBasicForwardRefComponentModule {}
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"import { NgModule } from \\"@angular/core\\";
+"/**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
@@ -3909,6 +3919,42 @@ export class MyBasicComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"complex-meta-raw\\",
+  template: \`
+    <div></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class ComplexMetaRaw {}
+
+@NgModule({
+  declarations: [ComplexMetaRaw],
+  imports: [CommonModule],
+  exports: [ComplexMetaRaw],
+  bootstrap: [SomeOtherComponent],
+})
+export class ComplexMetaRawModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > componentWithContext 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -4027,7 +4073,12 @@ export class RenderContentModule {}
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > customSelector 1`] = `
-"import { NgModule } from \\"@angular/core\\";
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"selector\\":\\"not-my-component\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
@@ -4552,6 +4603,55 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"figma-button\\",
+  template: \`
+    <button
+      [attr.data-icon]=\\"icon\\"
+      [attr.data-disabled]=\\"interactiveState\\"
+      [attr.data-width]=\\"width\\"
+      [attr.data-size]=\\"size\\"
+    >
+      {{label}}
+    </button>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class FigmaButton {
+  @Input() icon;
+  @Input() interactiveState;
+  @Input() width;
+  @Input() size;
+  @Input() label;
+}
+
+@NgModule({
+  declarations: [FigmaButton],
+  imports: [CommonModule],
+  exports: [FigmaButton],
+  bootstrap: [SomeOtherComponent],
+})
+export class FigmaButtonModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > getterState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -4848,7 +4948,12 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > nativeAttributes 1`] = `
-"import { NgModule } from \\"@angular/core\\";
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"nativeAttributes\\":[\\"disabled\\"]}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
@@ -5315,7 +5420,12 @@ export class OnUpdateWithDepsModule {}
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > outputEventBinding 1`] = `
-"import { NgModule } from \\"@angular/core\\";
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"nativeEvents\\":[\\"onFakeNative\\"]}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
@@ -7954,7 +8064,12 @@ export class MyBasicOutputsComponentModule {}
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > Basic Outputs Meta 1`] = `
-"import { NgModule } from \\"@angular/core\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
@@ -11447,7 +11562,12 @@ export class MyBasicForwardRefComponentModule {}
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"import { NgModule } from \\"@angular/core\\";
+"/**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
@@ -11744,6 +11864,42 @@ export class MyBasicComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"complex-meta-raw\\",
+  template: \`
+    <div></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class ComplexMetaRaw {}
+
+@NgModule({
+  declarations: [ComplexMetaRaw],
+  imports: [CommonModule],
+  exports: [ComplexMetaRaw],
+  bootstrap: [SomeOtherComponent],
+})
+export class ComplexMetaRawModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > componentWithContext 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -11870,7 +12026,12 @@ export class RenderContentModule {}
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > customSelector 1`] = `
-"import { NgModule } from \\"@angular/core\\";
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"selector\\":\\"not-my-component\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
@@ -12420,6 +12581,55 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"figma-button\\",
+  template: \`
+    <button
+      [attr.data-icon]=\\"icon\\"
+      [attr.data-disabled]=\\"interactiveState\\"
+      [attr.data-width]=\\"width\\"
+      [attr.data-size]=\\"size\\"
+    >
+      {{label}}
+    </button>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class FigmaButton {
+  @Input() icon!: any;
+  @Input() interactiveState!: any;
+  @Input() width!: any;
+  @Input() size!: any;
+  @Input() label!: any;
+}
+
+@NgModule({
+  declarations: [FigmaButton],
+  imports: [CommonModule],
+  exports: [FigmaButton],
+  bootstrap: [SomeOtherComponent],
+})
+export class FigmaButtonModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > getterState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -12735,7 +12945,12 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > nativeAttributes 1`] = `
-"import { NgModule } from \\"@angular/core\\";
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"nativeAttributes\\":[\\"disabled\\"]}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
@@ -13215,7 +13430,12 @@ export class OnUpdateWithDepsModule {}
 `;
 
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > outputEventBinding 1`] = `
-"import { NgModule } from \\"@angular/core\\";
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"nativeEvents\\":[\\"onFakeNative\\"]}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";

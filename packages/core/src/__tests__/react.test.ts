@@ -1,5 +1,5 @@
+import { componentToReact } from '@/generators/react';
 import { parseJsx } from '..';
-import { componentToReact } from '../generators/react';
 import { runTestsForTarget } from './test-generator';
 
 import stamped from './data/blocks/stamped-io.raw.tsx?raw';

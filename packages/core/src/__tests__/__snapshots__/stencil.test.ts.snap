@@ -292,7 +292,12 @@ export class MyBasicOutputsComponent {
 `;
 
 exports[`Stencil > jsx > Javascript Test > Basic Outputs Meta 1`] = `
-"import { Component, h, Fragment, Event, Prop, State } from \\"@stencil/core\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+import { Component, h, Fragment, Event, Prop, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-outputs-component\\",
@@ -2111,7 +2116,12 @@ export class MyBasicForwardRefComponent {
 `;
 
 exports[`Stencil > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
+"/**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-forward-ref-component\\",
@@ -2304,6 +2314,25 @@ export class MyBasicComponent {
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
+          */
+
+import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"complex-meta-raw\\",
+})
+export class ComplexMetaRaw {
+  render() {
+    return <div></div>;
   }
 }
 "
@@ -2532,6 +2561,40 @@ export class MyComponent {
 
   render() {
     return <div>{this.refToUse}</div>;
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
+          */
+
+import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"figma-button\\",
+})
+export class FigmaButton {
+  @Prop() icon: any;
+  @Prop() interactiveState: any;
+  @Prop() width: any;
+  @Prop() size: any;
+  @Prop() label: any;
+
+  render() {
+    return (
+      <button
+        data-icon={this.icon}
+        data-disabled={this.interactiveState}
+        data-width={this.width}
+        data-size={this.size}
+      >
+        {this.label}
+      </button>
+    );
   }
 }
 "
@@ -4171,7 +4234,12 @@ export class MyBasicOutputsComponent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > Basic Outputs Meta 1`] = `
-"import { Component, h, Fragment, Event, Prop, State } from \\"@stencil/core\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+import { Component, h, Fragment, Event, Prop, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-outputs-component\\",
@@ -6245,7 +6313,12 @@ export class MyBasicForwardRefComponent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
+"/**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
 
 export interface Props {
   showInput: boolean;
@@ -6450,6 +6523,25 @@ export class MyBasicComponent {
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
+          */
+
+import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"complex-meta-raw\\",
+})
+export class ComplexMetaRaw {
+  render() {
+    return <div></div>;
   }
 }
 "
@@ -6708,6 +6800,40 @@ export class MyComponent {
 
   render() {
     return <div>{this.refToUse}</div>;
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
+          */
+
+import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"figma-button\\",
+})
+export class FigmaButton {
+  @Prop() icon: any;
+  @Prop() interactiveState: any;
+  @Prop() width: any;
+  @Prop() size: any;
+  @Prop() label: any;
+
+  render() {
+    return (
+      <button
+        data-icon={this.icon}
+        data-disabled={this.interactiveState}
+        data-width={this.width}
+        data-size={this.size}
+      >
+        {this.label}
+      </button>
+    );
   }
 }
 "
