@@ -62,6 +62,5 @@ export const babelDefaultTransform = (
     plugins: [[tsPlugin, { isTSX: true }], (): babel.PluginObj<Context> => ({ visitor })],
   });
 
-
 export const isTypescriptFile = (fileName: string): boolean =>
-    fileName.endsWith('.ts') || fileName.endsWith('.tsx');
+  fileName.endsWith('.ts') || fileName.endsWith('.tsx');
