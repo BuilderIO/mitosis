@@ -1,6 +1,10 @@
 import { mapImportDeclarationToMitosisImport } from '@/helpers/mitosis-imports';
-import { isTypescriptFile } from '@/helpers/typescript';
-import { babelDefaultTransform, babelStripTypes, parseCodeJson } from '@/parsers/jsx/helpers';
+import {
+  babelDefaultTransform,
+  babelStripTypes,
+  isTypescriptFile,
+  parseCodeJson,
+} from '@/parsers/jsx/helpers';
 import { Context, ParseMitosisOptions, ResolvedImport } from '@/parsers/jsx/types';
 import { MitosisImport } from '@/types/mitosis-component';
 import * as babel from '@babel/core';
