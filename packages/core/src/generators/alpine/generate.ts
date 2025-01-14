@@ -19,7 +19,7 @@ import {
   runPreJsonPlugins,
 } from '@/modules/plugins';
 import { MitosisComponent } from '@/types/mitosis-component';
-import { checkIsForNode, ForNode, MitosisNode } from '@/types/mitosis-node';
+import { ForNode, MitosisNode, checkIsForNode } from '@/types/mitosis-node';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { camelCase, flowRight as compose, curry, flow } from 'lodash';
 import { format } from 'prettier/standalone';
