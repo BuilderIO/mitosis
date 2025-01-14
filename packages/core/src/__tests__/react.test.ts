@@ -1,5 +1,5 @@
-import { parseJsx } from '..';
 import { componentToReact } from '@/generators/react';
+import { parseJsx } from '..';
 import { runTestsForTarget } from './test-generator';
 
 import stamped from './data/blocks/stamped-io.raw.tsx?raw';
@@ -30,17 +30,3 @@ describe('React - stateType: useState', () => {
     expect(output).toMatchSnapshot();
   });
 });
-/*
-
-
-describe('React - test', () => {
-  runTestsForTarget({
-    options: {
-      stateType: 'useState',
-    },
-    target: 'react',
-    generator: componentToReact,
-    logOutput: true,
-    only: ["complexMeta"]
-  });
-})*/

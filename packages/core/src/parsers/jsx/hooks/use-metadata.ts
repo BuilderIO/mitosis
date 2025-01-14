@@ -84,7 +84,10 @@ const resolve = ({
         }
 
         // In this case the variable was imported
-        const { code, typescript, importFilePath } = getCodeFromImport(importObject, currentFilePath);
+        const { code, typescript, importFilePath } = getCodeFromImport(
+          importObject,
+          currentFilePath,
+        );
         if (code) {
           const jsxToUse = babelStripTypes(code, typescript);
 
