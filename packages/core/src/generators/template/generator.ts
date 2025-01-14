@@ -1,4 +1,5 @@
 import { ToTemplateOptions } from '@/generators/template/types';
+import { checkIsEvent } from '@/helpers/event-handlers';
 import { format } from 'prettier/standalone';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { dedent } from '../../helpers/dedent';
@@ -76,7 +77,7 @@ const blockToTemplate = (json: MitosisNode, options: ToTemplateOptions = {}) => 
       // TODO: proper babel transform to replace. Util for this
       const useValue = value;
 
-      if (key.startsWith('on')) {
+      if (checkIsEvent(key)) {
         // Do nothing
       } else {
         str += ` ${key}="\${${useValue}}" `;

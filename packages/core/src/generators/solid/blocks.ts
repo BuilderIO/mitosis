@@ -1,4 +1,5 @@
 import { babelTransformExpression } from '@/helpers/babel-transform';
+import { checkIsEvent } from '@/helpers/event-handlers';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { objectHasKey } from '@/helpers/typescript';
@@ -89,7 +90,7 @@ export const blockToSolid = (
 
     if (type === 'spread') {
       str += ` {...(${code})} `;
-    } else if (key.startsWith('on')) {
+    } else if (checkIsEvent(key)) {
       const useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
       const asyncKeyword = json.bindings[key]?.async ? 'async ' : '';
       str += ` ${useKey}={${asyncKeyword}(${cusArg.join(',')}) => ${code}} `;

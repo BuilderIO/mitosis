@@ -1,4 +1,5 @@
 import { createSingleBinding } from '@/helpers/bindings';
+import { checkIsEvent } from '@/helpers/event-handlers';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import isChildren from '@/helpers/is-children';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
@@ -130,7 +131,7 @@ const stringifyBinding =
       // TODO: proper babel transform to replace. Util for this
       const useValue = value?.code || '';
 
-      if (key.startsWith('on') && isValidHtmlTag) {
+      if (checkIsEvent(key) && isValidHtmlTag) {
         // handle html native on[event] props
         const { arguments: cusArgs = ['event'], async } = value;
         let event = key.replace('on', '').toLowerCase();
@@ -154,7 +155,7 @@ const stringifyBinding =
         const eventHandlerKey = `${SPECIAL_PROPERTIES.V_ON_AT}${event}`;
 
         return `${eventHandlerKey}="${eventHandlerValue}"`;
-      } else if (key.startsWith('on')) {
+      } else if (checkIsEvent(key)) {
         // handle on[custom event] props
         const { arguments: cusArgs = ['event'] } = node.bindings[key]!;
         return `:${key}="(${cusArgs.join(',')}) => ${encodeQuotes(useValue)}"`;
