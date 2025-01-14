@@ -1,5 +1,78 @@
 # Change Log
 
+## 0.5.24
+
+### Patch Changes
+
+- 995eb95: [All] Add new `explicitBuildFileExtensions` to `MitosisConfig`. This allows users to manage the extension of some components explicitly. This is very useful for plugins:
+
+  ```ts
+    /**
+     * Can be used for cli builds. Preserves explicit filename extensions when regex matches, e.g.:
+     * {
+     *   explicitBuildFileExtension: {
+     *     ".ts":/*.figma.lite.tsx/g,
+     *     ".md":/*.docs.lite.tsx/g
+     *   }
+     * }
+     */
+    explicitBuildFileExtensions?: Record<string, RegExp>;
+
+  ```
+
+  [All] Add new `pluginData` object to `MitosisComponent` which will be filled during build via cli. Users get some additional information to use them for plugins:
+
+  ```ts
+    /**
+     * This data is filled inside cli to provide more data for plugins
+     */
+  pluginData?: {
+      target?: Target;
+      path?: string;
+      outputDir?: string;
+      outputFilePath?: string;
+  };
+  ```
+
+- 341f281: [All] add additional `build` type for [Plugin](https://github.com/BuilderIO/mitosis/blob/main/packages/core/src/types/plugins.ts) to allow users to run plugins before/after cli build process
+- b387d21: [React, Angular] fix: issue with `state` inside `key` attribute in `Fragment`.
+
+  Example:
+
+  `<Fragment key={state.xxx + "abc"}...` was generated in React with `state.xxx` and in Angular without `this.`.
+
+## 0.5.23
+
+### Patch Changes
+
+- 772d6f5: Angular selector support in code generation
+
+## 0.5.22
+
+### Patch Changes
+
+- d52fe59: [Builder]: bound media query styles are not converted to strings
+
+## 0.5.21
+
+### Patch Changes
+
+- 73a55a3: [Builder]: Do not set width binding on Column if value is undefined
+- 10a168d: [Builder] preserve bound media query styles when converting to Mitosis
+
+## 0.5.20
+
+### Patch Changes
+
+- 7ae4a01: Fix: Solid fragments rendering by removing all props
+
+## 0.5.19
+
+### Patch Changes
+
+- e9cfef0: [All] Fix: scope renaming of state methods to not include shadow variables
+  [Angular]: Update `state.*` -> `this.*` transform to new AST transform approach
+
 ## 0.5.18
 
 ### Patch Changes

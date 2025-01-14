@@ -3784,10 +3784,23 @@ exports[`Html > jsx > Javascript Test > basicForFragment 1`] = `
       <template data-el=\\"div-1\\"><!-- option --></template>
     </div>
   </template>
+
+  <template data-el=\\"for-2\\">
+    <div>
+      <template data-el=\\"div-2\\"><!-- option --></template>
+    </div>
+  </template>
+  <select data-dom-state=\\"select-1\\">
+    <template data-el=\\"for-3\\">
+      <option data-el=\\"option-1\\">
+        <template data-el=\\"div-3\\"><!-- option --></template>
+      </option>
+    </template>
+  </select>
 </div>
 <script>
   (() => {
-    const state = {};
+    const state = { id: \\"xyz\\" };
 
     let context = null;
     let nodesToDestroy = [];
@@ -3814,6 +3827,34 @@ exports[`Html > jsx > Javascript Test > basicForFragment 1`] = `
       });
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+        renderTextNode(el, option);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-2']\\").forEach((el) => {
+        let array = [\\"a\\", \\"b\\", \\"c\\"];
+        renderLoop(el, array, \\"option\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+        renderTextNode(el, option);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-3']\\").forEach((el) => {
+        let array = [\\"d\\", \\"e\\", \\"f\\"];
+        renderLoop(el, array, \\"option\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='option-1']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+
+        el.key = \`\${state.id}-\${option}\`;
+
+        el.value = option;
+      });
+
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
         const option = getScope(el, \\"option\\");
         renderTextNode(el, option);
       });
@@ -11588,10 +11629,23 @@ exports[`Html > jsx > Typescript Test > basicForFragment 1`] = `
       <template data-el=\\"div-1\\"><!-- option --></template>
     </div>
   </template>
+
+  <template data-el=\\"for-2\\">
+    <div>
+      <template data-el=\\"div-2\\"><!-- option --></template>
+    </div>
+  </template>
+  <select data-dom-state=\\"select-1\\">
+    <template data-el=\\"for-3\\">
+      <option data-el=\\"option-1\\">
+        <template data-el=\\"div-3\\"><!-- option --></template>
+      </option>
+    </template>
+  </select>
 </div>
 <script>
   (() => {
-    const state = {};
+    const state = { id: \\"xyz\\" };
 
     let context = null;
     let nodesToDestroy = [];
@@ -11618,6 +11672,34 @@ exports[`Html > jsx > Typescript Test > basicForFragment 1`] = `
       });
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+        renderTextNode(el, option);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-2']\\").forEach((el) => {
+        let array = [\\"a\\", \\"b\\", \\"c\\"];
+        renderLoop(el, array, \\"option\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+        renderTextNode(el, option);
+      });
+
+      document.querySelectorAll(\\"[data-el='for-3']\\").forEach((el) => {
+        let array = [\\"d\\", \\"e\\", \\"f\\"];
+        renderLoop(el, array, \\"option\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='option-1']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+
+        el.key = \`\${state.id}-\${option}\`;
+
+        el.value = option;
+      });
+
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
         const option = getScope(el, \\"option\\");
         renderTextNode(el, option);
       });

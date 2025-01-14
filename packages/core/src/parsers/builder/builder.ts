@@ -108,16 +108,56 @@ const getActionBindingsFromBlock = (
 
 const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosisOptions) => {
   const styleBindings: any = {};
+  const responsiveStyles: Record<string, Record<string, string>> = {};
   let styleString = '';
 
   if (block.bindings) {
     for (const key in block.bindings) {
-      if (key.includes('style') && key.includes('.')) {
+      if (!key.includes('.')) {
+        continue;
+      }
+      if (key.includes('style')) {
         const styleProperty = key.split('.')[1];
         styleBindings[styleProperty] = convertExportDefaultToReturn(
           block.code?.bindings?.[key] || block.bindings[key],
         );
+        /**
+         * responsiveStyles that are bound need to be merged into media queries.
+         * Example:
+         * responsiveStyles.large.color: "state.color"
+         * responsiveStyles.large.background: "state.background"
+         * Should get mapped to:
+         * @media (max-width: 1200px): {
+         *   color: state.color,
+         *   background: state.background
+         * }
+         */
+      } else if (key.includes('responsiveStyles')) {
+        const [_, size, prop] = key.split('.');
+        const mediaKey = `@media (max-width: ${sizes[size as Size].max}px)`;
+
+        /**
+         * The media query key has spaces/special characters so we need to ensure
+         * that the key is always a string otherwise there will be runtime errors.
+         */
+        const objKey = `"${mediaKey}"`;
+        responsiveStyles[objKey] = {
+          ...responsiveStyles[objKey],
+          [prop]: block.bindings[key],
+        };
       }
+    }
+
+    /**
+     * All binding values are strings, but we don't want to stringify the values
+     * within the style object otherwise the bindings will be evaluated as strings.
+     * As a result, do not use JSON.stringify here.
+     */
+    for (const key in responsiveStyles) {
+      const styles = Object.keys(responsiveStyles[key]);
+      const keyValues = styles.map((prop) => `${prop}: ${responsiveStyles[key][prop]}`);
+      const stringifiedObject = `{ ${keyValues.join(', ')} }`;
+      styleBindings[key] = stringifiedObject;
     }
   }
 
@@ -347,9 +387,15 @@ const componentMappers: {
       block.component?.options.columns?.map((col: any, index: number) =>
         createMitosisNode({
           name: 'Column',
-          bindings: {
-            width: { code: col.width?.toString() },
-          },
+          /**
+           * If width if undefined, do not create a binding otherwise its JSX will
+           * be <Column width={} /> which is not valid due to the empty expression.
+           */
+          ...(col.width !== undefined && {
+            bindings: {
+              width: { code: col.width.toString() },
+            },
+          }),
           ...(col.link && {
             properties: {
               link: col.link,

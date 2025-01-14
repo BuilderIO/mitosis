@@ -12,7 +12,7 @@ import { MitosisComponent } from '@/types/mitosis-component';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { format } from 'prettier/standalone';
 import {
-  Plugin,
+  MitosisPlugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -28,7 +28,7 @@ Error.stackTraceLimit = 9999;
 
 const DEBUG = false;
 
-const PLUGINS: Plugin[] = [
+const PLUGINS: MitosisPlugin[] = [
   () => ({
     json: {
       post: (json) => {

@@ -2014,12 +2014,14 @@ export class MyComponent {
 `;
 
 exports[`Stencil > jsx > Javascript Test > basicForFragment 1`] = `
-"import { Component, h, Fragment } from \\"@stencil/core\\";
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"basic-for-fragment\\",
 })
 export class BasicForFragment {
+  @State() id = \\"xyz\\";
+
   render() {
     return (
       <div>
@@ -2028,6 +2030,18 @@ export class BasicForFragment {
             <div>{option}</div>
           </Fragment>
         ))}
+        {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+          <Fragment key={\`\${this.id}-\${option}\`}>
+            <div>{option}</div>
+          </Fragment>
+        ))}
+        <select>
+          {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+            <option key={\`\${this.id}-\${option}\`} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
       </div>
     );
   }
@@ -6192,12 +6206,14 @@ export class MyComponent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > basicForFragment 1`] = `
-"import { Component, h, Fragment } from \\"@stencil/core\\";
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"basic-for-fragment\\",
 })
 export class BasicForFragment {
+  @State() id = \\"xyz\\";
+
   render() {
     return (
       <div>
@@ -6206,6 +6222,18 @@ export class BasicForFragment {
             <div>{option}</div>
           </Fragment>
         ))}
+        {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+          <Fragment key={\`\${this.id}-\${option}\`}>
+            <div>{option}</div>
+          </Fragment>
+        ))}
+        <select>
+          {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+            <option key={\`\${this.id}-\${option}\`} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
       </div>
     );
   }

@@ -3419,6 +3419,20 @@ import { Component } from \\"@angular/core\\";
           <div>{{option}}</div>
         </ng-container>
       </ng-container>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption1\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+      <select>
+        <ng-container
+          *ngFor=\\"let option of ['d', 'e', 'f']; trackBy: trackByOption2\\"
+        >
+          <option [attr.value]=\\"option\\">{{option}}</option>
+        </ng-container>
+      </select>
     </div>
   \`,
   styles: [
@@ -3430,8 +3444,15 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class BasicForFragment {
+  id = \\"xyz\\";
   trackByOption0(_, option) {
     return \`key-\${option}\`;
+  }
+  trackByOption1(_, option) {
+    return \`\${this.id}-\${option}\`;
+  }
+  trackByOption2(_, option) {
+    return \`\${this.id}-\${option}\`;
   }
 }
 
@@ -11189,6 +11210,20 @@ import { Component } from \\"@angular/core\\";
           <div>{{option}}</div>
         </ng-container>
       </ng-container>
+      <ng-container
+        *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption1\\"
+      >
+        <ng-container>
+          <div>{{option}}</div>
+        </ng-container>
+      </ng-container>
+      <select>
+        <ng-container
+          *ngFor=\\"let option of ['d', 'e', 'f']; trackBy: trackByOption2\\"
+        >
+          <option [attr.value]=\\"option\\">{{option}}</option>
+        </ng-container>
+      </select>
     </div>
   \`,
   styles: [
@@ -11200,8 +11235,15 @@ import { Component } from \\"@angular/core\\";
   ],
 })
 export default class BasicForFragment {
+  id = \\"xyz\\";
   trackByOption0(_, option) {
     return \`key-\${option}\`;
+  }
+  trackByOption1(_, option) {
+    return \`\${this.id}-\${option}\`;
+  }
+  trackByOption2(_, option) {
+    return \`\${this.id}-\${option}\`;
   }
 }
 

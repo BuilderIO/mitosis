@@ -1558,10 +1558,24 @@ exports[`Alpine.js > jsx > Javascript Test > basicForFragment 1`] = `
       <div><span x-html=\\"option\\"></span></div>
     </div>
   </template>
+  <template x-for=\\"option in ['a', 'b', 'c']\\">
+    <div x-bind:key=\\"\`\${id}-\${option}\`\\">
+      <div><span x-html=\\"option\\"></span></div>
+    </div>
+  </template>
+  <select>
+    <template x-for=\\"option in ['d', 'e', 'f']\\">
+      <option x-bind:key=\\"\`\${id}-\${option}\`\\" x-bind:value=\\"option\\">
+        <span x-html=\\"option\\"></span>
+      </option>
+    </template>
+  </select>
 </div>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
-    Alpine.data(\\"basicForFragment\\", () => ({}));
+    Alpine.data(\\"basicForFragment\\", () => ({
+      id: \\"xyz\\",
+    }));
   });
 </script>
 "
@@ -4659,10 +4673,24 @@ exports[`Alpine.js > jsx > Typescript Test > basicForFragment 1`] = `
       <div><span x-html=\\"option\\"></span></div>
     </div>
   </template>
+  <template x-for=\\"option in ['a', 'b', 'c']\\">
+    <div x-bind:key=\\"\`\${id}-\${option}\`\\">
+      <div><span x-html=\\"option\\"></span></div>
+    </div>
+  </template>
+  <select>
+    <template x-for=\\"option in ['d', 'e', 'f']\\">
+      <option x-bind:key=\\"\`\${id}-\${option}\`\\" x-bind:value=\\"option\\">
+        <span x-html=\\"option\\"></span>
+      </option>
+    </template>
+  </select>
 </div>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
-    Alpine.data(\\"basicForFragment\\", () => ({}));
+    Alpine.data(\\"basicForFragment\\", () => ({
+      id: \\"xyz\\",
+    }));
   });
 </script>
 "

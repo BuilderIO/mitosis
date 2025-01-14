@@ -1746,9 +1746,13 @@ export default observedMyComponent;
 `;
 
 exports[`React - stateType: mobx > jsx > Javascript Test > basicForFragment 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
 
 function BasicForFragment(props) {
+  const state = useLocalObservable(() => ({ id: \\"xyz\\" }));
+
   return (
     <div>
       {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
@@ -1756,6 +1760,18 @@ function BasicForFragment(props) {
           <div>{option}</div>
         </React.Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${state.id}-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${state.id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
@@ -5772,9 +5788,13 @@ export default observedMyComponent;
 `;
 
 exports[`React - stateType: mobx > jsx > Typescript Test > basicForFragment 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
 
 function BasicForFragment(props: any) {
+  const state = useLocalObservable(() => ({ id: \\"xyz\\" }));
+
   return (
     <div>
       {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
@@ -5782,6 +5802,18 @@ function BasicForFragment(props: any) {
           <div>{option}</div>
         </React.Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${state.id}-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${state.id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

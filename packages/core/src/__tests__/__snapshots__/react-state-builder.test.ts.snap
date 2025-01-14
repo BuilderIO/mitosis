@@ -1704,10 +1704,11 @@ export default MyComponent;
 `;
 
 exports[`React - stateType: builder > jsx > Javascript Test > basicForFragment 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 
 function BasicForFragment(props) {
-  const state = useBuilderState({});
+  const state = useBuilderState({ id: \\"xyz\\" });
 
   return (
     <div>
@@ -1716,6 +1717,18 @@ function BasicForFragment(props) {
           <div>{option}</div>
         </React.Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${state.id}-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${state.id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
@@ -5696,10 +5709,11 @@ export default MyComponent;
 `;
 
 exports[`React - stateType: builder > jsx > Typescript Test > basicForFragment 1`] = `
-"import * as React from \\"react\\";
+"\\"use client\\";
+import * as React from \\"react\\";
 
 function BasicForFragment(props: any) {
-  const state = useBuilderState({});
+  const state = useBuilderState({ id: \\"xyz\\" });
 
   return (
     <div>
@@ -5708,6 +5722,18 @@ function BasicForFragment(props: any) {
           <div>{option}</div>
         </React.Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <React.Fragment key={\`\${state.id}-\${option}\`}>
+          <div>{option}</div>
+        </React.Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${state.id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

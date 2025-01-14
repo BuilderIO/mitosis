@@ -1695,8 +1695,11 @@ export default MyComponent;
 exports[`Preact > jsx > Javascript Test > basicForFragment 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
 function BasicForFragment(props) {
+  const [id, setId] = useState(() => \\"xyz\\");
+
   return (
     <div>
       {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
@@ -1704,6 +1707,18 @@ function BasicForFragment(props) {
           <div>{option}</div>
         </Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <Fragment key={\`\${id}-\${option}\`}>
+          <div>{option}</div>
+        </Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
@@ -5702,8 +5717,11 @@ export default MyComponent;
 exports[`Preact > jsx > Typescript Test > basicForFragment 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
 function BasicForFragment(props: any) {
+  const [id, setId] = useState(() => \\"xyz\\");
+
   return (
     <div>
       {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
@@ -5711,6 +5729,18 @@ function BasicForFragment(props: any) {
           <div>{option}</div>
         </Fragment>
       ))}
+      {[\\"a\\", \\"b\\", \\"c\\"]?.map((option) => (
+        <Fragment key={\`\${id}-\${option}\`}>
+          <div>{option}</div>
+        </Fragment>
+      ))}
+      <select>
+        {[\\"d\\", \\"e\\", \\"f\\"]?.map((option) => (
+          <option key={\`\${id}-\${option}\`} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

@@ -138,7 +138,7 @@ export const blockToMitosis = (
   for (const key in json.bindings) {
     const value = json.bindings[key]?.code as string;
 
-    if (json.slots?.[key]) {
+    if (!value || json.slots?.[key]) {
       continue;
     }
 

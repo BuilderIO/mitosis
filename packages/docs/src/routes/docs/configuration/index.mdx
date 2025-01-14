@@ -8,10 +8,14 @@ title: Configuration - Mitosis
 
 In the root of the project, from which you run mitosis, you can add a `mitosis.config.js` file that will be read by Mitosis. You can also specify a config file by option: `--config=<file>`.
 
-The `mitosis.config.js` file can take the following shape:
+The `mitosis.config.js` file uses the [MitosisConfig](https://github.com/BuilderIO/mitosis/blob/main/packages/core/src/types/config.ts#L22) type:
 
 ```tsx
-type MitosisConfig = {
+export type MitosisConfig = {
+  /**
+   * Apply common options to all targets
+   */
+  commonOptions?: Omit<BaseTranspilerOptions, 'experimental'>;
   /**
    * List of targets to compile to.
    */
@@ -50,24 +54,39 @@ type MitosisConfig = {
    *   react: {
    *     stateType: 'builder';
    *     stylesType: 'styled-jsx'
+   *     plugins: [myPlugin]
    *   }
    * }
    * ```
-   */
-  options: Partial<GeneratorOptions>;
-  /**
+*/
+options: Partial<GeneratorOptions>;
+/**
    * Configure a custom parser function which takes a string and returns MitosisJSON
    * Defaults to the JSXParser of this project (src/parsers/jsx)
-   */
-  parser?: (code: string, path?: string) => MitosisComponent | Promise<MitosisComponent>;
+*/
+parser?: (code: string, path?: string) => MitosisComponent | Promise<MitosisComponent>;
 
-  /**
+/**
    * Configure a custom function that provides the output path for each target.
    * If you provide this function, you must provide a value for every target yourself.
-   */
-  getTargetPath: ({ target }: { target: Target }) => string;
-}
+*/
+getTargetPath: ({ target }: { target: Target }) => string;
+
+/**
+   * Provide options to the parser.
+*/
+parserOptions?: {
+  jsx: Partial<ParseMitosisOptions> & {
+    /**
+      * Path to your project's `tsconfig.json` file. Needed for advanced types parsing (e.g. signals).
+    */
+      tsConfigFilePath?: string;
+    };
+  };
+};
 ```
+
+### Targets
 
 The `Targets` type can be any one of, or an array of the following strings:
 
@@ -96,7 +115,34 @@ type targets =
   | 'taro';
 ```
 
-Note that you can configure each target generator individually, providing plugins on a case-by-case basis.
+> **Note** that you can configure each target generator individually, providing [plugins](/docs/customizability/#plugins) on a case-by-case basis.
+
+### Common options
+
+The type `BaseTranspilerOptions` for `commonOptions` can be an object like this:
+
+````ts
+
+export interface BaseTranspilerOptions {
+  /**
+   * Runs `prettier` on generated components
+   */
+  prettier?: boolean;
+  /**
+   * Mitosis Plugins to run during codegen.
+   */
+  plugins?: Plugin[];
+  /**
+   * Enable `typescript` output
+   */
+  typescript?: boolean;
+  /**
+   * Preserves explicit filename extensions in import statements.
+   */
+  explicitImportFileExtension?: boolean;
+}
+````
+
 
 ### TypeScript configuration
 

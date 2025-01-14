@@ -1,5 +1,5 @@
 import { MitosisComponent } from './mitosis-component';
-import { Plugin } from './plugins';
+import { MitosisPlugin } from './plugins';
 
 export interface TranspilerArgs {
   path?: string;
@@ -24,7 +24,7 @@ export interface BaseTranspilerOptions {
   /**
    * Mitosis Plugins to run during codegen.
    */
-  plugins?: Plugin[];
+  plugins?: MitosisPlugin[];
   /**
    * Enable `typescript` output
    */
@@ -33,4 +33,14 @@ export interface BaseTranspilerOptions {
    * Preserves explicit filename extensions in import statements.
    */
   explicitImportFileExtension?: boolean;
+  /**
+   * Can be used for cli builds. Preserves explicit filename extensions when regex matches, e.g.:
+   * {
+   *   explicitBuildFileExtension: {
+   *     ".ts":/*.figma.lite.tsx/g,
+   *     ".md":/*.docs.lite.tsx/g
+   *   }
+   * }
+   */
+  explicitBuildFileExtensions?: Record<string, RegExp>;
 }

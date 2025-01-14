@@ -18,6 +18,20 @@ In your directory's `mitosis.config.js`, you can provide a `plugins` array for e
 
 ```tsx
 export type Plugin = {
+  name?: stirng;
+  order?: number; // Sort plugins by number, no matter the position of the array
+  build?: {
+    // Happens before build
+    pre?: (targetContext: TargetContext) => void | Promise<void>;
+    // Happens after build
+    post?: (
+      targetContext: TargetContext,
+      files?: {
+        componentFiles: OutputFiles[];
+        nonComponentFiles: OutputFiles[];
+      },
+    ) => void | Promise<void>;
+  };
   json?: {
     // Happens before any modifiers
     pre?: (json: MitosisComponent) => MitosisComponent | void;
@@ -89,7 +103,7 @@ Check the [example](https://github.com/BuilderIO/mitosis/tree/main/examples/meta
 
 The way Mitosis' engine works is:
 
-- you write a `.lite.jsx` component
+- you write a `.lite.jsx` or `.lite.tsx` component
 - the mitosis JSX parser converts it to a `MitosisComponent` JSON
 - that JSON is fed to the generator(s) of your choice, which provide it to the plugins.
 
@@ -97,3 +111,96 @@ For more information on what the JSON contains, check out the documented types:
 
 - [MitosisComponent](https://github.com/BuilderIO/mitosis/blob/main/packages/core/src/types/mitosis-component.ts)
 - [MitosisNode](https://github.com/BuilderIO/mitosis/blob/main/packages/core/src/types/mitosis-node.ts): Each `MitosisComponent` will have multiple `MitosisNode` under `component.children`. Each node represents a DOM/JSX node
+
+
+## Example
+
+This is an example what you could do with a plugin.
+In this example we want to create a documentation for one of our components, based on the target.
+
+The example component `button.docs.lite.tsx`:
+
+````tsx
+/* button.docs.lite.tsx */
+import { useMetadata } from '@builder.io/mitosis';
+import MyButton from './my-button.lite';
+
+useMetadata({
+  docs: {
+    name: "This is the name of my button"
+  },
+});
+
+export default function ButtonDocs(props: any) {
+  return <MyButton name={props.name}></MyButton>;
+}
+````
+
+The mitosis config `mitosis.config.cjs`:
+
+````js
+/**
+ * @type {import('@builder.io/mitosis'.MitosisConfig)}
+ */
+module.exports = {
+  files: 'src/**',
+  targets: [
+    'angular',
+    'react',
+    'vue'
+  ],
+  commonOptions: {
+    typescript: true,
+    explicitBuildFileExtensions: {
+      '.md': /.*(docs\.lite\.tsx)$/g
+    },
+    plugins: [
+      () => ({
+        code: {
+          post: (code, json) => {
+            if (json.meta?.useMetadata?.docs) {
+              return (
+                `# ${json.name} - ${json.pluginData?.target}\n\n` +
+                `${JSON.stringify(json.meta?.useMetadata?.docs)}\n\n` +
+                'This is the content:\n' +
+                '````\n' +
+                code +
+                '\n````'
+              );
+            }
+
+            return code;
+          }
+        }
+      })
+    ]
+  }
+};
+````
+
+We generate a new `button.docs.md` with a content based on the target, e.g. `vue`:
+
+````markdown
+# ButtonDocs - vue
+
+{"name":"This is the name of my button"}
+
+This is the content:
+\````
+<template>
+  <MyButton :name="name"></MyButton>
+</template>
+
+<script setup lang="ts">
+  import MyButton from "./my-button.vue";
+
+  const props = defineProps(["name"]);
+</script>
+
+\````
+````
+
+> **Note:** We use `commonOptions` here to apply the plugin to every target.
+>
+> We use `explicitBuildFileExtensions` to transform the file extension always to `.md`,
+otherwise you would get the default extension for your target. Like `.vue` for vue or `.tsx` for react.
