@@ -12,3 +12,6 @@ export type Dictionary<T> = { [key: string]: T };
 
 export const objectHasKey = <T>(object: T, key: PropertyKey): key is keyof T =>
   key in (object as any);
+
+export const isTypescriptFile = (fileName: string): boolean =>
+  fileName.endsWith('.ts') || fileName.endsWith('.tsx');

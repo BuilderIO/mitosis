@@ -1,4 +1,5 @@
 import { mapImportDeclarationToMitosisImport } from '@/helpers/mitosis-imports';
+import { isTypescriptFile } from '@/helpers/typescript';
 import { babelDefaultTransform, babelStripTypes, parseCodeJson } from '@/parsers/jsx/helpers';
 import { Context, ParseMitosisOptions, ResolvedImport } from '@/parsers/jsx/types';
 import { MitosisImport } from '@/types/mitosis-component';
@@ -16,19 +17,18 @@ type ResolveData = {
 const getCodeFromImport = (
   importObject: MitosisImport,
   currentFile?: string,
-): { code?: string; typescript?: boolean; importFile?: string } => {
+): { code?: string; typescript?: boolean; importFilePath?: string } => {
   if (currentFile) {
     // resolve path of import
-    const absolutePathArray = currentFile.replaceAll('\\', '/').replaceAll('/./', '/').split('/');
-    const originFile = absolutePathArray.pop();
-    const typescript = !!originFile?.includes('.ts');
+    const originFile = path.basename(currentFile);
+    const typescript = isTypescriptFile(originFile);
     const importFile =
-      importObject.path.endsWith('.ts') || importObject.path.endsWith('.js')
+      isTypescriptFile(importObject.path) || importObject.path.endsWith('.js')
         ? importObject.path
         : `${importObject.path}.${typescript ? 'ts' : 'js'}`;
-    const importFilePath = path.resolve(absolutePathArray.join('/'), importFile);
+    const importFilePath = path.resolve(path.dirname(currentFile), importFile);
     if (existsSync(importFilePath)) {
-      return { code: readFileSync(importFilePath).toString(), typescript, importFile };
+      return { code: readFileSync(importFilePath).toString(), typescript, importFilePath };
     }
     return { typescript };
   }
@@ -84,7 +84,7 @@ const resolve = ({
         }
 
         // In this case the variable was imported
-        const { code, typescript, importFile } = getCodeFromImport(importObject, currentFilePath);
+        const { code, typescript, importFilePath } = getCodeFromImport(importObject, currentFilePath);
         if (code) {
           const jsxToUse = babelStripTypes(code, typescript);
 
@@ -98,7 +98,7 @@ const resolve = ({
                     const filledDeclaration = fillDeclarations({
                       declaration,
                       valueToResolve,
-                      currentFilePath: importFile,
+                      currentFilePath: importFilePath,
                       nodePath: path,
                     });
                     result = {
