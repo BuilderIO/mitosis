@@ -1,20 +1,25 @@
+import { getDefaultProps } from '@/generators/react/helpers/default-props';
+import {
+  getOnEventHookComponentBody,
+  getOnInitHookComponentBody,
+  getOnMountComponentBody,
+  getOnUnMountComponentBody,
+  getOnUpdateComponentBody,
+} from '@/generators/react/helpers/hooks';
 import { createSingleBinding } from '@/helpers/bindings';
 import { createMitosisNode } from '@/helpers/create-mitosis-node';
 import { dedent } from '@/helpers/dedent';
 import { fastClone } from '@/helpers/fast-clone';
 import { getPropsRef } from '@/helpers/get-props-ref';
 import { getRefs } from '@/helpers/get-refs';
-import {
-  getStateObjectStringFromComponent,
-  stringifyContextValue,
-} from '@/helpers/get-state-object-string';
+import { stringifyContextValue } from '@/helpers/get-state-object-string';
 import { gettersToFunctions } from '@/helpers/getters-to-functions';
 import { handleMissingState } from '@/helpers/handle-missing-state';
 import { isRootTextNode } from '@/helpers/is-root-text-node';
 import { mapRefs } from '@/helpers/map-refs';
 import { initializeOptions } from '@/helpers/merge-options';
 import { checkIsDefined } from '@/helpers/nullable';
-import { getOnEventHandlerName, processOnEventHooksPlugin } from '@/helpers/on-event';
+import { processOnEventHooksPlugin } from '@/helpers/on-event';
 import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
 import { processHttpRequests } from '@/helpers/process-http-requests';
 import { renderPreComponent } from '@/helpers/render-imports';
@@ -25,24 +30,37 @@ import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import { collectCss } from '@/helpers/styles/collect-css';
 import { collectStyledComponents } from '@/helpers/styles/collect-styled-components';
 import { hasCss } from '@/helpers/styles/helpers';
+import {
+  runPostCodePlugins,
+  runPostJsonPlugins,
+  runPreCodePlugins,
+  runPreJsonPlugins,
+} from '@/modules/plugins';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { types } from '@babel/core';
 import hash from 'hash-sum';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import {
-  runPostCodePlugins,
-  runPostJsonPlugins,
-  runPreCodePlugins,
-  runPreJsonPlugins,
-} from '../../modules/plugins';
 import { hasContext } from '../helpers/context';
 import { checkIfIsClientComponent } from '../helpers/rsc';
 import { collectReactNativeStyles } from '../react-native';
 import { blockToReact } from './blocks';
-import { closeFrag, openFrag, processTagReferences, wrapInFragment } from './helpers';
-import { getUseStateCode, processHookCode, updateStateSetters } from './state';
+import {
+  closeFrag,
+  isReactForwardRef,
+  openFrag,
+  processTagReferences,
+  wrapInFragment,
+} from './helpers';
+import {
+  getDefaultImport,
+  getReactVariantStateImportString,
+  getReactVariantStateString,
+  getUseStateCode,
+  processHookCode,
+  updateStateSetters,
+} from './helpers/state';
 import { ToReactOptions } from './types';
 
 export const contextPropDrillingKey = '_context';
@@ -254,43 +272,6 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
     return str;
   };
 
-// TODO: import target components when they are required
-const getDefaultImport = (json: MitosisComponent, options: ToReactOptions): string => {
-  const { preact, type } = options;
-  if (preact) {
-    return `
-    /** @jsx h */
-    import { h, Fragment } from 'preact';
-    `;
-  }
-  if (type === 'native') {
-    return `
-    import * as React from 'react';
-    import { FlatList, ScrollView, View, StyleSheet, Image, Text, Pressable, TextInput, TouchableOpacity, Button, Linking } from 'react-native';
-    `;
-  }
-  if (type === 'taro') {
-    return `
-    import * as React from 'react';
-    `;
-  }
-
-  return "import * as React from 'react';";
-};
-
-const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
-  if (!json.defaultProps) return '';
-  const defaultPropsString = Object.keys(json.defaultProps)
-    .map((prop) => {
-      const value = json.defaultProps!.hasOwnProperty(prop)
-        ? json.defaultProps![prop]?.code
-        : 'undefined';
-      return `${prop}: ${value}`;
-    })
-    .join(',');
-  return `${json.name}.defaultProps = {${defaultPropsString}};`;
-};
-
 const isRSC = (json: MitosisComponent, options: ToReactOptions) => {
   // When using RSC generator, we check `componentType` field in metadata to determine if it's a server component
   const componentType = json.meta.useMetadata?.rsc?.componentType;
@@ -335,14 +316,9 @@ const _componentToReact = (
   const hasState = options.stateType === 'builder' || checkHasState(json);
 
   const [forwardRef, hasPropRef] = getPropsRef(json);
-  const isForwardRef =
-    !options.preact &&
-    Boolean(
-      json.meta.useMetadata?.forwardRef || json.meta.useMetadata?.react?.forwardRef || hasPropRef,
-    );
+  const isForwardRef = !options.preact && Boolean(isReactForwardRef(json) || hasPropRef);
   if (isForwardRef) {
-    const meta = (json.meta.useMetadata?.forwardRef ||
-      json.meta.useMetadata?.react?.forwardRef) as string;
+    const meta = isReactForwardRef(json) as string;
     options.forwardRef = meta || forwardRef;
   }
   const forwardRefType =
@@ -431,100 +407,17 @@ const _componentToReact = (
         : ''
     }
     ${hasStateArgument ? '' : refsString}
-    ${
-      hasState
-        ? options.stateType === 'mobx'
-          ? `const state = useLocalObservable(() => (${getStateObjectStringFromComponent(json)}));`
-          : options.stateType === 'useState'
-          ? useStateCode
-          : options.stateType === 'solid'
-          ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
-          : options.stateType === 'builder'
-          ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
-          : options.stateType === 'variables'
-          ? getStateObjectStringFromComponent(json, {
-              format: 'variables',
-              keyPrefix: 'const',
-              valueMapper: (code, type, _, key) => {
-                if (type === 'getter') return `${key} = function ${code.replace('get ', '')}`;
-                if (type === 'function')
-                  return code.startsWith('async') ? code : `${key} = function ${code}`;
-                return code;
-              },
-            })
-          : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
-        : ''
-    }
+    ${getReactVariantStateString({ hasState, useStateCode, json, options })}
     ${hasStateArgument ? refsString : ''}
     ${getContextString(json, options)}
     ${json.hooks.init?.code ? processHookCode({ str: json.hooks.init?.code, options }) : ''}
     ${contextStr || ''}
 
-    ${
-      json.hooks.onInit?.code
-        ? shouldInlineOnInitHook
-          ? processHookCode({ str: json.hooks.onInit.code, options })
-          : `
-        const hasInitialized = useRef(false);
-        if (!hasInitialized.current) {
-          ${processHookCode({
-            str: json.hooks.onInit.code,
-            options,
-          })}
-          hasInitialized.current = true;
-        }
-        `
-        : ''
-    }
-
-    ${json.hooks.onEvent
-      .map((hook) => {
-        const eventName = `"${hook.eventName}"`;
-        const handlerName = getOnEventHandlerName(hook);
-        return `
-      useEffect(() => {
-        ${hook.refName}.current?.addEventListener(${eventName}, ${handlerName});
-        return () => ${hook.refName}.current?.removeEventListener(${eventName}, ${handlerName});
-      }, []);
-      `;
-      })
-      .join('\n')}
-
-    ${json.hooks.onMount
-      .map(
-        (hook) =>
-          `useEffect(() => {
-          ${processHookCode({
-            str: hook.code,
-            options,
-          })}
-        }, [])`,
-      )
-      .join('\n')}
-
-    ${
-      json.hooks.onUpdate
-        ?.map(
-          (hook) => `useEffect(() => {
-          ${processHookCode({ str: hook.code, options })}
-        },
-        ${hook.deps ? processHookCode({ str: hook.deps, options }) : ''})`,
-        )
-        .join(';') ?? ''
-    }
-
-    ${
-      json.hooks.onUnMount?.code
-        ? `useEffect(() => {
-          return () => {
-            ${processHookCode({
-              str: json.hooks.onUnMount.code,
-              options,
-            })}
-          }
-        }, [])`
-        : ''
-    }
+    ${getOnInitHookComponentBody({ shouldInlineOnInitHook, json, options })}
+    ${getOnEventHookComponentBody(json)}
+    ${getOnMountComponentBody({ json, options })}
+    ${getOnUpdateComponentBody({ json, options })}
+    ${getOnUnMountComponentBody({ json, options })}
 
     return (
       ${wrap ? openFrag(options) : ''}
@@ -546,7 +439,7 @@ const _componentToReact = (
 
   const str = dedent`
   ${shouldAddUseClientDirective ? `'use client';` : ''}
-  ${getDefaultImport(json, options)}
+  ${getDefaultImport(options)}
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
   ${
     reactLibImports.size
@@ -562,17 +455,7 @@ const _componentToReact = (
     import { jsx } from '@emotion/react'`.trim()
       : ''
   }
-    ${
-      !hasState
-        ? ''
-        : options.stateType === 'valtio'
-        ? `import { useLocalProxy } from 'valtio/utils';`
-        : options.stateType === 'solid'
-        ? `import { useMutable } from 'react-solid-state';`
-        : options.stateType === 'mobx'
-        ? `import { useLocalObservable, observer } from 'mobx-react-lite';`
-        : ''
-    }
+    ${getReactVariantStateImportString(hasState, options)}
     ${json.types && options.typescript ? json.types.join('\n') : ''}
     ${renderPreComponent({
       explicitImportFileExtension: options.explicitImportFileExtension,
@@ -581,11 +464,9 @@ const _componentToReact = (
     })}
     ${isForwardRef ? `const ${json.name} = forwardRef${forwardRefType}(` : ''}function ${
     json.name
-  }(${componentArgs}) {
+  }(${componentArgs}${getDefaultProps(json)}) {
     ${componentBody}
   }${isForwardRef ? ')' : ''}
-
-    ${getPropsDefinition({ json })}
 
     ${
       reactNativeStyles

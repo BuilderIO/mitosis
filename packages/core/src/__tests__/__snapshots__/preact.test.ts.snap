@@ -560,7 +560,9 @@ exports[`Preact > jsx > Javascript Test > ContentSlotJSX 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
-function ContentSlotJsxCode(props) {
+function ContentSlotJsxCode(
+  props = { content: \\"\\", slotReference: undefined, slotContent: undefined }
+) {
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -597,12 +599,6 @@ function ContentSlotJsxCode(props) {
     </Fragment>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -2103,7 +2099,16 @@ exports[`Preact > jsx > Javascript Test > defaultProps 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 
-function Button(props) {
+function Button(
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -2128,15 +2133,6 @@ function Button(props) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -2145,7 +2141,14 @@ exports[`Preact > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 
-function Button(props) {
+function Button(
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -2169,13 +2172,6 @@ function Button(props) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -4384,7 +4380,13 @@ type Props = {
 };
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
-function ContentSlotJsxCode(props: Props) {
+function ContentSlotJsxCode(
+  props: Props = {
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+  }
+) {
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -4421,12 +4423,6 @@ function ContentSlotJsxCode(props: Props) {
     </Fragment>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -6161,7 +6157,16 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
-function Button(props: ButtonProps) {
+function Button(
+  props: ButtonProps = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -6186,15 +6191,6 @@ function Button(props: ButtonProps) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -6211,7 +6207,14 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-function Button(props: ButtonProps) {
+function Button(
+  props: ButtonProps = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -6235,13 +6238,6 @@ function Button(props: ButtonProps) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -8055,7 +8051,7 @@ exports[`Preact > svelte > Javascript Test > classDirective 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
-function MyComponent(props) {
+function MyComponent(props = {}) {
   const [focus, setFocus] = useState(() => true);
 
   return (
@@ -8066,8 +8062,6 @@ function MyComponent(props) {
     />
   );
 }
-
-MyComponent.defaultProps = {};
 
 export default MyComponent;
 "
@@ -8459,7 +8453,7 @@ exports[`Preact > svelte > Typescript Test > classDirective 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
-function MyComponent(props: any) {
+function MyComponent(props: any = {}) {
   const [focus, setFocus] = useState(() => true);
 
   return (
@@ -8470,8 +8464,6 @@ function MyComponent(props: any) {
     />
   );
 }
-
-MyComponent.defaultProps = {};
 
 export default MyComponent;
 "

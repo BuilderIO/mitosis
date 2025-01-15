@@ -15416,7 +15416,9 @@ exports[`Mitosis, format: react > jsx > Javascript Test > ContentSlotJSX 1`] = `
 import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-function ContentSlotJsxCode(props) {
+function ContentSlotJsxCode(
+  props = { content: \\"\\", slotReference: undefined, slotContent: undefined }
+) {
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -15453,12 +15455,6 @@ function ContentSlotJsxCode(props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -16937,7 +16933,16 @@ exports[`Mitosis, format: react > jsx > Javascript Test > defaultProps 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function Button(props) {
+function Button(
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -16962,15 +16967,6 @@ function Button(props) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -16979,7 +16975,14 @@ exports[`Mitosis, format: react > jsx > Javascript Test > defaultPropsOutsideCom
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function Button(props) {
+function Button(
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -17003,13 +17006,6 @@ function Button(props) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -19124,7 +19120,9 @@ import * as React from \\"react\\";
 import { useState } from \\"react\\";
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
-function ContentSlotJsxCode(props) {
+function ContentSlotJsxCode(
+  props = { content: \\"\\", slotReference: undefined, slotContent: undefined }
+) {
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -19161,12 +19159,6 @@ function ContentSlotJsxCode(props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -20653,7 +20645,16 @@ exports[`Mitosis, format: react > jsx > Typescript Test > defaultProps 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function Button(props) {
+function Button(
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -20678,15 +20679,6 @@ function Button(props) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -20695,7 +20687,14 @@ exports[`Mitosis, format: react > jsx > Typescript Test > defaultPropsOutsideCom
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function Button(props) {
+function Button(
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -20719,13 +20718,6 @@ function Button(props) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -22303,7 +22295,7 @@ exports[`Mitosis, format: react > svelte > Javascript Test > classDirective 1`] 
 import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-function MyComponent(props) {
+function MyComponent(props = {}) {
   const [focus, setFocus] = useState(() => true);
 
   return (
@@ -22314,8 +22306,6 @@ function MyComponent(props) {
     />
   );
 }
-
-MyComponent.defaultProps = {};
 
 export default MyComponent;
 "
@@ -22706,7 +22696,7 @@ exports[`Mitosis, format: react > svelte > Typescript Test > classDirective 1`] 
 import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-function MyComponent(props) {
+function MyComponent(props = {}) {
   const [focus, setFocus] = useState(() => true);
 
   return (
@@ -22717,8 +22707,6 @@ function MyComponent(props) {
     />
   );
 }
-
-MyComponent.defaultProps = {};
 
 export default MyComponent;
 "

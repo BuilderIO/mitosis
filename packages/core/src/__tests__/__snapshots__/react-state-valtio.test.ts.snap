@@ -569,7 +569,9 @@ exports[`React - stateType: valtio > jsx > Javascript Test > ContentSlotJSX 1`] 
 import * as React from \\"react\\";
 import { useLocalProxy } from \\"valtio/utils\\";
 
-function ContentSlotJsxCode(props) {
+function ContentSlotJsxCode(
+  props = { content: \\"\\", slotReference: undefined, slotContent: undefined }
+) {
   const state = useLocalProxy({
     name: \\"king\\",
     showContent: false,
@@ -605,12 +607,6 @@ function ContentSlotJsxCode(props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -2110,7 +2106,16 @@ exports[`React - stateType: valtio > jsx > Javascript Test > defaultProps 1`] = 
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function Button(props) {
+function Button(
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -2135,15 +2140,6 @@ function Button(props) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -2152,7 +2148,14 @@ exports[`React - stateType: valtio > jsx > Javascript Test > defaultPropsOutside
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function Button(props) {
+function Button(
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -2176,13 +2179,6 @@ function Button(props) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -4301,7 +4297,13 @@ type Props = {
 };
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
-function ContentSlotJsxCode(props: Props) {
+function ContentSlotJsxCode(
+  props: Props = {
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+  }
+) {
   const state = useLocalProxy({
     name: \\"king\\",
     showContent: false,
@@ -4337,12 +4339,6 @@ function ContentSlotJsxCode(props: Props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -6063,7 +6059,16 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
-function Button(props: ButtonProps) {
+function Button(
+  props: ButtonProps = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -6088,15 +6093,6 @@ function Button(props: ButtonProps) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -6113,7 +6109,14 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-function Button(props: ButtonProps) {
+function Button(
+  props: ButtonProps = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -6137,13 +6140,6 @@ function Button(props: ButtonProps) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -7858,7 +7854,7 @@ exports[`React - stateType: valtio > svelte > Javascript Test > classDirective 1
 import * as React from \\"react\\";
 import { useLocalProxy } from \\"valtio/utils\\";
 
-function MyComponent(props) {
+function MyComponent(props = {}) {
   const state = useLocalProxy({ focus: true });
 
   return (
@@ -7869,8 +7865,6 @@ function MyComponent(props) {
     />
   );
 }
-
-MyComponent.defaultProps = {};
 
 export default MyComponent;
 "
@@ -8264,7 +8258,7 @@ exports[`React - stateType: valtio > svelte > Typescript Test > classDirective 1
 import * as React from \\"react\\";
 import { useLocalProxy } from \\"valtio/utils\\";
 
-function MyComponent(props: any) {
+function MyComponent(props: any = {}) {
   const state = useLocalProxy({ focus: true });
 
   return (
@@ -8275,8 +8269,6 @@ function MyComponent(props: any) {
     />
   );
 }
-
-MyComponent.defaultProps = {};
 
 export default MyComponent;
 "

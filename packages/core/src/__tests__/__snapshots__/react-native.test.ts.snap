@@ -823,7 +823,9 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-function ContentSlotJsxCode(props) {
+function ContentSlotJsxCode(
+  props = { content: \\"\\", slotReference: undefined, slotContent: undefined }
+) {
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -859,12 +861,6 @@ function ContentSlotJsxCode(props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -2842,7 +2838,16 @@ import {
   Linking,
 } from \\"react-native\\";
 
-function Button(props) {
+function Button(
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+  }
+) {
   return (
     <View>
       {props.link ? (
@@ -2866,15 +2871,6 @@ function Button(props) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -2895,7 +2891,14 @@ import {
   Linking,
 } from \\"react-native\\";
 
-function Button(props) {
+function Button(
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+  }
+) {
   return (
     <View>
       {props.link ? (
@@ -2918,13 +2921,6 @@ function Button(props) {
     </View>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -6180,7 +6176,13 @@ type Props = {
 };
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
-function ContentSlotJsxCode(props: Props) {
+function ContentSlotJsxCode(
+  props: Props = {
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+  }
+) {
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -6216,12 +6218,6 @@ function ContentSlotJsxCode(props: Props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -8433,7 +8429,16 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
-function Button(props: ButtonProps) {
+function Button(
+  props: ButtonProps = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+  }
+) {
   return (
     <View>
       {props.link ? (
@@ -8456,15 +8461,6 @@ function Button(props: ButtonProps) {
     </View>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
 
 export default Button;
 "
@@ -8494,7 +8490,14 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-function Button(props: ButtonProps) {
+function Button(
+  props: ButtonProps = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+  }
+) {
   return (
     <View>
       {props.link ? (
@@ -8517,13 +8520,6 @@ function Button(props: ButtonProps) {
     </View>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -11263,13 +11259,11 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-function MyComponent(props) {
+function MyComponent(props = {}) {
   const [focus, setFocus] = useState(() => true);
 
   return <TextInput />;
 }
-
-MyComponent.defaultProps = {};
 
 export default MyComponent;
 "
@@ -11858,13 +11852,11 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-function MyComponent(props: any) {
+function MyComponent(props: any = {}) {
   const [focus, setFocus] = useState(() => true);
 
   return <TextInput />;
 }
-
-MyComponent.defaultProps = {};
 
 export default MyComponent;
 "

@@ -589,7 +589,9 @@ exports[`React - stateType: mobx > jsx > Javascript Test > ContentSlotJSX 1`] = 
 import * as React from \\"react\\";
 import { useLocalObservable, observer } from \\"mobx-react-lite\\";
 
-function ContentSlotJsxCode(props) {
+function ContentSlotJsxCode(
+  props = { content: \\"\\", slotReference: undefined, slotContent: undefined }
+) {
   const state = useLocalObservable(() => ({
     name: \\"king\\",
     showContent: false,
@@ -625,12 +627,6 @@ function ContentSlotJsxCode(props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 const observedContentSlotJsxCode = observer(ContentSlotJsxCode);
 export default observedContentSlotJsxCode;
@@ -2175,7 +2171,16 @@ exports[`React - stateType: mobx > jsx > Javascript Test > defaultProps 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function Button(props) {
+function Button(
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -2200,15 +2205,6 @@ function Button(props) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 const observedButton = observer(Button);
 export default observedButton;
 "
@@ -2218,7 +2214,14 @@ exports[`React - stateType: mobx > jsx > Javascript Test > defaultPropsOutsideCo
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function Button(props) {
+function Button(
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -2242,13 +2245,6 @@ function Button(props) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 const observedButton = observer(Button);
 export default observedButton;
@@ -4443,7 +4439,13 @@ type Props = {
 };
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
-function ContentSlotJsxCode(props: Props) {
+function ContentSlotJsxCode(
+  props: Props = {
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+  }
+) {
   const state = useLocalObservable(() => ({
     name: \\"king\\",
     showContent: false,
@@ -4479,12 +4481,6 @@ function ContentSlotJsxCode(props: Props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 const observedContentSlotJsxCode = observer(ContentSlotJsxCode);
 export default observedContentSlotJsxCode;
@@ -6250,7 +6246,16 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
-function Button(props: ButtonProps) {
+function Button(
+  props: ButtonProps = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -6275,15 +6280,6 @@ function Button(props: ButtonProps) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 const observedButton = observer(Button);
 export default observedButton;
 "
@@ -6301,7 +6297,14 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-function Button(props: ButtonProps) {
+function Button(
+  props: ButtonProps = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -6325,13 +6328,6 @@ function Button(props: ButtonProps) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 const observedButton = observer(Button);
 export default observedButton;
@@ -8104,7 +8100,7 @@ exports[`React - stateType: mobx > svelte > Javascript Test > classDirective 1`]
 import * as React from \\"react\\";
 import { useLocalObservable, observer } from \\"mobx-react-lite\\";
 
-function MyComponent(props) {
+function MyComponent(props = {}) {
   const state = useLocalObservable(() => ({ focus: true }));
 
   return (
@@ -8115,8 +8111,6 @@ function MyComponent(props) {
     />
   );
 }
-
-MyComponent.defaultProps = {};
 
 const observedMyComponent = observer(MyComponent);
 export default observedMyComponent;
@@ -8527,7 +8521,7 @@ exports[`React - stateType: mobx > svelte > Typescript Test > classDirective 1`]
 import * as React from \\"react\\";
 import { useLocalObservable, observer } from \\"mobx-react-lite\\";
 
-function MyComponent(props: any) {
+function MyComponent(props: any = {}) {
   const state = useLocalObservable(() => ({ focus: true }));
 
   return (
@@ -8538,8 +8532,6 @@ function MyComponent(props: any) {
     />
   );
 }
-
-MyComponent.defaultProps = {};
 
 const observedMyComponent = observer(MyComponent);
 export default observedMyComponent;

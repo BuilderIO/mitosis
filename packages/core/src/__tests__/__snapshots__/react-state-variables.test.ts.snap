@@ -1,63 +1,115 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`React - stateType: variables > jsx > Javascript Test > AdvancedRef 1`] = `
-"'(' expected. (18:34)
-  16 | const inputNoArgRef = useRef(null);
-  17 | const name= 'PatrickJS'
-> 18 | const onBlur = onBlur = function function onBlur() {
-     |                                  ^
-  19 | // Maintain focus
-  20 | inputRef.current.focus();
-  21 | }"
-`;
-
-exports[`React - stateType: variables > jsx > Javascript Test > Basic 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
-export const DEFAULT_VALUES = {
-  name: \\"Steve\\",
-};
-
-function MyBasicComponent(props) {
-  const name = \\"Steve\\";
-  const underscore_fn_name = function underscore_fn_name() {
-    return \\"bar\\";
+function MyBasicRefComponent(props) {
+  const inputRef = useRef(null);
+  const inputNoArgRef = useRef(null);
+  const name = \\"PatrickJS\\";
+  const onBlur = function onBlur() {
+    // Maintain focus
+    inputRef.current.focus();
   };
-  const age = 1;
-  const sports = [\\"\\"];
+  const lowerCaseName = function lowerCaseName() {
+    return name.toLowerCase();
+  };
+
+  useEffect(() => {
+    console.log(\\"Received an update\\");
+  }, [inputRef.current, inputNoArgRef.current]);
 
   return (
     <>
-      <div className=\\"test div\\">
-        <input
-          value={DEFAULT_VALUES.name || name}
-          onChange={(myEvent) => (name = myEvent.target.value)}
-        />
-        Hello! I can run in React, Vue, Solid, or Liquid! &gt;
+      <div>
+        {props.showInput ? (
+          <>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => (name = event.target.value)}
+            />
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
       </div>
       <style jsx>{\`
-        .div {
-          padding: 10px;
+        .input {
+          color: red;
         }
       \`}</style>
     </>
   );
 }
 
-export default MyBasicComponent;
+export default MyBasicRefComponent;
 "
 `;
 
+exports[`React - stateType: variables > jsx > Javascript Test > Basic 1`] = `
+"'function' is not allowed as a variable declaration name. (18:7)
+  16 |   function MyBasicComponent(props) {
+  17 |   const name= 'Steve'
+> 18 | const function underscore_fn_name() {
+     |       ^
+  19 | return 'bar';
+  20 | }
+  21 | const age= 1"
+`;
+
 exports[`React - stateType: variables > jsx > Javascript Test > Basic Context 1`] = `
-"'(' expected. (16:38)
-  14 |   function MyBasicComponent(props) {
-  15 |   const name= 'PatrickJS'
-> 16 | const onChange = onChange = function function onChange() {
-     |                                      ^
-  17 | const change = myService.method('change');
-  18 | console.log(change);
-  19 | }"
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useContext, useRef, useEffect } from \\"react\\";
+import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
+
+function MyBasicComponent(props) {
+  const name = \\"PatrickJS\\";
+  const onChange = function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  };
+
+  const myService = useContext(MyService);
+
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    const hi = myService.method(\\"hi\\");
+    console.log(hi);
+    hasInitialized.current = true;
+  }
+
+  useEffect(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  }, []);
+
+  return (
+    <Injector.Provider value={createInjector()}>
+      <div>
+        {myService.method(\\"hello\\") + name}
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        <input onChange={(event) => onChange} />
+      </div>
+    </Injector.Provider>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > Basic OnMount Update 1`] = `
@@ -227,25 +279,82 @@ export default MyBasicForComponent;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > BasicRef 1`] = `
-"'(' expected. (18:34)
-  16 | const inputNoArgRef = useRef(null);
-  17 | const name= 'PatrickJS'
-> 18 | const onBlur = onBlur = function function onBlur() {
-     |                                  ^
-  19 | // Maintain focus
-  20 | inputRef.current?.focus();
-  21 | }"
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+
+function MyBasicRefComponent(props) {
+  const inputRef = useRef(null);
+  const inputNoArgRef = useRef(null);
+  const name = \\"PatrickJS\\";
+  const onBlur = function onBlur() {
+    // Maintain focus
+    inputRef.current?.focus();
+  };
+  const lowerCaseName = function lowerCaseName() {
+    return name.toLowerCase();
+  };
+
+  return (
+    <>
+      <div>
+        {props.showInput ? (
+          <>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => (name = event.target.value)}
+            />
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicRefComponent;
+"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > BasicRefAssignment 1`] = `
-"'(' expected. (16:46)
-  14 |   function MyBasicRefAssignmentComponent(props) {
-  15 |   const holdValueRef = useRef('Patrick');
-> 16 | const handlerClick = handlerClick = function function handlerClick(event) {
-     |                                              ^
-  17 | event.preventDefault();
-  18 | console.log('current value', holdValueRef.current);
-  19 | holdValueRef.current = holdValueRef.current + 'JS';"
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+
+function MyBasicRefAssignmentComponent(props) {
+  const holdValueRef = useRef(\\"Patrick\\");
+  const handlerClick = function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef.current);
+    holdValueRef.current = holdValueRef.current + \\"JS\\";
+  };
+
+  return (
+    <div>
+      <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
+    </div>
+  );
+}
+
+export default MyBasicRefAssignmentComponent;
+"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > BasicRefPrevious 1`] = `
@@ -318,63 +427,14 @@ export default Button;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > Columns 1`] = `
-"import * as React from \\"react\\";
-
-function Column(props) {
-  const getColumns = function getColumns() {
-    return props.columns || [];
-  };
-  const getGutterSize = function getGutterSize() {
-    return typeof props.space === \\"number\\" ? props.space || 0 : 20;
-  };
-  const getWidth = function getWidth(index) {
-    const columns = getColumns();
-    return (columns[index] && columns[index].width) || 100 / columns.length;
-  };
-  const getColumnCssWidth = function getColumnCssWidth(index) {
-    const columns = getColumns();
-    const gutterSize = getGutterSize();
-    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
-  };
-
-  return (
-    <>
-      <div className=\\"builder-columns div\\">
-        {props.columns?.map((column, index) => (
-          <div className=\\"builder-column div-2\\">
-            {column.content}
-            {index}
-          </div>
-        ))}
-      </div>
-      <style jsx>{\`
-        .div {
-          display: flex;
-          flex-direction: column;
-          align-items: stretch;
-          line-height: normal;
-        }
-        @media (max-width: 999px) {
-          .div {
-            flex-direction: row;
-          }
-        }
-        @media (max-width: 639px) {
-          .div {
-            flex-direction: row-reverse;
-          }
-        }
-        .div-2 {
-          flex-grow: 1;
-        }
-      \`}</style>
-    </>
-  );
-}
-
-export default Column;
-"
+"'function' is not allowed as a variable declaration name. (14:9)
+  12 |
+  13 |   function Column(props) {
+> 14 |   const function getColumns() {
+     |         ^
+  15 | return props.columns || [];
+  16 | }
+  17 | const function getGutterSize() {"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > ContentSlotHtml 1`] = `
@@ -399,214 +459,58 @@ export default ContentSlotCode;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > ContentSlotJSX 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-
-function ContentSlotJsxCode(props) {
-  const name = \\"king\\";
-  const showContent = false;
-  const cls = function cls() {
-    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
-  };
-  const show = function show() {
-    props.slotContent ? 1 : \\"\\";
-  };
-
-  return (
-    <>
-      {props.slotReference ? (
-        <>
-          <div
-            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
-            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
-            {...props.attributes}
-            onClick={(event) => show()}
-            className={cls()}
-          >
-            {showContent && props.slotContent ? (
-              <>{props.content || \\"{props.content}\\"}</>
-            ) : null}
-            <div>
-              <hr />
-            </div>
-            <div>{props.children}</div>
-          </div>
-        </>
-      ) : null}
-    </>
-  );
-}
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
-
-export default ContentSlotJsxCode;
-"
+"'function' is not allowed as a variable declaration name. (17:7)
+  15 |   const name= 'king'
+  16 | const showContent= false
+> 17 | const function cls() {
+     |       ^
+  18 | return props.slotContent && props.children ? \`\${name}-content\` : '';
+  19 | }
+  20 | const function show() {"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > CustomCode 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useRef, useEffect } from \\"react\\";
-
-function CustomCode(props) {
-  const elem = useRef(null);
-  const scriptsInserted = [];
-  const scriptsRun = [];
-  const findAndRunScripts = function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem.current && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
-      const scripts = elem.current.getElementsByTagName(\\"script\\");
-
-      for (let i = 0; i < scripts.length; i++) {
-        const script = scripts[i];
-
-        if (script.src) {
-          if (scriptsInserted.includes(script.src)) {
-            continue;
-          }
-
-          scriptsInserted.push(script.src);
-          const newScript = document.createElement(\\"script\\");
-          newScript.async = true;
-          newScript.src = script.src;
-          document.head.appendChild(newScript);
-        } else if (
-          !script.type ||
-          [
-            \\"text/javascript\\",
-            \\"application/javascript\\",
-            \\"application/ecmascript\\",
-          ].includes(script.type)
-        ) {
-          if (scriptsRun.includes(script.innerText)) {
-            continue;
-          }
-
-          try {
-            scriptsRun.push(script.innerText);
-            new Function(script.innerText)();
-          } catch (error) {
-            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-          }
-        }
-      }
-    }
-  };
-
-  useEffect(() => {
-    findAndRunScripts();
-  }, []);
-
-  return (
-    <div
-      ref={elem}
-      className={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      dangerouslySetInnerHTML={{ __html: props.code }}
-    />
-  );
-}
-
-export default CustomCode;
-"
+"'function' is not allowed as a variable declaration name. (18:7)
+  16 | const scriptsInserted= []
+  17 | const scriptsRun= []
+> 18 | const function findAndRunScripts() {
+     |       ^
+  19 | // TODO: Move this function to standalone one in '@builder.io/utils'
+  20 | if (elem.current && typeof window !== 'undefined') {
+  21 | /** @type {HTMLScriptElement[]} */"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > Embed 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useRef, useEffect } from \\"react\\";
-
-function CustomCode(props) {
-  const elem = useRef(null);
-  const scriptsInserted = [];
-  const scriptsRun = [];
-  const findAndRunScripts = function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem.current && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
-      const scripts = elem.current.getElementsByTagName(\\"script\\");
-
-      for (let i = 0; i < scripts.length; i++) {
-        const script = scripts[i];
-
-        if (script.src) {
-          if (scriptsInserted.includes(script.src)) {
-            continue;
-          }
-
-          scriptsInserted.push(script.src);
-          const newScript = document.createElement(\\"script\\");
-          newScript.async = true;
-          newScript.src = script.src;
-          document.head.appendChild(newScript);
-        } else if (
-          !script.type ||
-          [
-            \\"text/javascript\\",
-            \\"application/javascript\\",
-            \\"application/ecmascript\\",
-          ].includes(script.type)
-        ) {
-          if (scriptsRun.includes(script.innerText)) {
-            continue;
-          }
-
-          try {
-            scriptsRun.push(script.innerText);
-            new Function(script.innerText)();
-          } catch (error) {
-            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-          }
-        }
-      }
-    }
-  };
-
-  useEffect(() => {
-    findAndRunScripts();
-  }, []);
-
-  return (
-    <div
-      ref={elem}
-      className={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      dangerouslySetInnerHTML={{ __html: props.code }}
-    />
-  );
-}
-
-export default CustomCode;
-"
+"'function' is not allowed as a variable declaration name. (18:7)
+  16 | const scriptsInserted= []
+  17 | const scriptsRun= []
+> 18 | const function findAndRunScripts() {
+     |       ^
+  19 | // TODO: Move this function to standalone one in '@builder.io/utils'
+  20 | if (elem.current && typeof window !== 'undefined') {
+  21 | /** @type {HTMLScriptElement[]} */"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > Form 1`] = `
-"',' expected. (108:2796)
-  106 | if (contentType && contentType !== 'multipart/form-data') {
-  107 |   if (
-> 108 |   /* Zapier doesn't allow content-type header to be sent from browsers */   !(sendWithJs && props.action?.includes('zapier.com'))) {     headers['content-type'] = contentType;   } }  const presubmitEvent = new CustomEvent('presubmit', {   detail: {     body   } });  if (formRef.current) {   formRef.current.dispatchEvent(presubmitEvent);    if (presubmitEvent.defaultPrevented) {     return;   } }  formState = 'sending'; const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(props.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(props.name || '')}\`; fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action /* TODO: throw error if no action URL */ , {   body,   headers,   method: props.method || 'post' }).then(async res => {   let body;   const contentType = res.headers.get('content-type');    if (contentType && contentType.indexOf('application/json') !== -1) {     body = await res.json();   } else {     body = await res.text();   }    if (!res.ok && props.errorMessagePath) {     /* TODO: allow supplying an error formatter function */     let message = get(body, props.errorMessagePath);      if (message) {       if (typeof message !== 'string') {         /* TODO: ideally convert json to yaml so it woul dbe like          error: - email has been taken */         message = JSON.stringify(message);       }        formErrorMessage = message;     }   }    responseData = body;   formState = res.ok ? 'success' : 'error';    if (res.ok) {     const submitSuccessEvent = new CustomEvent('submit:success', {       detail: {         res,         body       }     });      if (formRef.current) {       formRef.current.dispatchEvent(submitSuccessEvent);        if (submitSuccessEvent.defaultPrevented) {         return;       }       /* TODO: option to turn this on/off? */         if (props.resetFormOnSubmit !== false) {         formRef.current.reset();       }     }     /* TODO: client side route event first that can be preventDefaulted */       if (props.successUrl) {       if (formRef.current) {         const event = new CustomEvent('route', {           detail: {             url: props.successUrl           }         });         formRef.current.dispatchEvent(event);          if (!event.defaultPrevented) {           location.href = props.successUrl;         }       } else {         location.href = props.successUrl;       }     }   } }, err => {   const submitErrorEvent = new CustomEvent('submit:error', {     detail: {       error: err     }   });    if (formRef.current) {     formRef.current.dispatchEvent(submitErrorEvent);      if (submitErrorEvent.defaultPrevented) {       return;     }   }    responseData = err;   formState = 'error'; }); } }                 return (   <>   <form  validate={props.validate}  ref={formRef}  action={!props.sendWithJs && props.action}  method={props.method}  name={props.name}  onSubmit={(event) => onSubmit(event) }  {...(props.attributes)}>{props.builderBlock && props.builderBlock.children ? (   <>{props.builderBlock?.children?.map((block, index) => (   <BuilderBlockComponent  key={block.id}  block={block}  index={index}  /> ))}</> ) : null}{submissionState() === 'error' ? (   <BuilderBlocks  dataPath=\\"errorMessage\\"  blocks={props.errorMessage}  /> ) : null}{submissionState() === 'sending' ? (   <BuilderBlocks  dataPath=\\"sendingMessage\\"  blocks={props.sendingMessage}  /> ) : null}{submissionState() === 'error' && responseData ? (   <pre className=\\"builder-form-error-text pre\\">{JSON.stringify(responseData, null, 2)}</pre> ) : null}{submissionState() === 'success' ? (   <BuilderBlocks  dataPath=\\"successMessage\\"  blocks={props.successMessage}  /> ) : null}</form>   <style jsx>{\`.pre {   padding: 10px;   color: red;   text-align: center; }\`}</style>     </> ); }         export default FormComponent;
-      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ^
-  109 |
-  110 |
-  111 |"
+"'function' is not allowed as a variable declaration name. (20:7)
+  18 | const responseData= null
+  19 | const formErrorMessage= ''
+> 20 | const function submissionState() {
+     |       ^
+  21 | return Builder.isEditing && props.previewState || formState;
+  22 | }
+  23 | const function onSubmit(event) {"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > Image 1`] = `
-"'(' expected. (25:40)
-  23 | return !!props.lazy && isBrowser();
-  24 | }
-> 25 | const isBrowser = isBrowser = function function isBrowser() {
-     |                                        ^
-  26 | return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
-  27 | }
-  28 | const load= false"
+"'function' is not allowed as a variable declaration name. (18:7)
+  16 | const scrollListener= null
+  17 | const imageLoaded= false
+> 18 | const function setLoaded() {
+     |       ^
+  19 | imageLoaded = true;
+  20 | }
+  21 | const function useLazyLoading() {"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > Image State 1`] = `
@@ -683,25 +587,14 @@ export default FormInputComponent;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > InputParent 1`] = `
-"import * as React from \\"react\\";
-import FormInputComponent from \\"./input.raw\\";
-
-function Stepper(props) {
-  const handleChange = function handleChange(value) {
-    console.log(value);
-  };
-
-  return (
-    <FormInputComponent
-      name=\\"kingzez\\"
-      type=\\"text\\"
-      onChange={(value) => handleChange(value)}
-    />
-  );
-}
-
-export default Stepper;
-"
+"'function' is not allowed as a variable declaration name. (14:9)
+  12 |
+  13 |   function Stepper(props) {
+> 14 |   const function handleChange(value) {
+     |         ^
+  15 | console.log(value);
+  16 | }
+  17 |"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > NestedStore 1`] = `
@@ -862,150 +755,47 @@ export default SlotCode;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > Stamped.io 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useEffect } from \\"react\\";
-import { kebabCase, snakeCase } from \\"lodash\\";
-
-function SmileReviews(props) {
-  const reviews = [];
-  const name = \\"test\\";
-  const showReviewPrompt = false;
-  const kebabCaseValue = function kebabCaseValue() {
-    return kebabCase(\\"testThat\\");
-  };
-  const snakeCaseValue = function snakeCaseValue() {
-    return snakeCase(\\"testThis\\");
-  };
-
-  useEffect(() => {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${props.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        reviews = data.data;
-      });
-  }, []);
-
-  return (
-    <>
-      <div data-user={name}>
-        <button onClick={(event) => (showReviewPrompt = true)}>
-          Write a review
-        </button>
-        {showReviewPrompt || \\"asdf\\" ? (
-          <>
-            <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input\\" />
-            <textarea
-              placeholder=\\"How was your experience?\\"
-              className=\\"textarea\\"
-            />
-            <button
-              className=\\"button\\"
-              onClick={(ev) => {
-                ev.preventDefault();
-                showReviewPrompt = false;
-              }}
-            >
-              Submit
-            </button>
-          </>
-        ) : null}
-        {reviews?.map((review, index) => (
-          <div className=\\"review\\" key={review.id}>
-            <img className=\\"img\\" src={review.avatar} />
-            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>N: {index}</div>
-              <div>{review.author}</div>
-              <div>{review.reviewMessage}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-      <style jsx>{\`
-        .input {
-          display: block;
-        }
-        .textarea {
-          display: block;
-        }
-        .button {
-          display: block;
-        }
-        .review {
-          margin: 10px;
-          padding: 10px;
-          background: white;
-          display: flex;
-          border-radius: 5px;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-          -webkit-font-smoothing: antialiased;
-        }
-        .img {
-          height: 30px;
-          width: 30px;
-          margin-right: 10px;
-        }
-      \`}</style>
-    </>
-  );
-}
-
-export default SmileReviews;
-"
+"'function' is not allowed as a variable declaration name. (18:7)
+  16 | const name= 'test'
+  17 | const showReviewPrompt= false
+> 18 | const function kebabCaseValue() {
+     |       ^
+  19 | return kebabCase('testThat');
+  20 | }
+  21 | const function snakeCaseValue() {"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > StoreComment 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-
-function StringLiteralStore(props) {
-  const foo = true;
-  const bar = function bar() {};
-
-  return <>{foo}</>;
-}
-
-export default StringLiteralStore;
-"
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function StringLiteralStore(props) {
+  15 |   const foo= true
+> 16 | const function bar() {}
+     |       ^
+  17 |
+  18 |
+  19 |"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > StoreShadowVars 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-
-function MyComponent(props) {
-  const errors = {};
-  const foo = function foo(errors) {
-    return errors;
-  };
-
-  return <>{foo(errors)}</>;
-}
-
-export default MyComponent;
-"
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function MyComponent(props) {
+  15 |   const errors= {}
+> 16 | const function foo(errors) {
+     |       ^
+  17 | return errors;
+  18 | }
+  19 |"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > StoreWithState 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-
-function MyComponent(props) {
-  const foo = false;
-  const bar = function bar() {
-    return foo;
-  };
-
-  return <>{bar()}</>;
-}
-
-export default MyComponent;
-"
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function MyComponent(props) {
+  15 |   const foo= false
+> 16 | const function bar() {
+     |       ^
+  17 | return foo;
+  18 | }
+  19 |"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > Submit 1`] = `
@@ -1072,32 +862,14 @@ export default Textarea;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useEffect } from \\"react\\";
-
-function UseValueAndFnFromStore(props) {
-  const _id = \\"abc\\";
-  const _active = false;
-  const _do = function _do(id) {
-    _active = !!id;
-
-    if (props.onChange) {
-      props.onChange(_active);
-    }
-  };
-
-  useEffect(() => {
-    if (_do) {
-      _do(_id);
-    }
-  });
-
-  return <div>Test</div>;
-}
-
-export default UseValueAndFnFromStore;
-"
+"'function' is not allowed as a variable declaration name. (17:7)
+  15 |   const _id= 'abc'
+  16 | const _active= false
+> 17 | const function _do(id) {
+     |       ^
+  18 | _active = !!id;
+  19 |
+  20 | if (props.onChange) {"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > Video 1`] = `
@@ -1133,23 +905,14 @@ export default Video;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-
-function MyComponent(props) {
-  const name = \\"steve\\";
-  const setName = function setName(value) {
-    name = value;
-  };
-  const updateNameWithArrowFn = function updateNameWithArrowFn(value) {
-    name = value;
-  };
-
-  return <div>Hello {name}</div>;
-}
-
-export default MyComponent;
-"
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function MyComponent(props) {
+  15 |   const name= 'steve'
+> 16 | const function setName(value) {
+     |       ^
+  17 | name = value;
+  18 | }
+  19 | const function updateNameWithArrowFn(value) {"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > basicForFragment 1`] = `
@@ -1187,14 +950,14 @@ export default BasicForFragment;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > basicForNoTagReference 1`] = `
-"Identifier expected. (39:17)
-  37 | return (
-  38 |
-> 39 |   <TagNameGetter()>
-     |                 ^
-  40 |   Hello <tag>{name}</tag>{props.actions?.map((action) => (
-  41 |   <TagName><action.icon  /><span>{action.text}</span></TagName>
-  42 | ))}</TagNameGetter()>"
+"'function' is not allowed as a variable declaration name. (18:7)
+  16 | const TagName= 'div'
+  17 | const tag= 'span'
+> 18 | const function TagNameGetter() {
+     |       ^
+  19 | return 'span';
+  20 | }
+  21 |"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > basicForwardRef 1`] = `
@@ -1535,7 +1298,16 @@ exports[`React - stateType: variables > jsx > Javascript Test > defaultProps 1`]
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function Button(props) {
+function Button(
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -1560,15 +1332,6 @@ function Button(props) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -1577,7 +1340,14 @@ exports[`React - stateType: variables > jsx > Javascript Test > defaultPropsOuts
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function Button(props) {
+function Button(
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -1601,13 +1371,6 @@ function Button(props) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -1701,53 +1464,25 @@ export default FigmaButton;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > getterState 1`] = `
-"import * as React from \\"react\\";
-
-function Button(props) {
-  const foo2 = function foo2() {
-    return props.foo + \\"foo\\";
-  };
-  const bar = function bar() {
-    return \\"bar\\";
-  };
-  const baz = function baz(i) {
-    return i + foo2().length;
-  };
-
-  return (
-    <div>
-      <p>{foo2()}</p>
-      <p>{bar()}</p>
-      <p>{baz(1)}</p>
-    </div>
-  );
-}
-
-export default Button;
-"
+"'function' is not allowed as a variable declaration name. (14:9)
+  12 |
+  13 |   function Button(props) {
+> 14 |   const function foo2() {
+     |         ^
+  15 | return props.foo + 'foo';
+  16 | }
+  17 | const function bar() {"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > import types 1`] = `
-"import * as React from \\"react\\";
-import RenderBlock from \\"./builder-render-block.raw\\";
-
-function RenderContent(props) {
-  const getRenderContentProps = function getRenderContentProps(block, index) {
-    return {
-      block: block,
-      index: index,
-    };
-  };
-
-  return (
-    <RenderBlock
-      {...getRenderContentProps(props.renderContentProps.block, 0)}
-    />
-  );
-}
-
-export default RenderContent;
-"
+"'function' is not allowed as a variable declaration name. (14:9)
+  12 |
+  13 |   function RenderContent(props) {
+> 14 |   const function getRenderContentProps(block, index) {
+     |         ^
+  15 | return {
+  16 | block: block,
+  17 | index: index"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > multipleOnUpdate 1`] = `
@@ -1887,42 +1622,14 @@ export default NestedStyles;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > onEvent 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useRef, useEffect } from \\"react\\";
-
-function Embed(props) {
-  const elem = useRef(null);
-  const foo = function foo(event) {
-    console.log(\\"test2\\");
-  };
-  const elem_onInitEditingBldr = function elem_onInitEditingBldr(event) {
-    console.log(\\"test\\");
-    foo(event);
-  };
-
-  useEffect(() => {
-    elem.current?.addEventListener(\\"initEditingBldr\\", elem_onInitEditingBldr);
-    return () =>
-      elem.current?.removeEventListener(
-        \\"initEditingBldr\\",
-        elem_onInitEditingBldr
-      );
-  }, []);
-
-  useEffect(() => {
-    elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
-  }, []);
-
-  return (
-    <div className=\\"builder-embed\\" ref={elem}>
-      <div>Test</div>
-    </div>
-  );
-}
-
-export default Embed;
-"
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function Embed(props) {
+  15 |   const elem = useRef(null);
+> 16 | const function foo(event) {
+     |       ^
+  17 | console.log('test2');
+  18 | }
+  19 | const function elem_onInitEditingBldr(event) {"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > onInit & onMount 1`] = `
@@ -2152,25 +1859,41 @@ export default MyBasicComponent;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > referencingFunInsideHook 1`] = `
-"'(' expected. (15:30)
-  13 |
-  14 |   function OnUpdate(props) {
-> 15 |   const foo = foo = function function foo(params) {}
-     |                              ^
-  16 | const bar = bar = function function bar() {}
-  17 | const zoo = zoo = function function zoo() {
-  18 | const params = {"
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+function OnUpdate(props) {
+  const foo = function foo(params) {};
+  const bar = function bar() {};
+  const zoo = function zoo() {
+    const params = {
+      cb: bar,
+    };
+  };
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <div />;
+}
+
+export default OnUpdate;
+"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > renderBlock 1`] = `
-"Identifier expected. (214:8)
-  212 |    {shouldWrap() ? (
-  213 |    <>{isEmptyHtmlElement(tag()) ? (
-> 214 |    <tag()  {...(attributes())}  {...(actions())}  />
-      |        ^
-  215 |  ) : null}
-  216 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
-  217 |    <>{repeatItemData()?.map((data, index) => ("
+"'function' is not allowed as a variable declaration name. (28:10)
+  26 |
+  27 |    function RenderBlock(props) {
+> 28 |    const function component() {
+     |          ^
+  29 | const componentName = getProcessedBlock({
+  30 |  block: props.block,
+  31 |  state: props.context.state,"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > renderContentExample 1`] = `
@@ -2312,24 +2035,14 @@ export default MyComponent;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > setState 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-
-function SetState(props) {
-  const n = [\\"123\\"];
-  const someFn = function someFn() {
-    n[0] = \\"123\\";
-  };
-
-  return (
-    <div>
-      <button onClick={(event) => someFn()}>Click me</button>
-    </div>
-  );
-}
-
-export default SetState;
-"
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function SetState(props) {
+  15 |   const n= ['123']
+> 16 | const function someFn() {
+     |       ^
+  17 | n[0] = '123';
+  18 | }
+  19 |"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > showExpressions 1`] = `
@@ -2647,27 +2360,14 @@ export default TypeExternalStore;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > typeGetterStore 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-
-function TypeGetterStore(props) {
-  const name = \\"test\\";
-  const getName = function getName() {
-    if (name === \\"a\\") {
-      return \\"b\\";
-    }
-
-    return name;
-  };
-  const test = function test() {
-    return \\"test\\";
-  };
-
-  return <div>Hello {name}! </div>;
-}
-
-export default TypeGetterStore;
-"
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function TypeGetterStore(props) {
+  15 |   const name= 'test'
+> 16 | const function getName() {
+     |       ^
+  17 | if (name === 'a') {
+  18 | return 'b';
+  19 | }"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > use-style 1`] = `
@@ -2745,32 +2445,14 @@ export default MyComponent;
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > useTarget 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useEffect } from \\"react\\";
-
-function UseTargetComponent(props) {
-  const name = function name() {
-    const prefix = 123;
-    return prefix + \\"foo\\";
-  };
-  const lastName = \\"bar\\";
-  const foo = \\"bar\\";
-
-  useEffect(() => {
-    console.log(foo);
-    foo = \\"bar\\";
-    console.log(\\"react\\");
-    lastName = \\"baz\\";
-    console.log(foo);
-    foo = \\"baz\\";
-  }, []);
-
-  return <div>{name()}</div>;
-}
-
-export default UseTargetComponent;
-"
+"'function' is not allowed as a variable declaration name. (15:9)
+  13 |
+  14 |   function UseTargetComponent(props) {
+> 15 |   const function name() {
+     |         ^
+  16 | const prefix = 123;
+  17 | return prefix + 'foo';
+  18 | }"
 `;
 
 exports[`React - stateType: variables > jsx > Javascript Test > webComponent 1`] = `
@@ -2815,67 +2497,119 @@ export default MyBasicComponent;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > AdvancedRef 1`] = `
-"'(' expected. (20:34)
-  18 | const inputNoArgRef = useRef<HTMLLabelElement>(null);
-  19 | const name= 'PatrickJS'
-> 20 | const onBlur = onBlur = function function onBlur() {
-     |                                  ^
-  21 | // Maintain focus
-  22 | inputRef.current.focus();
-  23 | }"
-`;
-
-exports[`React - stateType: variables > jsx > Typescript Test > Basic 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
-export interface MyBasicComponentProps {
-  id: string;
+export interface Props {
+  showInput: boolean;
 }
 
-export const DEFAULT_VALUES = {
-  name: \\"Steve\\",
-};
-
-function MyBasicComponent(props: MyBasicComponentProps) {
-  const name = \\"Steve\\";
-  const underscore_fn_name = function underscore_fn_name() {
-    return \\"bar\\";
+function MyBasicRefComponent(props: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+  const name = \\"PatrickJS\\";
+  const onBlur = function onBlur() {
+    // Maintain focus
+    inputRef.current.focus();
   };
-  const age = 1;
-  const sports = [\\"\\"];
+  const lowerCaseName = function lowerCaseName() {
+    return name.toLowerCase();
+  };
+
+  useEffect(() => {
+    console.log(\\"Received an update\\");
+  }, [inputRef.current, inputNoArgRef.current]);
 
   return (
     <>
-      <div className=\\"test div\\">
-        <input
-          value={DEFAULT_VALUES.name || name}
-          onChange={(myEvent) => (name = myEvent.target.value)}
-        />
-        Hello! I can run in React, Vue, Solid, or Liquid! &gt;
+      <div>
+        {props.showInput ? (
+          <>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => (name = event.target.value)}
+            />
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
       </div>
       <style jsx>{\`
-        .div {
-          padding: 10px;
+        .input {
+          color: red;
         }
       \`}</style>
     </>
   );
 }
 
-export default MyBasicComponent;
+export default MyBasicRefComponent;
 "
 `;
 
+exports[`React - stateType: variables > jsx > Typescript Test > Basic 1`] = `
+"'function' is not allowed as a variable declaration name. (20:7)
+  18 |   function MyBasicComponent(props:MyBasicComponentProps) {
+  19 |   const name= 'Steve'
+> 20 | const function underscore_fn_name() {
+     |       ^
+  21 | return 'bar';
+  22 | }
+  23 | const age= 1"
+`;
+
 exports[`React - stateType: variables > jsx > Typescript Test > Basic Context 1`] = `
-"'(' expected. (16:38)
-  14 |   function MyBasicComponent(props:any) {
-  15 |   const name= 'PatrickJS'
-> 16 | const onChange = onChange = function function onChange() {
-     |                                      ^
-  17 | const change = myService.method('change');
-  18 | console.log(change);
-  19 | }"
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useContext, useRef, useEffect } from \\"react\\";
+import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
+
+function MyBasicComponent(props: any) {
+  const name = \\"PatrickJS\\";
+  const onChange = function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  };
+
+  const myService = useContext(MyService);
+
+  const hasInitialized = useRef(false);
+  if (!hasInitialized.current) {
+    const hi = myService.method(\\"hi\\");
+    console.log(hi);
+    hasInitialized.current = true;
+  }
+
+  useEffect(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  }, []);
+
+  return (
+    <Injector.Provider value={createInjector()}>
+      <div>
+        {myService.method(\\"hello\\") + name}
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        <input onChange={(event) => onChange} />
+      </div>
+    </Injector.Provider>
+  );
+}
+
+export default MyBasicComponent;
+"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > Basic OnMount Update 1`] = `
@@ -3055,25 +2789,90 @@ export default MyBasicForComponent;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > BasicRef 1`] = `
-"'(' expected. (20:34)
-  18 | const inputNoArgRef = useRef<HTMLLabelElement | null>(null);
-  19 | const name= 'PatrickJS'
-> 20 | const onBlur = onBlur = function function onBlur() {
-     |                                  ^
-  21 | // Maintain focus
-  22 | inputRef.current?.focus();
-  23 | }"
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+function MyBasicRefComponent(props: Props) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement | null>(null);
+  const name = \\"PatrickJS\\";
+  const onBlur = function onBlur() {
+    // Maintain focus
+    inputRef.current?.focus();
+  };
+  const lowerCaseName = function lowerCaseName() {
+    return name.toLowerCase();
+  };
+
+  return (
+    <>
+      <div>
+        {props.showInput ? (
+          <>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => (name = event.target.value)}
+            />
+            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicRefComponent;
+"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > BasicRefAssignment 1`] = `
-"'(' expected. (18:46)
-  16 |   function MyBasicRefAssignmentComponent(props:Props) {
-  17 |   const holdValueRef = useRef('Patrick');
-> 18 | const handlerClick = handlerClick = function function handlerClick(event: Event) {
-     |                                              ^
-  19 | event.preventDefault();
-  20 | console.log('current value', holdValueRef.current);
-  21 | holdValueRef.current = holdValueRef.current + 'JS';"
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+function MyBasicRefAssignmentComponent(props: Props) {
+  const holdValueRef = useRef(\\"Patrick\\");
+  const handlerClick = function handlerClick(event: Event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef.current);
+    holdValueRef.current = holdValueRef.current + \\"JS\\";
+  };
+
+  return (
+    <div>
+      <button onClick={async (evt) => await handlerClick(evt)}>Click</button>
+    </div>
+  );
+}
+
+export default MyBasicRefAssignmentComponent;
+"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > BasicRefPrevious 1`] = `
@@ -3157,78 +2956,14 @@ export default Button;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > Columns 1`] = `
-"import * as React from \\"react\\";
-
-type Column = {
-  content: any; // TODO: Implement this when support for dynamic CSS lands
-
-  width?: number;
-};
-export interface ColumnProps {
-  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
-
-  space?: number; // TODO: Implement this when support for dynamic CSS lands
-
-  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
-
-  reverseColumnsWhenStacked?: boolean;
-}
-
-function Column(props: ColumnProps) {
-  const getColumns = function getColumns() {
-    return props.columns || [];
-  };
-  const getGutterSize = function getGutterSize() {
-    return typeof props.space === \\"number\\" ? props.space || 0 : 20;
-  };
-  const getWidth = function getWidth(index: number) {
-    const columns = getColumns();
-    return (columns[index] && columns[index].width) || 100 / columns.length;
-  };
-  const getColumnCssWidth = function getColumnCssWidth(index: number) {
-    const columns = getColumns();
-    const gutterSize = getGutterSize();
-    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
-  };
-
-  return (
-    <>
-      <div className=\\"builder-columns div\\">
-        {props.columns?.map((column, index) => (
-          <div className=\\"builder-column div-2\\">
-            {column.content}
-            {index}
-          </div>
-        ))}
-      </div>
-      <style jsx>{\`
-        .div {
-          display: flex;
-          flex-direction: column;
-          align-items: stretch;
-          line-height: normal;
-        }
-        @media (max-width: 999px) {
-          .div {
-            flex-direction: row;
-          }
-        }
-        @media (max-width: 639px) {
-          .div {
-            flex-direction: row-reverse;
-          }
-        }
-        .div-2 {
-          flex-grow: 1;
-        }
-      \`}</style>
-    </>
-  );
-}
-
-export default Column;
-"
+"'function' is not allowed as a variable declaration name. (27:9)
+  25 |
+  26 |   function Column(props:ColumnProps) {
+> 27 |   const function getColumns() {
+     |         ^
+  28 | return props.columns || [];
+  29 | }
+  30 | const function getGutterSize() {"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > ContentSlotHtml 1`] = `
@@ -3259,229 +2994,58 @@ export default ContentSlotCode;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-
-type Props = {
-  [key: string]: string | JSX.Element;
-};
-import type { JSX } from \\"../../../../jsx-runtime\\";
-
-function ContentSlotJsxCode(props: Props) {
-  const name = \\"king\\";
-  const showContent = false;
-  const cls = function cls() {
-    return props.slotContent && props.children ? \`\${name}-content\` : \\"\\";
-  };
-  const show = function show() {
-    props.slotContent ? 1 : \\"\\";
-  };
-
-  return (
-    <>
-      {props.slotReference ? (
-        <>
-          <div
-            name={props.slotContent ? \\"name1\\" : \\"name2\\"}
-            title={props.slotContent ? \\"title1\\" : \\"title2\\"}
-            {...props.attributes}
-            onClick={(event) => show()}
-            className={cls()}
-          >
-            {showContent && props.slotContent ? (
-              <>{props.content || \\"{props.content}\\"}</>
-            ) : null}
-            <div>
-              <hr />
-            </div>
-            <div>{props.children}</div>
-          </div>
-        </>
-      ) : null}
-    </>
-  );
-}
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
-
-export default ContentSlotJsxCode;
-"
+"'function' is not allowed as a variable declaration name. (19:7)
+  17 |   const name= 'king'
+  18 | const showContent= false
+> 19 | const function cls() {
+     |       ^
+  20 | return props.slotContent && props.children ? \`\${name}-content\` : '';
+  21 | }
+  22 | const function show() {"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > CustomCode 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useRef, useEffect } from \\"react\\";
-
-export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}
-
-function CustomCode(props: CustomCodeProps) {
-  const elem = useRef<HTMLDivElement>(null);
-  const scriptsInserted = [];
-  const scriptsRun = [];
-  const findAndRunScripts = function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem.current && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
-      const scripts = elem.current.getElementsByTagName(\\"script\\");
-
-      for (let i = 0; i < scripts.length; i++) {
-        const script = scripts[i];
-
-        if (script.src) {
-          if (scriptsInserted.includes(script.src)) {
-            continue;
-          }
-
-          scriptsInserted.push(script.src);
-          const newScript = document.createElement(\\"script\\");
-          newScript.async = true;
-          newScript.src = script.src;
-          document.head.appendChild(newScript);
-        } else if (
-          !script.type ||
-          [
-            \\"text/javascript\\",
-            \\"application/javascript\\",
-            \\"application/ecmascript\\",
-          ].includes(script.type)
-        ) {
-          if (scriptsRun.includes(script.innerText)) {
-            continue;
-          }
-
-          try {
-            scriptsRun.push(script.innerText);
-            new Function(script.innerText)();
-          } catch (error) {
-            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-          }
-        }
-      }
-    }
-  };
-
-  useEffect(() => {
-    findAndRunScripts();
-  }, []);
-
-  return (
-    <div
-      ref={elem}
-      className={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      dangerouslySetInnerHTML={{ __html: props.code }}
-    />
-  );
-}
-
-export default CustomCode;
-"
+"'function' is not allowed as a variable declaration name. (21:7)
+  19 | const scriptsInserted= []
+  20 | const scriptsRun= []
+> 21 | const function findAndRunScripts() {
+     |       ^
+  22 | // TODO: Move this function to standalone one in '@builder.io/utils'
+  23 | if (elem.current && typeof window !== 'undefined') {
+  24 | /** @type {HTMLScriptElement[]} */"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > Embed 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useRef, useEffect } from \\"react\\";
-
-export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}
-
-function CustomCode(props: CustomCodeProps) {
-  const elem = useRef<HTMLDivElement>(null);
-  const scriptsInserted = [];
-  const scriptsRun = [];
-  const findAndRunScripts = function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem.current && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
-      const scripts = elem.current.getElementsByTagName(\\"script\\");
-
-      for (let i = 0; i < scripts.length; i++) {
-        const script = scripts[i];
-
-        if (script.src) {
-          if (scriptsInserted.includes(script.src)) {
-            continue;
-          }
-
-          scriptsInserted.push(script.src);
-          const newScript = document.createElement(\\"script\\");
-          newScript.async = true;
-          newScript.src = script.src;
-          document.head.appendChild(newScript);
-        } else if (
-          !script.type ||
-          [
-            \\"text/javascript\\",
-            \\"application/javascript\\",
-            \\"application/ecmascript\\",
-          ].includes(script.type)
-        ) {
-          if (scriptsRun.includes(script.innerText)) {
-            continue;
-          }
-
-          try {
-            scriptsRun.push(script.innerText);
-            new Function(script.innerText)();
-          } catch (error) {
-            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-          }
-        }
-      }
-    }
-  };
-
-  useEffect(() => {
-    findAndRunScripts();
-  }, []);
-
-  return (
-    <div
-      ref={elem}
-      className={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      dangerouslySetInnerHTML={{ __html: props.code }}
-    />
-  );
-}
-
-export default CustomCode;
-"
+"'function' is not allowed as a variable declaration name. (21:7)
+  19 | const scriptsInserted= []
+  20 | const scriptsRun= []
+> 21 | const function findAndRunScripts() {
+     |       ^
+  22 | // TODO: Move this function to standalone one in '@builder.io/utils'
+  23 | if (elem.current && typeof window !== 'undefined') {
+  24 | /** @type {HTMLScriptElement[]} */"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > Form 1`] = `
-"',' expected. (135:2797)
-  133 | if (contentType && contentType !== 'multipart/form-data') {
-  134 |   if (
-> 135 |   /* Zapier doesn't allow content-type header to be sent from browsers */   !(sendWithJs && props.action?.includes('zapier.com'))) {     headers['content-type'] = contentType;   } }  const presubmitEvent = new CustomEvent('presubmit', {   detail: {     body   } });  if (formRef.current) {   formRef.current.dispatchEvent(presubmitEvent);    if (presubmitEvent.defaultPrevented) {     return;   } }  formState = 'sending'; const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(props.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(props.name || '')}\`; fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action! /* TODO: throw error if no action URL */ , {   body,   headers,   method: props.method || 'post' }).then(async res => {   let body;   const contentType = res.headers.get('content-type');    if (contentType && contentType.indexOf('application/json') !== -1) {     body = await res.json();   } else {     body = await res.text();   }    if (!res.ok && props.errorMessagePath) {     /* TODO: allow supplying an error formatter function */     let message = get(body, props.errorMessagePath);      if (message) {       if (typeof message !== 'string') {         /* TODO: ideally convert json to yaml so it woul dbe like          error: - email has been taken */         message = JSON.stringify(message);       }        formErrorMessage = message;     }   }    responseData = body;   formState = res.ok ? 'success' : 'error';    if (res.ok) {     const submitSuccessEvent = new CustomEvent('submit:success', {       detail: {         res,         body       }     });      if (formRef.current) {       formRef.current.dispatchEvent(submitSuccessEvent);        if (submitSuccessEvent.defaultPrevented) {         return;       }       /* TODO: option to turn this on/off? */         if (props.resetFormOnSubmit !== false) {         formRef.current.reset();       }     }     /* TODO: client side route event first that can be preventDefaulted */       if (props.successUrl) {       if (formRef.current) {         const event = new CustomEvent('route', {           detail: {             url: props.successUrl           }         });         formRef.current.dispatchEvent(event);          if (!event.defaultPrevented) {           location.href = props.successUrl;         }       } else {         location.href = props.successUrl;       }     }   } }, err => {   const submitErrorEvent = new CustomEvent('submit:error', {     detail: {       error: err     }   });    if (formRef.current) {     formRef.current.dispatchEvent(submitErrorEvent);      if (submitErrorEvent.defaultPrevented) {       return;     }   }    responseData = err;   formState = 'error'; }); } }                 return (   <>   <form  validate={props.validate}  ref={formRef}  action={!props.sendWithJs && props.action}  method={props.method}  name={props.name}  onSubmit={(event) => onSubmit(event) }  {...(props.attributes)}>{props.builderBlock && props.builderBlock.children ? (   <>{props.builderBlock?.children?.map((block, index) => (   <BuilderBlockComponent  key={block.id}  block={block}  index={index}  /> ))}</> ) : null}{submissionState() === 'error' ? (   <BuilderBlocks  dataPath=\\"errorMessage\\"  blocks={props.errorMessage!}  /> ) : null}{submissionState() === 'sending' ? (   <BuilderBlocks  dataPath=\\"sendingMessage\\"  blocks={props.sendingMessage!}  /> ) : null}{submissionState() === 'error' && responseData ? (   <pre className=\\"builder-form-error-text pre\\">{JSON.stringify(responseData, null, 2)}</pre> ) : null}{submissionState() === 'success' ? (   <BuilderBlocks  dataPath=\\"successMessage\\"  blocks={props.successMessage!}  /> ) : null}</form>   <style jsx>{\`.pre {   padding: 10px;   color: red;   text-align: center; }\`}</style>     </> ); }         export default FormComponent;
-      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ^
-  136 |
-  137 |
-  138 |"
+"'function' is not allowed as a variable declaration name. (42:7)
+  40 | const responseData= null
+  41 | const formErrorMessage= ''
+> 42 | const function submissionState() {
+     |       ^
+  43 | return Builder.isEditing && props.previewState || formState;
+  44 | }
+  45 | const function onSubmit(event: Event & {"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > Image 1`] = `
-"'(' expected. (42:40)
-  40 | return !!props.lazy && isBrowser();
-  41 | }
-> 42 | const isBrowser = isBrowser = function function isBrowser() {
-     |                                        ^
-  43 | return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
-  44 | }
-  45 | const load= false"
+"'function' is not allowed as a variable declaration name. (35:7)
+  33 | const scrollListener= null
+  34 | const imageLoaded= false
+> 35 | const function setLoaded() {
+     |       ^
+  36 | imageLoaded = true;
+  37 | }
+  38 | const function useLazyLoading() {"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > Image State 1`] = `
@@ -3588,25 +3152,14 @@ export default FormInputComponent;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > InputParent 1`] = `
-"import * as React from \\"react\\";
-import FormInputComponent from \\"./input.raw\\";
-
-function Stepper(props: any) {
-  const handleChange = function handleChange(value: string) {
-    console.log(value);
-  };
-
-  return (
-    <FormInputComponent
-      name=\\"kingzez\\"
-      type=\\"text\\"
-      onChange={(value) => handleChange(value)}
-    />
-  );
-}
-
-export default Stepper;
-"
+"'function' is not allowed as a variable declaration name. (14:9)
+  12 |
+  13 |   function Stepper(props:any) {
+> 14 |   const function handleChange(value: string) {
+     |         ^
+  15 | console.log(value);
+  16 | }
+  17 |"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > NestedStore 1`] = `
@@ -3811,155 +3364,47 @@ export default SlotCode;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > Stamped.io 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useEffect } from \\"react\\";
-
-type SmileReviewsProps = {
-  productId: string;
-  apiKey: string;
-};
-import { kebabCase, snakeCase } from \\"lodash\\";
-
-function SmileReviews(props: SmileReviewsProps) {
-  const reviews = [];
-  const name = \\"test\\";
-  const showReviewPrompt = false;
-  const kebabCaseValue = function kebabCaseValue() {
-    return kebabCase(\\"testThat\\");
-  };
-  const snakeCaseValue = function snakeCaseValue() {
-    return snakeCase(\\"testThis\\");
-  };
-
-  useEffect(() => {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${props.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        reviews = data.data;
-      });
-  }, []);
-
-  return (
-    <>
-      <div data-user={name}>
-        <button onClick={(event) => (showReviewPrompt = true)}>
-          Write a review
-        </button>
-        {showReviewPrompt || \\"asdf\\" ? (
-          <>
-            <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input\\" />
-            <textarea
-              placeholder=\\"How was your experience?\\"
-              className=\\"textarea\\"
-            />
-            <button
-              className=\\"button\\"
-              onClick={(ev) => {
-                ev.preventDefault();
-                showReviewPrompt = false;
-              }}
-            >
-              Submit
-            </button>
-          </>
-        ) : null}
-        {reviews?.map((review, index) => (
-          <div className=\\"review\\" key={review.id}>
-            <img className=\\"img\\" src={review.avatar} />
-            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>N: {index}</div>
-              <div>{review.author}</div>
-              <div>{review.reviewMessage}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-      <style jsx>{\`
-        .input {
-          display: block;
-        }
-        .textarea {
-          display: block;
-        }
-        .button {
-          display: block;
-        }
-        .review {
-          margin: 10px;
-          padding: 10px;
-          background: white;
-          display: flex;
-          border-radius: 5px;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-          -webkit-font-smoothing: antialiased;
-        }
-        .img {
-          height: 30px;
-          width: 30px;
-          margin-right: 10px;
-        }
-      \`}</style>
-    </>
-  );
-}
-
-export default SmileReviews;
-"
+"'function' is not allowed as a variable declaration name. (21:7)
+  19 | const name= 'test'
+  20 | const showReviewPrompt= false
+> 21 | const function kebabCaseValue() {
+     |       ^
+  22 | return kebabCase('testThat');
+  23 | }
+  24 | const function snakeCaseValue() {"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > StoreComment 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-
-function StringLiteralStore(props: any) {
-  const foo = true;
-  const bar = function bar() {};
-
-  return <>{foo}</>;
-}
-
-export default StringLiteralStore;
-"
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function StringLiteralStore(props:any) {
+  15 |   const foo= true
+> 16 | const function bar() {}
+     |       ^
+  17 |
+  18 |
+  19 |"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > StoreShadowVars 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-
-function MyComponent(props: any) {
-  const errors = {};
-  const foo = function foo(errors) {
-    return errors;
-  };
-
-  return <>{foo(errors)}</>;
-}
-
-export default MyComponent;
-"
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function MyComponent(props:any) {
+  15 |   const errors= {}
+> 16 | const function foo(errors) {
+     |       ^
+  17 | return errors;
+  18 | }
+  19 |"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > StoreWithState 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-
-function MyComponent(props: any) {
-  const foo = false;
-  const bar = function bar() {
-    return foo;
-  };
-
-  return <>{bar()}</>;
-}
-
-export default MyComponent;
-"
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function MyComponent(props:any) {
+  15 |   const foo= false
+> 16 | const function bar() {
+     |       ^
+  17 | return foo;
+  18 | }
+  19 |"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > Submit 1`] = `
@@ -4048,41 +3493,14 @@ export default Textarea;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useEffect } from \\"react\\";
-
-type MyProps = {
-  onChange?: (active: boolean) => void;
-};
-type MyStore = {
-  _id?: string;
-  _active?: boolean;
-  _do?: (id?: string) => void;
-};
-
-function UseValueAndFnFromStore(props: MyProps) {
-  const _id = \\"abc\\";
-  const _active = false;
-  const _do = function _do(id?: string) {
-    _active = !!id;
-
-    if (props.onChange) {
-      props.onChange(_active);
-    }
-  };
-
-  useEffect(() => {
-    if (_do) {
-      _do(_id);
-    }
-  });
-
-  return <div>Test</div>;
-}
-
-export default UseValueAndFnFromStore;
-"
+"'function' is not allowed as a variable declaration name. (24:7)
+  22 |   const _id= 'abc'
+  23 | const _active= false
+> 24 | const function _do(id?: string) {
+     |       ^
+  25 | _active = !!id;
+  26 |
+  27 | if (props.onChange) {"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > Video 1`] = `
@@ -4144,23 +3562,14 @@ export default Video;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-
-function MyComponent(props: any) {
-  const name = \\"steve\\";
-  const setName = function setName(value) {
-    name = value;
-  };
-  const updateNameWithArrowFn = function updateNameWithArrowFn(value) {
-    name = value;
-  };
-
-  return <div>Hello {name}</div>;
-}
-
-export default MyComponent;
-"
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function MyComponent(props:any) {
+  15 |   const name= 'steve'
+> 16 | const function setName(value) {
+     |       ^
+  17 | name = value;
+  18 | }
+  19 | const function updateNameWithArrowFn(value) {"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > basicForFragment 1`] = `
@@ -4198,14 +3607,14 @@ export default BasicForFragment;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > basicForNoTagReference 1`] = `
-"Identifier expected. (39:17)
-  37 | return (
-  38 |
-> 39 |   <TagNameGetter()>
-     |                 ^
-  40 |   Hello <tag>{name}</tag>{props.actions?.map((action) => (
-  41 |   <TagName><action.icon  /><span>{action.text}</span></TagName>
-  42 | ))}</TagNameGetter()>"
+"'function' is not allowed as a variable declaration name. (18:7)
+  16 | const TagName= 'div'
+  17 | const tag= 'span'
+> 18 | const function TagNameGetter() {
+     |       ^
+  19 | return 'span';
+  20 | }
+  21 |"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > basicForwardRef 1`] = `
@@ -4582,7 +3991,16 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
-function Button(props: ButtonProps) {
+function Button(
+  props: ButtonProps = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -4607,15 +4025,6 @@ function Button(props: ButtonProps) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -4632,7 +4041,14 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-function Button(props: ButtonProps) {
+function Button(
+  props: ButtonProps = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+  }
+) {
   return (
     <div>
       {props.link ? (
@@ -4656,13 +4072,6 @@ function Button(props: ButtonProps) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -4760,64 +4169,25 @@ export default FigmaButton;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > getterState 1`] = `
-"import * as React from \\"react\\";
-
-export interface ButtonProps {
-  foo: string;
-}
-
-function Button(props: ButtonProps) {
-  const foo2 = function foo2() {
-    return props.foo + \\"foo\\";
-  };
-  const bar = function bar() {
-    return \\"bar\\";
-  };
-  const baz = function baz(i: number) {
-    return i + foo2().length;
-  };
-
-  return (
-    <div>
-      <p>{foo2()}</p>
-      <p>{bar()}</p>
-      <p>{baz(1)}</p>
-    </div>
-  );
-}
-
-export default Button;
-"
+"'function' is not allowed as a variable declaration name. (16:9)
+  14 |
+  15 |   function Button(props:ButtonProps) {
+> 16 |   const function foo2() {
+     |         ^
+  17 | return props.foo + 'foo';
+  18 | }
+  19 | const function bar() {"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > import types 1`] = `
-"import * as React from \\"react\\";
-
-type RenderContentProps = {
-  options?: GetContentOptions;
-  content: BuilderContent;
-  renderContentProps: RenderBlockProps;
-};
-import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
-import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
-
-function RenderContent(props: RenderContentProps) {
-  const getRenderContentProps = function getRenderContentProps(block, index) {
-    return {
-      block: block,
-      index: index,
-    };
-  };
-
-  return (
-    <RenderBlock
-      {...getRenderContentProps(props.renderContentProps.block, 0)}
-    />
-  );
-}
-
-export default RenderContent;
-"
+"'function' is not allowed as a variable declaration name. (19:9)
+  17 |
+  18 |   function RenderContent(props:RenderContentProps) {
+> 19 |   const function getRenderContentProps(block, index) {
+     |         ^
+  20 | return {
+  21 | block: block,
+  22 | index: index"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > multipleOnUpdate 1`] = `
@@ -4962,42 +4332,14 @@ export default NestedStyles;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > onEvent 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useRef, useEffect } from \\"react\\";
-
-function Embed(props: any) {
-  const elem = useRef<HTMLDivElement>(null);
-  const foo = function foo(event) {
-    console.log(\\"test2\\");
-  };
-  const elem_onInitEditingBldr = function elem_onInitEditingBldr(event) {
-    console.log(\\"test\\");
-    foo(event);
-  };
-
-  useEffect(() => {
-    elem.current?.addEventListener(\\"initEditingBldr\\", elem_onInitEditingBldr);
-    return () =>
-      elem.current?.removeEventListener(
-        \\"initEditingBldr\\",
-        elem_onInitEditingBldr
-      );
-  }, []);
-
-  useEffect(() => {
-    elem.current.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
-  }, []);
-
-  return (
-    <div className=\\"builder-embed\\" ref={elem}>
-      <div>Test</div>
-    </div>
-  );
-}
-
-export default Embed;
-"
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function Embed(props:any) {
+  15 |   const elem = useRef<HTMLDivElement>(null);
+> 16 | const function foo(event) {
+     |       ^
+  17 | console.log('test2');
+  18 | }
+  19 | const function elem_onInitEditingBldr(event) {"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > onInit & onMount 1`] = `
@@ -5273,25 +4615,41 @@ export default MyBasicComponent;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > referencingFunInsideHook 1`] = `
-"'(' expected. (15:30)
-  13 |
-  14 |   function OnUpdate(props:any) {
-> 15 |   const foo = foo = function function foo(params) {}
-     |                              ^
-  16 | const bar = bar = function function bar() {}
-  17 | const zoo = zoo = function function zoo() {
-  18 | const params = {"
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+function OnUpdate(props: any) {
+  const foo = function foo(params) {};
+  const bar = function bar() {};
+  const zoo = function zoo() {
+    const params = {
+      cb: bar,
+    };
+  };
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <div />;
+}
+
+export default OnUpdate;
+"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > renderBlock 1`] = `
-"Identifier expected. (222:8)
-  220 |    {shouldWrap() ? (
-  221 |    <>{isEmptyHtmlElement(tag()) ? (
-> 222 |    <tag()  {...(attributes())}  {...(actions())}  />
-      |        ^
-  223 |  ) : null}
-  224 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
-  225 |    <>{repeatItemData()?.map((data, index) => ("
+"'function' is not allowed as a variable declaration name. (36:10)
+  34 |
+  35 |    function RenderBlock(props:RenderBlockProps) {
+> 36 |    const function component() {
+     |          ^
+  37 | const componentName = getProcessedBlock({
+  38 |  block: props.block,
+  39 |  state: props.context.state,"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > renderContentExample 1`] = `
@@ -5452,24 +4810,14 @@ export default MyComponent;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > setState 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-
-function SetState(props: any) {
-  const n = [\\"123\\"];
-  const someFn = function someFn() {
-    n[0] = \\"123\\";
-  };
-
-  return (
-    <div>
-      <button onClick={(event) => someFn()}>Click me</button>
-    </div>
-  );
-}
-
-export default SetState;
-"
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function SetState(props:any) {
+  15 |   const n= ['123']
+> 16 | const function someFn() {
+     |       ^
+  17 | n[0] = '123';
+  18 | }
+  19 |"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > showExpressions 1`] = `
@@ -5822,33 +5170,14 @@ export default TypeExternalStore;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > typeGetterStore 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-
-type GetterStore = {
-  getName: () => string;
-  name: string;
-  get test(): string;
-};
-
-function TypeGetterStore(props: any) {
-  const name = \\"test\\";
-  const getName = function getName() {
-    if (name === \\"a\\") {
-      return \\"b\\";
-    }
-
-    return name;
-  };
-  const test = function test() {
-    return \\"test\\";
-  };
-
-  return <div>Hello {name}! </div>;
-}
-
-export default TypeGetterStore;
-"
+"'function' is not allowed as a variable declaration name. (20:7)
+  18 |   function TypeGetterStore(props:any) {
+  19 |   const name= 'test'
+> 20 | const function getName() {
+     |       ^
+  21 | if (name === 'a') {
+  22 | return 'b';
+  23 | }"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > use-style 1`] = `
@@ -5926,32 +5255,14 @@ export default MyComponent;
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > useTarget 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useEffect } from \\"react\\";
-
-function UseTargetComponent(props: any) {
-  const name = function name() {
-    const prefix = 123;
-    return prefix + \\"foo\\";
-  };
-  const lastName = \\"bar\\";
-  const foo = \\"bar\\";
-
-  useEffect(() => {
-    console.log(foo);
-    foo = \\"bar\\";
-    console.log(\\"react\\");
-    lastName = \\"baz\\";
-    console.log(foo);
-    foo = \\"baz\\";
-  }, []);
-
-  return <div>{name()}</div>;
-}
-
-export default UseTargetComponent;
-"
+"'function' is not allowed as a variable declaration name. (15:9)
+  13 |
+  14 |   function UseTargetComponent(props:any) {
+> 15 |   const function name() {
+     |         ^
+  16 | const prefix = 123;
+  17 | return prefix + 'foo';
+  18 | }"
 `;
 
 exports[`React - stateType: variables > jsx > Typescript Test > webComponent 1`] = `
@@ -6080,7 +5391,7 @@ exports[`React - stateType: variables > svelte > Javascript Test > classDirectiv
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function MyComponent(props) {
+function MyComponent(props = {}) {
   const focus = true;
 
   return (
@@ -6091,8 +5402,6 @@ function MyComponent(props) {
     />
   );
 }
-
-MyComponent.defaultProps = {};
 
 export default MyComponent;
 "
@@ -6130,14 +5439,25 @@ export default MyComponent;
 `;
 
 exports[`React - stateType: variables > svelte > Javascript Test > eventHandlers 1`] = `
-"'(' expected. (15:30)
-  13 |
-  14 |   function MyComponent(props) {
-> 15 |   const log = log = function function log(msg = 'hello') {
-     |                              ^
-  16 | console.log(msg);
-  17 | }
-  18 |"
+"\\"use client\\";
+import * as React from \\"react\\";
+
+function MyComponent(props) {
+  const log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`React - stateType: variables > svelte > Javascript Test > html 1`] = `
@@ -6155,14 +5475,30 @@ export default MyComponent;
 `;
 
 exports[`React - stateType: variables > svelte > Javascript Test > ifElse 1`] = `
-"'(' expected. (16:34)
-  14 |   function MyComponent(props) {
-  15 |   const show= true
-> 16 | const toggle = toggle = function function toggle() {
-     |                                  ^
-  17 | show = !show;
-  18 | }
-  19 |"
+"\\"use client\\";
+import * as React from \\"react\\";
+
+function MyComponent(props) {
+  const show = true;
+  const toggle = function toggle() {
+    show = !show;
+  };
+
+  return (
+    <>
+      {show ? (
+        <>
+          <button onClick={(event) => toggle(event)}> Hide </button>
+        </>
+      ) : (
+        <button onClick={(event) => toggle(event)}> Show </button>
+      )}
+    </>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`React - stateType: variables > svelte > Javascript Test > imports 1`] = `
@@ -6214,36 +5550,52 @@ export default MyComponent;
 `;
 
 exports[`React - stateType: variables > svelte > Javascript Test > reactive 1`] = `
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function MyComponent(props) {
+  15 |   const name= \\"Steve\\"
+> 16 | const function lowercaseName() {
+     |       ^
+  17 | return name.toLowerCase();
+  18 | }
+  19 |"
+`;
+
+exports[`React - stateType: variables > svelte > Javascript Test > reactiveWithFn 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
 
 function MyComponent(props) {
-  const name = \\"Steve\\";
-  const lowercaseName = function lowercaseName() {
-    return name.toLowerCase();
+  const a = 2;
+  const b = 5;
+  const result = null;
+  const calculateResult = function calculateResult(a_, b_) {
+    result = a_ * b_;
   };
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
 
   return (
     <div>
-      <input value={name} />
-      Lowercase: {lowercaseName()}
+      <input
+        type=\\"number\\"
+        onChange={(event) => (a = event.target.value)}
+        value={a}
+      />
+      <input
+        type=\\"number\\"
+        onChange={(event) => (b = event.target.value)}
+        value={b}
+      />
+      Result: {result}
     </div>
   );
 }
 
 export default MyComponent;
 "
-`;
-
-exports[`React - stateType: variables > svelte > Javascript Test > reactiveWithFn 1`] = `
-"'(' expected. (18:52)
-  16 | const b= 5
-  17 | const result= null
-> 18 | const calculateResult = calculateResult = function function calculateResult(a_, b_) {
-     |                                                    ^
-  19 | result = a_ * b_;
-  20 | }
-  21 |"
 `;
 
 exports[`React - stateType: variables > svelte > Javascript Test > slots 1`] = `
@@ -6411,7 +5763,7 @@ exports[`React - stateType: variables > svelte > Typescript Test > classDirectiv
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function MyComponent(props: any) {
+function MyComponent(props: any = {}) {
   const focus = true;
 
   return (
@@ -6422,8 +5774,6 @@ function MyComponent(props: any) {
     />
   );
 }
-
-MyComponent.defaultProps = {};
 
 export default MyComponent;
 "
@@ -6461,14 +5811,25 @@ export default MyComponent;
 `;
 
 exports[`React - stateType: variables > svelte > Typescript Test > eventHandlers 1`] = `
-"'(' expected. (15:30)
-  13 |
-  14 |   function MyComponent(props:any) {
-> 15 |   const log = log = function function log(msg = 'hello') {
-     |                              ^
-  16 | console.log(msg);
-  17 | }
-  18 |"
+"\\"use client\\";
+import * as React from \\"react\\";
+
+function MyComponent(props: any) {
+  const log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`React - stateType: variables > svelte > Typescript Test > html 1`] = `
@@ -6486,14 +5847,30 @@ export default MyComponent;
 `;
 
 exports[`React - stateType: variables > svelte > Typescript Test > ifElse 1`] = `
-"'(' expected. (16:34)
-  14 |   function MyComponent(props:any) {
-  15 |   const show= true
-> 16 | const toggle = toggle = function function toggle() {
-     |                                  ^
-  17 | show = !show;
-  18 | }
-  19 |"
+"\\"use client\\";
+import * as React from \\"react\\";
+
+function MyComponent(props: any) {
+  const show = true;
+  const toggle = function toggle() {
+    show = !show;
+  };
+
+  return (
+    <>
+      {show ? (
+        <>
+          <button onClick={(event) => toggle(event)}> Hide </button>
+        </>
+      ) : (
+        <button onClick={(event) => toggle(event)}> Show </button>
+      )}
+    </>
+  );
+}
+
+export default MyComponent;
+"
 `;
 
 exports[`React - stateType: variables > svelte > Typescript Test > imports 1`] = `
@@ -6545,36 +5922,52 @@ export default MyComponent;
 `;
 
 exports[`React - stateType: variables > svelte > Typescript Test > reactive 1`] = `
+"'function' is not allowed as a variable declaration name. (16:7)
+  14 |   function MyComponent(props:any) {
+  15 |   const name= \\"Steve\\"
+> 16 | const function lowercaseName() {
+     |       ^
+  17 | return name.toLowerCase();
+  18 | }
+  19 |"
+`;
+
+exports[`React - stateType: variables > svelte > Typescript Test > reactiveWithFn 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
 
 function MyComponent(props: any) {
-  const name = \\"Steve\\";
-  const lowercaseName = function lowercaseName() {
-    return name.toLowerCase();
+  const a = 2;
+  const b = 5;
+  const result = null;
+  const calculateResult = function calculateResult(a_, b_) {
+    result = a_ * b_;
   };
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
 
   return (
     <div>
-      <input value={name} />
-      Lowercase: {lowercaseName()}
+      <input
+        type=\\"number\\"
+        onChange={(event) => (a = event.target.value)}
+        value={a}
+      />
+      <input
+        type=\\"number\\"
+        onChange={(event) => (b = event.target.value)}
+        value={b}
+      />
+      Result: {result}
     </div>
   );
 }
 
 export default MyComponent;
 "
-`;
-
-exports[`React - stateType: variables > svelte > Typescript Test > reactiveWithFn 1`] = `
-"'(' expected. (18:52)
-  16 | const b= 5
-  17 | const result= null
-> 18 | const calculateResult = calculateResult = function function calculateResult(a_, b_) {
-     |                                                    ^
-  19 | result = a_ * b_;
-  20 | }
-  21 |"
 `;
 
 exports[`React - stateType: variables > svelte > Typescript Test > slots 1`] = `
