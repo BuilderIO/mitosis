@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.27
+
+### Patch Changes
+
+- 92ad2c6: Misc: stop using `fs-extra-promise` dependency
+
 ## 0.5.26
 
 ### Patch Changes
