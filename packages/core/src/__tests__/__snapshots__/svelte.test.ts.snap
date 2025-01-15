@@ -6762,13 +6762,13 @@ exports[`Svelte > jsx > Typescript Test > signalsOnUpdate 1`] = `
 
   function onUpdateFn_0(..._args: any[]) {
     console.log(\\"props.id changed\\", id);
-    console.log(\\"props.foo.value.bar.baz changed\\", foo.value.bar.baz);
+    console.log(\\"props.foo.value.bar.baz changed\\", $foo.bar.baz);
   }
-
-  $: onUpdateFn_0(...[id, foo.value.bar.baz]);
+  $: onUpdateFn_0_foo_bar_baz = $foo.bar.baz;
+  $: onUpdateFn_0(...[id, onUpdateFn_0_foo_bar_baz]);
 </script>
 
-<div class=\\"test div\\">{id}{foo.value.bar.baz}</div>
+<div class=\\"test div\\">{id}{$foo.bar.baz}</div>
 
 <style>
   .div {
