@@ -1,9 +1,9 @@
-import { writeFileSync } from 'fs';
+import { mkdirSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 import stripAnsi from 'strip-ansi';
 import { File } from '../generators/qwik';
 import { componentToQwik } from '../generators/qwik/component-generator';
-import { addComponent, createFileSet, FileSet } from '../generators/qwik/index';
+import { FileSet, addComponent, createFileSet } from '../generators/qwik/index';
 import { builderContentToMitosisComponent } from '../parsers/builder';
 import { parseJsx } from '../parsers/jsx';
 import {
@@ -27,6 +27,7 @@ const debugOutput = async (fileSet: FileSet) => {
   if (debugFiles) {
     for (const key in fileSet) {
       const file = (fileSet as any)[key];
+      await mkdirSync(base, { recursive: true });
       await writeFileSync(resolve(base, file.path), file.contents);
     }
   }
