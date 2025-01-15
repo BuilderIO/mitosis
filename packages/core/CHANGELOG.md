@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.26
+
+### Patch Changes
+
+- 57bdffe: [angular] fix issue with definite assignment (!) for props with defaultProps
+
 ## 0.5.25
 
 ### Patch Changes
