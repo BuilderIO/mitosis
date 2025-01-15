@@ -9,7 +9,7 @@ import { Context, ParseMitosisOptions, ResolvedImport } from '@/parsers/jsx/type
 import { MitosisImport } from '@/types/mitosis-component';
 import * as babel from '@babel/core';
 import { NodePath } from '@babel/core';
-import { existsSync, readFileSync } from 'fs-extra-promise';
+import { existsSync, readFileSync } from 'fs';
 import * as path from 'path';
 
 type ResolveData = {

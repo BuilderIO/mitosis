@@ -1,4 +1,4 @@
-import { outputFileAsync } from 'fs-extra-promise';
+import { writeFileSync } from 'fs';
 import { resolve } from 'path';
 import stripAnsi from 'strip-ansi';
 import { File } from '../generators/qwik';
@@ -27,7 +27,7 @@ const debugOutput = async (fileSet: FileSet) => {
   if (debugFiles) {
     for (const key in fileSet) {
       const file = (fileSet as any)[key];
-      await outputFileAsync(resolve(base, file.path), file.contents);
+      await writeFileSync(resolve(base, file.path), file.contents);
     }
   }
 };
