@@ -1,5 +1,77 @@
 # Change Log
 
+## 0.5.27
+
+### Patch Changes
+
+- 92ad2c6: Misc: stop using `fs-extra-promise` dependency
+
+## 0.5.26
+
+### Patch Changes
+
+- 57bdffe: [angular] fix issue with definite assignment (!) for props with defaultProps
+
+## 0.5.25
+
+### Patch Changes
+
+- af43f50: [All] Refactored `useMetadata` hook to enable import resolution instead of simple `JSON5` parsing.
+
+  You could use a normal JS `Object` and import it inside your `*.lite.tsx` file like this:
+
+  ```ts
+  // data.ts
+
+  export const myMetadata: Record<string, string | number> = {
+    a: 'b',
+    c: 1,
+  };
+  ```
+
+  ```tsx
+  // my-button.lite.tsx
+  import { useMetadata } from '@builder.io/mitosis';
+  import { myMetadata } from './data.ts';
+
+  useMetadata({
+    x: 'y',
+    my: myMetadata,
+  });
+
+  export default function MyButton() {
+    return <button></button>;
+  }
+  ```
+
+- 20ad8dc: [angular]: Fix issue with events forced to become `toLowerCase()`.
+
+  Based on [choosing-event-names](https://angular.dev/guide/components/outputs#choosing-event-names) custom events are camelCase.
+  [DOM events](https://www.w3schools.com/jsref/dom_obj_event.asp) are always lower-cased for Angular components.
+
+  Checkout [event-handlers.ts](https://github.com/BuilderIO/mitosis/blob/main/packages/core/src/helpers/event-handlers.ts) for a list of all events that are automatically lower-cased. Everything else will be treated as a custom event and therefore camelCased.
+
+  If you need some other event to be lower-cased you can use `useMetadata.angular.nativeEvents`:
+
+  ```tsx
+  import { useMetadata } from '@builder.io/mitosis';
+
+  useMetadata({
+    angular: {
+      nativeEvents: ['onNativeEvent'],
+    },
+  });
+
+  export default function MyComponent(props) {
+    return (
+      <div>
+        <input onNativeEvent={(event) => console.log(event)} />
+        Hello!
+      </div>
+    );
+  }
+  ```
+
 ## 0.5.24
 
 ### Patch Changes

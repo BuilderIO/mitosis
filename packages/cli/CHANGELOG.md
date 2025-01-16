@@ -1,5 +1,28 @@
 # @builder.io/mitosis-cli
 
+## 0.5.27
+
+### Patch Changes
+
+- 92ad2c6: Misc: stop using `fs-extra-promise` dependency
+- Updated dependencies [92ad2c6]
+  - @builder.io/mitosis@0.5.27
+
+## 0.5.26
+
+### Patch Changes
+
+- Updated dependencies [57bdffe]
+  - @builder.io/mitosis@0.5.26
+
+## 0.5.25
+
+### Patch Changes
+
+- Updated dependencies [af43f50]
+- Updated dependencies [20ad8dc]
+  - @builder.io/mitosis@0.5.25
+
 ## 0.5.24
 
 ### Patch Changes
