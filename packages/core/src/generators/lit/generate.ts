@@ -1,6 +1,7 @@
 import { ToLitOptions } from '@/generators/lit/types';
 import { dashCase } from '@/helpers/dash-case';
 import { dedent } from '@/helpers/dedent';
+import { checkIsEvent } from '@/helpers/event-handlers';
 import { fastClone } from '@/helpers/fast-clone';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import { getProps } from '@/helpers/get-props';
@@ -92,7 +93,7 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
       // TODO: maybe use ref directive instead
       // https://lit.dev/docs/templates/directives/#ref
       str += ` ref="${code}" `;
-    } else if (key.startsWith('on')) {
+    } else if (checkIsEvent(key)) {
       const asyncKeyword = json.bindings[key]?.async ? 'async ' : '';
       const useKey = '@' + key.substring(2).toLowerCase();
 

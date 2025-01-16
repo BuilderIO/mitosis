@@ -62,9 +62,13 @@ You will see that we traverse the JSON nodes, and for each MitosisNode, we remov
 
 ## useMetadata
 
-What happens if you want a plugin to only apply to a specific set of components? Or if you'd like to provide some metadata for your plugin, and that metadata will depend on which component is being compiled?
+What happens if you want a plugin to only apply to a specific set of components?
+Or if you'd like to provide some metadata for your plugin,
+and that metadata will depend on which component is being compiled?
 
-This is where our `useMetadata` hook comes in handy. All you need to do is import and use the hook (you can use it anywhere in your mitosis component file, even at the top root level!):
+This is where our `useMetadata` hook comes in handy.
+All you need to do is import and use the hook
+(you can use it anywhere in your mitosis component file, even at the top root level!):
 
 ```tsx
 import { useMetadata } from '@builder.io/mitosis';
@@ -76,7 +80,9 @@ export default function SmileReviews(props: SmileReviewsProps) {
 }
 ```
 
-The metadata will be stored in your mitosis component's JSON, under `json.meta.useMetadata.mySpecialComponentType`. You can then use it in your JSON pre/post plugins:
+The metadata will be stored in your mitosis component's JSON
+, under `json.meta.useMetadata.mySpecialComponentType`.
+You can then use it in your JSON pre/post plugins:
 
 ```tsx
 const plugin = {
@@ -90,6 +96,8 @@ const plugin = {
   },
 };
 ```
+
+Check the [example](https://github.com/BuilderIO/mitosis/tree/main/examples/metadata/src/components/metadata.lite.tsx) to see a complex `useMetadata` usage.
 
 ## Component JSON
 

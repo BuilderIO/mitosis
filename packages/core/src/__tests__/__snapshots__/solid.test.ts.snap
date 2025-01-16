@@ -693,7 +693,12 @@ export default MyBasicOutputsComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > Basic Outputs Meta 1`] = `
-"import { onMount, createSignal, createMemo } from \\"solid-js\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+import { onMount, createSignal, createMemo } from \\"solid-js\\";
 
 function MyBasicOutputsComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
@@ -715,7 +720,12 @@ export default MyBasicOutputsComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > Basic Outputs Meta 2`] = `
-"import { onMount, createSignal, createMemo } from \\"solid-js\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+import { onMount, createSignal, createMemo } from \\"solid-js\\";
 
 function MyBasicOutputsComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
@@ -4061,7 +4071,12 @@ export default MyBasicForwardRefComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"import { createSignal, createMemo } from \\"solid-js\\";
+"/**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+import { createSignal, createMemo } from \\"solid-js\\";
 
 function MyBasicForwardRefComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
@@ -4088,7 +4103,12 @@ export default MyBasicForwardRefComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > basicForwardRefMetadata 2`] = `
-"import { createSignal, createMemo } from \\"solid-js\\";
+"/**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+import { createSignal, createMemo } from \\"solid-js\\";
 
 function MyBasicForwardRefComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
@@ -4403,6 +4423,42 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
+          */
+
+function ComplexMetaRaw(props) {
+  return (
+    <>
+      <div></div>
+    </>
+  );
+}
+
+export default ComplexMetaRaw;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > complexMeta 2`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
+          */
+
+function ComplexMetaRaw(props) {
+  return (
+    <>
+      <div></div>
+    </>
+  );
+}
+
+export default ComplexMetaRaw;
 "
 `;
 
@@ -4873,6 +4929,56 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
+          */
+
+function FigmaButton(props) {
+  return (
+    <>
+      <button
+        data-icon={props.icon}
+        data-disabled={props.interactiveState}
+        data-width={props.width}
+        data-size={props.size}
+      >
+        {props.label}
+      </button>
+    </>
+  );
+}
+
+export default FigmaButton;
+"
+`;
+
+exports[`Solid > jsx > Javascript Test > figmaMeta 2`] = `
+"/**
+          useMetadata:
+          {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
+          */
+
+function FigmaButton(props) {
+  return (
+    <>
+      <button
+        data-icon={props.icon}
+        data-disabled={props.interactiveState}
+        data-width={props.width}
+        data-size={props.size}
+      >
+        {props.label}
+      </button>
+    </>
+  );
+}
+
+export default FigmaButton;
 "
 `;
 
@@ -8569,7 +8675,12 @@ export default MyBasicOutputsComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > Basic Outputs Meta 1`] = `
-"import { onMount, createSignal, createMemo } from \\"solid-js\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+import { onMount, createSignal, createMemo } from \\"solid-js\\";
 
 function MyBasicOutputsComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
@@ -8591,7 +8702,12 @@ export default MyBasicOutputsComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > Basic Outputs Meta 2`] = `
-"import { onMount, createSignal, createMemo } from \\"solid-js\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+import { onMount, createSignal, createMemo } from \\"solid-js\\";
 
 function MyBasicOutputsComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
@@ -12447,7 +12563,12 @@ export default MyBasicForwardRefComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"import { createSignal, createMemo } from \\"solid-js\\";
+"/**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+import { createSignal, createMemo } from \\"solid-js\\";
 
 export interface Props {
   showInput: boolean;
@@ -12479,7 +12600,12 @@ export default MyBasicForwardRefComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > basicForwardRefMetadata 2`] = `
-"import { createSignal, createMemo } from \\"solid-js\\";
+"/**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+import { createSignal, createMemo } from \\"solid-js\\";
 
 export interface Props {
   showInput: boolean;
@@ -12813,6 +12939,42 @@ function MyBasicComponent(props: any) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
+          */
+
+function ComplexMetaRaw(props: any) {
+  return (
+    <>
+      <div></div>
+    </>
+  );
+}
+
+export default ComplexMetaRaw;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > complexMeta 2`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
+          */
+
+function ComplexMetaRaw(props: any) {
+  return (
+    <>
+      <div></div>
+    </>
+  );
+}
+
+export default ComplexMetaRaw;
 "
 `;
 
@@ -13343,6 +13505,56 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
+          */
+
+function FigmaButton(props: any) {
+  return (
+    <>
+      <button
+        data-icon={props.icon}
+        data-disabled={props.interactiveState}
+        data-width={props.width}
+        data-size={props.size}
+      >
+        {props.label}
+      </button>
+    </>
+  );
+}
+
+export default FigmaButton;
+"
+`;
+
+exports[`Solid > jsx > Typescript Test > figmaMeta 2`] = `
+"/**
+          useMetadata:
+          {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
+          */
+
+function FigmaButton(props: any) {
+  return (
+    <>
+      <button
+        data-icon={props.icon}
+        data-disabled={props.interactiveState}
+        data-width={props.width}
+        data-size={props.size}
+      >
+        {props.label}
+      </button>
+    </>
+  );
+}
+
+export default FigmaButton;
 "
 `;
 

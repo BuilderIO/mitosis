@@ -1,4 +1,5 @@
 import { createSingleBinding } from '@/helpers/bindings';
+import { checkIsEvent } from '@/helpers/event-handlers';
 import isChildren from '@/helpers/is-children';
 import { isUpperCase } from '@/helpers/is-upper-case';
 import { getForArguments } from '@/helpers/nodes/for';
@@ -222,7 +223,7 @@ const stringifyBinding =
     if (type === 'spread') {
       const spreadValue = key === 'props' ? '$$props' : code;
       return ` {...${spreadValue}} `;
-    } else if (key.startsWith('on') && isValidHtmlTag) {
+    } else if (checkIsEvent(key) && isValidHtmlTag) {
       const { async } = binding;
       // handle html native on[event] props
       const event = key.replace('on', '').toLowerCase();
@@ -236,7 +237,7 @@ const stringifyBinding =
         const asyncKeyword = async ? 'async ' : '';
         return ` on:${event}="{${asyncKeyword}(${cusArgs.join(',')}) => {${valueWithoutBlock}}}" `;
       }
-    } else if (key.startsWith('on')) {
+    } else if (checkIsEvent(key)) {
       // handle on[custom event] props
       const valueWithoutBlock = removeSurroundingBlock(code);
 

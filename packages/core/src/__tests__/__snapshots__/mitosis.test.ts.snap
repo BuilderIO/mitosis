@@ -248,7 +248,12 @@ export default function MyBasicOutputsComponent(props) {
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > Basic Outputs Meta 1`] = `
-"import { useStore } from \\"@builder.io/mitosis\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+import { useStore } from \\"@builder.io/mitosis\\";
 
 useMetadata({
   outputs: [\\"onMessage\\", \\"onEvent\\"],
@@ -1668,14 +1673,14 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"',' expected. (16:12)
-  14 |     const state = useStore({ name: 'PatrickJS',});
-  15 |
-> 16 | const props.inputRef = useRef();
+"',' expected. (22:12)
+  20 |     const state = useStore({ name: 'PatrickJS',});
+  21 |
+> 22 | const props.inputRef = useRef();
      |            ^
-  17 |
-  18 |
-  19 |"
+  23 |
+  24 |
+  25 |"
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
@@ -1789,6 +1794,29 @@ export default function MyBasicComponent(props) {
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>,
   ];
+}
+"
+`;
+
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
+          */
+
+useMetadata({
+  x: \\"y\\",
+  asdf: {
+    stringValue: \\"d\\",
+    booleanValue: true,
+    numberValue: 1,
+    innerObject: { stringValue: \\"inner\\", numberValue: 2, booleanValue: false },
+    spreadStringValue: \\"f\\",
+  },
+});
+
+export default function ComplexMetaRaw(props) {
+  return [<div />];
 }
 "
 `;
@@ -1946,6 +1974,65 @@ export default function MyComponent(props) {
   });
 
   return [<div>{state.refToUse}</div>];
+}
+"
+`;
+
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
+          */
+
+useMetadata({
+  figma: {
+    name: \\"def-button-beta-outlined\\",
+    url: \\"https://www.figma.com/xxx\\",
+    props: {
+      iconSmall: { type: \\"instance\\", key: \\"📍 Icon Small\\" },
+      iconMedium: { type: \\"instance\\", key: \\"📍 Icon Medium\\" },
+      label: { type: \\"string\\", key: \\"✏️ Label\\" },
+      icon: {
+        type: \\"boolean\\",
+        key: \\"👁️ Icon\\",
+        value: { false: false, true: \\"placeholder\\" },
+      },
+      interactiveState: {
+        type: \\"enum\\",
+        key: \\"Interactive State\\",
+        value: {
+          \\"(Def) Enabled\\": false,
+          Hovered: false,
+          Pressed: false,
+          Focused: false,
+          Disabled: \\"true\\",
+        },
+      },
+      size: {
+        type: \\"enum\\",
+        key: \\"Size\\",
+        value: { \\"(Def) Medium\\": false, Small: \\"small\\" },
+      },
+      width: {
+        type: \\"enum\\",
+        key: \\"Width\\",
+        value: { \\"(Def) Auto Width\\": false, \\"Full Width\\": \\"full\\" },
+      },
+    },
+  },
+});
+
+export default function FigmaButton(props) {
+  return [
+    <button
+      data-icon={props.icon}
+      data-disabled={props.interactiveState}
+      data-width={props.width}
+      data-size={props.size}
+    >
+      {props.label}
+    </button>,
+  ];
 }
 "
 `;
@@ -3307,7 +3394,12 @@ export default function MyBasicOutputsComponent(props) {
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > Basic Outputs Meta 1`] = `
-"import { useStore } from \\"@builder.io/mitosis\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+import { useStore } from \\"@builder.io/mitosis\\";
 
 useMetadata({
   outputs: [\\"onMessage\\", \\"onEvent\\"],
@@ -4954,14 +5046,14 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescr
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"',' expected. (19:12)
-  17 |     const state = useStore({ name: 'PatrickJS',});
-  18 |
-> 19 | const props.inputRef = useRef();
+"',' expected. (25:12)
+  23 |     const state = useStore({ name: 'PatrickJS',});
+  24 |
+> 25 | const props.inputRef = useRef();
      |            ^
-  20 |
-  21 |
-  22 |"
+  26 |
+  27 |
+  28 |"
 `;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
@@ -5082,6 +5174,29 @@ export default function MyBasicComponent(props) {
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>,
   ];
+}
+"
+`;
+
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
+          */
+
+useMetadata({
+  x: \\"y\\",
+  asdf: {
+    stringValue: \\"d\\",
+    booleanValue: true,
+    numberValue: 1,
+    innerObject: { stringValue: \\"inner\\", numberValue: 2, booleanValue: false },
+    spreadStringValue: \\"f\\",
+  },
+});
+
+export default function ComplexMetaRaw(props) {
+  return [<div />];
 }
 "
 `;
@@ -5265,6 +5380,65 @@ export default function MyComponent(props) {
   });
 
   return [<div>{state.refToUse}</div>];
+}
+"
+`;
+
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
+          */
+
+useMetadata({
+  figma: {
+    name: \\"def-button-beta-outlined\\",
+    url: \\"https://www.figma.com/xxx\\",
+    props: {
+      iconSmall: { type: \\"instance\\", key: \\"📍 Icon Small\\" },
+      iconMedium: { type: \\"instance\\", key: \\"📍 Icon Medium\\" },
+      label: { type: \\"string\\", key: \\"✏️ Label\\" },
+      icon: {
+        type: \\"boolean\\",
+        key: \\"👁️ Icon\\",
+        value: { false: false, true: \\"placeholder\\" },
+      },
+      interactiveState: {
+        type: \\"enum\\",
+        key: \\"Interactive State\\",
+        value: {
+          \\"(Def) Enabled\\": false,
+          Hovered: false,
+          Pressed: false,
+          Focused: false,
+          Disabled: \\"true\\",
+        },
+      },
+      size: {
+        type: \\"enum\\",
+        key: \\"Size\\",
+        value: { \\"(Def) Medium\\": false, Small: \\"small\\" },
+      },
+      width: {
+        type: \\"enum\\",
+        key: \\"Width\\",
+        value: { \\"(Def) Auto Width\\": false, \\"Full Width\\": \\"full\\" },
+      },
+    },
+  },
+});
+
+export default function FigmaButton(props) {
+  return [
+    <button
+      data-icon={props.icon}
+      data-disabled={props.interactiveState}
+      data-width={props.width}
+      data-size={props.size}
+    >
+      {props.label}
+    </button>,
+  ];
 }
 "
 `;
@@ -7417,7 +7591,12 @@ export default function MyBasicOutputsComponent(props) {
 `;
 
 exports[`Mitosis, format: legacy > jsx > Javascript Test > Basic Outputs Meta 1`] = `
-"import { useStore } from \\"@builder.io/mitosis\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+import { useStore } from \\"@builder.io/mitosis\\";
 
 useMetadata({
   outputs: [\\"onMessage\\", \\"onEvent\\"],
@@ -8851,14 +9030,14 @@ exports[`Mitosis, format: legacy > jsx > Javascript Test > basicForwardRef 1`] =
 `;
 
 exports[`Mitosis, format: legacy > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"',' expected. (16:12)
-  14 |     const state = useStore({ name: 'PatrickJS',});
-  15 |
-> 16 | const props.inputRef = useRef();
+"',' expected. (22:12)
+  20 |     const state = useStore({ name: 'PatrickJS',});
+  21 |
+> 22 | const props.inputRef = useRef();
      |            ^
-  17 |
-  18 |
-  19 |"
+  23 |
+  24 |
+  25 |"
 `;
 
 exports[`Mitosis, format: legacy > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
@@ -8972,6 +9151,29 @@ export default function MyBasicComponent(props) {
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
   );
+}
+"
+`;
+
+exports[`Mitosis, format: legacy > jsx > Javascript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
+          */
+
+useMetadata({
+  x: \\"y\\",
+  asdf: {
+    stringValue: \\"d\\",
+    booleanValue: true,
+    numberValue: 1,
+    innerObject: { stringValue: \\"inner\\", numberValue: 2, booleanValue: false },
+    spreadStringValue: \\"f\\",
+  },
+});
+
+export default function ComplexMetaRaw(props) {
+  return <div />;
 }
 "
 `;
@@ -9129,6 +9331,65 @@ export default function MyComponent(props) {
   });
 
   return <div>{state.refToUse}</div>;
+}
+"
+`;
+
+exports[`Mitosis, format: legacy > jsx > Javascript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
+          */
+
+useMetadata({
+  figma: {
+    name: \\"def-button-beta-outlined\\",
+    url: \\"https://www.figma.com/xxx\\",
+    props: {
+      iconSmall: { type: \\"instance\\", key: \\"📍 Icon Small\\" },
+      iconMedium: { type: \\"instance\\", key: \\"📍 Icon Medium\\" },
+      label: { type: \\"string\\", key: \\"✏️ Label\\" },
+      icon: {
+        type: \\"boolean\\",
+        key: \\"👁️ Icon\\",
+        value: { false: false, true: \\"placeholder\\" },
+      },
+      interactiveState: {
+        type: \\"enum\\",
+        key: \\"Interactive State\\",
+        value: {
+          \\"(Def) Enabled\\": false,
+          Hovered: false,
+          Pressed: false,
+          Focused: false,
+          Disabled: \\"true\\",
+        },
+      },
+      size: {
+        type: \\"enum\\",
+        key: \\"Size\\",
+        value: { \\"(Def) Medium\\": false, Small: \\"small\\" },
+      },
+      width: {
+        type: \\"enum\\",
+        key: \\"Width\\",
+        value: { \\"(Def) Auto Width\\": false, \\"Full Width\\": \\"full\\" },
+      },
+    },
+  },
+});
+
+export default function FigmaButton(props) {
+  return (
+    <button
+      data-icon={props.icon}
+      data-disabled={props.interactiveState}
+      data-width={props.width}
+      data-size={props.size}
+    >
+      {props.label}
+    </button>
+  );
 }
 "
 `;
@@ -10531,7 +10792,12 @@ export default function MyBasicOutputsComponent(props) {
 `;
 
 exports[`Mitosis, format: legacy > jsx > Typescript Test > Basic Outputs Meta 1`] = `
-"import { useStore } from \\"@builder.io/mitosis\\";
+"/**
+          useMetadata:
+          {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
+          */
+
+import { useStore } from \\"@builder.io/mitosis\\";
 
 useMetadata({
   outputs: [\\"onMessage\\", \\"onEvent\\"],
@@ -12198,14 +12464,14 @@ exports[`Mitosis, format: legacy > jsx > Typescript Test > basicForwardRef 1`] =
 `;
 
 exports[`Mitosis, format: legacy > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"',' expected. (19:12)
-  17 |     const state = useStore({ name: 'PatrickJS',});
-  18 |
-> 19 | const props.inputRef = useRef();
+"',' expected. (25:12)
+  23 |     const state = useStore({ name: 'PatrickJS',});
+  24 |
+> 25 | const props.inputRef = useRef();
      |            ^
-  20 |
-  21 |
-  22 |"
+  26 |
+  27 |
+  28 |"
 `;
 
 exports[`Mitosis, format: legacy > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
@@ -12326,6 +12592,29 @@ export default function MyBasicComponent(props) {
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
   );
+}
+"
+`;
+
+exports[`Mitosis, format: legacy > jsx > Typescript Test > complexMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
+          */
+
+useMetadata({
+  x: \\"y\\",
+  asdf: {
+    stringValue: \\"d\\",
+    booleanValue: true,
+    numberValue: 1,
+    innerObject: { stringValue: \\"inner\\", numberValue: 2, booleanValue: false },
+    spreadStringValue: \\"f\\",
+  },
+});
+
+export default function ComplexMetaRaw(props) {
+  return <div />;
 }
 "
 `;
@@ -12511,6 +12800,65 @@ export default function MyComponent(props) {
   });
 
   return <div>{state.refToUse}</div>;
+}
+"
+`;
+
+exports[`Mitosis, format: legacy > jsx > Typescript Test > figmaMeta 1`] = `
+"/**
+          useMetadata:
+          {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
+          */
+
+useMetadata({
+  figma: {
+    name: \\"def-button-beta-outlined\\",
+    url: \\"https://www.figma.com/xxx\\",
+    props: {
+      iconSmall: { type: \\"instance\\", key: \\"📍 Icon Small\\" },
+      iconMedium: { type: \\"instance\\", key: \\"📍 Icon Medium\\" },
+      label: { type: \\"string\\", key: \\"✏️ Label\\" },
+      icon: {
+        type: \\"boolean\\",
+        key: \\"👁️ Icon\\",
+        value: { false: false, true: \\"placeholder\\" },
+      },
+      interactiveState: {
+        type: \\"enum\\",
+        key: \\"Interactive State\\",
+        value: {
+          \\"(Def) Enabled\\": false,
+          Hovered: false,
+          Pressed: false,
+          Focused: false,
+          Disabled: \\"true\\",
+        },
+      },
+      size: {
+        type: \\"enum\\",
+        key: \\"Size\\",
+        value: { \\"(Def) Medium\\": false, Small: \\"small\\" },
+      },
+      width: {
+        type: \\"enum\\",
+        key: \\"Width\\",
+        value: { \\"(Def) Auto Width\\": false, \\"Full Width\\": \\"full\\" },
+      },
+    },
+  },
+});
+
+export default function FigmaButton(props) {
+  return (
+    <button
+      data-icon={props.icon}
+      data-disabled={props.interactiveState}
+      data-width={props.width}
+      data-size={props.size}
+    >
+      {props.label}
+    </button>
+  );
 }
 "
 `;
@@ -16478,6 +16826,17 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Mitosis, format: react > jsx > Javascript Test > complexMeta 1`] = `
+"import * as React from \\"react\\";
+
+function ComplexMetaRaw(props) {
+  return <div />;
+}
+
+export default ComplexMetaRaw;
+"
+`;
+
 exports[`Mitosis, format: react > jsx > Javascript Test > componentWithContext 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -16712,6 +17071,26 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Mitosis, format: react > jsx > Javascript Test > figmaMeta 1`] = `
+"import * as React from \\"react\\";
+
+function FigmaButton(props) {
+  return (
+    <button
+      data-icon={props.icon}
+      data-disabled={props.interactiveState}
+      data-width={props.width}
+      data-size={props.size}
+    >
+      {props.label}
+    </button>
+  );
+}
+
+export default FigmaButton;
 "
 `;
 
@@ -20163,6 +20542,17 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Mitosis, format: react > jsx > Typescript Test > complexMeta 1`] = `
+"import * as React from \\"react\\";
+
+function ComplexMetaRaw(props) {
+  return <div />;
+}
+
+export default ComplexMetaRaw;
+"
+`;
+
 exports[`Mitosis, format: react > jsx > Typescript Test > componentWithContext 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -20397,6 +20787,26 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Mitosis, format: react > jsx > Typescript Test > figmaMeta 1`] = `
+"import * as React from \\"react\\";
+
+function FigmaButton(props) {
+  return (
+    <button
+      data-icon={props.icon}
+      data-disabled={props.interactiveState}
+      data-width={props.width}
+      data-size={props.size}
+    >
+      {props.label}
+    </button>
+  );
+}
+
+export default FigmaButton;
 "
 `;
 

@@ -1,4 +1,5 @@
 import { ToLiquidOptions } from '@/generators/liquid/types';
+import { checkIsEvent } from '@/helpers/event-handlers';
 import { format } from 'prettier/standalone';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import { fastClone } from '../../helpers/fast-clone';
@@ -113,7 +114,7 @@ const blockToLiquid = (json: MitosisNode, options: ToLiquidOptions = {}): string
       // TODO: proper babel transform to replace. Util for this
       const useValue = stripStateAndPropsRefs(value);
 
-      if (key.startsWith('on')) {
+      if (checkIsEvent(key)) {
         // Do nothing
       } else if (isValidLiquidBinding(useValue)) {
         str += ` ${key}="{{${useValue}}}" `;

@@ -1,48 +1,50 @@
+import { SELF_CLOSING_HTML_TAGS } from '@/constants/html_tags';
 import { ToHtmlOptions } from '@/generators/html/types';
-import { NodePath, types } from '@babel/core';
-import { pipe } from 'fp-ts/lib/function';
-import { camelCase, kebabCase } from 'lodash';
-import traverse from 'neotraverse/legacy';
-import { format } from 'prettier/standalone';
-import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
-import { babelTransformExpression } from '../../helpers/babel-transform';
-import { dashCase } from '../../helpers/dash-case';
-import { fastClone } from '../../helpers/fast-clone';
-import { getPropFunctions } from '../../helpers/get-prop-functions';
-import { getProps } from '../../helpers/get-props';
-import { getPropsRef } from '../../helpers/get-props-ref';
-import { getRefs } from '../../helpers/get-refs';
-import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
-import { hasBindingsText } from '../../helpers/has-bindings-text';
-import { hasComponent } from '../../helpers/has-component';
-import { hasProps } from '../../helpers/has-props';
-import { hasStatefulDom } from '../../helpers/has-stateful-dom';
-import isChildren from '../../helpers/is-children';
-import { isHtmlAttribute } from '../../helpers/is-html-attribute';
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { mapRefs } from '../../helpers/map-refs';
-import { initializeOptions } from '../../helpers/merge-options';
-import { getForArguments } from '../../helpers/nodes/for';
-import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
-import { renderPreComponent } from '../../helpers/render-imports';
-import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { babelTransformExpression } from '@/helpers/babel-transform';
+import { dashCase } from '@/helpers/dash-case';
+import { checkIsEvent } from '@/helpers/event-handlers';
+import { fastClone } from '@/helpers/fast-clone';
+import { getPropFunctions } from '@/helpers/get-prop-functions';
+import { getProps } from '@/helpers/get-props';
+import { getPropsRef } from '@/helpers/get-props-ref';
+import { getRefs } from '@/helpers/get-refs';
+import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
+import { hasBindingsText } from '@/helpers/has-bindings-text';
+import { hasComponent } from '@/helpers/has-component';
+import { hasProps } from '@/helpers/has-props';
+import { hasStatefulDom } from '@/helpers/has-stateful-dom';
+import { isHtmlAttribute } from '@/helpers/is-html-attribute';
+import { isMitosisNode } from '@/helpers/is-mitosis-node';
+import { mapRefs } from '@/helpers/map-refs';
+import { initializeOptions } from '@/helpers/merge-options';
+import { getForArguments } from '@/helpers/nodes/for';
+import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
+import { renderPreComponent } from '@/helpers/render-imports';
+import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import {
   DO_NOT_USE_ARGS,
   DO_NOT_USE_CONTEXT_VARS_TRANSFORMS,
   DO_NOT_USE_VARS_TRANSFORMS,
   StripStateAndPropsRefsOptions,
   stripStateAndPropsRefs,
-} from '../../helpers/strip-state-and-props-refs';
-import { collectCss } from '../../helpers/styles/collect-css';
+} from '@/helpers/strip-state-and-props-refs';
+import { collectCss } from '@/helpers/styles/collect-css';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
-} from '../../modules/plugins';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { MitosisNode, checkIsForNode } from '../../types/mitosis-node';
-import { TranspilerGenerator } from '../../types/transpiler';
+} from '@/modules/plugins';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { MitosisNode, checkIsForNode } from '@/types/mitosis-node';
+import { TranspilerGenerator } from '@/types/transpiler';
+import { NodePath, types } from '@babel/core';
+import { pipe } from 'fp-ts/lib/function';
+import { camelCase, kebabCase } from 'lodash';
+import traverse from 'neotraverse/legacy';
+
+import isChildren from '@/helpers/is-children';
+import { format } from 'prettier/standalone';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 
 type ScopeVars = Array<string>;
@@ -424,7 +426,7 @@ const blockToHtml = (
       // TODO: proper babel transform to replace. Util for this
       const useValue = value;
 
-      if (key.startsWith('on')) {
+      if (checkIsEvent(key)) {
         let event = key.replace('on', '').toLowerCase();
         const fnName = camelCase(`on-${elId}-${event}`);
         const codeContent: string = removeSurroundingBlock(
