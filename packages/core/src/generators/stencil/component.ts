@@ -112,8 +112,6 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
     ${getImports(json, options, childComponents)}
     
     import { ${coreImports} } from '@stencil/core';
-        
-    ${json.types ? json.types.join('\n') : ''}
     
     @Component({
       tag: '${tagName}',
@@ -127,7 +125,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
     })
     export class ${json.name} {
         ${refs}
-        ${getPropsAsCode(props, defaultProps, json.propsTypeRef)}
+        ${getPropsAsCode(props, json, defaultProps)}
         ${dataString}
         ${methodsString}
 

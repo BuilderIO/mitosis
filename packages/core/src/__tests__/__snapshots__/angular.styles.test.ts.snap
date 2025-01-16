@@ -6371,6 +6371,31 @@ export class TypeDependencyModule {}
 "
 `;
 
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > typeExternalProps 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"type-external-props\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+})
+export default class TypeExternalProps {
+  @Input() name;
+}
+
+@NgModule({
+  declarations: [TypeExternalProps],
+  imports: [CommonModule],
+  exports: [TypeExternalProps],
+})
+export class TypeExternalPropsModule {}
+"
+`;
+
 exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > typeExternalStore 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -13539,6 +13564,33 @@ export default class TypeDependency {
   exports: [TypeDependency],
 })
 export class TypeDependencyModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > typeExternalProps 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+import { FooProps } from \\"./foo-props\\";
+
+@Component({
+  selector: \\"type-external-props\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+})
+export default class TypeExternalProps {
+  @Input() name!: FooProps[\\"name\\"];
+}
+
+@NgModule({
+  declarations: [TypeExternalProps],
+  imports: [CommonModule],
+  exports: [TypeExternalProps],
+})
+export class TypeExternalPropsModule {}
 "
 `;
 

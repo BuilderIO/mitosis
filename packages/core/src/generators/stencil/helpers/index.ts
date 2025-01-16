@@ -42,9 +42,12 @@ export const getTagName = (name: string, { prefix }: ToStencilOptions): string =
 
 export const getPropsAsCode = (
   props: string[],
+  json: MitosisComponent,
   defaultProps?: MitosisState | undefined,
-  propsTypeRef?: string,
 ): string => {
+  const propsTypeRef: string | undefined = json.propsTypeRef;
+  const internalTypes: string[] | undefined = json.types;
+
   return props
     .map((item: string) => {
       const defaultProp: string | undefined = defaultProps ? defaultProps[item]?.code : undefined;
@@ -58,7 +61,8 @@ export const getPropsAsCode = (
         propsTypeRef &&
         propsTypeRef !== 'any' &&
         propsTypeRef !== 'unknown' &&
-        propsTypeRef !== 'never'
+        propsTypeRef !== 'never' &&
+        (!internalTypes || !internalTypes.includes(propsTypeRef))
           ? `${propsTypeRef}["${item}"]`
           : 'any';
       return `@Prop() ${item}: ${type}${defaultPropString}`;
