@@ -50,7 +50,6 @@ export const HELPER_FUNCTIONS = (
 export const getAppropriateTemplateFunctionKeys = (code: string) =>
   Object.keys(HELPER_FUNCTIONS()).filter((key) => code.includes(key));
 
-
 export const getDefaultProps = ({ defaultProps }: MitosisComponent) => {
   if (!defaultProps) return '';
   const defalutPropsString = Object.keys(defaultProps)
@@ -96,4 +95,3 @@ export const hasFirstChildKeyAttribute = (node: MitosisNode): boolean => {
   const firstChildBinding = node.children[0].bindings;
   return Boolean(firstChildBinding && firstChildBinding.key?.code);
 };
-
