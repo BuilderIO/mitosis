@@ -9,7 +9,7 @@ import { parseJsx } from '@/parsers/jsx';
 import { compileAwayBuilderComponents } from '@/plugins/compile-away-builder-components';
 import { BuilderContent } from '@builder.io/sdk';
 
-import asyncBindings from './data/basic-ref-assignment.raw.tsx?raw';
+import asyncBindings from './data/ref/basic-ref-assignment.raw.tsx?raw';
 import columns from './data/blocks/columns.raw.tsx?raw';
 import customCode from './data/blocks/custom-code.raw.tsx?raw';
 import embed from './data/blocks/embed.raw.tsx?raw';
