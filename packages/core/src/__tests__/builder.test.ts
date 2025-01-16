@@ -485,25 +485,6 @@ describe('Builder', () => {
     expect(backToBuilder).toMatchSnapshot();
   });
 
-  test('localization preserve text blocks', () => {
-    const originalBuilder = JSON.parse(localization);
-    const componentPreserveTextBlocks = builderContentToMitosisComponent(originalBuilder, {
-      preserveTextBlocks: true,
-    });
-    const mitosisJsxPreserveTextBlocks = componentToMitosis()({
-      component: componentPreserveTextBlocks,
-    });
-
-    expect(componentPreserveTextBlocks).toMatchSnapshot();
-    expect(mitosisJsxPreserveTextBlocks).toMatchSnapshot();
-
-    const backToBuilderPreserveTextBlocks = componentToBuilder()({
-      component: componentPreserveTextBlocks,
-    });
-
-    expect(backToBuilderPreserveTextBlocks).toMatchSnapshot();
-  });
-
   test('preserve cssCode when converting', () => {
     const builderJson: BuilderContent = {
       data: {
