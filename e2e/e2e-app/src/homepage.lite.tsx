@@ -1,7 +1,7 @@
 import { For, onMount, Show, useStore } from '@builder.io/mitosis';
 import { COMPONENT_PATHS } from './component-paths';
 import ComponentWithTypes from './components/component-with-types.lite';
-import DefaultProps from './components/default-props.lite';
+import DefaultProps from './components/default-props/default-props.lite';
 import DisabledInput from './components/disabled-input/disabled-input.lite';
 import NestedParent from './components/nested/nested-parent.lite';
 import OneComponent from './components/one-component.lite';
