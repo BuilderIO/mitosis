@@ -631,9 +631,12 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${Array.from(props)
         .filter((item) => !isSlotProperty(item) && item !== 'children')
         .map((item) => {
+          const hasDefaultProp = json.defaultProps && json.defaultProps.hasOwnProperty(item);
           const propType = propsTypeRef ? `${propsTypeRef}["${item}"]` : 'any';
-          let propDeclaration = `@Input() ${item}${options.typescript ? `!: ${propType}` : ''}`;
-          if (json.defaultProps && json.defaultProps.hasOwnProperty(item)) {
+          let propDeclaration = `@Input() ${item}${
+            options.typescript ? `${hasDefaultProp ? '' : '!'}: ${propType}` : ''
+          }`;
+          if (hasDefaultProp) {
             propDeclaration += ` = defaultProps["${item}"]`;
           }
           return propDeclaration;
