@@ -477,23 +477,30 @@ describe('Builder', () => {
   test('localization', () => {
     const originalBuilder = JSON.parse(localization);
     const component = builderContentToMitosisComponent(originalBuilder);
+    const mitosisJsx = componentToMitosis()({ component });
+    expect(component).toMatchSnapshot();
+    expect(mitosisJsx).toMatchSnapshot();
+
+    const backToBuilder = componentToBuilder()({ component });
+    expect(backToBuilder).toMatchSnapshot();
+  });
+
+  test('localization preserve text blocks', () => {
+    const originalBuilder = JSON.parse(localization);
     const componentPreserveTextBlocks = builderContentToMitosisComponent(originalBuilder, {
       preserveTextBlocks: true,
     });
-    const mitosisJsx = componentToMitosis()({ component });
     const mitosisJsxPreserveTextBlocks = componentToMitosis()({
       component: componentPreserveTextBlocks,
     });
-    expect(component).toMatchSnapshot();
-    expect(mitosisJsx).toMatchSnapshot();
+
     expect(componentPreserveTextBlocks).toMatchSnapshot();
     expect(mitosisJsxPreserveTextBlocks).toMatchSnapshot();
 
-    const backToBuilder = componentToBuilder()({ component });
     const backToBuilderPreserveTextBlocks = componentToBuilder()({
       component: componentPreserveTextBlocks,
     });
-    expect(backToBuilder).toMatchSnapshot();
+
     expect(backToBuilderPreserveTextBlocks).toMatchSnapshot();
   });
 
