@@ -560,9 +560,13 @@ exports[`Preact > jsx > Javascript Test > ContentSlotJSX 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
-function ContentSlotJsxCode(
-  props = { content: \\"\\", slotReference: undefined, slotContent: undefined }
-) {
+function ContentSlotJsxCode(props) {
+  props = {
+    ...props,
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -2099,16 +2103,16 @@ exports[`Preact > jsx > Javascript Test > defaultProps 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 
-function Button(
+function Button(props) {
   props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {
       console.log(\\"hi\\");
     },
-  }
-) {
+  };
   return (
     <div>
       {props.link ? (
@@ -2141,14 +2145,14 @@ exports[`Preact > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 
-function Button(
+function Button(props) {
   props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {},
-  }
-) {
+  };
   return (
     <div>
       {props.link ? (
@@ -4379,13 +4383,13 @@ type Props = {
 };
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
-function ContentSlotJsxCode(
-  props: Props = {
+function ContentSlotJsxCode(props: Props) {
+  props = {
+    ...props,
     content: \\"\\",
     slotReference: undefined,
     slotContent: undefined,
-  }
-) {
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -6156,16 +6160,16 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
-function Button(
-  props: ButtonProps = {
+function Button(props: ButtonProps) {
+  props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {
       console.log(\\"hi\\");
     },
-  }
-) {
+  };
   return (
     <div>
       {props.link ? (
@@ -6206,14 +6210,14 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-function Button(
-  props: ButtonProps = {
+function Button(props: ButtonProps) {
+  props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {},
-  }
-) {
+  };
   return (
     <div>
       {props.link ? (
@@ -8049,7 +8053,8 @@ exports[`Preact > svelte > Javascript Test > classDirective 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
-function MyComponent(props = {}) {
+function MyComponent(props) {
+  props = { ...props };
   const [focus, setFocus] = useState(() => true);
 
   return (
@@ -8066,14 +8071,14 @@ export default MyComponent;
 `;
 
 exports[`Preact > svelte > Javascript Test > context 1`] = `
-"'>' expected. (32:13)
-  30 | return (
-  31 |
-> 32 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (33:13)
+  31 | return (
+  32 |
+> 33 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  33 |
   34 |
-  35 |"
+  35 |
+  36 |"
 `;
 
 exports[`Preact > svelte > Javascript Test > each 1`] = `
@@ -8449,7 +8454,8 @@ exports[`Preact > svelte > Typescript Test > classDirective 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
-function MyComponent(props: any = {}) {
+function MyComponent(props: any) {
+  props = { ...props };
   const [focus, setFocus] = useState(() => true);
 
   return (
@@ -8466,14 +8472,14 @@ export default MyComponent;
 `;
 
 exports[`Preact > svelte > Typescript Test > context 1`] = `
-"'>' expected. (32:13)
-  30 | return (
-  31 |
-> 32 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (33:13)
+  31 | return (
+  32 |
+> 33 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  33 |
   34 |
-  35 |"
+  35 |
+  36 |"
 `;
 
 exports[`Preact > svelte > Typescript Test > each 1`] = `

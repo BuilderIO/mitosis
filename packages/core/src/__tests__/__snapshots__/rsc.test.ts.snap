@@ -482,14 +482,14 @@ export default Button;
 `;
 
 exports[`RSC > jsx > Javascript Test > Columns 1`] = `
-"'function' is not allowed as a variable declaration name. (20:9)
-  18 |
+"'function' is not allowed as a variable declaration name. (21:9)
   19 |   function Column(props) {
-> 20 |   const function getColumns() {
+  20 |
+> 21 |   const function getColumns() {
      |         ^
-  21 | return props.columns || [];
-  22 | }
-  23 | const function getGutterSize() {"
+  22 | return props.columns || [];
+  23 | }
+  24 | const function getGutterSize() {"
 `;
 
 exports[`RSC > jsx > Javascript Test > ContentSlotHtml 1`] = `
@@ -523,9 +523,13 @@ exports[`RSC > jsx > Javascript Test > ContentSlotJSX 1`] = `
 import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-function ContentSlotJsxCode(
-  props = { content: \\"\\", slotReference: undefined, slotContent: undefined }
-) {
+function ContentSlotJsxCode(props) {
+  props = {
+    ...props,
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -1157,14 +1161,14 @@ export default FormInputComponent;
 `;
 
 exports[`RSC > jsx > Javascript Test > InputParent 1`] = `
-"'function' is not allowed as a variable declaration name. (20:9)
-  18 |
+"'function' is not allowed as a variable declaration name. (21:9)
   19 |   function Stepper(props) {
-> 20 |   const function handleChange(value) {
+  20 |
+> 21 |   const function handleChange(value) {
      |         ^
-  21 | console.log(value);
-  22 | }
-  23 |"
+  22 | console.log(value);
+  23 | }
+  24 |"
 `;
 
 exports[`RSC > jsx > Javascript Test > NestedStore 1`] = `
@@ -2109,16 +2113,16 @@ exports[`RSC > jsx > Javascript Test > defaultProps 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function Button(
+function Button(props) {
   props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {
       console.log(\\"hi\\");
     },
-  }
-) {
+  };
   return (
     <div>
       {props.link ? (
@@ -2151,14 +2155,14 @@ exports[`RSC > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function Button(
+function Button(props) {
   props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {},
-  }
-) {
+  };
   return (
     <div>
       {props.link ? (
@@ -2282,25 +2286,25 @@ export default FigmaButton;
 `;
 
 exports[`RSC > jsx > Javascript Test > getterState 1`] = `
-"'function' is not allowed as a variable declaration name. (20:9)
-  18 |
+"'function' is not allowed as a variable declaration name. (21:9)
   19 |   function Button(props) {
-> 20 |   const function foo2() {
+  20 |
+> 21 |   const function foo2() {
      |         ^
-  21 | return props.foo + 'foo';
-  22 | }
-  23 | const function bar() {"
+  22 | return props.foo + 'foo';
+  23 | }
+  24 | const function bar() {"
 `;
 
 exports[`RSC > jsx > Javascript Test > import types 1`] = `
-"'function' is not allowed as a variable declaration name. (20:9)
-  18 |
+"'function' is not allowed as a variable declaration name. (21:9)
   19 |   function RenderContent(props) {
-> 20 |   const function getRenderContentProps(block, index) {
+  20 |
+> 21 |   const function getRenderContentProps(block, index) {
      |         ^
-  21 | return {
-  22 | block: block,
-  23 | index: index"
+  22 | return {
+  23 | block: block,
+  24 | index: index"
 `;
 
 exports[`RSC > jsx > Javascript Test > multipleOnUpdate 1`] = `
@@ -2771,14 +2775,14 @@ export default OnUpdate;
 `;
 
 exports[`RSC > jsx > Javascript Test > renderBlock 1`] = `
-"'function' is not allowed as a variable declaration name. (33:10)
-  31 |
+"'function' is not allowed as a variable declaration name. (34:10)
   32 |    function RenderBlock(props) {
-> 33 |    const function component() {
+  33 |
+> 34 |    const function component() {
      |          ^
-  34 | const componentName = getProcessedBlock({
-  35 |  block: props.block,
-  36 |  state: props.context.state,"
+  35 | const componentName = getProcessedBlock({
+  36 |  block: props.block,
+  37 |  state: props.context.state,"
 `;
 
 exports[`RSC > jsx > Javascript Test > renderContentExample 1`] = `
@@ -4046,14 +4050,14 @@ export default Button;
 `;
 
 exports[`RSC > jsx > Typescript Test > Columns 1`] = `
-"'function' is not allowed as a variable declaration name. (33:9)
-  31 |
+"'function' is not allowed as a variable declaration name. (34:9)
   32 |   function Column(props:ColumnProps) {
-> 33 |   const function getColumns() {
+  33 |
+> 34 |   const function getColumns() {
      |         ^
-  34 | return props.columns || [];
-  35 | }
-  36 | const function getGutterSize() {"
+  35 | return props.columns || [];
+  36 | }
+  37 | const function getGutterSize() {"
 `;
 
 exports[`RSC > jsx > Typescript Test > ContentSlotHtml 1`] = `
@@ -4098,13 +4102,13 @@ type Props = {
 };
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
-function ContentSlotJsxCode(
-  props: Props = {
+function ContentSlotJsxCode(props: Props) {
+  props = {
+    ...props,
     content: \\"\\",
     slotReference: undefined,
     slotContent: undefined,
-  }
-) {
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -4826,14 +4830,14 @@ export default FormInputComponent;
 `;
 
 exports[`RSC > jsx > Typescript Test > InputParent 1`] = `
-"'function' is not allowed as a variable declaration name. (20:9)
-  18 |
+"'function' is not allowed as a variable declaration name. (21:9)
   19 |   function Stepper(props:any) {
-> 20 |   const function handleChange(value: string) {
+  20 |
+> 21 |   const function handleChange(value: string) {
      |         ^
-  21 | console.log(value);
-  22 | }
-  23 |"
+  22 | console.log(value);
+  23 | }
+  24 |"
 `;
 
 exports[`RSC > jsx > Typescript Test > NestedStore 1`] = `
@@ -5922,16 +5926,16 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
-function Button(
-  props: ButtonProps = {
+function Button(props: ButtonProps) {
+  props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {
       console.log(\\"hi\\");
     },
-  }
-) {
+  };
   return (
     <div>
       {props.link ? (
@@ -5972,14 +5976,14 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-function Button(
-  props: ButtonProps = {
+function Button(props: ButtonProps) {
+  props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {},
-  }
-) {
+  };
   return (
     <div>
       {props.link ? (
@@ -6107,25 +6111,25 @@ export default FigmaButton;
 `;
 
 exports[`RSC > jsx > Typescript Test > getterState 1`] = `
-"'function' is not allowed as a variable declaration name. (22:9)
-  20 |
+"'function' is not allowed as a variable declaration name. (23:9)
   21 |   function Button(props:ButtonProps) {
-> 22 |   const function foo2() {
+  22 |
+> 23 |   const function foo2() {
      |         ^
-  23 | return props.foo + 'foo';
-  24 | }
-  25 | const function bar() {"
+  24 | return props.foo + 'foo';
+  25 | }
+  26 | const function bar() {"
 `;
 
 exports[`RSC > jsx > Typescript Test > import types 1`] = `
-"'function' is not allowed as a variable declaration name. (25:9)
-  23 |
+"'function' is not allowed as a variable declaration name. (26:9)
   24 |   function RenderContent(props:RenderContentProps) {
-> 25 |   const function getRenderContentProps(block, index) {
+  25 |
+> 26 |   const function getRenderContentProps(block, index) {
      |         ^
-  26 | return {
-  27 | block: block,
-  28 | index: index"
+  27 | return {
+  28 | block: block,
+  29 | index: index"
 `;
 
 exports[`RSC > jsx > Typescript Test > multipleOnUpdate 1`] = `
@@ -6647,14 +6651,14 @@ export default OnUpdate;
 `;
 
 exports[`RSC > jsx > Typescript Test > renderBlock 1`] = `
-"'function' is not allowed as a variable declaration name. (41:10)
-  39 |
+"'function' is not allowed as a variable declaration name. (42:10)
   40 |    function RenderBlock(props:RenderBlockProps) {
-> 41 |    const function component() {
+  41 |
+> 42 |    const function component() {
      |          ^
-  42 | const componentName = getProcessedBlock({
-  43 |  block: props.block,
-  44 |  state: props.context.state,"
+  43 | const componentName = getProcessedBlock({
+  44 |  block: props.block,
+  45 |  state: props.context.state,"
 `;
 
 exports[`RSC > jsx > Typescript Test > renderContentExample 1`] = `
@@ -7552,7 +7556,8 @@ exports[`RSC > svelte > Javascript Test > classDirective 1`] = `
 import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-function MyComponent(props = {}) {
+function MyComponent(props) {
+  props = { ...props };
   const [focus, setFocus] = useState(() => true);
 
   return (
@@ -7569,14 +7574,14 @@ export default MyComponent;
 `;
 
 exports[`RSC > svelte > Javascript Test > context 1`] = `
-"'>' expected. (31:13)
-  29 | return (
-  30 |
-> 31 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (32:13)
+  30 | return (
+  31 |
+> 32 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  32 |
   33 |
-  34 |"
+  34 |
+  35 |"
 `;
 
 exports[`RSC > svelte > Javascript Test > each 1`] = `
@@ -7960,7 +7965,8 @@ exports[`RSC > svelte > Typescript Test > classDirective 1`] = `
 import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-function MyComponent(props: any = {}) {
+function MyComponent(props: any) {
+  props = { ...props };
   const [focus, setFocus] = useState(() => true);
 
   return (
@@ -7977,14 +7983,14 @@ export default MyComponent;
 `;
 
 exports[`RSC > svelte > Typescript Test > context 1`] = `
-"'>' expected. (31:13)
-  29 | return (
-  30 |
-> 31 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (32:13)
+  30 | return (
+  31 |
+> 32 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  32 |
   33 |
-  34 |"
+  34 |
+  35 |"
 `;
 
 exports[`RSC > svelte > Typescript Test > each 1`] = `

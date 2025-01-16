@@ -31,7 +31,7 @@ describe('React - stateType: useState', () => {
   });
 });
 
-/*describe('React - test', () => {
+describe('React - test', () => {
   runTestsForTarget({
     options: {
       stateType: 'useState',
@@ -41,4 +41,4 @@ describe('React - stateType: useState', () => {
     only: ['defaultProps'],
     logOutput: true,
   });
-});*/
+});

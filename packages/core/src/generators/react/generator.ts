@@ -464,7 +464,8 @@ const _componentToReact = (
     })}
     ${isForwardRef ? `const ${json.name} = forwardRef${forwardRefType}(` : ''}function ${
     json.name
-  }(${componentArgs}${getDefaultProps(json)}) {
+  }(${componentArgs}) {
+  ${getDefaultProps(json)}
     ${componentBody}
   }${isForwardRef ? ')' : ''}
 

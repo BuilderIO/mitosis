@@ -10,5 +10,8 @@ export const getDefaultProps = (json: MitosisComponent) => {
       return `${prop}: ${value}`;
     })
     .join(',');
-  return ` = {${defaultPropsString}}`;
+  if (defaultPropsString) {
+    return `props = {${defaultPropsString}, ...props}`;
+  }
+  return '';
 };

@@ -7,6 +7,13 @@ const test = playwrightTest.extend<{ packageName: PackageName | 'DEFAULT' }>({
 });
 
 test.describe('e2e', () => {
+  test('default props', async ({ page }) => {
+    await page.goto('/default-props/');
+    const text = await page.getByTestId('default-props').allTextContents();
+
+    expect(text.includes('abc')).toBeTruthy();
+    expect(text.includes('xyz')).toBeTruthy();
+  });
   test('todo list add', async ({ page }) => {
     await page.goto('/one-component/');
 

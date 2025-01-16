@@ -555,9 +555,13 @@ exports[`React - stateType: useState > jsx > Javascript Test > ContentSlotJSX 1`
 import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-function ContentSlotJsxCode(
-  props = { content: \\"\\", slotReference: undefined, slotContent: undefined }
-) {
+function ContentSlotJsxCode(props) {
+  props = {
+    ...props,
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -2082,16 +2086,16 @@ exports[`React - stateType: useState > jsx > Javascript Test > defaultProps 1`] 
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function Button(
+function Button(props) {
   props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {
       console.log(\\"hi\\");
     },
-  }
-) {
+  };
   return (
     <div>
       {props.link ? (
@@ -2124,14 +2128,14 @@ exports[`React - stateType: useState > jsx > Javascript Test > defaultPropsOutsi
 "\\"use client\\";
 import * as React from \\"react\\";
 
-function Button(
+function Button(props) {
   props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {},
-  }
-) {
+  };
   return (
     <div>
       {props.link ? (
@@ -4269,13 +4273,13 @@ type Props = {
 };
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
-function ContentSlotJsxCode(
-  props: Props = {
+function ContentSlotJsxCode(props: Props) {
+  props = {
+    ...props,
     content: \\"\\",
     slotReference: undefined,
     slotContent: undefined,
-  }
-) {
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -6034,16 +6038,16 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
-function Button(
-  props: ButtonProps = {
+function Button(props: ButtonProps) {
+  props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {
       console.log(\\"hi\\");
     },
-  }
-) {
+  };
   return (
     <div>
       {props.link ? (
@@ -6084,14 +6088,14 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-function Button(
-  props: ButtonProps = {
+function Button(props: ButtonProps) {
+  props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {},
-  }
-) {
+  };
   return (
     <div>
       {props.link ? (
@@ -8035,7 +8039,8 @@ exports[`React - stateType: useState > svelte > Javascript Test > classDirective
 import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-function MyComponent(props = {}) {
+function MyComponent(props) {
+  props = { ...props };
   const [focus, setFocus] = useState(() => true);
 
   return (
@@ -8052,14 +8057,14 @@ export default MyComponent;
 `;
 
 exports[`React - stateType: useState > svelte > Javascript Test > context 1`] = `
-"'>' expected. (31:13)
-  29 | return (
-  30 |
-> 31 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (32:13)
+  30 | return (
+  31 |
+> 32 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  32 |
   33 |
-  34 |"
+  34 |
+  35 |"
 `;
 
 exports[`React - stateType: useState > svelte > Javascript Test > each 1`] = `
@@ -8433,7 +8438,8 @@ exports[`React - stateType: useState > svelte > Typescript Test > classDirective
 import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-function MyComponent(props: any = {}) {
+function MyComponent(props: any) {
+  props = { ...props };
   const [focus, setFocus] = useState(() => true);
 
   return (
@@ -8450,14 +8456,14 @@ export default MyComponent;
 `;
 
 exports[`React - stateType: useState > svelte > Typescript Test > context 1`] = `
-"'>' expected. (31:13)
-  29 | return (
-  30 |
-> 31 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (32:13)
+  30 | return (
+  31 |
+> 32 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  32 |
   33 |
-  34 |"
+  34 |
+  35 |"
 `;
 
 exports[`React - stateType: useState > svelte > Typescript Test > each 1`] = `
@@ -8722,5 +8728,99 @@ function MyComponent(props: any) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`React - test > jsx > Javascript Test > defaultProps 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+
+function Button(props) {
+  props = {
+    ...props,
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+  };
+  return (
+    <div>
+      {props.link ? (
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      ) : null}
+      {!props.link ? (
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick()}
+        >
+          {props.buttonText}
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+export default Button;
+"
+`;
+
+exports[`React - test > jsx > Typescript Test > defaultProps 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  buttonText?: string; // no default value
+
+  link?: string;
+  openLinkInNewTab?: boolean;
+  onClick?: () => void;
+}
+
+function Button(props: ButtonProps) {
+  props = {
+    ...props,
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+  };
+  return (
+    <div>
+      {props.link ? (
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      ) : null}
+      {!props.link ? (
+        <button
+          type=\\"button\\"
+          {...props.attributes}
+          onClick={(event) => props.onClick()}
+        >
+          {props.buttonText}
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+export default Button;
 "
 `;

@@ -823,9 +823,13 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-function ContentSlotJsxCode(
-  props = { content: \\"\\", slotReference: undefined, slotContent: undefined }
-) {
+function ContentSlotJsxCode(props) {
+  props = {
+    ...props,
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -2838,16 +2842,16 @@ import {
   Linking,
 } from \\"react-native\\";
 
-function Button(
+function Button(props) {
   props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {
       console.log(\\"hi\\");
     },
-  }
-) {
+  };
   return (
     <View>
       {props.link ? (
@@ -2891,14 +2895,14 @@ import {
   Linking,
 } from \\"react-native\\";
 
-function Button(
+function Button(props) {
   props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {},
-  }
-) {
+  };
   return (
     <View>
       {props.link ? (
@@ -6175,13 +6179,13 @@ type Props = {
 };
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
-function ContentSlotJsxCode(
-  props: Props = {
+function ContentSlotJsxCode(props: Props) {
+  props = {
+    ...props,
     content: \\"\\",
     slotReference: undefined,
     slotContent: undefined,
-  }
-) {
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -8428,16 +8432,16 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
-function Button(
-  props: ButtonProps = {
+function Button(props: ButtonProps) {
+  props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {
       console.log(\\"hi\\");
     },
-  }
-) {
+  };
   return (
     <View>
       {props.link ? (
@@ -8489,14 +8493,14 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-function Button(
-  props: ButtonProps = {
+function Button(props: ButtonProps) {
+  props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {},
-  }
-) {
+  };
   return (
     <View>
       {props.link ? (
@@ -11257,7 +11261,8 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-function MyComponent(props = {}) {
+function MyComponent(props) {
+  props = { ...props };
   const [focus, setFocus] = useState(() => true);
 
   return <TextInput />;
@@ -11268,14 +11273,14 @@ export default MyComponent;
 `;
 
 exports[`React Native > svelte > Javascript Test > context 1`] = `
-"'>' expected. (32:13)
-  30 | return (
-  31 |
-> 32 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
+"'>' expected. (33:13)
+  31 | return (
+  32 |
+> 33 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
      |             ^
-  33 |
   34 |
-  35 |"
+  35 |
+  36 |"
 `;
 
 exports[`React Native > svelte > Javascript Test > each 1`] = `
@@ -11848,7 +11853,8 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-function MyComponent(props: any = {}) {
+function MyComponent(props: any) {
+  props = { ...props };
   const [focus, setFocus] = useState(() => true);
 
   return <TextInput />;
@@ -11859,14 +11865,14 @@ export default MyComponent;
 `;
 
 exports[`React Native > svelte > Typescript Test > context 1`] = `
-"'>' expected. (32:13)
-  30 | return (
-  31 |
-> 32 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
+"'>' expected. (33:13)
+  31 | return (
+  32 |
+> 33 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
      |             ^
-  33 |
   34 |
-  35 |"
+  35 |
+  36 |"
 `;
 
 exports[`React Native > svelte > Typescript Test > each 1`] = `

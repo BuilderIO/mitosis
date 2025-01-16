@@ -570,9 +570,13 @@ import * as React from \\"react\\";
 import { useState } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 
-function ContentSlotJsxCode(
-  props = { content: \\"\\", slotReference: undefined, slotContent: undefined }
-) {
+function ContentSlotJsxCode(props) {
+  props = {
+    ...props,
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -2104,16 +2108,16 @@ exports[`Taro > jsx > Javascript Test > defaultProps 1`] = `
 "import * as React from \\"react\\";
 import { View, Text, Button } from \\"@tarojs/components\\";
 
-function Button(
+function Button(props) {
   props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {
       console.log(\\"hi\\");
     },
-  }
-) {
+  };
   return (
     <View>
       {props.link ? (
@@ -2146,14 +2150,14 @@ exports[`Taro > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 "import * as React from \\"react\\";
 import { View, Text, Button } from \\"@tarojs/components\\";
 
-function Button(
+function Button(props) {
   props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {},
-  }
-) {
+  };
   return (
     <View>
       {props.link ? (
@@ -4365,13 +4369,13 @@ type Props = {
 import type { JSX } from \\"../../../../jsx-runtime\\";
 import { View, Text } from \\"@tarojs/components\\";
 
-function ContentSlotJsxCode(
-  props: Props = {
+function ContentSlotJsxCode(props: Props) {
+  props = {
+    ...props,
     content: \\"\\",
     slotReference: undefined,
     slotContent: undefined,
-  }
-) {
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -6148,16 +6152,16 @@ export interface ButtonProps {
 
 import { View, Text, Button } from \\"@tarojs/components\\";
 
-function Button(
-  props: ButtonProps = {
+function Button(props: ButtonProps) {
+  props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {
       console.log(\\"hi\\");
     },
-  }
-) {
+  };
   return (
     <View>
       {props.link ? (
@@ -6199,14 +6203,14 @@ export interface ButtonProps {
 
 import { View, Text, Button } from \\"@tarojs/components\\";
 
-function Button(
-  props: ButtonProps = {
+function Button(props: ButtonProps) {
+  props = {
+    ...props,
     text: \\"default text\\",
     link: \\"https://builder.io/\\",
     openLinkInNewTab: false,
     onClick: () => {},
-  }
-) {
+  };
   return (
     <View>
       {props.link ? (
@@ -8019,7 +8023,8 @@ import * as React from \\"react\\";
 import { useState } from \\"react\\";
 import { Input } from \\"@tarojs/components\\";
 
-function MyComponent(props = {}) {
+function MyComponent(props) {
+  props = { ...props };
   const [focus, setFocus] = useState(() => true);
 
   return <Input />;
@@ -8030,14 +8035,14 @@ export default MyComponent;
 `;
 
 exports[`Taro > svelte > Javascript Test > context 1`] = `
-"'>' expected. (33:13)
-  31 | return (
-  32 |
-> 33 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
+"'>' expected. (34:13)
+  32 | return (
+  33 |
+> 34 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
      |             ^
-  34 |
   35 |
-  36 |"
+  36 |
+  37 |"
 `;
 
 exports[`Taro > svelte > Javascript Test > each 1`] = `
@@ -8425,7 +8430,8 @@ import * as React from \\"react\\";
 import { useState } from \\"react\\";
 import { Input } from \\"@tarojs/components\\";
 
-function MyComponent(props: any = {}) {
+function MyComponent(props: any) {
+  props = { ...props };
   const [focus, setFocus] = useState(() => true);
 
   return <Input />;
@@ -8436,14 +8442,14 @@ export default MyComponent;
 `;
 
 exports[`Taro > svelte > Typescript Test > context 1`] = `
-"'>' expected. (33:13)
-  31 | return (
-  32 |
-> 33 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
+"'>' expected. (34:13)
+  32 | return (
+  33 |
+> 34 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
      |             ^
-  34 |
   35 |
-  36 |"
+  36 |
+  37 |"
 `;
 
 exports[`Taro > svelte > Typescript Test > each 1`] = `
