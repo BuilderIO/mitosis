@@ -1,10 +1,9 @@
 import { useDefaultProps, useStore } from '@builder.io/mitosis';
-import { DefaultPropsState, DefaultPropsType } from './types';
 
-useDefaultProps<DefaultPropsType>({ foo: 'abc', bar: 'foo' });
+useDefaultProps({ foo: 'abc', bar: 'foo' });
 
-export default function DefaultProps(props: DefaultPropsType) {
-  const state = useStore<DefaultPropsState>({
+export default function DefaultProps(props: any) {
+  const state = useStore({
     getProps: () => {
       return JSON.stringify({ foo: props.foo, bar: props.bar });
     },

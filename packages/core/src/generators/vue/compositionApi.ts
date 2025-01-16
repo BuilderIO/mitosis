@@ -20,7 +20,7 @@ const getCompositionPropDefinition = ({
   let str = 'const props = ';
 
   if (component.defaultProps) {
-    const generic = isTs ? `<${component.propsTypeRef}>` : '';
+    const generic = isTs && component.propsTypeRef !== 'any' ? `<${component.propsTypeRef}>` : '';
     const defalutPropsString = props
       .map((prop) => {
         const value = component.defaultProps!.hasOwnProperty(prop)
