@@ -14,7 +14,7 @@ import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { fastClone } from '../../helpers/fast-clone';
 import { isExpression, parseCode } from '../../helpers/parsers';
 import { Dictionary } from '../../helpers/typescript';
-import { Binding, MitosisNode } from '../../types/mitosis-node';
+import { Binding, BuilderLocalizedValue, MitosisNode } from '../../types/mitosis-node';
 import { parseJsx } from '../jsx';
 import { parseStateObjectToMitosisState } from '../jsx/state';
 import { mapBuilderContentStateToMitosisState } from './helpers';
@@ -26,13 +26,6 @@ const styleOmitList: (keyof CSSStyleDeclaration | 'backgroundRepeatX' | 'backgro
   'backgroundPositionX',
   'backgroundPositionY',
 ];
-
-interface LocalizedValue {
-  '@type': '@builder.io/core:LocalizedValue';
-  Default: string;
-}
-
-export const localizedValuePrefix = 'loc-';
 
 const getCssFromBlock = (block: BuilderElement) => {
   const blockSizes: Size[] = Object.keys(block.responsiveStyles || {}).filter((size) =>
@@ -481,6 +474,7 @@ const componentMappers: {
     let css = getCssFromBlock(block);
     const styleString = getStyleStringFromBlock(block, options);
     const actionBindings = getActionBindingsFromBlock(block, options);
+    const localizedValues: MitosisNode['localizedValues'] = {};
 
     const blockBindings: MitosisNode['bindings'] = {
       ...mapBuilderBindingsToMitosisBindingWithCode(block.bindings),
@@ -514,8 +508,8 @@ const componentMappers: {
         properties[key] !== null &&
         (properties[key] as any)['@type'] === '@builder.io/core:LocalizedValue'
       ) {
-        const localizedValue = properties[key] as LocalizedValue;
-        properties[`$${localizedValuePrefix}${key}`] = json5.stringify(localizedValue);
+        const localizedValue = properties[key] as BuilderLocalizedValue;
+        localizedValues[`properties.${key}`] = localizedValue;
         properties[key] = localizedValue.Default;
       }
     }
@@ -539,7 +533,7 @@ const componentMappers: {
       text !== null &&
       text['@type'] === '@builder.io/core:LocalizedValue'
     ) {
-      properties[`$${localizedValuePrefix}options-text`] = json5.stringify(text);
+      localizedValues['component.options.text'] = block.component!.options?.text;
       text = text.Default;
     }
 
@@ -559,6 +553,7 @@ const componentMappers: {
         bindings,
         properties,
         meta: getMetaFromBlock(block, options),
+        ...(Object.keys(localizedValues).length && { localizedValues }),
         children: [
           createMitosisNode({
             bindings: innerBindings,
@@ -595,6 +590,7 @@ const componentMappers: {
         name: finalTagname,
         bindings,
         properties: finalProperties,
+        ...(Object.keys(localizedValues).length && { localizedValues }),
         meta: getMetaFromBlock(block, options),
         children: [
           createMitosisNode({
@@ -617,6 +613,7 @@ const componentMappers: {
         ...innerBindings,
       },
       meta: getMetaFromBlock(block, options),
+      ...(Object.keys(localizedValues).length && { localizedValues }),
     });
   },
 };
@@ -635,6 +632,7 @@ export const builderElementToMitosisNode = (
   _internalOptions: InternalOptions = {},
 ): MitosisNode => {
   const { includeSpecialBindings = true } = options;
+  const localizedValues: MitosisNode['localizedValues'] = {};
 
   if (block.component?.name === 'Core:Fragment') {
     block.component.name = 'Fragment';
@@ -765,8 +763,8 @@ export const builderElementToMitosisNode = (
       properties[key] !== null &&
       (properties[key] as any)['@type'] === '@builder.io/core:LocalizedValue'
     ) {
-      const localizedValue = properties[key] as LocalizedValue;
-      properties[`$${localizedValuePrefix}${key}`] = json5.stringify(localizedValue);
+      const localizedValue = properties[key] as BuilderLocalizedValue;
+      localizedValues[`properties.${key}`] = localizedValue;
       properties[key] = localizedValue.Default;
     }
   }
@@ -779,7 +777,7 @@ export const builderElementToMitosisNode = (
   if (linkUrl) {
     if (typeof linkUrl === 'object' && linkUrl['@type'] === '@builder.io/core:LocalizedValue') {
       properties.href = linkUrl.Default;
-      properties[`$${localizedValuePrefix}linkUrl`] = json5.stringify(linkUrl);
+      localizedValues['linkUrl'] = linkUrl;
     } else {
       properties.href = linkUrl;
     }
@@ -808,7 +806,7 @@ export const builderElementToMitosisNode = (
         value['@type'] === '@builder.io/core:LocalizedValue'
       ) {
         properties[key] = value.Default;
-        properties[`$${localizedValuePrefix}options-${key}`] = json5.stringify(value);
+        localizedValues[`component.options.${key}`] = value;
       } else if (valueIsArrayOfBuilderElements) {
         const childrenElements = value
           .filter((item) => {
@@ -866,6 +864,7 @@ export const builderElementToMitosisNode = (
       ...slots,
     },
     meta: getMetaFromBlock(block, options),
+    ...(Object.keys(localizedValues).length && { localizedValues }),
   });
 
   // Has single text node child
