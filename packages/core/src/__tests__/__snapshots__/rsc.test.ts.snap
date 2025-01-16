@@ -1930,6 +1930,50 @@ export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
+exports[`RSC > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+
+function BasicRefAttributePassingComponent(props) {
+  const buttonRef = useRef(null);
+
+  return <button ref={buttonRef}>Attribute Passing</button>;
+}
+
+export default BasicRefAttributePassingComponent;
+"
+`;
+
+exports[`RSC > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+
+function BasicRefAttributePassingCustomRefComponent(props) {
+  const buttonRef = useRef(null);
+
+  return (
+    <div>
+      <button ref={buttonRef}>Attribute Passing</button>
+    </div>
+  );
+}
+
+export default BasicRefAttributePassingCustomRefComponent;
+"
+`;
+
 exports[`RSC > jsx > Javascript Test > class + ClassName + css 1`] = `
 "/**
           useMetadata:
@@ -5841,6 +5885,50 @@ export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
+exports[`RSC > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+
+function BasicRefAttributePassingComponent(props: any) {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  return <button ref={buttonRef}>Attribute Passing</button>;
+}
+
+export default BasicRefAttributePassingComponent;
+"
+`;
+
+exports[`RSC > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+
+function BasicRefAttributePassingCustomRefComponent(props: any) {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  return (
+    <div>
+      <button ref={buttonRef}>Attribute Passing</button>
+    </div>
+  );
+}
+
+export default BasicRefAttributePassingCustomRefComponent;
+"
+`;
+
 exports[`RSC > jsx > Typescript Test > class + ClassName + css 1`] = `
 "/**
           useMetadata:
@@ -7259,14 +7347,14 @@ type Props = {
 function MyBasicComponent(props: Props) {
   useEffect(() => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
-  }, [props.id, props.foo.bar.baz]);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
 
   return (
     <>
       <div className=\\"test div\\">
         {props.id}
-        {props.foo.bar.baz}
+        {props.foo.value.bar.baz}
       </div>
       <style jsx>{\`
         .div {

@@ -1814,6 +1814,35 @@ watch(
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"/** useMetadata: {\\"attributePassing\\":{\\"enabled\\":true}} */
+
+<template>
+  <button ref=\\"buttonRef\\">Attribute Passing</button>
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const buttonRef = ref(null);
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"/** useMetadata: {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+*/
+
+<template>
+  <div><button ref=\\"buttonRef\\">Attribute Passing</button></div>
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const buttonRef = ref(null);
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > class + ClassName + css 1`] = `
 "<template>
   <div>
@@ -5436,6 +5465,35 @@ watch(
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"/** useMetadata: {\\"attributePassing\\":{\\"enabled\\":true}} */
+
+<template>
+  <button ref=\\"buttonRef\\">Attribute Passing</button>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+const buttonRef = ref<HTMLButtonElement | null>(null);
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"/** useMetadata: {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+*/
+
+<template>
+  <div><button ref=\\"buttonRef\\">Attribute Passing</button></div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+const buttonRef = ref<HTMLButtonElement | null>(null);
+</script>"
+`;
+
 exports[`Vue > jsx > Typescript Test > class + ClassName + css 1`] = `
 "<template>
   <div>
@@ -6857,7 +6915,7 @@ const props = defineProps<Props>();
 
 exports[`Vue > jsx > Typescript Test > signalsOnUpdate 1`] = `
 "<template>
-  <div class=\\"test div\\">{{ id }}{{ foo.bar.baz }}</div>
+  <div class=\\"test div\\">{{ id }}{{ foo.value.bar.baz }}</div>
 </template>
 
 <script setup lang=\\"ts\\">
@@ -6875,10 +6933,10 @@ type Props = {
 const props = defineProps<Props>();
 
 watch(
-  () => [props.id, props.foo.bar.baz],
+  () => [props.id, props.foo.value.bar.baz],
   () => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
   },
   { immediate: true }
 );

@@ -3727,6 +3727,173 @@ export class MyBasicOnUpdateReturnComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"basic-ref-attribute-passing-component\\",
+  template: \`
+    <button #buttonRef #_root>Attribute Passing</button>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class BasicRefAttributePassingComponent {
+  @ViewChild(\\"buttonRef\\") buttonRef;
+  @ViewChild(\\"_root\\") _root;
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(element, customElementSelector) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root?.nativeElement;
+    this.enableAttributePassing(
+      element,
+      \\"basic-ref-attribute-passing-component\\"
+    );
+  }
+}
+
+@NgModule({
+  declarations: [BasicRefAttributePassingComponent],
+  imports: [CommonModule],
+  exports: [BasicRefAttributePassingComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class BasicRefAttributePassingComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"basic-ref-attribute-passing-custom-ref-component\\",
+  template: \`
+    <div><button #buttonRef>Attribute Passing</button></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class BasicRefAttributePassingCustomRefComponent {
+  @ViewChild(\\"buttonRef\\") buttonRef;
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(element, customElementSelector) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this.buttonRef?.nativeElement;
+    this.enableAttributePassing(
+      element,
+      \\"basic-ref-attribute-passing-custom-ref-component\\"
+    );
+  }
+}
+
+@NgModule({
+  declarations: [BasicRefAttributePassingCustomRefComponent],
+  imports: [CommonModule],
+  exports: [BasicRefAttributePassingCustomRefComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class BasicRefAttributePassingCustomRefComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > class + ClassName + css 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -6990,6 +7157,9 @@ export default class StringLiteralStore {
 
 
    foo-bar= 123
+
+
+
 
 
 
@@ -11665,6 +11835,179 @@ export class MyBasicOnUpdateReturnComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"basic-ref-attribute-passing-component\\",
+  template: \`
+    <button #buttonRef #_root>Attribute Passing</button>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class BasicRefAttributePassingComponent {
+  @ViewChild(\\"buttonRef\\") buttonRef!: ElementRef;
+  @ViewChild(\\"_root\\") _root!: ElementRef;
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root?.nativeElement;
+    this.enableAttributePassing(
+      element,
+      \\"basic-ref-attribute-passing-component\\"
+    );
+  }
+}
+
+@NgModule({
+  declarations: [BasicRefAttributePassingComponent],
+  imports: [CommonModule],
+  exports: [BasicRefAttributePassingComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class BasicRefAttributePassingComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"basic-ref-attribute-passing-custom-ref-component\\",
+  template: \`
+    <div><button #buttonRef>Attribute Passing</button></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class BasicRefAttributePassingCustomRefComponent {
+  @ViewChild(\\"buttonRef\\") buttonRef!: ElementRef;
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this.buttonRef?.nativeElement;
+    this.enableAttributePassing(
+      element,
+      \\"basic-ref-attribute-passing-custom-ref-component\\"
+    );
+  }
+}
+
+@NgModule({
+  declarations: [BasicRefAttributePassingCustomRefComponent],
+  imports: [CommonModule],
+  exports: [BasicRefAttributePassingCustomRefComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class BasicRefAttributePassingCustomRefComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > class + ClassName + css 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -14635,7 +14978,7 @@ type Props = {
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
-    <div class=\\"test div\\">{{id}} {{foo.bar.baz}}</div>
+    <div class=\\"test div\\">{{id}} {{foo.value.bar.baz}}</div>
   \`,
   styles: [
     \`
@@ -14655,7 +14998,7 @@ export default class MyBasicComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (typeof window !== \\"undefined\\") {
       console.log(\\"props.id changed\\", this.id);
-      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
     }
   }
 }
@@ -15105,6 +15448,9 @@ export default class StringLiteralStore {
 
 
    foo-bar= 123
+
+
+
 
 
 

@@ -2488,6 +2488,80 @@ export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useRef } from \\"react\\";
+
+function BasicRefAttributePassingComponent(props) {
+  const buttonRef = useRef(null);
+
+  return (
+    <Button ref={buttonRef}>
+      <Text>Attribute Passing</Text>
+    </Button>
+  );
+}
+
+export default BasicRefAttributePassingComponent;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useRef } from \\"react\\";
+
+function BasicRefAttributePassingCustomRefComponent(props) {
+  const buttonRef = useRef(null);
+
+  return (
+    <View>
+      <Button ref={buttonRef}>
+        <Text>Attribute Passing</Text>
+      </Button>
+    </View>
+  );
+}
+
+export default BasicRefAttributePassingCustomRefComponent;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -8053,6 +8127,80 @@ export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
+exports[`React Native > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useRef } from \\"react\\";
+
+function BasicRefAttributePassingComponent(props: any) {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  return (
+    <Button ref={buttonRef}>
+      <Text>Attribute Passing</Text>
+    </Button>
+  );
+}
+
+export default BasicRefAttributePassingComponent;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { useRef } from \\"react\\";
+
+function BasicRefAttributePassingCustomRefComponent(props: any) {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  return (
+    <View>
+      <Button ref={buttonRef}>
+        <Text>Attribute Passing</Text>
+      </Button>
+    </View>
+  );
+}
+
+export default BasicRefAttributePassingCustomRefComponent;
+"
+`;
+
 exports[`React Native > jsx > Typescript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -10487,13 +10635,13 @@ type Props = {
 function MyBasicComponent(props: Props) {
   useEffect(() => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
-  }, [props.id, props.foo.bar.baz]);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
 
   return (
     <View style={styles.view1}>
       <Text>{props.id}</Text>
-      <Text>{props.foo.bar.baz}</Text>
+      <Text>{props.foo.value.bar.baz}</Text>
     </View>
   );
 }

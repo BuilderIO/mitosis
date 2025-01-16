@@ -35,11 +35,15 @@ const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw.tsx');
 const basicChildComponent = getRawFile('./data/basic-child-component.raw.tsx');
 const basicFor = getRawFile('./data/for/basic-for.raw.tsx');
 const basicForNoTagReference = getRawFile('./data/for/basic-for-no-tag-reference.raw.tsx');
-const basicRef = getRawFile('./data/basic-ref.raw.tsx');
-const basicForwardRef = getRawFile('./data/basic-forwardRef.raw.tsx');
-const basicForwardRefMetadata = getRawFile('./data/basic-forwardRef-metadata.raw.tsx');
-const basicRefPrevious = getRawFile('./data/basic-ref-usePrevious.raw.tsx');
-const basicRefAssignment = getRawFile('./data/basic-ref-assignment.raw.tsx');
+const basicRef = getRawFile('./data/ref/basic-ref.raw.tsx');
+const basicRefAttributePassing = getRawFile('./data/ref/basic-ref-attribute-passing.raw.tsx');
+const basicRefAttributePassingCustomRef = getRawFile(
+  './data/ref/basic-ref-attribute-passing-custom-ref.raw.tsx',
+);
+const basicForwardRef = getRawFile('./data/ref/basic-forwardRef.raw.tsx');
+const basicForwardRefMetadata = getRawFile('./data/ref/basic-forwardRef-metadata.raw.tsx');
+const basicRefPrevious = getRawFile('./data/ref/basic-ref-usePrevious.raw.tsx');
+const basicRefAssignment = getRawFile('./data/ref/basic-ref-assignment.raw.tsx');
 const eventInputAndChange = getRawFile('./data/events/event-input-and-change.raw.tsx');
 const propsDestructure = getRawFile('./data/basic-props-destructure.raw.tsx');
 const nestedStyles = getRawFile('./data/nested-styles.raw.tsx');
@@ -184,6 +188,8 @@ const BASIC_TESTS: Tests = {
   BasicAttribute: basicAttribute,
   BasicBooleanAttribute: basicBooleanAttribute,
   BasicRef: basicRef,
+  basicRefAttributePassing,
+  basicRefAttributePassingCustomRef,
   BasicRefPrevious: basicRefPrevious,
   BasicRefAssignment: basicRefAssignment,
   BasicChildComponent: basicChildComponent,

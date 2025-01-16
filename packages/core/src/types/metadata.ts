@@ -15,7 +15,7 @@ import { SvelteMetadata } from '@/generators/svelte/types';
 import { SwiftMetadata } from '@/generators/swift/types';
 import { TaroMetadata } from '@/generators/taro/types';
 import { TemplateMetadata } from '@/generators/template/types';
-import { ReactMetadata, Target, VueMetadata } from '..';
+import { AttributePassingType, ReactMetadata, Target, VueMetadata } from '..';
 
 type Targets = typeof import('../targets').targets;
 type TargetOptions = {
@@ -32,6 +32,9 @@ export type ComponentMetadata = {
   forwardRef?: string;
   /** Enables shadowDom for web-components */
   isAttachedToShadowDom?: boolean;
+  /** Enables/disables attribute passing for frameworks with custom elements like angular and stencil */
+  attributePassing?: AttributePassingType;
+
   alpine?: AlpineMetadata;
   angular?: AngularMetadata;
   builder?: BuilderMetadata;

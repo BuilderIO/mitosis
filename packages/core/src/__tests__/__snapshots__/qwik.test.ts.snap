@@ -3748,6 +3748,50 @@ export const STYLES = \`
 "
 `;
 
+exports[`qwik > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+          
+          import { Fragment, component$, h, useSignal } from \\"@builder.io/qwik\\";
+
+export const BasicRefAttributePassingComponent = component$((props) => {
+  const buttonRef = useSignal();
+
+  return <button ref={buttonRef}>Attribute Passing</button>;
+});
+
+export default BasicRefAttributePassingComponent;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+          
+          import { Fragment, component$, h, useSignal } from \\"@builder.io/qwik\\";
+
+export const BasicRefAttributePassingCustomRefComponent = component$(
+  (props) => {
+    const buttonRef = useSignal();
+
+    return (
+      <div>
+        <button ref={buttonRef}>Attribute Passing</button>
+      </div>
+    );
+  }
+);
+
+export default BasicRefAttributePassingCustomRefComponent;
+"
+`;
+
 exports[`qwik > jsx > Javascript Test > class + ClassName + css 1`] = `
 "import MyComp from \\"./my-component.jsx\\";
 
@@ -7720,6 +7764,50 @@ export const STYLES = \`
 "
 `;
 
+exports[`qwik > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+          
+          import { Fragment, component$, h, useSignal } from \\"@builder.io/qwik\\";
+
+export const BasicRefAttributePassingComponent = component$((props: any) => {
+  const buttonRef = useSignal<Element>();
+
+  return <button ref={buttonRef}>Attribute Passing</button>;
+});
+
+export default BasicRefAttributePassingComponent;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+          
+          import { Fragment, component$, h, useSignal } from \\"@builder.io/qwik\\";
+
+export const BasicRefAttributePassingCustomRefComponent = component$(
+  (props: any) => {
+    const buttonRef = useSignal<Element>();
+
+    return (
+      <div>
+        <button ref={buttonRef}>Attribute Passing</button>
+      </div>
+    );
+  }
+);
+
+export default BasicRefAttributePassingCustomRefComponent;
+"
+`;
+
 exports[`qwik > jsx > Typescript Test > class + ClassName + css 1`] = `
 "import MyComp from \\"./my-component.jsx\\";
 
@@ -9172,15 +9260,15 @@ export const MyBasicComponent = component$((props: Props) => {
 
   useTask$(({ track }) => {
     track(() => props.id);
-    track(() => props.foo.bar.baz);
+    track(() => props.foo.value.bar.baz);
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
   });
 
   return (
     <div class=\\"test div-MyBasicComponent\\">
       {props.id}
-      {props.foo.bar.baz}
+      {props.foo.value.bar.baz}
     </div>
   );
 });

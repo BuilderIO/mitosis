@@ -1863,6 +1863,52 @@ export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
+exports[`Taro > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
+
+function BasicRefAttributePassingComponent(props) {
+  const buttonRef = useRef(null);
+
+  return <Button ref={buttonRef}>Attribute Passing</Button>;
+}
+
+export default BasicRefAttributePassingComponent;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+import { View, Button, Text } from \\"@tarojs/components\\";
+
+function BasicRefAttributePassingCustomRefComponent(props) {
+  const buttonRef = useRef(null);
+
+  return (
+    <View>
+      <Button ref={buttonRef}>Attribute Passing</Button>
+    </View>
+  );
+}
+
+export default BasicRefAttributePassingCustomRefComponent;
+"
+`;
+
 exports[`Taro > jsx > Javascript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
 import MyComp from \\"./my-component\\";
@@ -5881,6 +5927,52 @@ export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
+exports[`Taro > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
+
+function BasicRefAttributePassingComponent(props: any) {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  return <Button ref={buttonRef}>Attribute Passing</Button>;
+}
+
+export default BasicRefAttributePassingComponent;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+import { View, Button, Text } from \\"@tarojs/components\\";
+
+function BasicRefAttributePassingCustomRefComponent(props: any) {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  return (
+    <View>
+      <Button ref={buttonRef}>Attribute Passing</Button>
+    </View>
+  );
+}
+
+export default BasicRefAttributePassingCustomRefComponent;
+"
+`;
+
 exports[`Taro > jsx > Typescript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
 import MyComp from \\"./my-component\\";
@@ -7524,14 +7616,14 @@ import { View, Text } from \\"@tarojs/components\\";
 function MyBasicComponent(props: Props) {
   useEffect(() => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
-  }, [props.id, props.foo.bar.baz]);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
 
   return (
     <>
       <View className=\\"view\\">
         {props.id}
-        {props.foo.bar.baz}
+        {props.foo.value.bar.baz}
       </View>
       <style jsx>{\`
         .view {

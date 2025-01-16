@@ -10,6 +10,8 @@ export class MyBasicForShowComponent {
   @State() name = \\"PatrickJS\\";
   @State() names = [\\"Steve\\", \\"PatrickJS\\"];
 
+  componentDidLoad() {}
+
   render() {
     return (
       <main>
@@ -95,6 +97,8 @@ export class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
+  componentDidLoad() {}
+
   componentDidUpdate() {
     console.log(\\"Received an update\\");
   }
@@ -106,12 +110,19 @@ export class MyBasicRefComponent {
           <Fragment>
             <input
               class=\\"input\\"
-              ref={(el) => (this.inputRef = el)}
+              ref={(el: any) => {
+                this.inputRef = el;
+              }}
               value={this.name}
               onBlur={(event) => this.onBlur()}
               onChange={(event) => (this.name = event.target.value)}
             />
-            <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
+            <label
+              for=\\"cars\\"
+              ref={(el: any) => {
+                this.inputNoArgRef = el;
+              }}
+            >
               Choose a car:
             </label>
             <select name=\\"cars\\" id=\\"cars\\">
@@ -155,6 +166,8 @@ export class MyBasicComponent {
     return \\"bar\\";
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div class=\\"test div\\">
@@ -179,6 +192,8 @@ exports[`Stencil > jsx > Javascript Test > Basic 2`] = `
 export class MyBasicForShowComponent {
   @State() name = \\"PatrickJS\\";
   @State() names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -327,6 +342,8 @@ exports[`Stencil > jsx > Javascript Test > BasicAttribute 1`] = `
   tag: \\"my-component\\",
 })
 export class MyComponent {
+  componentDidLoad() {}
+
   render() {
     return <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />;
   }
@@ -345,6 +362,8 @@ import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
 export class MyBooleanAttribute {
   @Prop() children: any;
   @Prop() type: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -383,6 +402,8 @@ import { Component, h, Fragment, State } from \\"@stencil/core\\";
 export class MyBasicChildComponent {
   @State() name = \\"Steve\\";
   @State() dev = \\"PatrickJS\\";
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -464,6 +485,8 @@ export class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -471,12 +494,19 @@ export class MyBasicRefComponent {
           <Fragment>
             <input
               class=\\"input\\"
-              ref={(el) => (this.inputRef = el)}
+              ref={(el: any) => {
+                this.inputRef = el;
+              }}
               value={this.name}
               onBlur={(event) => this.onBlur()}
               onChange={(event) => (this.name = event.target.value)}
             />
-            <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
+            <label
+              for=\\"cars\\"
+              ref={(el: any) => {
+                this.inputNoArgRef = el;
+              }}
+            >
               Choose a car:
             </label>
             <select name=\\"cars\\" id=\\"cars\\">
@@ -509,6 +539,8 @@ export class MyBasicRefAssignmentComponent {
     console.log(\\"current value\\", this.holdValueRef);
     this.holdValueRef = this.holdValueRef + \\"JS\\";
   };
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -547,6 +579,8 @@ export class MyPreviousComponent {
 
   @State() count = 0;
 
+  componentDidLoad() {}
+
   componentDidUpdate() {
     this.prevCount = this.count;
   }
@@ -578,6 +612,8 @@ export class Button {
   @Prop() attributes: any;
   @Prop() openLinkInNewTab: any;
   @Prop() text: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -652,6 +688,8 @@ export class Column {
     return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div class=\\"builder-columns div\\">
@@ -676,6 +714,8 @@ exports[`Stencil > jsx > Javascript Test > ContentSlotHtml 1`] = `
 })
 export class ContentSlotCode {
   @Prop() slotTesting: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -715,6 +755,8 @@ export class ContentSlotJsxCode {
   show() {
     this.slotContent ? 1 : \\"\\";
   }
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -810,7 +852,9 @@ export class CustomCode {
         class={
           \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\")
         }
-        ref={(el) => (this.elem = el)}
+        ref={(el: any) => {
+          this.elem = el;
+        }}
         innerHTML={this.code}
       ></div>
     );
@@ -884,7 +928,9 @@ export class CustomCode {
         class={
           \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\")
         }
-        ref={(el) => (this.elem = el)}
+        ref={(el: any) => {
+          this.elem = el;
+        }}
         innerHTML={this.code}
       ></div>
     );
@@ -1156,11 +1202,15 @@ export class FormComponent {
     }
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <form
         validate={this.validate}
-        ref={(el) => (this.formRef = el)}
+        ref={(el: any) => {
+          this.formRef = el;
+        }}
         action={!this.sendWithJs && this.action}
         method={this.method}
         name={this.name}
@@ -1280,7 +1330,11 @@ export class Image {
   render() {
     return (
       <div>
-        <picture ref={(el) => (this.pictureRef = el)}>
+        <picture
+          ref={(el: any) => {
+            this.pictureRef = el;
+          }}
+        >
           {!this.useLazyLoading() || this.load ? (
             <img
               class={
@@ -1316,6 +1370,8 @@ export class ImgStateComponent {
   @State() canShow = true;
   @State() images = [\\"http://example.com/qwik.png\\"];
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -1345,6 +1401,8 @@ export class ImgComponent {
   @Prop() attributes: any;
   @Prop() imgSrc: any;
   @Prop() altText: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -1382,6 +1440,8 @@ export class FormInputComponent {
   @Prop() required: any;
   @Event() onChange: any;
 
+  componentDidLoad() {}
+
   render() {
     return (
       <input
@@ -1418,6 +1478,8 @@ export class Stepper {
     console.log(value);
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <form-input-component
@@ -1441,6 +1503,8 @@ export class NestedStore {
   @State() _id = \\"abc\\";
   @State() _messageId = this._id + \\"-message\\";
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div id={this._id}>
@@ -1462,6 +1526,8 @@ exports[`Stencil > jsx > Javascript Test > RawText 1`] = `
 export class RawText {
   @Prop() attributes: any;
   @Prop() text: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -1485,6 +1551,8 @@ export class SectionComponent {
   @Prop() attributes: any;
   @Prop() maxWidth: any;
   @Prop() children: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -1517,6 +1585,8 @@ export class SectionStateComponent {
   @Prop() children: any;
   @State() max = 42;
   @State() items = [42];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -1555,6 +1625,8 @@ export class SelectComponent {
   @Prop() name: any;
   @Prop() options: any;
 
+  componentDidLoad() {}
+
   render() {
     return (
       <select
@@ -1587,6 +1659,8 @@ exports[`Stencil > jsx > Javascript Test > SlotDefault 1`] = `
   tag: \\"slot-code\\",
 })
 export class SlotCode {
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -1609,6 +1683,8 @@ import { Component, h, Fragment } from \\"@stencil/core\\";
   tag: \\"slot-code\\",
 })
 export class SlotCode {
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -1631,6 +1707,8 @@ import { Component, h, Fragment } from \\"@stencil/core\\";
   tag: \\"slot-code\\",
 })
 export class SlotCode {
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -1649,6 +1727,8 @@ exports[`Stencil > jsx > Javascript Test > SlotNamed 1`] = `
   tag: \\"slot-code\\",
 })
 export class SlotCode {
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -1779,6 +1859,8 @@ export class StringLiteralStore {
 
   bar() {}
 
+  componentDidLoad() {}
+
   render() {
     return <Fragment>{this.foo}</Fragment>;
   }
@@ -1798,6 +1880,8 @@ export class MyComponent {
   foo(errors) {
     return errors;
   }
+
+  componentDidLoad() {}
 
   render() {
     return <Fragment>{this.foo(this.errors)}</Fragment>;
@@ -1819,6 +1903,8 @@ export class MyComponent {
     return this.foo;
   }
 
+  componentDidLoad() {}
+
   render() {
     return <Fragment>{this.bar()}</Fragment>;
   }
@@ -1835,6 +1921,8 @@ exports[`Stencil > jsx > Javascript Test > Submit 1`] = `
 export class SubmitButton {
   @Prop() attributes: any;
   @Prop() text: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -1859,6 +1947,8 @@ export class Text {
   @Prop() text: any;
   @Prop() content: any;
   @State() name = \\"Decadef20\\";
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -1892,6 +1982,8 @@ export class Textarea {
   @Prop() name: any;
   @Prop() value: any;
   @Prop() defaultValue: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -1927,6 +2019,8 @@ export class UseValueAndFnFromStore {
     }
   }
 
+  componentDidLoad() {}
+
   componentDidUpdate() {
     if (this._do) {
       this._do(this._id);
@@ -1956,6 +2050,8 @@ export class Video {
   @Prop() muted: any;
   @Prop() controls: any;
   @Prop() loop: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -2001,6 +2097,8 @@ export class MyComponent {
     this.name = value;
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -2021,6 +2119,8 @@ exports[`Stencil > jsx > Javascript Test > basicForFragment 1`] = `
 })
 export class BasicForFragment {
   @State() id = \\"xyz\\";
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -2065,6 +2165,8 @@ export class MyBasicForNoTagRefComponent {
     return \\"span\\";
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <this.TagNameGetter>
@@ -2099,12 +2201,16 @@ export class MyBasicForwardRefComponent {
   @Prop() inputRef: any;
   @State() name = \\"PatrickJS\\";
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
         <input
           class=\\"input\\"
-          ref={(el) => (this.inputRef = el)}
+          ref={(el: any) => {
+            this.inputRef = el;
+          }}
           value={this.name}
           onChange={(event) => (this.name = event.target.value)}
         />
@@ -2136,12 +2242,16 @@ export class MyBasicForwardRefComponent {
   @Prop() inputRef: any;
   @State() name = \\"PatrickJS\\";
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
         <input
           class=\\"input\\"
-          ref={(el) => (this.inputRef = el)}
+          ref={(el: any) => {
+            this.inputRef = el;
+          }}
           value={this.name}
           onChange={(event) => (this.name = event.target.value)}
         />
@@ -2160,6 +2270,8 @@ exports[`Stencil > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 })
 export class MyBasicOnUpdateReturnComponent {
   @State() name = \\"PatrickJS\\";
+
+  componentDidLoad() {}
 
   componentDidUpdate() {
     const controller = new AbortController();
@@ -2190,6 +2302,162 @@ export class MyBasicOnUpdateReturnComponent {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"basic-ref-attribute-passing-component\\",
+})
+export class BasicRefAttributePassingComponent {
+  private buttonRef!: HTMLElement;
+  private _root!: HTMLElement;
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  componentDidLoad() {
+    this.enableAttributePassing(
+      this._root,
+      \\"basic-ref-attribute-passing-component\\"
+    );
+  }
+
+  render() {
+    return (
+      <button
+        ref={(el: any) => {
+          this._root = el;
+          this.buttonRef = el;
+        }}
+      >
+        Attribute Passing
+      </button>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"basic-ref-attribute-passing-custom-ref-component\\",
+})
+export class BasicRefAttributePassingCustomRefComponent {
+  private buttonRef!: HTMLElement;
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  componentDidLoad() {
+    this.enableAttributePassing(
+      this.buttonRef,
+      \\"basic-ref-attribute-passing-custom-ref-component\\"
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        <button
+          ref={(el: any) => {
+            this.buttonRef = el;
+          }}
+        >
+          Attribute Passing
+        </button>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > class + ClassName + css 1`] = `
 "import { MyComp } from \\"./my-component.lite\\";
 
@@ -2205,6 +2473,8 @@ import { Component, h, Fragment } from \\"@stencil/core\\";
 \`,
 })
 export class MyBasicComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -2234,6 +2504,8 @@ exports[`Stencil > jsx > Javascript Test > class + css 1`] = `
 \`,
 })
 export class MyBasicComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <div class=\\"test div\\">
@@ -2258,6 +2530,8 @@ exports[`Stencil > jsx > Javascript Test > className + css 1`] = `
 \`,
 })
 export class MyBasicComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <div class=\\"test div\\">
@@ -2277,6 +2551,8 @@ exports[`Stencil > jsx > Javascript Test > className 1`] = `
 })
 export class ClassNameCode {
   @State() bindings = \\"a binding\\";
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -2308,6 +2584,8 @@ export class MyBasicComponent {
     color: \\"red\\",
   };
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div class={this.classState + \\" div\\"} style={this.styleState}>
@@ -2331,6 +2609,8 @@ import { Component, h, Fragment } from \\"@stencil/core\\";
   tag: \\"complex-meta-raw\\",
 })
 export class ComplexMetaRaw {
+  componentDidLoad() {}
+
   render() {
     return <div></div>;
   }
@@ -2349,6 +2629,8 @@ import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
 })
 export class ComponentWithContext {
   @Prop() content: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -2372,6 +2654,8 @@ import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
 })
 export class ComponentWithContext {
   @Prop() content: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -2397,6 +2681,8 @@ export class RenderContent {
   @Prop() content: any;
   @Prop() customComponents: any;
 
+  componentDidLoad() {}
+
   render() {
     return <div>setting context</div>;
   }
@@ -2419,6 +2705,8 @@ export class Button {
     console.log(\\"hi\\");
   };
   @Prop() buttonText: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -2461,6 +2749,8 @@ export class Button {
   @Prop() text: any = \\"default text\\";
   @Event() onClick: any = () => {};
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -2502,6 +2792,8 @@ import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
 export class ComponentWithTypes {
   @Prop() name: any;
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -2529,6 +2821,8 @@ exports[`Stencil > jsx > Javascript Test > eventInputAndChange 1`] = `
 })
 export class EventInputAndChange {
   @State() name = \\"Steve\\";
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -2559,6 +2853,8 @@ export class MyComponent {
     ? this.componentRef
     : null;
 
+  componentDidLoad() {}
+
   render() {
     return <div>{this.refToUse}</div>;
   }
@@ -2583,6 +2879,8 @@ export class FigmaButton {
   @Prop() width: any;
   @Prop() size: any;
   @Prop() label: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -2619,6 +2917,8 @@ export class Button {
     return i + this.foo2.length;
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -2650,6 +2950,8 @@ export class RenderContent {
     };
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <render-block
@@ -2668,6 +2970,8 @@ exports[`Stencil > jsx > Javascript Test > multipleOnUpdate 1`] = `
   tag: \\"multiple-on-update\\",
 })
 export class MultipleOnUpdate {
+  componentDidLoad() {}
+
   componentDidUpdate() {
     console.log(\\"Runs on every update/rerender\\");
     console.log(\\"Runs on every update/rerender as well\\");
@@ -2691,6 +2995,8 @@ export class MultipleOnUpdateWithDeps {
   @State() b = \\"b\\";
   @State() c = \\"c\\";
   @State() d = \\"d\\";
+
+  componentDidLoad() {}
 
   componentDidUpdate() {
     console.log(\\"Runs when a or b changes\\", this.a, this.b);
@@ -2722,6 +3028,8 @@ export class MyBasicComponent {
   @State() attrs = {
     hello: \\"world\\",
   };
+
+  componentDidLoad() {}
 
   render() {
     return <input {...this.attrs} {...this} />;
@@ -2765,6 +3073,8 @@ exports[`Stencil > jsx > Javascript Test > nestedStyles 1`] = `
 \`,
 })
 export class NestedStyles {
+  componentDidLoad() {}
+
   render() {
     return <div class=\\"div\\">Hello world</div>;
   }
@@ -2791,7 +3101,12 @@ export class Embed {
 
   render() {
     return (
-      <div class=\\"builder-embed\\" ref={(el) => (this.elem = el)}>
+      <div
+        class=\\"builder-embed\\"
+        ref={(el: any) => {
+          this.elem = el;
+        }}
+      >
         <div>Test</div>
       </div>
     );
@@ -2832,6 +3147,8 @@ export class OnInit {
   @Prop() name: any;
   @State() name = \\"\\";
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -2851,6 +3168,8 @@ exports[`Stencil > jsx > Javascript Test > onInitPlain 1`] = `
   tag: \\"on-init-plain\\",
 })
 export class OnInitPlain {
+  componentDidLoad() {}
+
   render() {
     return <div></div>;
   }
@@ -2915,6 +3234,8 @@ exports[`Stencil > jsx > Javascript Test > onUpdate 1`] = `
   tag: \\"on-update\\",
 })
 export class OnUpdate {
+  componentDidLoad() {}
+
   componentDidUpdate() {
     console.log(\\"Runs on every update/rerender\\");
   }
@@ -2936,6 +3257,8 @@ export class OnUpdateWithDeps {
   @Prop() size: any;
   @State() a = \\"a\\";
   @State() b = \\"b\\";
+
+  componentDidLoad() {}
 
   componentDidUpdate() {
     console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
@@ -2961,6 +3284,8 @@ import { Component, h, Fragment } from \\"@stencil/core\\";
   tag: \\"my-basic-component\\",
 })
 export class MyBasicComponent {
+  componentDidLoad() {}
+
   render() {
     return <div></div>;
   }
@@ -2976,6 +3301,8 @@ exports[`Stencil > jsx > Javascript Test > preserveTyping 1`] = `
 })
 export class MyBasicComponent {
   @Prop() name: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -3000,6 +3327,8 @@ export class MyBasicComponent {
   @Prop() type: any;
   @State() name = \\"Decadef20\\";
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -3022,6 +3351,8 @@ exports[`Stencil > jsx > Javascript Test > propsInterface 1`] = `
 export class MyBasicComponent {
   @Prop() name: any;
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -3042,6 +3373,8 @@ exports[`Stencil > jsx > Javascript Test > propsType 1`] = `
 })
 export class MyBasicComponent {
   @Prop() name: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -3069,6 +3402,8 @@ export class OnUpdate {
       cb: this.bar,
     };
   };
+
+  componentDidLoad() {}
 
   componentDidUpdate() {
     this.foo({
@@ -3281,6 +3616,8 @@ export class RenderBlock {
     }
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <Host>
@@ -3388,6 +3725,8 @@ export class Button {
   @Prop() openLinkInNewTab: any;
   @Prop() text: any;
 
+  componentDidLoad() {}
+
   render() {
     return (
       <Fragment>
@@ -3421,6 +3760,8 @@ exports[`Stencil > jsx > Javascript Test > self-referencing component 1`] = `
 export class MyComponent {
   @Prop() name: any;
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -3444,6 +3785,8 @@ exports[`Stencil > jsx > Javascript Test > self-referencing component with child
 export class MyComponent {
   @Prop() name: any;
   @Prop() children: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -3475,6 +3818,8 @@ export class SetState {
     this.n[0] = \\"123\\";
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -3502,6 +3847,8 @@ export class MyBasicComponent {
   @Prop() id: any;
   @Prop() foo: any;
 
+  componentDidLoad() {}
+
   componentDidUpdate() {
     console.log(\\"props.id changed\\", this.id);
     console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
@@ -3526,6 +3873,8 @@ exports[`Stencil > jsx > Javascript Test > spreadAttrs 1`] = `
   tag: \\"my-basic-component\\",
 })
 export class MyBasicComponent {
+  componentDidLoad() {}
+
   render() {
     return <input {...attrs} />;
   }
@@ -3542,6 +3891,8 @@ exports[`Stencil > jsx > Javascript Test > spreadNestedProps 1`] = `
 export class MyBasicComponent {
   @Prop() nested: any;
 
+  componentDidLoad() {}
+
   render() {
     return <input {...this.nested} />;
   }
@@ -3556,6 +3907,8 @@ exports[`Stencil > jsx > Javascript Test > spreadProps 1`] = `
   tag: \\"my-basic-component\\",
 })
 export class MyBasicComponent {
+  componentDidLoad() {}
+
   render() {
     return <input {...this} />;
   }
@@ -3580,6 +3933,8 @@ export class StringLiteralStore {
     return Promise.resolve();
   };
 
+  componentDidLoad() {}
+
   render() {
     return <div></div>;
   }
@@ -3595,6 +3950,8 @@ exports[`Stencil > jsx > Javascript Test > string-literal-store 1`] = `
 })
 export class StringLiteralStore {
   @State() foo = 123;
+
+  componentDidLoad() {}
 
   render() {
     return <div>{this.foo}</div>;
@@ -3618,6 +3975,8 @@ exports[`Stencil > jsx > Javascript Test > styleClassAndCss 1`] = `
 \`,
 })
 export class MyComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <div
@@ -3649,6 +4008,8 @@ exports[`Stencil > jsx > Javascript Test > stylePropClassAndCss 1`] = `
 export class StylePropClassAndCss {
   @Prop() attributes: any;
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div
@@ -3670,6 +4031,8 @@ import { Component, h, Fragment } from \\"@stencil/core\\";
   tag: \\"sub-component\\",
 })
 export class SubComponent {
+  componentDidLoad() {}
+
   render() {
     return <foo></foo>;
   }
@@ -3684,6 +4047,8 @@ exports[`Stencil > jsx > Javascript Test > svgComponent 1`] = `
   tag: \\"svg-component\\",
 })
 export class SvgComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <svg
@@ -3723,6 +4088,8 @@ exports[`Stencil > jsx > Javascript Test > typeDependency 1`] = `
 export class TypeDependency {
   @Prop() foo: any;
 
+  componentDidLoad() {}
+
   render() {
     return <div>{this.foo}</div>;
   }
@@ -3738,6 +4105,8 @@ exports[`Stencil > jsx > Javascript Test > typeExternalStore 1`] = `
 })
 export class TypeExternalStore {
   @State() _name = \\"test\\";
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -3771,6 +4140,8 @@ export class TypeGetterStore {
     return \\"test\\";
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -3799,6 +4170,8 @@ exports[`Stencil > jsx > Javascript Test > use-style 1`] = `
 \`,
 })
 export class MyComponent {
+  componentDidLoad() {}
+
   render() {
     return <button type=\\"button\\">Button</button>;
   }
@@ -3825,6 +4198,8 @@ exports[`Stencil > jsx > Javascript Test > use-style-and-css 1`] = `
 \`,
 })
 export class MyComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <button class=\\"button\\" type=\\"button\\">
@@ -3852,6 +4227,8 @@ exports[`Stencil > jsx > Javascript Test > use-style-outside-component 1`] = `
 \`,
 })
 export class MyComponent {
+  componentDidLoad() {}
+
   render() {
     return <button type=\\"button\\">Button</button>;
   }
@@ -3895,6 +4272,8 @@ import { Component, h, Fragment } from \\"@stencil/core\\";
   tag: \\"my-basic-web-component\\",
 })
 export class MyBasicWebComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -3917,6 +4296,8 @@ exports[`Stencil > jsx > Remove Internal mitosis package 1`] = `
 export class MyBasicComponent {
   @State() name = \\"PatrickJS\\";
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -3938,6 +4319,8 @@ exports[`Stencil > jsx > Typescript Test > Advanced 1`] = `
 export class MyBasicForShowComponent {
   @State() name = \\"PatrickJS\\";
   @State() names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -4028,6 +4411,8 @@ export class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
+  componentDidLoad() {}
+
   componentDidUpdate() {
     console.log(\\"Received an update\\");
   }
@@ -4039,12 +4424,19 @@ export class MyBasicRefComponent {
           <Fragment>
             <input
               class=\\"input\\"
-              ref={(el) => (this.inputRef = el)}
+              ref={(el: any) => {
+                this.inputRef = el;
+              }}
               value={this.name}
               onBlur={(event) => this.onBlur()}
               onChange={(event) => (this.name = event.target.value)}
             />
-            <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
+            <label
+              for=\\"cars\\"
+              ref={(el: any) => {
+                this.inputNoArgRef = el;
+              }}
+            >
               Choose a car:
             </label>
             <select name=\\"cars\\" id=\\"cars\\">
@@ -4092,6 +4484,8 @@ export class MyBasicComponent {
     return \\"bar\\";
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div class=\\"test div\\">
@@ -4116,6 +4510,8 @@ exports[`Stencil > jsx > Typescript Test > Basic 2`] = `
 export class MyBasicForShowComponent {
   @State() name = \\"PatrickJS\\";
   @State() names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -4269,6 +4665,8 @@ exports[`Stencil > jsx > Typescript Test > BasicAttribute 1`] = `
   tag: \\"my-component\\",
 })
 export class MyComponent {
+  componentDidLoad() {}
+
   render() {
     return <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />;
   }
@@ -4292,6 +4690,8 @@ type Props = {
 export class MyBooleanAttribute {
   @Prop() children: Props[\\"children\\"];
   @Prop() type: Props[\\"type\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -4330,6 +4730,8 @@ import { Component, h, Fragment, State } from \\"@stencil/core\\";
 export class MyBasicChildComponent {
   @State() name = \\"Steve\\";
   @State() dev = \\"PatrickJS\\";
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -4415,6 +4817,8 @@ export class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -4422,12 +4826,19 @@ export class MyBasicRefComponent {
           <Fragment>
             <input
               class=\\"input\\"
-              ref={(el) => (this.inputRef = el)}
+              ref={(el: any) => {
+                this.inputRef = el;
+              }}
               value={this.name}
               onBlur={(event) => this.onBlur()}
               onChange={(event) => (this.name = event.target.value)}
             />
-            <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
+            <label
+              for=\\"cars\\"
+              ref={(el: any) => {
+                this.inputNoArgRef = el;
+              }}
+            >
               Choose a car:
             </label>
             <select name=\\"cars\\" id=\\"cars\\">
@@ -4464,6 +4875,8 @@ export class MyBasicRefAssignmentComponent {
     console.log(\\"current value\\", this.holdValueRef);
     this.holdValueRef = this.holdValueRef + \\"JS\\";
   };
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -4506,6 +4919,8 @@ export class MyPreviousComponent {
 
   @State() count = 0;
 
+  componentDidLoad() {}
+
   componentDidUpdate() {
     this.prevCount = this.count;
   }
@@ -4544,6 +4959,8 @@ export class Button {
   @Prop() attributes: ButtonProps[\\"attributes\\"];
   @Prop() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
   @Prop() text: ButtonProps[\\"text\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -4633,6 +5050,8 @@ export class Column {
     return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div class=\\"builder-columns div\\">
@@ -4664,6 +5083,8 @@ type Props = {
 })
 export class ContentSlotCode {
   @Prop() slotTesting: Props[\\"slotTesting\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -4709,6 +5130,8 @@ export class ContentSlotJsxCode {
   show() {
     this.slotContent ? 1 : \\"\\";
   }
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -4809,7 +5232,9 @@ export class CustomCode {
         class={
           \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\")
         }
-        ref={(el) => (this.elem = el)}
+        ref={(el: any) => {
+          this.elem = el;
+        }}
         innerHTML={this.code}
       ></div>
     );
@@ -4888,7 +5313,9 @@ export class CustomCode {
         class={
           \\"builder-custom-code\\" + (this.replaceNodes ? \\" replace-nodes\\" : \\"\\")
         }
-        ref={(el) => (this.elem = el)}
+        ref={(el: any) => {
+          this.elem = el;
+        }}
         innerHTML={this.code}
       ></div>
     );
@@ -5191,11 +5618,15 @@ export class FormComponent {
     }
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <form
         validate={this.validate}
-        ref={(el) => (this.formRef = el)}
+        ref={(el: any) => {
+          this.formRef = el;
+        }}
         action={!this.sendWithJs && this.action}
         method={this.method}
         name={this.name}
@@ -5334,7 +5765,11 @@ export class Image {
   render() {
     return (
       <div>
-        <picture ref={(el) => (this.pictureRef = el)}>
+        <picture
+          ref={(el: any) => {
+            this.pictureRef = el;
+          }}
+        >
           {!this.useLazyLoading() || this.load ? (
             <img
               class={
@@ -5369,6 +5804,8 @@ exports[`Stencil > jsx > Typescript Test > Image State 1`] = `
 export class ImgStateComponent {
   @State() canShow = true;
   @State() images = [\\"http://example.com/qwik.png\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -5417,6 +5854,8 @@ export class ImgComponent {
   @Prop() imgSrc: ImgProps[\\"imgSrc\\"];
   @Prop() altText: ImgProps[\\"altText\\"];
 
+  componentDidLoad() {}
+
   render() {
     return (
       <img
@@ -5464,6 +5903,8 @@ export class FormInputComponent {
   @Prop() required: FormInputProps[\\"required\\"];
   @Event() onChange: any;
 
+  componentDidLoad() {}
+
   render() {
     return (
       <input
@@ -5500,6 +5941,8 @@ export class Stepper {
     console.log(value);
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <form-input-component
@@ -5528,6 +5971,8 @@ export class NestedStore {
   @State() _id = \\"abc\\";
   @State() _messageId = this._id + \\"-message\\";
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div id={this._id}>
@@ -5554,6 +5999,8 @@ export interface RawTextProps {
 export class RawText {
   @Prop() attributes: RawTextProps[\\"attributes\\"];
   @Prop() text: RawTextProps[\\"text\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -5583,6 +6030,8 @@ export class SectionComponent {
   @Prop() attributes: SectionProps[\\"attributes\\"];
   @Prop() maxWidth: SectionProps[\\"maxWidth\\"];
   @Prop() children: SectionProps[\\"children\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -5621,6 +6070,8 @@ export class SectionStateComponent {
   @Prop() children: SectionProps[\\"children\\"];
   @State() max = 42;
   @State() items = [42];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -5670,6 +6121,8 @@ export class SelectComponent {
   @Prop() name: FormSelectProps[\\"name\\"];
   @Prop() options: FormSelectProps[\\"options\\"];
 
+  componentDidLoad() {}
+
   render() {
     return (
       <select
@@ -5706,6 +6159,8 @@ type Props = {
   tag: \\"slot-code\\",
 })
 export class SlotCode {
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -5732,6 +6187,8 @@ type Props = {
   tag: \\"slot-code\\",
 })
 export class SlotCode {
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -5758,6 +6215,8 @@ type Props = {
   tag: \\"slot-code\\",
 })
 export class SlotCode {
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -5780,6 +6239,8 @@ type Props = {
   tag: \\"slot-code\\",
 })
 export class SlotCode {
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -5915,6 +6376,8 @@ export class StringLiteralStore {
 
   bar() {}
 
+  componentDidLoad() {}
+
   render() {
     return <Fragment>{this.foo}</Fragment>;
   }
@@ -5935,6 +6398,8 @@ export class MyComponent {
     return errors;
   }
 
+  componentDidLoad() {}
+
   render() {
     return <Fragment>{this.foo(this.errors)}</Fragment>;
   }
@@ -5954,6 +6419,8 @@ export class MyComponent {
   bar() {
     return this.foo;
   }
+
+  componentDidLoad() {}
 
   render() {
     return <Fragment>{this.bar()}</Fragment>;
@@ -5976,6 +6443,8 @@ export interface ButtonProps {
 export class SubmitButton {
   @Prop() attributes: ButtonProps[\\"attributes\\"];
   @Prop() text: ButtonProps[\\"text\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -6008,6 +6477,8 @@ export class Text {
   @Prop() text: TextProps[\\"text\\"];
   @Prop() content: TextProps[\\"content\\"];
   @State() name = \\"Decadef20\\";
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -6049,6 +6520,8 @@ export class Textarea {
   @Prop() name: TextareaProps[\\"name\\"];
   @Prop() value: TextareaProps[\\"value\\"];
   @Prop() defaultValue: TextareaProps[\\"defaultValue\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -6092,6 +6565,8 @@ export class UseValueAndFnFromStore {
       this.onChange.emit(this._active);
     }
   }
+
+  componentDidLoad() {}
 
   componentDidUpdate() {
     if (this._do) {
@@ -6149,6 +6624,8 @@ export class Video {
   @Prop() controls: VideoProps[\\"controls\\"];
   @Prop() loop: VideoProps[\\"loop\\"];
 
+  componentDidLoad() {}
+
   render() {
     return (
       <video
@@ -6193,6 +6670,8 @@ export class MyComponent {
     this.name = value;
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -6213,6 +6692,8 @@ exports[`Stencil > jsx > Typescript Test > basicForFragment 1`] = `
 })
 export class BasicForFragment {
   @State() id = \\"xyz\\";
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -6257,6 +6738,8 @@ export class MyBasicForNoTagRefComponent {
     return \\"span\\";
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <this.TagNameGetter>
@@ -6296,12 +6779,16 @@ export class MyBasicForwardRefComponent {
   @Prop() inputRef: Props[\\"inputRef\\"];
   @State() name = \\"PatrickJS\\";
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
         <input
           class=\\"input\\"
-          ref={(el) => (this.inputRef = el)}
+          ref={(el: any) => {
+            this.inputRef = el;
+          }}
           value={this.name}
           onChange={(event) => (this.name = event.target.value)}
         />
@@ -6338,12 +6825,16 @@ export class MyBasicForwardRefComponent {
   @Prop() inputRef: Props[\\"inputRef\\"];
   @State() name = \\"PatrickJS\\";
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
         <input
           class=\\"input\\"
-          ref={(el) => (this.inputRef = el)}
+          ref={(el: any) => {
+            this.inputRef = el;
+          }}
           value={this.name}
           onChange={(event) => (this.name = event.target.value)}
         />
@@ -6362,6 +6853,8 @@ exports[`Stencil > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 })
 export class MyBasicOnUpdateReturnComponent {
   @State() name = \\"PatrickJS\\";
+
+  componentDidLoad() {}
 
   componentDidUpdate() {
     const controller = new AbortController();
@@ -6392,6 +6885,162 @@ export class MyBasicOnUpdateReturnComponent {
 "
 `;
 
+exports[`Stencil > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"basic-ref-attribute-passing-component\\",
+})
+export class BasicRefAttributePassingComponent {
+  private buttonRef!: HTMLButtonElement | null;
+  private _root!: HTMLElement;
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  componentDidLoad() {
+    this.enableAttributePassing(
+      this._root,
+      \\"basic-ref-attribute-passing-component\\"
+    );
+  }
+
+  render() {
+    return (
+      <button
+        ref={(el: any) => {
+          this._root = el;
+          this.buttonRef = el;
+        }}
+      >
+        Attribute Passing
+      </button>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"basic-ref-attribute-passing-custom-ref-component\\",
+})
+export class BasicRefAttributePassingCustomRefComponent {
+  private buttonRef!: HTMLButtonElement | null;
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  componentDidLoad() {
+    this.enableAttributePassing(
+      this.buttonRef,
+      \\"basic-ref-attribute-passing-custom-ref-component\\"
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        <button
+          ref={(el: any) => {
+            this.buttonRef = el;
+          }}
+        >
+          Attribute Passing
+        </button>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Typescript Test > class + ClassName + css 1`] = `
 "import { MyComp } from \\"./my-component.lite\\";
 
@@ -6407,6 +7056,8 @@ import { Component, h, Fragment } from \\"@stencil/core\\";
 \`,
 })
 export class MyBasicComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -6436,6 +7087,8 @@ exports[`Stencil > jsx > Typescript Test > class + css 1`] = `
 \`,
 })
 export class MyBasicComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <div class=\\"test div\\">
@@ -6460,6 +7113,8 @@ exports[`Stencil > jsx > Typescript Test > className + css 1`] = `
 \`,
 })
 export class MyBasicComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <div class=\\"test div\\">
@@ -6486,6 +7141,8 @@ type Props = {
 })
 export class ClassNameCode {
   @State() bindings = \\"a binding\\";
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -6517,6 +7174,8 @@ export class MyBasicComponent {
     color: \\"red\\",
   };
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div class={this.classState + \\" div\\"} style={this.styleState}>
@@ -6540,6 +7199,8 @@ import { Component, h, Fragment } from \\"@stencil/core\\";
   tag: \\"complex-meta-raw\\",
 })
 export class ComplexMetaRaw {
+  componentDidLoad() {}
+
   render() {
     return <div></div>;
   }
@@ -6562,6 +7223,8 @@ export interface ComponentWithContextProps {
 })
 export class ComponentWithContext {
   @Prop() content: ComponentWithContextProps[\\"content\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -6590,6 +7253,8 @@ export interface ComponentWithContextProps {
 export class ComponentWithContext {
   @Prop() content: ComponentWithContextProps[\\"content\\"];
 
+  componentDidLoad() {}
+
   render() {
     return (
       <Fragment>
@@ -6613,6 +7278,8 @@ import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
 export class RenderContent {
   @Prop() content: any;
   @Prop() customComponents: any;
+
+  componentDidLoad() {}
 
   render() {
     return <div>setting context</div>;
@@ -6646,6 +7313,8 @@ export class Button {
     console.log(\\"hi\\");
   };
   @Prop() buttonText: ButtonProps[\\"buttonText\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -6696,6 +7365,8 @@ export class Button {
   @Prop() text: ButtonProps[\\"text\\"] = \\"default text\\";
   @Event() onClick: any = () => {};
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -6741,6 +7412,8 @@ type Props = {
 export class ComponentWithTypes {
   @Prop() name: Props[\\"name\\"];
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -6768,6 +7441,8 @@ exports[`Stencil > jsx > Typescript Test > eventInputAndChange 1`] = `
 })
 export class EventInputAndChange {
   @State() name = \\"Steve\\";
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -6798,6 +7473,8 @@ export class MyComponent {
     ? this.componentRef
     : null;
 
+  componentDidLoad() {}
+
   render() {
     return <div>{this.refToUse}</div>;
   }
@@ -6822,6 +7499,8 @@ export class FigmaButton {
   @Prop() width: any;
   @Prop() size: any;
   @Prop() label: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -6862,6 +7541,8 @@ export class Button {
     return i + this.foo2.length;
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -6900,6 +7581,8 @@ export class RenderContent {
     };
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <render-block
@@ -6918,6 +7601,8 @@ exports[`Stencil > jsx > Typescript Test > multipleOnUpdate 1`] = `
   tag: \\"multiple-on-update\\",
 })
 export class MultipleOnUpdate {
+  componentDidLoad() {}
+
   componentDidUpdate() {
     console.log(\\"Runs on every update/rerender\\");
     console.log(\\"Runs on every update/rerender as well\\");
@@ -6941,6 +7626,8 @@ export class MultipleOnUpdateWithDeps {
   @State() b = \\"b\\";
   @State() c = \\"c\\";
   @State() d = \\"d\\";
+
+  componentDidLoad() {}
 
   componentDidUpdate() {
     console.log(\\"Runs when a or b changes\\", this.a, this.b);
@@ -6972,6 +7659,8 @@ export class MyBasicComponent {
   @State() attrs = {
     hello: \\"world\\",
   };
+
+  componentDidLoad() {}
 
   render() {
     return <input {...this.attrs} {...this} />;
@@ -7015,6 +7704,8 @@ exports[`Stencil > jsx > Typescript Test > nestedStyles 1`] = `
 \`,
 })
 export class NestedStyles {
+  componentDidLoad() {}
+
   render() {
     return <div class=\\"div\\">Hello world</div>;
   }
@@ -7041,7 +7732,12 @@ export class Embed {
 
   render() {
     return (
-      <div class=\\"builder-embed\\" ref={(el) => (this.elem = el)}>
+      <div
+        class=\\"builder-embed\\"
+        ref={(el: any) => {
+          this.elem = el;
+        }}
+      >
         <div>Test</div>
       </div>
     );
@@ -7086,6 +7782,8 @@ export class OnInit {
   @Prop() name: Props[\\"name\\"];
   @State() name = \\"\\";
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -7105,6 +7803,8 @@ exports[`Stencil > jsx > Typescript Test > onInitPlain 1`] = `
   tag: \\"on-init-plain\\",
 })
 export class OnInitPlain {
+  componentDidLoad() {}
+
   render() {
     return <div></div>;
   }
@@ -7169,6 +7869,8 @@ exports[`Stencil > jsx > Typescript Test > onUpdate 1`] = `
   tag: \\"on-update\\",
 })
 export class OnUpdate {
+  componentDidLoad() {}
+
   componentDidUpdate() {
     console.log(\\"Runs on every update/rerender\\");
   }
@@ -7194,6 +7896,8 @@ export class OnUpdateWithDeps {
   @Prop() size: Props[\\"size\\"];
   @State() a = \\"a\\";
   @State() b = \\"b\\";
+
+  componentDidLoad() {}
 
   componentDidUpdate() {
     console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
@@ -7229,6 +7933,8 @@ export interface MyBasicComponentProps {
   tag: \\"my-basic-component\\",
 })
 export class MyBasicComponent {
+  componentDidLoad() {}
+
   render() {
     return <div></div>;
   }
@@ -7258,6 +7964,8 @@ export interface MyBasicComponentProps {
 export class MyBasicComponent {
   @Prop() name: MyBasicComponentProps[\\"name\\"];
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -7286,6 +7994,8 @@ export class MyBasicComponent {
   @Prop() type: Props[\\"type\\"];
   @State() name = \\"Decadef20\\";
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -7313,6 +8023,8 @@ interface Person {
 export class MyBasicComponent {
   @Prop() name: Person | never[\\"name\\"];
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -7338,6 +8050,8 @@ type Person = {
 })
 export class MyBasicComponent {
   @Prop() name: Person[\\"name\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -7365,6 +8079,8 @@ export class OnUpdate {
       cb: this.bar,
     };
   };
+
+  componentDidLoad() {}
 
   componentDidUpdate() {
     this.foo({
@@ -7590,6 +8306,8 @@ export class RenderBlock {
     }
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <Host>
@@ -7712,6 +8430,8 @@ export class Button {
   @Prop() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
   @Prop() text: ButtonProps[\\"text\\"];
 
+  componentDidLoad() {}
+
   render() {
     return (
       <Fragment>
@@ -7745,6 +8465,8 @@ exports[`Stencil > jsx > Typescript Test > self-referencing component 1`] = `
 export class MyComponent {
   @Prop() name: any;
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -7768,6 +8490,8 @@ exports[`Stencil > jsx > Typescript Test > self-referencing component with child
 export class MyComponent {
   @Prop() name: any;
   @Prop() children: any;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -7798,6 +8522,8 @@ export class SetState {
   someFn() {
     this.n[0] = \\"123\\";
   }
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -7835,16 +8561,18 @@ export class MyBasicComponent {
   @Prop() id: Props[\\"id\\"];
   @Prop() foo: Props[\\"foo\\"];
 
+  componentDidLoad() {}
+
   componentDidUpdate() {
     console.log(\\"props.id changed\\", this.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+    console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
   }
 
   render() {
     return (
       <div class=\\"test div\\">
         {this.id}
-        {this.foo.bar.baz}
+        {this.foo.value.bar.baz}
       </div>
     );
   }
@@ -7859,6 +8587,8 @@ exports[`Stencil > jsx > Typescript Test > spreadAttrs 1`] = `
   tag: \\"my-basic-component\\",
 })
 export class MyBasicComponent {
+  componentDidLoad() {}
+
   render() {
     return <input {...attrs} />;
   }
@@ -7875,6 +8605,8 @@ exports[`Stencil > jsx > Typescript Test > spreadNestedProps 1`] = `
 export class MyBasicComponent {
   @Prop() nested: any;
 
+  componentDidLoad() {}
+
   render() {
     return <input {...this.nested} />;
   }
@@ -7889,6 +8621,8 @@ exports[`Stencil > jsx > Typescript Test > spreadProps 1`] = `
   tag: \\"my-basic-component\\",
 })
 export class MyBasicComponent {
+  componentDidLoad() {}
+
   render() {
     return <input {...this} />;
   }
@@ -7913,6 +8647,8 @@ export class StringLiteralStore {
     return Promise.resolve();
   };
 
+  componentDidLoad() {}
+
   render() {
     return <div></div>;
   }
@@ -7928,6 +8664,8 @@ exports[`Stencil > jsx > Typescript Test > string-literal-store 1`] = `
 })
 export class StringLiteralStore {
   @State() foo = 123;
+
+  componentDidLoad() {}
 
   render() {
     return <div>{this.foo}</div>;
@@ -7951,6 +8689,8 @@ exports[`Stencil > jsx > Typescript Test > styleClassAndCss 1`] = `
 \`,
 })
 export class MyComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <div
@@ -7982,6 +8722,8 @@ exports[`Stencil > jsx > Typescript Test > stylePropClassAndCss 1`] = `
 export class StylePropClassAndCss {
   @Prop() attributes: any;
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div
@@ -8003,6 +8745,8 @@ import { Component, h, Fragment } from \\"@stencil/core\\";
   tag: \\"sub-component\\",
 })
 export class SubComponent {
+  componentDidLoad() {}
+
   render() {
     return <foo></foo>;
   }
@@ -8017,6 +8761,8 @@ exports[`Stencil > jsx > Typescript Test > svgComponent 1`] = `
   tag: \\"svg-component\\",
 })
 export class SvgComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <svg
@@ -8064,6 +8810,8 @@ export type TypeDependencyProps = {
 export class TypeDependency {
   @Prop() foo: TypeDependencyProps[\\"foo\\"];
 
+  componentDidLoad() {}
+
   render() {
     return <div>{this.foo}</div>;
   }
@@ -8081,6 +8829,8 @@ import { Component, h, Fragment, State } from \\"@stencil/core\\";
 })
 export class TypeExternalStore {
   @State() _name = \\"test\\";
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -8120,6 +8870,8 @@ export class TypeGetterStore {
     return \\"test\\";
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -8148,6 +8900,8 @@ exports[`Stencil > jsx > Typescript Test > use-style 1`] = `
 \`,
 })
 export class MyComponent {
+  componentDidLoad() {}
+
   render() {
     return <button type=\\"button\\">Button</button>;
   }
@@ -8174,6 +8928,8 @@ exports[`Stencil > jsx > Typescript Test > use-style-and-css 1`] = `
 \`,
 })
 export class MyComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <button class=\\"button\\" type=\\"button\\">
@@ -8201,6 +8957,8 @@ exports[`Stencil > jsx > Typescript Test > use-style-outside-component 1`] = `
 \`,
 })
 export class MyComponent {
+  componentDidLoad() {}
+
   render() {
     return <button type=\\"button\\">Button</button>;
   }
@@ -8244,6 +9002,8 @@ import { Component, h, Fragment } from \\"@stencil/core\\";
   tag: \\"my-basic-web-component\\",
 })
 export class MyBasicWebComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
@@ -8265,6 +9025,8 @@ exports[`Stencil > svelte > Javascript Test > basic 1`] = `
 })
 export class MyComponent {
   @State() name = \\"Steve\\";
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -8290,6 +9052,8 @@ exports[`Stencil > svelte > Javascript Test > bindGroup 1`] = `
 export class MyComponent {
   @State() tortilla = \\"Plain\\";
   @State() fillings = [];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -8362,6 +9126,8 @@ exports[`Stencil > svelte > Javascript Test > bindProperty 1`] = `
 export class MyComponent {
   @State() value = \\"hello\\";
 
+  componentDidLoad() {}
+
   render() {
     return <input value={this.value} />;
   }
@@ -8378,6 +9144,8 @@ exports[`Stencil > svelte > Javascript Test > classDirective 1`] = `
 export class MyComponent {
   @Prop() disabled: any;
   @State() focus = true;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -8401,6 +9169,8 @@ exports[`Stencil > svelte > Javascript Test > context 1`] = `
 export class MyComponent {
   @State() activeTab = 0;
 
+  componentDidLoad() {}
+
   render() {
     return <div>{this.activeTab}</div>;
   }
@@ -8416,6 +9186,8 @@ exports[`Stencil > svelte > Javascript Test > each 1`] = `
 })
 export class MyComponent {
   @State() numbers = [\\"one\\", \\"two\\", \\"three\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -8441,6 +9213,8 @@ export class MyComponent {
     console.log(msg);
   };
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -8463,6 +9237,8 @@ exports[`Stencil > svelte > Javascript Test > html 1`] = `
 export class MyComponent {
   @State() html = \\"<b>bold</b>\\";
 
+  componentDidLoad() {}
+
   render() {
     return <div innerHTML={this.html}></div>;
   }
@@ -8482,6 +9258,8 @@ export class MyComponent {
   toggle = function toggle() {
     this.show = !this.show;
   };
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -8508,6 +9286,8 @@ import { Component, h, Fragment, State } from \\"@stencil/core\\";
 })
 export class MyComponent {
   @State() disabled = false;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -8559,6 +9339,8 @@ export class MyComponent {
     return this.name.toLowerCase();
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -8586,6 +9368,8 @@ export class MyComponent {
   calculateResult = function calculateResult(a_, b_) {
     this.result = a_ * b_;
   };
+
+  componentDidLoad() {}
 
   componentDidUpdate() {
     this.calculateResult(this.a, this.b);
@@ -8620,6 +9404,8 @@ exports[`Stencil > svelte > Javascript Test > slots 1`] = `
   tag: \\"my-component\\",
 })
 export class MyComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -8652,6 +9438,8 @@ exports[`Stencil > svelte > Javascript Test > style 1`] = `
 \`,
 })
 export class MyComponent {
+  componentDidLoad() {}
+
   render() {
     return <input class=\\"form-input\\" />;
   }
@@ -8668,6 +9456,8 @@ exports[`Stencil > svelte > Javascript Test > textExpressions 1`] = `
 export class MyComponent {
   @State() a = 5;
   @State() b = 12;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -8693,6 +9483,8 @@ exports[`Stencil > svelte > Typescript Test > basic 1`] = `
 export class MyComponent {
   @State() name = \\"Steve\\";
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -8717,6 +9509,8 @@ exports[`Stencil > svelte > Typescript Test > bindGroup 1`] = `
 export class MyComponent {
   @State() tortilla = \\"Plain\\";
   @State() fillings = [];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -8789,6 +9583,8 @@ exports[`Stencil > svelte > Typescript Test > bindProperty 1`] = `
 export class MyComponent {
   @State() value = \\"hello\\";
 
+  componentDidLoad() {}
+
   render() {
     return <input value={this.value} />;
   }
@@ -8805,6 +9601,8 @@ exports[`Stencil > svelte > Typescript Test > classDirective 1`] = `
 export class MyComponent {
   @Prop() disabled: any;
   @State() focus = true;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -8828,6 +9626,8 @@ exports[`Stencil > svelte > Typescript Test > context 1`] = `
 export class MyComponent {
   @State() activeTab = 0;
 
+  componentDidLoad() {}
+
   render() {
     return <div>{this.activeTab}</div>;
   }
@@ -8843,6 +9643,8 @@ exports[`Stencil > svelte > Typescript Test > each 1`] = `
 })
 export class MyComponent {
   @State() numbers = [\\"one\\", \\"two\\", \\"three\\"];
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -8868,6 +9670,8 @@ export class MyComponent {
     console.log(msg);
   };
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -8890,6 +9694,8 @@ exports[`Stencil > svelte > Typescript Test > html 1`] = `
 export class MyComponent {
   @State() html = \\"<b>bold</b>\\";
 
+  componentDidLoad() {}
+
   render() {
     return <div innerHTML={this.html}></div>;
   }
@@ -8909,6 +9715,8 @@ export class MyComponent {
   toggle = function toggle() {
     this.show = !this.show;
   };
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -8935,6 +9743,8 @@ import { Component, h, Fragment, State } from \\"@stencil/core\\";
 })
 export class MyComponent {
   @State() disabled = false;
+
+  componentDidLoad() {}
 
   render() {
     return (
@@ -8986,6 +9796,8 @@ export class MyComponent {
     return this.name.toLowerCase();
   }
 
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -9013,6 +9825,8 @@ export class MyComponent {
   calculateResult = function calculateResult(a_, b_) {
     this.result = a_ * b_;
   };
+
+  componentDidLoad() {}
 
   componentDidUpdate() {
     this.calculateResult(this.a, this.b);
@@ -9047,6 +9861,8 @@ exports[`Stencil > svelte > Typescript Test > slots 1`] = `
   tag: \\"my-component\\",
 })
 export class MyComponent {
+  componentDidLoad() {}
+
   render() {
     return (
       <div>
@@ -9079,6 +9895,8 @@ exports[`Stencil > svelte > Typescript Test > style 1`] = `
 \`,
 })
 export class MyComponent {
+  componentDidLoad() {}
+
   render() {
     return <input class=\\"form-input\\" />;
   }
@@ -9095,6 +9913,8 @@ exports[`Stencil > svelte > Typescript Test > textExpressions 1`] = `
 export class MyComponent {
   @State() a = 5;
   @State() b = 12;
+
+  componentDidLoad() {}
 
   render() {
     return (

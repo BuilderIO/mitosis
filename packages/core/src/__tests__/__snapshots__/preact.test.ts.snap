@@ -1861,6 +1861,50 @@ export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useRef } from \\"preact/hooks\\";
+
+function BasicRefAttributePassingComponent(props) {
+  const buttonRef = useRef(null);
+
+  return <button ref={buttonRef}>Attribute Passing</button>;
+}
+
+export default BasicRefAttributePassingComponent;
+"
+`;
+
+exports[`Preact > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useRef } from \\"preact/hooks\\";
+
+function BasicRefAttributePassingCustomRefComponent(props) {
+  const buttonRef = useRef(null);
+
+  return (
+    <div>
+      <button ref={buttonRef}>Attribute Passing</button>
+    </div>
+  );
+}
+
+export default BasicRefAttributePassingCustomRefComponent;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > class + ClassName + css 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -5893,6 +5937,50 @@ export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
+exports[`Preact > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useRef } from \\"preact/hooks\\";
+
+function BasicRefAttributePassingComponent(props: any) {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  return <button ref={buttonRef}>Attribute Passing</button>;
+}
+
+export default BasicRefAttributePassingComponent;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useRef } from \\"preact/hooks\\";
+
+function BasicRefAttributePassingCustomRefComponent(props: any) {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  return (
+    <div>
+      <button ref={buttonRef}>Attribute Passing</button>
+    </div>
+  );
+}
+
+export default BasicRefAttributePassingCustomRefComponent;
+"
+`;
+
 exports[`Preact > jsx > Typescript Test > class + ClassName + css 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -7559,14 +7647,14 @@ type Props = {
 function MyBasicComponent(props: Props) {
   useEffect(() => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
-  }, [props.id, props.foo.bar.baz]);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
+  }, [props.id, props.foo.value.bar.baz]);
 
   return (
     <Fragment>
       <div className=\\"test div\\">
         {props.id}
-        {props.foo.bar.baz}
+        {props.foo.value.bar.baz}
       </div>
       <style jsx>{\`
         .div {

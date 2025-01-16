@@ -2149,6 +2149,39 @@ export default defineComponent({
 </script>"
 `;
 
+exports[`Vue > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"/** useMetadata: {\\"attributePassing\\":{\\"enabled\\":true}} */
+
+<template>
+  <button ref=\\"buttonRef\\">Attribute Passing</button>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"basic-ref-attribute-passing-component\\",
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"/** useMetadata: {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+*/
+
+<template>
+  <div><button ref=\\"buttonRef\\">Attribute Passing</button></div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"basic-ref-attribute-passing-custom-ref-component\\",
+});
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > class + ClassName + css 1`] = `
 "<template>
   <div>
@@ -6688,6 +6721,39 @@ export default defineComponent({
 </script>"
 `;
 
+exports[`Vue > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"/** useMetadata: {\\"attributePassing\\":{\\"enabled\\":true}} */
+
+<template>
+  <button ref=\\"buttonRef\\">Attribute Passing</button>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"basic-ref-attribute-passing-component\\",
+});
+</script>"
+`;
+
+exports[`Vue > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"/** useMetadata: {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+*/
+
+<template>
+  <div><button ref=\\"buttonRef\\">Attribute Passing</button></div>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"basic-ref-attribute-passing-custom-ref-component\\",
+});
+</script>"
+`;
+
 exports[`Vue > jsx > Typescript Test > class + ClassName + css 1`] = `
 "<template>
   <div>
@@ -8470,7 +8536,7 @@ export default defineComponent({
 
 exports[`Vue > jsx > Typescript Test > signalsOnUpdate 1`] = `
 "<template>
-  <div class=\\"test div\\">{{ id }}{{ foo.bar.baz }}</div>
+  <div class=\\"test div\\">{{ id }}{{ foo.value.bar.baz }}</div>
 </template>
 
 <script lang=\\"ts\\">
@@ -8494,7 +8560,7 @@ export default defineComponent({
     onUpdateHook0: {
       handler() {
         console.log(\\"props.id changed\\", this.id);
-        console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+        console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
       },
       immediate: true,
     },
@@ -8504,7 +8570,7 @@ export default defineComponent({
     onUpdateHook0() {
       return {
         0: this.id,
-        1: this.foo.bar.baz,
+        1: this.foo.value.bar.baz,
       };
     },
   },
