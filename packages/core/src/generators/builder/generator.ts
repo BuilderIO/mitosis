@@ -324,6 +324,26 @@ type InternalOptions = {
   skipMapper?: boolean;
 };
 
+const processLocalizedValues = (element: BuilderElement, node: MitosisNode) => {
+  if (node.localizedValues) {
+    for (const [path, value] of Object.entries(node.localizedValues)) {
+      if (path.startsWith('properties.')) {
+        const key = path.replace('properties.', '');
+        element.properties = element.properties || {};
+        (element as any).properties[key] = value;
+      } else if (path === 'linkUrl') {
+        (element as any).linkUrl = value;
+      } else if (path.startsWith('component.options.')) {
+        const key = path.replace('component.options.', '');
+        if (element.component) {
+          element.component.options[key] = value;
+        }
+      }
+    }
+  }
+  return element;
+};
+
 export const blockToBuilder = (
   json: MitosisNode,
   options: ToBuilderOptions = {},
@@ -331,33 +351,12 @@ export const blockToBuilder = (
 ): BuilderElement => {
   const mapper = !_internalOptions.skipMapper && componentMappers[json.name];
 
-  // Handle localized values
-  const processLocalizedValues = (element: BuilderElement, node: MitosisNode) => {
-    if (node.localizedValues) {
-      for (const [path, value] of Object.entries(node.localizedValues)) {
-        if (path.startsWith('properties.')) {
-          const key = path.replace('properties.', '');
-          element.properties = element.properties || {};
-          (element as any).properties[key] = value;
-        } else if (path === 'linkUrl') {
-          (element as any).linkUrl = value;
-        } else if (path.startsWith('component.options.')) {
-          const key = path.replace('component.options.', '');
-          if (element.component) {
-            element.component.options[key] = value;
-          }
-        }
-      }
-    }
-    return element;
-  };
-
   if (mapper) {
     const element = mapper(json, options);
     return processLocalizedValues(element, json);
   }
   if (json.properties._text || json.bindings._text?.code) {
-    return el(
+    const element = el(
       {
         tagName: 'span',
         bindings: {
@@ -378,6 +377,7 @@ export const blockToBuilder = (
       },
       options,
     );
+    return processLocalizedValues(element, json);
   }
 
   const thisIsComponent = isComponent(json);
