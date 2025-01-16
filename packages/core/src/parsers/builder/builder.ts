@@ -508,7 +508,7 @@ const componentMappers: {
         properties[key] !== null &&
         (properties[key] as any)['@type'] === '@builder.io/core:LocalizedValue'
       ) {
-        const localizedValue = properties[key] as BuilderLocalizedValue;
+        const localizedValue = properties[key] as unknown as BuilderLocalizedValue;
         localizedValues[`properties.${key}`] = localizedValue;
         properties[key] = localizedValue.Default;
       }
@@ -764,7 +764,7 @@ export const builderElementToMitosisNode = (
       properties[key] !== null &&
       (properties[key] as any)['@type'] === '@builder.io/core:LocalizedValue'
     ) {
-      const localizedValue = properties[key] as BuilderLocalizedValue;
+      const localizedValue = properties[key] as unknown as BuilderLocalizedValue;
       localizedValues[`properties.${key}`] = localizedValue;
       properties[key] = localizedValue.Default;
     }
