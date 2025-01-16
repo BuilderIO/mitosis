@@ -47,6 +47,8 @@ export const getPropsAsCode = (
 ): string => {
   const propsTypeRef: string | undefined = json.propsTypeRef;
   const internalTypes: string[] | undefined = json.types;
+  const isInternalType =
+    propsTypeRef && internalTypes && internalTypes.find((iType) => iType.includes(propsTypeRef));
 
   return props
     .map((item: string) => {
@@ -62,7 +64,7 @@ export const getPropsAsCode = (
         propsTypeRef !== 'any' &&
         propsTypeRef !== 'unknown' &&
         propsTypeRef !== 'never' &&
-        (!internalTypes || !internalTypes.includes(propsTypeRef))
+        !isInternalType
           ? `${propsTypeRef}["${item}"]`
           : 'any';
       return `@Prop() ${item}: ${type}${defaultPropString}`;
