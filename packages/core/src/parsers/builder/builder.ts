@@ -561,6 +561,7 @@ const componentMappers: {
               ...innerProperties,
               class: 'builder-text',
             },
+            ...(Object.keys(localizedValues).length && { localizedValues }),
           }),
         ],
       });
@@ -590,12 +591,12 @@ const componentMappers: {
         name: finalTagname,
         bindings,
         properties: finalProperties,
-        ...(Object.keys(localizedValues).length && { localizedValues }),
         meta: getMetaFromBlock(block, options),
         children: [
           createMitosisNode({
             bindings: innerBindings,
             properties: innerProperties,
+            ...(Object.keys(localizedValues).length && { localizedValues }),
           }),
         ],
       });
