@@ -23,8 +23,21 @@ const appendEmits = (str: string, events: string[]): string => {
 
 export type ProcessBindingOptions = { events: string[] };
 
-export const processBinding = (code: string, { events }: ProcessBindingOptions) => {
-  return stripStateAndPropsRefs(appendEmits(code, events), { replaceWith: 'this.' });
+export const processBinding = (
+  json: MitosisComponent,
+  code: string,
+  { events }: ProcessBindingOptions,
+) => {
+  let resolvedCode = stripStateAndPropsRefs(appendEmits(code, events), { replaceWith: 'this.' });
+  if (json.exports) {
+    // We need to use local exports with `this.` in stencil
+    Object.entries(json.exports)
+      .filter(([, value]) => value.usedInLocal)
+      .forEach(([key]) => {
+        resolvedCode = resolvedCode.replaceAll(key, `this.${key}`);
+      });
+  }
+  return resolvedCode;
 };
 
 export const getTagName = (name: string, { prefix }: ToStencilOptions): string => {
@@ -126,6 +139,7 @@ export const getImports = (
     explicitImportFileExtension: options.explicitImportFileExtension,
     component: json,
     target: 'stencil',
+    excludeExportAndLocal: true,
     importMapper: (_: any, theImport: any, importedValues: any) => {
       const childImport = importedValues.defaultImport;
       if (childImport && childComponents.includes(childImport)) {
@@ -135,4 +149,16 @@ export const getImports = (
       return undefined;
     },
   });
+};
+
+export const getExportsAndLocal = (json: MitosisComponent) => {
+  return Object.entries(json.exports || {})
+    .map(([key, { usedInLocal, code }]) => {
+      if (usedInLocal) {
+        return `${key} = ${code.substring(code.indexOf('=') + 1)}`;
+      }
+
+      return '';
+    })
+    .join('\n');
 };

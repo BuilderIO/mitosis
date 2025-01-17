@@ -131,11 +131,7 @@ export class MyBasicRefComponent {
 `;
 
 exports[`Stencil > jsx > Javascript Test > Basic 1`] = `
-"export const DEFAULT_VALUES = {
-  name: \\"Steve\\",
-};
-
-import { Component, h, Fragment, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-component\\",
@@ -155,11 +151,15 @@ export class MyBasicComponent {
     return \\"bar\\";
   }
 
+  DEFAULT_VALUES = {
+    name: \\"Steve\\",
+  };
+
   render() {
     return (
       <div class=\\"test div\\">
         <input
-          value={DEFAULT_VALUES.name || this.name}
+          value={this.DEFAULT_VALUES.name || this.name}
           onChange={(myEvent) => (this.name = myEvent.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid! &gt;
@@ -524,20 +524,7 @@ export class MyBasicRefAssignmentComponent {
 `;
 
 exports[`Stencil > jsx > Javascript Test > BasicRefPrevious 1`] = `
-"export function usePrevious(value) {
-  // The ref object is a generic container whose current property is mutable ...
-  // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef(null); // Store current value in ref
-
-  onUpdate(() => {
-    ref = value;
-  }, [value]); // Only re-run if value changes
-  // Return previous value (happens before update in useEffect above)
-
-  return ref;
-}
-
-import { Component, h, Fragment, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-previous-component\\",
@@ -2490,11 +2477,7 @@ export class Button {
 `;
 
 exports[`Stencil > jsx > Javascript Test > defaultValsWithTypes 1`] = `
-"const DEFAULT_VALUES = {
-  name: \\"Sami\\",
-};
-
-import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"component-with-types\\",
@@ -2502,12 +2485,16 @@ import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
 export class ComponentWithTypes {
   @Prop() name: any;
 
+  DEFAULT_VALUES = {
+    name: \\"Sami\\",
+  };
+
   render() {
     return (
       <div>
         {\\" \\"}
         Hello
-        {this.name || DEFAULT_VALUES.name}
+        {this.name || this.DEFAULT_VALUES.name}
       </div>
     );
   }
@@ -2819,11 +2806,7 @@ export class OnInit {
 `;
 
 exports[`Stencil > jsx > Javascript Test > onInit 1`] = `
-"export const defaultValues = {
-  name: \\"PatrickJS\\",
-};
-
-import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"on-init\\",
@@ -2949,13 +2932,7 @@ export class OnUpdateWithDeps {
 `;
 
 exports[`Stencil > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
-"const b = 3;
-const foo = () => {};
-export const a = 3;
-export const bar = () => {};
-export function run(value) {}
-
-import { Component, h, Fragment } from \\"@stencil/core\\";
+"import { Component, h, Fragment } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-component\\",
@@ -4081,11 +4058,7 @@ export class MyBasicRefComponent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > Basic 1`] = `
-"export const DEFAULT_VALUES = {
-  name: \\"Steve\\",
-};
-
-import { Component, h, Fragment, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-component\\",
@@ -4105,11 +4078,15 @@ export class MyBasicComponent {
     return \\"bar\\";
   }
 
+  DEFAULT_VALUES = {
+    name: \\"Steve\\",
+  };
+
   render() {
     return (
       <div class=\\"test div\\">
         <input
-          value={DEFAULT_VALUES.name || this.name}
+          value={this.DEFAULT_VALUES.name || this.name}
           onChange={(myEvent) => (this.name = myEvent.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid! &gt;
@@ -4474,20 +4451,7 @@ export class MyBasicRefAssignmentComponent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > BasicRefPrevious 1`] = `
-"export function usePrevious<T>(value: T) {
-  // The ref object is a generic container whose current property is mutable ...
-  // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
-
-  onUpdate(() => {
-    ref = value;
-  }, [value]); // Only re-run if value changes
-  // Return previous value (happens before update in useEffect above)
-
-  return ref;
-}
-
-import { Component, h, Fragment, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-previous-component\\",
@@ -6453,11 +6417,7 @@ export class Button {
 `;
 
 exports[`Stencil > jsx > Typescript Test > defaultValsWithTypes 1`] = `
-"const DEFAULT_VALUES: Props = {
-  name: \\"Sami\\",
-};
-
-import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"component-with-types\\",
@@ -6465,12 +6425,16 @@ import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
 export class ComponentWithTypes {
   @Prop() name: any;
 
+  DEFAULT_VALUES = {
+    name: \\"Sami\\",
+  };
+
   render() {
     return (
       <div>
         {\\" \\"}
         Hello
-        {this.name || DEFAULT_VALUES.name}
+        {this.name || this.DEFAULT_VALUES.name}
       </div>
     );
   }
@@ -6783,11 +6747,7 @@ export class OnInit {
 `;
 
 exports[`Stencil > jsx > Typescript Test > onInit 1`] = `
-"export const defaultValues = {
-  name: \\"PatrickJS\\",
-};
-
-import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"on-init\\",
@@ -6913,13 +6873,7 @@ export class OnUpdateWithDeps {
 `;
 
 exports[`Stencil > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
-"const b = 3;
-const foo = () => {};
-export const a = 3;
-export const bar = () => {};
-export function run<T>(value: T) {}
-
-import { Component, h, Fragment } from \\"@stencil/core\\";
+"import { Component, h, Fragment } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-component\\",

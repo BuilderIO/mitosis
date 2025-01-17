@@ -14,6 +14,6 @@ describe('Stencil', () => {
     generator: componentToStencil,
     options: {},
     logOutput: true,
-    only: ['typeDependency'],
+    only: ['defaultValsWithTypes'],
   });
 });*/

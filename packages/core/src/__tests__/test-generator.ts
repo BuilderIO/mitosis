@@ -218,7 +218,7 @@ const BASIC_TESTS: Tests = {
   propsInterface: propsInterface,
   defaultProps: defaultProps,
   defaultPropsOutsideComponent,
-  preserveTyping: preserveTyping,
+  preserveTyping,
   typeDependency,
   typeExternalStore,
   typeExternalProps,
