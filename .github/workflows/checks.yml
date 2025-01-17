@@ -153,3 +153,11 @@ jobs:
           name: playwright-results
           path: ./e2e/e2e-app/test-results
           retention-days: 14
+
+      - name: 🆙 Upload e2e builds
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-builds
+          path: ./e2e/**/dist
+          retention-days: 14
