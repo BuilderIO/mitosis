@@ -6,12 +6,19 @@ import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import { getForArguments } from '@/helpers/nodes/for';
 import { MitosisNode, checkIsForNode } from '@/types/mitosis-node';
 
-export const blockToStencil = (
-  json: MitosisNode,
-  options: ToStencilOptions = {},
-  insideJsx: boolean,
-  childComponents: string[],
-): string => {
+export const blockToStencil = ({
+  json,
+  options = {},
+  insideJsx,
+  rootRef,
+  childComponents,
+}: {
+  json: MitosisNode;
+  options: ToStencilOptions;
+  insideJsx?: boolean;
+  rootRef?: string;
+  childComponents: string[];
+}): string => {
   let blockName = childComponents.find((impName) => impName === json.name)
     ? getTagName(json.name, options)
     : json.name;
@@ -41,7 +48,7 @@ export const blockToStencil = (
       ${wrap ? '<Fragment>' : ''}
       ${json.children
         .filter(filterEmptyTextNodes)
-        .map((item) => blockToStencil(item, options, wrap, childComponents))
+        .map((item) => blockToStencil({ json: item, options, insideJsx: wrap, childComponents }))
         .join('\n')}
       ${wrap ? '</Fragment>' : ''}
     ))`;
@@ -56,13 +63,17 @@ export const blockToStencil = (
       ${wrap ? '<Fragment>' : ''}
       ${json.children
         .filter(filterEmptyTextNodes)
-        .map((item) => blockToStencil(item, options, wrap, childComponents))
+        .map((item) => blockToStencil({ json: item, options, insideJsx: wrap, childComponents }))
         .join('\n')}
       ${wrap ? '</Fragment>' : ''}
     ) : ${
       !json.meta.else
         ? 'null'
-        : `(${blockToStencil(json.meta.else as any, options, false, childComponents)})`
+        : `(${blockToStencil({
+            json: json.meta.else as any,
+            options,
+            childComponents,
+          })})`
     }`;
 
     if (insideJsx) {
@@ -92,8 +103,10 @@ export const blockToStencil = (
     if (type === 'spread') {
       str += ` {...(${code})} `;
     } else if (key === 'ref') {
-      // TODO: Add correct type here
-      str += ` ref={(el) => ${code.startsWith('this.') ? code : `this.${code}`} = el} `;
+      str += ` ref={(el:any) => {
+        ${rootRef ? `this.${rootRef} = el` : ''}
+        ${code.startsWith('this.') ? code : `this.${code}`} = el}
+      } `;
     } else if (isEvent(key)) {
       const asyncKeyword = json.bindings[key]?.async ? 'async ' : '';
       str += ` ${key}={${asyncKeyword}(${cusArgs.join(',')}) => ${code}} `;
@@ -107,7 +120,14 @@ export const blockToStencil = (
   str += '>';
   if (json.children) {
     str += json.children
-      .map((item) => blockToStencil(item, options, true, childComponents))
+      .map((item) =>
+        blockToStencil({
+          json: item,
+          options,
+          insideJsx: true,
+          childComponents,
+        }),
+      )
       .join('\n');
   }
 
