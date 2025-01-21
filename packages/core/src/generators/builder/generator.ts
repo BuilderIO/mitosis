@@ -325,23 +325,9 @@ type InternalOptions = {
 };
 
 const processLocalizedValues = (element: BuilderElement, node: MitosisNode) => {
-  const propertiesPrefix = 'properties.';
-  const componentOptionsPrefix = 'component.options.';
-
   if (node.localizedValues) {
     for (const [path, value] of Object.entries(node.localizedValues)) {
-      if (path.startsWith(propertiesPrefix)) {
-        const key = path.replace(propertiesPrefix, '');
-        element.properties = element.properties || {};
-        (element as any).properties[key] = value;
-      } else if (path === 'linkUrl') {
-        (element as any).linkUrl = value;
-      } else if (path.startsWith(componentOptionsPrefix)) {
-        const key = path.replace(componentOptionsPrefix, '');
-        if (element.component) {
-          element.component.options[key] = value;
-        }
-      }
+      set(element, path, value);
     }
   }
   return element;
