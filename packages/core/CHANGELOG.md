@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.29
+
+### Patch Changes
+
+- 1d74164: adds support to Builder parser and generator for inline localized content
+
 ## 0.5.28
 
 ### Patch Changes
