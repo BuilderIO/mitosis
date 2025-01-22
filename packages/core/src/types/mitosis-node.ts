@@ -35,6 +35,12 @@ export type Binding = {
   code: string;
 } & BindingProperties;
 
+export type BuilderLocalizedValue = {
+  '@type': '@builder.io/core:LocalizedValue';
+  Default: string;
+  [index: string]: string;
+};
+
 export type BaseNode = {
   '@type': '@builder.io/mitosis/node';
   meta: JSONObject;
@@ -71,6 +77,11 @@ export type BaseNode = {
    * It is used when components have props that are also nodes
    */
   slots?: { [key: string]: MitosisNode[] };
+  /**
+   * Key-value store of localized values
+   * It is used when a Builder content block has localized values.
+   */
+  localizedValues?: { [index: string]: BuilderLocalizedValue };
 };
 
 export type SpecialNodesNames = 'For' | 'Fragment' | 'Show' | 'Slot';

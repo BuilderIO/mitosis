@@ -324,17 +324,28 @@ type InternalOptions = {
   skipMapper?: boolean;
 };
 
+const processLocalizedValues = (element: BuilderElement, node: MitosisNode) => {
+  if (node.localizedValues) {
+    for (const [path, value] of Object.entries(node.localizedValues)) {
+      set(element, path, value);
+    }
+  }
+  return element;
+};
+
 export const blockToBuilder = (
   json: MitosisNode,
   options: ToBuilderOptions = {},
   _internalOptions: InternalOptions = {},
 ): BuilderElement => {
   const mapper = !_internalOptions.skipMapper && componentMappers[json.name];
+
   if (mapper) {
-    return mapper(json, options);
+    const element = mapper(json, options);
+    return processLocalizedValues(element, json);
   }
   if (json.properties._text || json.bindings._text?.code) {
-    return el(
+    const element = el(
       {
         tagName: 'span',
         bindings: {
@@ -355,6 +366,7 @@ export const blockToBuilder = (
       },
       options,
     );
+    return processLocalizedValues(element, json);
   }
 
   const thisIsComponent = isComponent(json);
@@ -450,7 +462,7 @@ export const blockToBuilder = (
     }
   }
 
-  return el(
+  const element = el(
     {
       tagName: thisIsComponent ? undefined : json.name,
       ...(hasCss && {
@@ -481,6 +493,8 @@ export const blockToBuilder = (
     },
     options,
   );
+
+  return processLocalizedValues(element, json);
 };
 
 export const componentToBuilder =
