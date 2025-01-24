@@ -47,15 +47,7 @@ export const shouldAddAttributePassing = (
 ) => {
   const metaAttributePassingAsString = String(json.meta.useMetadata?.attributePassing?.enabled);
 
-  if (!options.attributePassing?.enabled && metaAttributePassingAsString !== 'false') {
-    return false;
-  }
-
-  if (metaAttributePassingAsString === 'true') {
-    return true;
-  }
-
-  return options.attributePassing?.enabled;
+  return options.attributePassing?.enabled || metaAttributePassingAsString !== 'true';
 };
 
 export const getAddAttributePassingRef = (
