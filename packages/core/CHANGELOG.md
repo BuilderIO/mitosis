@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.30
+
+### Patch Changes
+
+- 0c493b2: [Builder] Fix null check issue with localized values
+
 ## 0.5.29
 
 ### Patch Changes
