@@ -2,4 +2,4 @@
 '@builder.io/mitosis': patch
 ---
 
-fix null check issue with localized values
+[Builder] Fix null check issue with localized values
