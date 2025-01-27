@@ -41,14 +41,8 @@ export const getAttributePassingString = (typescript?: boolean) => {
   );
 };
 
-export const shouldAddAttributePassing = (
-  json: MitosisComponent,
-  options: BaseTranspilerOptions,
-) => {
-  const metaAttributePassingAsString = String(json.meta.useMetadata?.attributePassing?.enabled);
-
-  return options.attributePassing?.enabled || metaAttributePassingAsString !== 'true';
-};
+export const shouldAddAttributePassing = (json: MitosisComponent, options: BaseTranspilerOptions) =>
+  options.attributePassing?.enabled || json.meta.useMetadata?.attributePassing?.enabled;
 
 export const getAddAttributePassingRef = (
   json: MitosisComponent,

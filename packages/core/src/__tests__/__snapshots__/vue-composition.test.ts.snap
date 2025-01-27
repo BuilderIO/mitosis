@@ -6915,7 +6915,7 @@ const props = defineProps<Props>();
 
 exports[`Vue > jsx > Typescript Test > signalsOnUpdate 1`] = `
 "<template>
-  <div class=\\"test div\\">{{ id }}{{ foo.bar.baz }}</div>
+  <div class=\\"test div\\">{{ id }}{{ foo.value.bar.baz }}</div>
 </template>
 
 <script setup lang=\\"ts\\">
@@ -6933,10 +6933,10 @@ type Props = {
 const props = defineProps<Props>();
 
 watch(
-  () => [props.id, props.foo.bar.baz],
+  () => [props.id, props.foo.value.bar.baz],
   () => {
     console.log(\\"props.id changed\\", props.id);
-    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.bar.baz);
+    console.log(\\"props.foo.value.bar.baz changed\\", props.foo.value.bar.baz);
   },
   { immediate: true }
 );
