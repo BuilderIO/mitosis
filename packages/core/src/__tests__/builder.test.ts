@@ -4,7 +4,11 @@ import { componentToMitosis } from '@/generators/mitosis';
 import { ToMitosisOptions } from '@/generators/mitosis/types';
 import { componentToReact } from '@/generators/react';
 import { dedent } from '@/helpers/dedent';
-import { builderContentToMitosisComponent, extractStateHook } from '@/parsers/builder';
+import {
+  builderContentToMitosisComponent,
+  builderElementToMitosisNode,
+  extractStateHook,
+} from '@/parsers/builder';
 import { parseJsx } from '@/parsers/jsx';
 import { compileAwayBuilderComponents } from '@/plugins/compile-away-builder-components';
 import { BuilderContent } from '@builder.io/sdk';
@@ -483,6 +487,30 @@ describe('Builder', () => {
 
     const backToBuilder = componentToBuilder()({ component });
     expect(backToBuilder).toMatchSnapshot();
+  });
+
+  test('null values', () => {
+    const component = builderElementToMitosisNode(
+      {
+        '@type': '@builder.io/sdk:Element',
+        '@version': 2,
+        id: 'builder-170e19cac58e4c28998d443a9dce80b8',
+        linkUrl: null,
+        component: {
+          name: 'CustomText',
+          options: {
+            text: 'hello',
+            text2: null,
+          },
+        },
+        properties: {
+          href: null,
+        },
+      } as any,
+      {},
+    );
+
+    expect(component).toMatchSnapshot();
   });
 
   test('preserve cssCode when converting', () => {
