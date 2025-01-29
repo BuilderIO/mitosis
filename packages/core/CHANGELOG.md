@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.31
+
+### Patch Changes
+
+- d24889d: [angular,stencil] Fix attribute-passing in options
+
 ## 0.5.30
 
 ### Patch Changes
