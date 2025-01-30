@@ -419,14 +419,23 @@ const parseJSObject = (
 };
 
 const extractValue = (input: string, node: Node | null): [string, null] | [null, string] => {
-  const start = node?.loc?.start?.index;
-  const end = node?.loc?.end?.index;
-  if (typeof start !== 'number' || typeof end !== 'number' || node === null) {
+  const start = node?.loc?.start;
+  const end = node?.loc?.end;
+  const startIndex =
+    start !== undefined && 'index' in start && typeof start['index'] === 'number'
+      ? start['index']
+      : undefined;
+  const endIndex =
+    end !== undefined && 'index' in end && typeof end['index'] === 'number'
+      ? end['index']
+      : undefined;
+
+  if (startIndex === undefined || endIndex === undefined || node === null) {
     const err = `bad value: ${node}`;
     return [null, err];
   }
 
-  const value = input.slice(start - 1, end - 1);
+  const value = input.slice(startIndex - 1, endIndex - 1);
   return [value, null];
 };
 
