@@ -716,7 +716,7 @@ describe('Builder', () => {
     );
   });
 
-  test('preserve bound media query styles when converting to mitosis', () => {
+  test.only('preserve bound media query styles when converting to mitosis', () => {
     const content = {
       data: {
         blocks: [
@@ -763,6 +763,33 @@ describe('Builder', () => {
         );
       }
       "
+    `);
+
+    // TODO This is wrong: should map back to individual responsiveStyles in bindings
+    const json = componentToBuilder()({ component: mitosis });
+    expect(json).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "blocks": [
+            {
+              "@type": "@builder.io/sdk:Element",
+              "actions": {},
+              "bindings": {
+                "style": "{ fontSize: state.fontSize, \\"@media (max-width: 640px)\\": { left: state.left, top: state.top }, \\"@media (max-width: 1200px)\\": { color: state.color }, }",
+              },
+              "children": [],
+              "code": {
+                "actions": {},
+                "bindings": {},
+              },
+              "properties": {},
+              "tagName": "div",
+            },
+          ],
+          "jsCode": "",
+          "tsCode": "",
+        },
+      }
     `);
   });
 });
