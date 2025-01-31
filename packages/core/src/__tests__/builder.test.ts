@@ -764,6 +764,35 @@ describe('Builder', () => {
       }
       "
     `);
+
+    const json = componentToBuilder()({ component: mitosis });
+    expect(json).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "blocks": [
+            {
+              "@type": "@builder.io/sdk:Element",
+              "actions": {},
+              "bindings": {
+                "responsiveStyles.large.color": "state.color",
+                "responsiveStyles.small.left": "state.left",
+                "responsiveStyles.small.top": "state.top",
+                "style.fontSize": "state.fontSize",
+              },
+              "children": [],
+              "code": {
+                "actions": {},
+                "bindings": {},
+              },
+              "properties": {},
+              "tagName": "div",
+            },
+          ],
+          "jsCode": "",
+          "tsCode": "",
+        },
+      }
+    `);
   });
 });
 
