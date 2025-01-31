@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.32
+
+### Patch Changes
+
+- a38e5bb: Builder: dynamic styles are mapped to bindings when generating
+
 ## 0.5.31
 
 ### Patch Changes
