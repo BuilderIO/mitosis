@@ -795,8 +795,7 @@ describe('Builder', () => {
     `);
   });
 
-  // TODO this is not correct
-  test.only('map custom component bindings', () => {
+  test('map custom component bindings', () => {
     const content = {
       data: {
         blocks: [
@@ -832,31 +831,46 @@ describe('Builder', () => {
     };
 
     const mitosis = builderContentToMitosisComponent(content);
-    expect(mitosis.children[0].slots).toMatchInlineSnapshot(`
-      {
-        "actions": [
-          {
-            "@type": "@builder.io/mitosis/node",
-            "bindings": {},
-            "children": [],
-            "meta": {},
-            "name": "Button",
-            "properties": {},
-            "scope": {},
-            "slots": {},
+    expect(mitosis.children).toMatchInlineSnapshot(`
+      [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "Header",
+          "properties": {
+            "$tagName": undefined,
+            "description": "Collection description",
+            "variant": "h1",
           },
-          {
-            "@type": "@builder.io/mitosis/node",
-            "bindings": {},
-            "children": [],
-            "meta": {},
-            "name": "Button",
-            "properties": {},
-            "scope": {},
-            "slots": {},
+          "scope": {},
+          "slots": {
+            "actions": [
+              {
+                "@type": "@builder.io/mitosis/node",
+                "bindings": {},
+                "children": [],
+                "meta": {},
+                "name": "Button",
+                "properties": {},
+                "scope": {},
+                "slots": {},
+              },
+              {
+                "@type": "@builder.io/mitosis/node",
+                "bindings": {},
+                "children": [],
+                "meta": {},
+                "name": "Button",
+                "properties": {},
+                "scope": {},
+                "slots": {},
+              },
+            ],
           },
-        ],
-      }
+        },
+      ]
     `);
 
     const jsx = componentToMitosis()({ component: mitosis });
@@ -881,58 +895,62 @@ describe('Builder', () => {
     `);
 
     const backToMitosis = parseJsx(jsx);
-    expect(backToMitosis).toMatchInlineSnapshot(`
-      {
-        "@type": "@builder.io/mitosis/component",
-        "children": [
-          {
-            "@type": "@builder.io/mitosis/node",
-            "bindings": {
-              "actions": {
-                "bindingType": "expression",
-                "code": "<>
+    expect(backToMitosis.children).toMatchInlineSnapshot(`
+      [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "actions": {
+              "bindingType": "expression",
+              "code": "<>
                 <Button />
                 <Button />
               </>",
-                "type": "single",
+              "type": "single",
+            },
+          },
+          "children": [],
+          "meta": {},
+          "name": "Header",
+          "properties": {
+            "description": "Collection description",
+            "variant": "h1",
+          },
+          "scope": {},
+          "slots": {
+            "actions": [
+              {
+                "@type": "@builder.io/mitosis/node",
+                "bindings": {},
+                "children": [
+                  {
+                    "@type": "@builder.io/mitosis/node",
+                    "bindings": {},
+                    "children": [],
+                    "meta": {},
+                    "name": "Button",
+                    "properties": {},
+                    "scope": {},
+                  },
+                  {
+                    "@type": "@builder.io/mitosis/node",
+                    "bindings": {},
+                    "children": [],
+                    "meta": {},
+                    "name": "Button",
+                    "properties": {},
+                    "scope": {},
+                  },
+                ],
+                "meta": {},
+                "name": "Fragment",
+                "properties": {},
+                "scope": {},
               },
-            },
-            "children": [],
-            "meta": {},
-            "name": "Header",
-            "properties": {
-              "description": "Collection description",
-              "variant": "h1",
-            },
-            "scope": {},
+            ],
           },
-        ],
-        "context": {
-          "get": {},
-          "set": {},
         },
-        "exports": {},
-        "hooks": {
-          "onEvent": [],
-          "onMount": [],
-        },
-        "imports": [
-          {
-            "importKind": "value",
-            "imports": {
-              "Button": "Button",
-              "Header": "Header",
-            },
-            "path": "@components",
-          },
-        ],
-        "inputs": [],
-        "meta": {},
-        "name": "MyComponent",
-        "refs": {},
-        "state": {},
-        "subComponents": [],
-      }
+      ]
     `);
 
     const json = componentToBuilder()({ component: backToMitosis });
@@ -943,25 +961,60 @@ describe('Builder', () => {
             {
               "@type": "@builder.io/sdk:Element",
               "actions": {},
-              "bindings": {
-                "component.options.actions": " return <>
-                <Button />
-                <Button />
-              </>",
-              },
+              "bindings": {},
               "children": [],
               "code": {
                 "actions": {},
-                "bindings": {
-                  "component.options.actions": "<>
-                <Button />
-                <Button />
-              </>",
-                },
+                "bindings": {},
               },
               "component": {
                 "name": "Header",
                 "options": {
+                  "actions": [
+                    {
+                      "@type": "@builder.io/sdk:Element",
+                      "actions": {},
+                      "bindings": {},
+                      "children": [
+                        {
+                          "@type": "@builder.io/sdk:Element",
+                          "actions": {},
+                          "bindings": {},
+                          "children": [],
+                          "code": {
+                            "actions": {},
+                            "bindings": {},
+                          },
+                          "component": {
+                            "name": "Button",
+                            "options": {},
+                          },
+                        },
+                        {
+                          "@type": "@builder.io/sdk:Element",
+                          "actions": {},
+                          "bindings": {},
+                          "children": [],
+                          "code": {
+                            "actions": {},
+                            "bindings": {},
+                          },
+                          "component": {
+                            "name": "Button",
+                            "options": {},
+                          },
+                        },
+                      ],
+                      "code": {
+                        "actions": {},
+                        "bindings": {},
+                      },
+                      "component": {
+                        "name": "Fragment",
+                        "options": {},
+                      },
+                    },
+                  ],
                   "description": "Collection description",
                   "variant": "h1",
                 },
