@@ -794,6 +794,186 @@ describe('Builder', () => {
       }
     `);
   });
+
+  // TODO this is not correct
+  test.only('map custom component bindings', () => {
+    const content = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            '@version': 2,
+            component: {
+              name: 'Header',
+              options: {
+                variant: 'h1',
+                description: 'Collection description',
+                actions: [
+                  {
+                    '@type': '@builder.io/sdk:Element',
+                    '@version': 2,
+                    component: {
+                      name: 'Button',
+                    },
+                  },
+                  {
+                    '@type': '@builder.io/sdk:Element',
+                    '@version': 2,
+                    component: {
+                      name: 'Button',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    const mitosis = builderContentToMitosisComponent(content);
+    expect(mitosis.children[0].slots).toMatchInlineSnapshot(`
+      {
+        "actions": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {},
+            "children": [],
+            "meta": {},
+            "name": "Button",
+            "properties": {},
+            "scope": {},
+            "slots": {},
+          },
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {},
+            "children": [],
+            "meta": {},
+            "name": "Button",
+            "properties": {},
+            "scope": {},
+            "slots": {},
+          },
+        ],
+      }
+    `);
+
+    const jsx = componentToMitosis()({ component: mitosis });
+    expect(jsx).toMatchInlineSnapshot(`
+      "import { Header, Button } from \\"@components\\";
+
+      export default function MyComponent(props) {
+        return (
+          <Header
+            variant=\\"h1\\"
+            description=\\"Collection description\\"
+            actions={
+              <>
+                <Button />
+                <Button />
+              </>
+            }
+          />
+        );
+      }
+      "
+    `);
+
+    const backToMitosis = parseJsx(jsx);
+    expect(backToMitosis).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/component",
+        "children": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {
+              "actions": {
+                "bindingType": "expression",
+                "code": "<>
+                <Button />
+                <Button />
+              </>",
+                "type": "single",
+              },
+            },
+            "children": [],
+            "meta": {},
+            "name": "Header",
+            "properties": {
+              "description": "Collection description",
+              "variant": "h1",
+            },
+            "scope": {},
+          },
+        ],
+        "context": {
+          "get": {},
+          "set": {},
+        },
+        "exports": {},
+        "hooks": {
+          "onEvent": [],
+          "onMount": [],
+        },
+        "imports": [
+          {
+            "importKind": "value",
+            "imports": {
+              "Button": "Button",
+              "Header": "Header",
+            },
+            "path": "@components",
+          },
+        ],
+        "inputs": [],
+        "meta": {},
+        "name": "MyComponent",
+        "refs": {},
+        "state": {},
+        "subComponents": [],
+      }
+    `);
+
+    const json = componentToBuilder()({ component: backToMitosis });
+    expect(json).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "blocks": [
+            {
+              "@type": "@builder.io/sdk:Element",
+              "actions": {},
+              "bindings": {
+                "component.options.actions": " return <>
+                <Button />
+                <Button />
+              </>",
+              },
+              "children": [],
+              "code": {
+                "actions": {},
+                "bindings": {
+                  "component.options.actions": "<>
+                <Button />
+                <Button />
+              </>",
+                },
+              },
+              "component": {
+                "name": "Header",
+                "options": {
+                  "description": "Collection description",
+                  "variant": "h1",
+                },
+              },
+            },
+          ],
+          "jsCode": "",
+          "tsCode": "",
+        },
+      }
+    `);
+  });
 });
 
 const bindingJson = {
