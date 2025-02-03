@@ -253,7 +253,6 @@ export const jsxElementToJson = (
   // const bindings: MitosisNode['bindings'] = {}
   // const slots: MitosisNode['slots'] = {}
 
-  console.log('looking at', node.openingElement);
   const { bindings, properties, slots } = node.openingElement.attributes.reduce<{
     bindings: MitosisNode['bindings'];
     properties: MitosisNode['properties'];
