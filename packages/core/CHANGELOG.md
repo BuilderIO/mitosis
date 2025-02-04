@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.33
+
+### Patch Changes
+
+- 50976fa: parseJsx accounts for JSX fragments when generating slots
+
 ## 0.5.32
 
 ### Patch Changes
