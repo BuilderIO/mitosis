@@ -11,6 +11,7 @@ import { collectTypes, isTypeScriptComponent } from './typescript';
 
 import type { Ast } from 'svelte/types/compiler/interfaces';
 import type { MitosisComponent } from '../../types/mitosis-component';
+import { builderContentToMitosisComponent } from '../builder/builder';
 import type { SveltosisComponent } from './types';
 
 function mapAstToMitosisJson(
@@ -73,4 +74,13 @@ export const parseSvelte = async function (
   const ast = parse(processedString.code);
   const componentName = path.split('/').pop()?.split('.')[0] ?? 'MyComponent';
   return mapAstToMitosisJson(ast, componentName, string_, usesTypescript);
+};
+
+export const parseBuilderSyntax = async function (
+  string_: string,
+  path = 'MyComponent.svelte',
+): Promise<MitosisComponent> {
+  const component = builderContentToMitosisComponent(JSON.parse(string_));
+
+  return component;
 };

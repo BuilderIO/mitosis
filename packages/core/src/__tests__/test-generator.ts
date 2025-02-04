@@ -178,6 +178,9 @@ const SVELTE_SYNTAX_TESTS: Tests = {
   textExpressions: getRawFile('./syntax/svelte/text-expressions.raw.svelte'),
 };
 
+const BuilderRenderContentTests: Tests = {
+  basic
+
 const REACT_NATIVE_TESTS: Tests = {
   onClickToPressable,
   inputToTextInputRN,
@@ -646,6 +649,14 @@ export const runTestsForSvelteSyntax = () => {
   });
 };
 
+export const runTestsForBuilderSyntax = () => {
+  Object.keys(BuilderRenderContentTests).forEach((key) => {
+    test(key, async () => {
+      const singleTest = BuilderRenderContentTests[key];
+      const t = isTestWithFailFor(singleTest) ? singleTest.file : singleTest;
+    });
+  });
+};
 const tsProject = createTypescriptProject(__dirname + '/tsconfig.json');
 
 const filterTests = (testArray?: Tests[], only?: string[]) =>
@@ -719,6 +730,11 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
         name: 'svelte',
         parser: async ({ code }) => parseSvelte(code),
         testsArray: filterTests([SVELTE_SYNTAX_TESTS], only),
+      },
+      {
+        name: 'builder',
+        parser: async ({ code }) => parseBuilder(code),
+        testsArray: filterTests([BuilderRenderContentTests], only),
       },
     ];
     for (const { name, parser, testsArray } of parsers) {

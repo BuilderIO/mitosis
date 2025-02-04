@@ -207,7 +207,7 @@ export const components: CompileAwayComponentsMap = {
       createMitosisNode({
         name: (node.properties.builderTag as string) || 'div',
         properties: {
-          innerHTML: node.properties.code || '',
+          innerHTML: JSON.stringify(node.properties.code || ''),
         },
         bindings: bindings,
       }),
