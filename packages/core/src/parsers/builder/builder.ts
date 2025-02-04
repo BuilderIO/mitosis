@@ -391,7 +391,7 @@ const componentMappers: {
            * If width if undefined, do not create a binding otherwise its JSX will
            * be <Column width={} /> which is not valid due to the empty expression.
            */
-          ...(col.width !== undefined && {
+          ...(col.width != null && {
             bindings: {
               width: { code: col.width.toString() },
             },
