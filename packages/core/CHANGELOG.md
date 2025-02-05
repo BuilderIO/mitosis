@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.34
+
+### Patch Changes
+
+- cf666ff: check for null string
+
 ## 0.5.33
 
 ### Patch Changes
