@@ -3,6 +3,7 @@ import { componentToHtml } from '@/generators/html';
 import { componentToMitosis } from '@/generators/mitosis';
 import { ToMitosisOptions } from '@/generators/mitosis/types';
 import { componentToReact } from '@/generators/react';
+import { componentToVue } from '@/generators/vue';
 import { dedent } from '@/helpers/dedent';
 import {
   builderContentToMitosisComponent,
@@ -13,8 +14,6 @@ import { parseJsx } from '@/parsers/jsx';
 import { compileAwayBuilderComponents } from '@/plugins/compile-away-builder-components';
 import { BuilderContent } from '@builder.io/sdk';
 
-import { componentToVue } from '@/generators/vue';
-import asyncBindings from './data/basic-ref-assignment.raw.tsx?raw';
 import columns from './data/blocks/columns.raw.tsx?raw';
 import customCode from './data/blocks/custom-code.raw.tsx?raw';
 import embed from './data/blocks/embed.raw.tsx?raw';
