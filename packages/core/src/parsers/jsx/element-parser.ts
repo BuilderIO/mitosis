@@ -294,8 +294,9 @@ export const jsxElementToJson = (
             arguments: args.length ? args : undefined,
             bindingType: 'function',
           });
-        } else if (types.isJSXElement(expression)) {
+        } else if (types.isJSXElement(expression) || types.isJSXFragment(expression)) {
           // <Foo myProp={<MoreMitosisNode><div /></MoreMitosisNode>} />
+          // <Foo myProp={<><Node /><Node /></>} />
           const slotNode = jsxElementToJson(expression);
           if (!slotNode) return memo;
 

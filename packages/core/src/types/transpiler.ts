@@ -15,6 +15,11 @@ export type TranspilerGenerator<X extends BaseTranspilerOptions, Y = string> = (
   args?: X,
 ) => Transpiler<Y>;
 
+export type AttributePassingType = {
+  enabled: boolean;
+  customRef?: string;
+};
+
 export interface BaseTranspilerOptions {
   experimental?: { [key: string]: any };
   /**
@@ -29,6 +34,8 @@ export interface BaseTranspilerOptions {
    * Enable `typescript` output
    */
   typescript?: boolean;
+  /** Enables/disables attribute passing for frameworks with custom elements like angular and stencil */
+  attributePassing?: AttributePassingType;
   /**
    * Preserves explicit filename extensions in import statements.
    */

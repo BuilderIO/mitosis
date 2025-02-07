@@ -14,11 +14,13 @@ import { replaceNodes } from '@/helpers/replace-identifiers';
 import { checkHasState } from '@/helpers/state';
 import { isBuilderElement, symbolBlocksAsChildren } from '@/parsers/builder';
 import { hashCodeAsString } from '@/symbols/symbol-processor';
-import { ForNode, MitosisNode } from '@/types/mitosis-node';
+import { Binding, ForNode, MitosisNode } from '@/types/mitosis-node';
 import { MitosisStyles } from '@/types/mitosis-styles';
 import { TranspilerArgs } from '@/types/transpiler';
 import { traverse as babelTraverse, types } from '@babel/core';
 import generate from '@babel/generator';
+import { parseExpression } from '@babel/parser';
+import type { Node } from '@babel/types';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { attempt, mapValues, omit, omitBy, set } from 'lodash';
@@ -324,17 +326,172 @@ type InternalOptions = {
   skipMapper?: boolean;
 };
 
+const processLocalizedValues = (element: BuilderElement, node: MitosisNode) => {
+  if (node.localizedValues) {
+    for (const [path, value] of Object.entries(node.localizedValues)) {
+      set(element, path, value);
+    }
+  }
+  return element;
+};
+
+/**
+ * Turns a stringified object into an object that can be looped over.
+ * Since values in the stringified object could be JS expressions, all
+ * values in the resulting object will remain strings.
+ * @param input - The stringified object
+ */
+const parseJSObject = (
+  input: string,
+): {
+  parsed: Record<string, string>;
+  unparsed?: string;
+} => {
+  const unparsed: string[] = [];
+  let parsed: Record<string, string> = {};
+
+  try {
+    const ast = parseExpression(`(${input})`, {
+      plugins: ['jsx', 'typescript'],
+      sourceType: 'module',
+    });
+
+    if (ast.type !== 'ObjectExpression') {
+      return { parsed, unparsed: input };
+    }
+
+    for (const prop of ast.properties) {
+      /**
+       * If the object includes spread or method, we stop. We can't really break the component into Key/Value
+       * and the whole expression is considered dynamic. We return `false` to signify that.
+       */
+      if (prop.type === 'ObjectMethod' || prop.type === 'SpreadElement') {
+        if (!!prop.start && !!prop.end) {
+          if (typeof input === 'string') {
+            unparsed.push(input.slice(prop.start - 1, prop.end - 1));
+          }
+        }
+        continue;
+      }
+
+      /**
+       * Ignore shorthand objects when processing incomplete objects. Otherwise we may
+       * create identifiers unintentionally.
+       * Example: When accounting for shorthand objects, "{ color" would become
+       * { color: color } thus creating a "color" identifier that does not exist.
+       */
+      if (prop.type === 'ObjectProperty') {
+        if (prop.extra?.shorthand) {
+          if (typeof input === 'string') {
+            unparsed.push(input.slice(prop.start! - 1, prop.end! - 1));
+          }
+          continue;
+        }
+
+        let key = '';
+        if (prop.key.type === 'Identifier') {
+          key = prop.key.name;
+        } else if (prop.key.type === 'StringLiteral') {
+          key = prop.key.value;
+        } else {
+          continue;
+        }
+
+        if (typeof input === 'string') {
+          const [val, err] = extractValue(input, prop.value);
+          if (err === null) {
+            parsed[key] = val;
+          }
+        }
+      }
+    }
+
+    return {
+      parsed,
+      unparsed: unparsed.length > 0 ? `{${unparsed.join('\n')}}` : undefined,
+    };
+  } catch (err) {
+    return {
+      parsed,
+      unparsed: unparsed.length > 0 ? `{${unparsed.join('\n')}}` : undefined,
+    };
+  }
+};
+
+const extractValue = (input: string, node: Node | null): [string, null] | [null, string] => {
+  const start = node?.loc?.start;
+  const end = node?.loc?.end;
+  const startIndex =
+    start !== undefined && 'index' in start && typeof start['index'] === 'number'
+      ? start['index']
+      : undefined;
+  const endIndex =
+    end !== undefined && 'index' in end && typeof end['index'] === 'number'
+      ? end['index']
+      : undefined;
+
+  if (startIndex === undefined || endIndex === undefined || node === null) {
+    const err = `bad value: ${node}`;
+    return [null, err];
+  }
+
+  const value = input.slice(startIndex - 1, endIndex - 1);
+  return [value, null];
+};
+
+/**
+ * Maps and styles that are bound with dynamic values onto their respective
+ * binding keys for Builder elements. This function also maps media queries
+ * with dynamic values.
+ * @param - bindings - The bindings object that has your styles. This param
+ * will be modified in-place, and the old "style" key will be removed.
+ */
+const mapBoundStyles = (bindings: { [key: string]: Binding | undefined }) => {
+  const styles = bindings['style'];
+  if (!styles) {
+    return;
+  }
+  const { parsed } = parseJSObject(styles.code);
+
+  for (const key in parsed) {
+    const mediaQueryMatch = key.match(mediaQueryRegex);
+
+    if (mediaQueryMatch) {
+      const { parsed: mParsed } = parseJSObject(parsed[key]);
+      const [_, pixelSize] = mediaQueryMatch;
+      const size = sizes.getSizeForWidth(Number(pixelSize));
+      for (const mKey in mParsed) {
+        bindings[`responsiveStyles.${size}.${mKey}`] = {
+          code: mParsed[mKey],
+          bindingType: 'expression',
+          type: 'single',
+        };
+      }
+    } else {
+      bindings[`style.${key}`] = {
+        code: parsed[key],
+        bindingType: 'expression',
+        type: 'single',
+      };
+    }
+  }
+
+  delete bindings['style'];
+};
+
 export const blockToBuilder = (
   json: MitosisNode,
   options: ToBuilderOptions = {},
   _internalOptions: InternalOptions = {},
 ): BuilderElement => {
   const mapper = !_internalOptions.skipMapper && componentMappers[json.name];
+
   if (mapper) {
-    return mapper(json, options);
+    const element = mapper(json, options);
+    return processLocalizedValues(element, json);
   }
   if (json.properties._text || json.bindings._text?.code) {
-    return el(
+    const element = el(
       {
         tagName: 'span',
         bindings: {
@@ -355,6 +512,7 @@ export const blockToBuilder = (
       },
       options,
     );
+    return processLocalizedValues(element, json);
   }
 
   const thisIsComponent = isComponent(json);
@@ -380,6 +538,10 @@ export const blockToBuilder = (
       actions[key.replace(eventBindingKeyRegex, firstCharMatchForEventBindingKey.toLowerCase())] =
         actionBody;
       delete bindings[key];
+    }
+
+    if (key === 'style') {
+      mapBoundStyles(bindings);
     }
   }
 
@@ -450,7 +612,7 @@ export const blockToBuilder = (
     }
   }
 
-  return el(
+  const element = el(
     {
       tagName: thisIsComponent ? undefined : json.name,
       ...(hasCss && {
@@ -481,6 +643,8 @@ export const blockToBuilder = (
     },
     options,
   );
+
+  return processLocalizedValues(element, json);
 };
 
 export const componentToBuilder =
