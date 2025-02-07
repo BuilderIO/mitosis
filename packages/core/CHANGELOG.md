@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.35
+
+### Patch Changes
+
+- b6a01ab: Fix: properly handle innerHTML properties in react codegen
+
 ## 0.5.34
 
 ### Patch Changes
