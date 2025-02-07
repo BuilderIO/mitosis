@@ -203,7 +203,10 @@ export const components: CompileAwayComponentsMap = {
       bindings.innerHTML = node.bindings.code;
     }
     return wrapOutput(
-      node,
+      {
+        ...node,
+        properties: omit(node.properties, 'code'),
+      },
       createMitosisNode({
         name: (node.properties.builderTag as string) || 'div',
         properties: {

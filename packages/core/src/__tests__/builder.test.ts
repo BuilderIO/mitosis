@@ -9,6 +9,7 @@ import { parseJsx } from '@/parsers/jsx';
 import { compileAwayBuilderComponents } from '@/plugins/compile-away-builder-components';
 import { BuilderContent } from '@builder.io/sdk';
 
+import { componentToVue } from '@/generators/vue';
 import asyncBindings from './data/basic-ref-assignment.raw.tsx?raw';
 import columns from './data/blocks/columns.raw.tsx?raw';
 import customCode from './data/blocks/custom-code.raw.tsx?raw';
@@ -315,6 +316,35 @@ describe('Builder', () => {
       plugins: [compileAwayBuilderComponents()],
     })({ component });
     expect(html).toMatchSnapshot();
+  });
+
+  test('Valid Custom Code', async () => {
+    const builderJson: BuilderContent = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element',
+            component: {
+              name: 'CustomCode',
+              options: {
+                code: `<svg width="200" height="200"></svg>`,
+              },
+            },
+          },
+        ],
+      },
+    } as BuilderContent;
+    const component = builderContentToMitosisComponent(builderJson);
+
+    const vue = componentToVue({
+      plugins: [compileAwayBuilderComponents()],
+    })({ component });
+    expect(vue).toMatchSnapshot();
+
+    const react = componentToReact({
+      plugins: [compileAwayBuilderComponents()],
+    })({ component });
+    expect(react).toMatchSnapshot();
   });
 
   test('Regenerate custom Hero', () => {

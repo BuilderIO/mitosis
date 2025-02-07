@@ -3530,6 +3530,39 @@ exports[`Builder > Text with bindings 3`] = `
 }
 `;
 
+exports[`Builder > Valid Custom Code 1`] = `
+"<template>
+  <div><div innerHTML='<svg width=\\"200\\" height=\\"200\\"></svg>'></div></div>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"my-component\\",
+});
+</script>"
+`;
+
+exports[`Builder > Valid Custom Code 2`] = `
+"import * as React from \\"react\\";
+
+function MyComponent(props) {
+  return (
+    <div>
+      <div
+        dangerouslySetInnerHTML={{
+          __html: \\"<svg width=&quot;200&quot; height=&quot;200&quot;></svg>\\",
+        }}
+      />
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
 exports[`Builder > async bindings 1`] = `
 {
   "data": {

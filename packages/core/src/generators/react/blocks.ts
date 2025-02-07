@@ -145,7 +145,12 @@ const ATTTRIBUTE_MAPPERS: { [key: string]: string } = {
 const BINDING_MAPPERS: {
   [key: string]:
     | string
-    | ((key: string, value: string, options?: ToReactOptions) => [string, string]);
+    | ((
+        key: string,
+        value: string,
+        options?: ToReactOptions,
+        isProperty?: boolean,
+      ) => [string, string]);
 } = {
   ref(ref, value, options) {
     if (options?.preact) {
@@ -161,8 +166,14 @@ const BINDING_MAPPERS: {
     }
     return [ref, value];
   },
-  innerHTML(_key, value) {
-    return ['dangerouslySetInnerHTML', `{__html: ${value.replace(/\s+/g, ' ')}}`];
+  innerHTML(_key, value, _options, isProperty) {
+    const wrapChar = isProperty ? '"' : '';
+    let useValue = value.replace(/\s+/g, ' ');
+
+    if (isProperty) {
+      useValue = value.replace(/"/g, '\\"');
+    }
+    return ['dangerouslySetInnerHTML', `{__html: ${wrapChar}${useValue}${wrapChar}}`];
   },
   ...ATTTRIBUTE_MAPPERS,
 };
@@ -246,7 +257,7 @@ export const blockToReact = (
     } else if (BINDING_MAPPERS[key]) {
       const mapper = BINDING_MAPPERS[key];
       if (typeof mapper === 'function') {
-        const [newKey, newValue] = mapper(key, value, options);
+        const [newKey, newValue] = mapper(key, value, options, true);
         str += ` ${newKey}={${newValue}} `;
       } else {
         str += ` ${BINDING_MAPPERS[key]}="${value}" `;
