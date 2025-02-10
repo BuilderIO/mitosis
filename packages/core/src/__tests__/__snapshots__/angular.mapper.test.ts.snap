@@ -4819,6 +4819,54 @@ export class FigmaButtonModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > functionProps 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <p
+      [attr.f]=\\"() => x\\"
+      [attr.f1]=\\"x => x\\"
+      [attr.f2]=\\"x => {}\\"
+      [attr.f3]=\\"function () {
+          return x;
+        }\\"
+      [attr.f4]=\\"function (x) {
+          return x;
+        }\\"
+      [attr.f5]=\\"function (x) {
+          return;
+        }\\"
+      [attr.f6]=\\"function () {
+          return;
+        }\\"
+      [attr.f7]=\\"(a, b, c) => a + b + c\\"
+    ></p>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicComponent {}
+
+@NgModule({
+  declarations: [MyBasicComponent],
+  imports: [CommonModule],
+  exports: [MyBasicComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyBasicComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > getterState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -12970,6 +13018,58 @@ export default class FigmaButton {
   bootstrap: [SomeOtherComponent],
 })
 export class FigmaButtonModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > functionProps 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+export interface MyBasicComponentProps {
+  id: string;
+}
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <p
+      [attr.f]=\\"() => x\\"
+      [attr.f1]=\\"x => x\\"
+      [attr.f2]=\\"x => {}\\"
+      [attr.f3]=\\"function () {
+          return x;
+        }\\"
+      [attr.f4]=\\"function (x) {
+          return x;
+        }\\"
+      [attr.f5]=\\"function (x) {
+          return;
+        }\\"
+      [attr.f6]=\\"function () {
+          return;
+        }\\"
+      [attr.f7]=\\"(a, b, c) => a + b + c\\"
+    ></p>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicComponent {}
+
+@NgModule({
+  declarations: [MyBasicComponent],
+  imports: [CommonModule],
+  exports: [MyBasicComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyBasicComponentModule {}
 "
 `;
 

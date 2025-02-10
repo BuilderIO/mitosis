@@ -46,6 +46,7 @@ const basicRefPrevious = getRawFile('./data/ref/basic-ref-usePrevious.raw.tsx');
 const basicRefAssignment = getRawFile('./data/ref/basic-ref-assignment.raw.tsx');
 const eventInputAndChange = getRawFile('./data/events/event-input-and-change.raw.tsx');
 const propsDestructure = getRawFile('./data/basic-props-destructure.raw.tsx');
+const functionProps = getRawFile('./data/function-props.raw.tsx');
 const nestedStyles = getRawFile('./data/nested-styles.raw.tsx');
 const preserveExportOrLocalStatement = getRawFile(
   './data/basic-preserve-export-or-local-statement.raw.tsx',
@@ -196,6 +197,7 @@ const BASIC_TESTS: Tests = {
   BasicFor: basicFor,
   basicForFragment,
   basicForNoTagReference: basicForNoTagReference,
+  functionProps: functionProps,
   Input: inputBlock,
   InputParent: inputParentBlock,
   Submit: submitButtonBlock,
@@ -597,7 +599,7 @@ const metaDataPlugin: Plugin = () => ({
           useMetadata:
           ${JSON.stringify(json.meta.useMetadata)}
           */
-          
+
           ${code}`;
       }
 

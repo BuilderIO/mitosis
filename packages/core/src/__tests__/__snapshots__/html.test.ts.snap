@@ -5058,6 +5058,69 @@ Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}} */
 "
 `;
 
+exports[`Html > jsx > Javascript Test > functionProps 1`] = `
+"<p data-el=\\"p-1\\"></p>
+<script>
+  (() => {
+    const state = {};
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='p-1']\\").forEach((el) => {
+        el.setAttribute(\\"f\\", () => x);
+
+        el.setAttribute(\\"f1\\", (x) => x);
+
+        el.setAttribute(\\"f2\\", (x) => {});
+
+        el.setAttribute(\\"f3\\", function () {
+          return x;
+        });
+
+        el.setAttribute(\\"f4\\", function (x) {
+          return x;
+        });
+
+        el.setAttribute(\\"f5\\", function (x) {
+          return;
+        });
+
+        el.setAttribute(\\"f6\\", function () {
+          return;
+        });
+
+        el.setAttribute(\\"f7\\", (a, b, c) => a + b + c);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > getterState 1`] = `
 "<div>
   <p>
@@ -12919,6 +12982,69 @@ Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}} */
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > functionProps 1`] = `
+"<p data-el=\\"p-1\\"></p>
+<script>
+  (() => {
+    const state = {};
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='p-1']\\").forEach((el) => {
+        el.setAttribute(\\"f\\", () => x);
+
+        el.setAttribute(\\"f1\\", (x) => x);
+
+        el.setAttribute(\\"f2\\", (x) => {});
+
+        el.setAttribute(\\"f3\\", function () {
+          return x;
+        });
+
+        el.setAttribute(\\"f4\\", function (x) {
+          return x;
+        });
+
+        el.setAttribute(\\"f5\\", function (x) {
+          return;
+        });
+
+        el.setAttribute(\\"f6\\", function () {
+          return;
+        });
+
+        el.setAttribute(\\"f7\\", (a, b, c) => a + b + c);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
   })();
 </script>
 "

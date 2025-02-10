@@ -4921,6 +4921,97 @@ export class FigmaButtonModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > functionProps 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <p
+      [attr.f]=\\"node_0_p\\"
+      [attr.f1]=\\"x => x\\"
+      [attr.f2]=\\"node_1_p\\"
+      [attr.f3]=\\"node_2_p\\"
+      [attr.f4]=\\"node_3_p\\"
+      [attr.f5]=\\"node_4_p\\"
+      [attr.f6]=\\"node_5_p\\"
+      [attr.f7]=\\"node_6_p\\"
+    ></p>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicComponent {
+  node_0_p = null;
+  node_1_p = null;
+  node_2_p = null;
+  node_3_p = null;
+  node_4_p = null;
+  node_5_p = null;
+  node_6_p = null;
+
+  ngOnInit() {
+    this.node_0_p = () => x;
+
+    this.node_1_p = (x) => {};
+
+    this.node_2_p = function () {
+      return x;
+    };
+
+    this.node_3_p = function (x) {
+      return x;
+    };
+
+    this.node_4_p = function (x) {
+      return;
+    };
+
+    this.node_5_p = function () {
+      return;
+    };
+
+    this.node_6_p = (a, b, c) => a + b + c;
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_p = () => x;
+      this.node_1_p = (x) => {};
+      this.node_2_p = function () {
+        return x;
+      };
+      this.node_3_p = function (x) {
+        return x;
+      };
+      this.node_4_p = function (x) {
+        return;
+      };
+      this.node_5_p = function () {
+        return;
+      };
+      this.node_6_p = (a, b, c) => a + b + c;
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicComponent],
+  imports: [CommonModule],
+  exports: [MyBasicComponent],
+})
+export class MyBasicComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > getterState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -13219,6 +13310,101 @@ export default class FigmaButton {
   exports: [FigmaButton],
 })
 export class FigmaButtonModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > functionProps 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, SimpleChanges } from \\"@angular/core\\";
+
+export interface MyBasicComponentProps {
+  id: string;
+}
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <p
+      [attr.f]=\\"node_0_p\\"
+      [attr.f1]=\\"x => x\\"
+      [attr.f2]=\\"node_1_p\\"
+      [attr.f3]=\\"node_2_p\\"
+      [attr.f4]=\\"node_3_p\\"
+      [attr.f5]=\\"node_4_p\\"
+      [attr.f6]=\\"node_5_p\\"
+      [attr.f7]=\\"node_6_p\\"
+    ></p>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicComponent {
+  node_0_p = null;
+  node_1_p = null;
+  node_2_p = null;
+  node_3_p = null;
+  node_4_p = null;
+  node_5_p = null;
+  node_6_p = null;
+
+  ngOnInit() {
+    this.node_0_p = () => x;
+
+    this.node_1_p = (x) => {};
+
+    this.node_2_p = function () {
+      return x;
+    };
+
+    this.node_3_p = function (x) {
+      return x;
+    };
+
+    this.node_4_p = function (x) {
+      return;
+    };
+
+    this.node_5_p = function () {
+      return;
+    };
+
+    this.node_6_p = (a, b, c) => a + b + c;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      this.node_0_p = () => x;
+      this.node_1_p = (x) => {};
+      this.node_2_p = function () {
+        return x;
+      };
+      this.node_3_p = function (x) {
+        return x;
+      };
+      this.node_4_p = function (x) {
+        return;
+      };
+      this.node_5_p = function () {
+        return;
+      };
+      this.node_6_p = (a, b, c) => a + b + c;
+    }
+  }
+}
+
+@NgModule({
+  declarations: [MyBasicComponent],
+  imports: [CommonModule],
+  exports: [MyBasicComponent],
+})
+export class MyBasicComponentModule {}
 "
 `;
 
