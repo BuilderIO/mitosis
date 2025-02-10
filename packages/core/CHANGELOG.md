@@ -1,5 +1,29 @@
 # Change Log
 
+## 0.5.35
+
+### Patch Changes
+
+- b6a01ab: Fix: properly handle innerHTML properties in react codegen
+
+## 0.5.34
+
+### Patch Changes
+
+- cf666ff: check for null string
+
+## 0.5.33
+
+### Patch Changes
+
+- 50976fa: parseJsx accounts for JSX fragments when generating slots
+
+## 0.5.32
+
+### Patch Changes
+
+- a38e5bb: Builder: dynamic styles are mapped to bindings when generating
+
 ## 0.5.31
 
 ### Patch Changes
