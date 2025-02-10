@@ -20,7 +20,7 @@ export default component$(() => {
         Welcome to our new site! Please{' '}
         <a
           href={`https://docs.google.com/forms/d/e/1FAIpQLSc6jOAOPMRHviiXv4Pkk28fmdFhcX-IprhHvKCIBhjuZKmgiA/viewform?usp=pp_url&entry.1953883676=${encodeURIComponent(
-            location.url.href,
+            location.url.pathname + location.url.search,
           )}`}
           target="_blank"
           class="underline"
