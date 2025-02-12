@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.5.36
+
+### Patch Changes
+
+- a68bd42: [All] Bug: Fix arrow function expressions in non-on properties
+- b91dfa7: Builder: bound style string literals are not removed
+
 ## 0.5.35
 
 ### Patch Changes
