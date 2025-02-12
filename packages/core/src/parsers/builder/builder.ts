@@ -1010,6 +1010,7 @@ export function convertExportDefaultToReturn(code: string) {
   try {
     const { types } = babel;
     const body = parseCode(code);
+    if (body.length === 0) return code;
     const newBody = body.slice();
     for (let i = 0; i < body.length; i++) {
       const statement = body[i];
