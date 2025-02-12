@@ -757,6 +757,8 @@ describe('Builder', () => {
               'responsiveStyles.small.top': 'state.top',
               'responsiveStyles.large.color': 'state.color',
               'style.fontSize': 'state.fontSize',
+              'style.background': '"red"',
+              'responsiveStyles.large.background': '"green"',
             },
           },
         ],
@@ -768,7 +770,7 @@ describe('Builder', () => {
       {
         "style": {
           "bindingType": "expression",
-          "code": "{ fontSize: state.fontSize, \\"@media (max-width: 640px)\\": { left: state.left, top: state.top }, \\"@media (max-width: 1200px)\\": { color: state.color }, }",
+          "code": "{ fontSize: state.fontSize, background: \\"red\\", \\"@media (max-width: 640px)\\": { left: state.left, top: state.top }, \\"@media (max-width: 1200px)\\": { color: state.color, background: \\"green\\" }, }",
           "type": "single",
         },
       }
@@ -776,53 +778,57 @@ describe('Builder', () => {
 
     const jsx = componentToMitosis()({ component: mitosis });
     expect(jsx).toMatchInlineSnapshot(`
-      "export default function MyComponent(props) {
-        return (
-          <div
-            style={{
-              fontSize: state.fontSize,
-              \\"@media (max-width: 640px)\\": {
-                left: state.left,
-                top: state.top,
-              },
-              \\"@media (max-width: 1200px)\\": {
-                color: state.color,
-              },
-            }}
-          />
-        );
-      }
-      "
-    `);
+          "export default function MyComponent(props) {
+            return (
+              <div
+                style={{
+                  fontSize: state.fontSize,
+                  background: \\"red\\",
+                  \\"@media (max-width: 640px)\\": {
+                    left: state.left,
+                    top: state.top,
+                  },
+                  \\"@media (max-width: 1200px)\\": {
+                    color: state.color,
+                    background: \\"green\\",
+                  },
+                }}
+              />
+            );
+          }
+          "
+        `);
 
     const json = componentToBuilder()({ component: mitosis });
     expect(json).toMatchInlineSnapshot(`
-      {
-        "data": {
-          "blocks": [
-            {
-              "@type": "@builder.io/sdk:Element",
-              "actions": {},
-              "bindings": {
-                "responsiveStyles.large.color": "state.color",
-                "responsiveStyles.small.left": "state.left",
-                "responsiveStyles.small.top": "state.top",
-                "style.fontSize": "state.fontSize",
-              },
-              "children": [],
-              "code": {
-                "actions": {},
-                "bindings": {},
-              },
-              "properties": {},
-              "tagName": "div",
+          {
+            "data": {
+              "blocks": [
+                {
+                  "@type": "@builder.io/sdk:Element",
+                  "actions": {},
+                  "bindings": {
+                    "responsiveStyles.large.background": "\\"green\\"",
+                    "responsiveStyles.large.color": "state.color",
+                    "responsiveStyles.small.left": "state.left",
+                    "responsiveStyles.small.top": "state.top",
+                    "style.background": "\\"red\\"",
+                    "style.fontSize": "state.fontSize",
+                  },
+                  "children": [],
+                  "code": {
+                    "actions": {},
+                    "bindings": {},
+                  },
+                  "properties": {},
+                  "tagName": "div",
+                },
+              ],
+              "jsCode": "",
+              "tsCode": "",
             },
-          ],
-          "jsCode": "",
-          "tsCode": "",
-        },
-      }
-    `);
+          }
+        `);
   });
 
   test('map custom component bindings', () => {
