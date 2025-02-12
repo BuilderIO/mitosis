@@ -5,6 +5,7 @@ export interface ToMitosisOptions extends BaseTranspilerOptions {
   nativeConditionals?: boolean;
   nativeLoops?: boolean;
   returnArray?: boolean;
+  addCloseTagIdComments?: boolean;
 }
 
 export type MitosisMetadata = {};

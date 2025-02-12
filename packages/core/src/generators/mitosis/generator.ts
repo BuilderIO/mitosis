@@ -189,7 +189,9 @@ export const blockToMitosis = (
     str += json.children.map((item) => blockToMitosis(item, options, component, true)).join('\n');
   }
 
-  str += `</${json.name}>`;
+  str += `</${json.name}>${
+    options.addCloseTagIdComments && json.properties._id ? `{/* end ${json.properties._id} */}` : ''
+  }`;
 
   return str;
 };
@@ -242,6 +244,7 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
     });
 
     const addWrapper = json.children.length !== 1 || isRootTextNode(json);
+    const forceWrapper = options.addCloseTagIdComments || addWrapper;
 
     const components = Array.from(getComponents(json));
     const mitosisCoreComponents: string[] = [];
@@ -299,11 +302,11 @@ export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> 
 
       ${json.style ? `useStyle(\`${json.style}\`)` : ''}
 
-      return ${options.returnArray ? '[' : '('}${addWrapper ? '<>' : ''}
+      return ${options.returnArray ? '[' : '('}${forceWrapper ? '<>' : ''}
         ${json.children
-          .map((item) => blockToMitosis(item, options, component, addWrapper))
+          .map((item) => blockToMitosis(item, options, component, forceWrapper))
           .join('\n')}
-        ${addWrapper ? '</>' : ''}${options.returnArray ? ']' : ')'}
+        ${forceWrapper ? '</>' : ''}${options.returnArray ? ']' : ')'}
     }
 
   `;
