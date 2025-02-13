@@ -468,16 +468,39 @@ const mapBoundStyles = (bindings: { [key: string]: Binding | undefined }) => {
         };
       }
     } else {
-      bindings[`style.${key}`] = {
-        code: parsed[key],
-        bindingType: 'expression',
-        type: 'single',
-      };
+      if (isGlobalStyle(key)) {
+        console.warn(
+          `The following bound styles are not supported by Builder JSON and have been removed:
+  "${key}": ${parsed[key]}
+          `,
+        );
+      } else {
+        bindings[`style.${key}`] = {
+          code: parsed[key],
+          bindingType: 'expression',
+          type: 'single',
+        };
+      }
     }
   }
 
   delete bindings['style'];
 };
+
+function isGlobalStyle(key: string) {
+  // max-width media queries are handled separately
+  if (/max-width: (.*?)px/gm.exec(key)) {
+    return false;
+  }
+
+  return (
+    // pseudo class
+    key.startsWith('&:') ||
+    key.startsWith(':') ||
+    // @ rules
+    key.startsWith('@')
+  );
+}
 
 export const blockToBuilder = (
   json: MitosisNode,
