@@ -701,7 +701,7 @@ describe('Builder', () => {
     `);
   });
 
-  test.only('map Column widths', () => {
+  test('map Column widths', () => {
     const content = {
       data: {
         blocks: [
@@ -710,7 +710,7 @@ describe('Builder', () => {
             component: {
               name: 'Columns',
               options: {
-                columns: [{ blocks: [], width: 50 }],
+                columns: [{ blocks: [], width: 50 }, { blocks: [] }],
               },
             },
           },
@@ -740,7 +740,10 @@ describe('Builder', () => {
                   "columns": [
                     {
                       "blocks": [],
-                      "width": 50
+                      "width": 50,
+                    },
+                    {
+                      "blocks": [],
                     },
                   ],
                 },
