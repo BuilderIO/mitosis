@@ -488,7 +488,7 @@ const mapBoundStyles = (bindings: { [key: string]: Binding | undefined }) => {
 };
 
 function isGlobalStyle(key: string) {
-  // max-width media queries are handled separately
+  // These are mapped to their respective responsiveStyle and support bindings
   if (/max-width: (.*?)px/gm.exec(key)) {
     return false;
   }
