@@ -87,6 +87,7 @@ const componentMappers: {
 
     const columns = block.children!.map((item) => ({
       blocks: item.children,
+      width: item.component?.options?.width,
     }));
 
     block.component!.options.columns = columns;

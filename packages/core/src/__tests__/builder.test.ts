@@ -701,6 +701,62 @@ describe('Builder', () => {
     `);
   });
 
+  test('map Column widths', () => {
+    const content = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            component: {
+              name: 'Columns',
+              options: {
+                columns: [{ blocks: [], width: 50 }, { blocks: [] }],
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    const mitosisJson = builderContentToMitosisComponent(content);
+
+    const backToBuilder = componentToBuilder()({ component: mitosisJson });
+    expect(backToBuilder).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "blocks": [
+            {
+              "@type": "@builder.io/sdk:Element",
+              "actions": {},
+              "bindings": {},
+              "children": [],
+              "code": {
+                "actions": {},
+                "bindings": {},
+              },
+              "component": {
+                "name": "Columns",
+                "options": {
+                  "columns": [
+                    {
+                      "blocks": [],
+                      "width": 50,
+                    },
+                    {
+                      "blocks": [],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          "jsCode": "",
+          "tsCode": "",
+        },
+      }
+    `);
+  });
+
   test('nodes as props', () => {
     const content = {
       data: {
