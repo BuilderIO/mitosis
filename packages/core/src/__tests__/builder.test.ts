@@ -831,6 +831,49 @@ describe('Builder', () => {
         `);
   });
 
+  test('drop unsupported bound styles to avoid crashes', () => {
+    const jsx = `export default function MyComponent(props) {
+      return (
+        <div
+          style={{
+            fontSize: state.fontSize,
+            '&:hover': {
+              backgroundColor: state.foo === 1 ? "red" : "blue"
+            }
+          }}
+        />
+      );
+    }`;
+
+    const mitosis = parseJsx(jsx);
+
+    const json = componentToBuilder()({ component: mitosis });
+    expect(json).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "blocks": [
+            {
+              "@type": "@builder.io/sdk:Element",
+              "actions": {},
+              "bindings": {
+                "style.fontSize": "state.fontSize",
+              },
+              "children": [],
+              "code": {
+                "actions": {},
+                "bindings": {},
+              },
+              "properties": {},
+              "tagName": "div",
+            },
+          ],
+          "jsCode": "",
+          "tsCode": "",
+        },
+      }
+    `);
+  });
+
   test('map custom component bindings', () => {
     const content = {
       data: {
