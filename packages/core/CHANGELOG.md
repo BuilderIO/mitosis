@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.38
+
+### Patch Changes
+
+- 469394f: Builder: include Column widths in generator
+
 ## 0.5.37
 
 ### Patch Changes
