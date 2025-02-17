@@ -1143,6 +1143,7 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > CustomCode 1
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"custom-code\\",
@@ -1150,7 +1151,7 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
   styles: [
@@ -1210,6 +1211,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(private sanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -1233,6 +1236,7 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > Embed 1`] = 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"custom-code\\",
@@ -1240,7 +1244,7 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
   styles: [
@@ -1300,6 +1304,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(private sanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -2158,13 +2164,14 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > RawText 1`] 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"raw-text\\",
   template: \`
     <span
       [class]=\\"attributes?.class || attributes?.className\\"
-      [innerHTML]=\\"text || ''\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || '')\\"
     ></span>
   \`,
   styles: [
@@ -2178,6 +2185,8 @@ import { Component, Input } from \\"@angular/core\\";
 export default class RawText {
   @Input() attributes;
   @Input() text;
+
+  constructor(private sanitizer) {}
 }
 
 @NgModule({
@@ -2962,6 +2971,7 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > Text 1`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -2973,7 +2983,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.data-name]=\\"{
           test: name || 'any name'
         }\\"
-      [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || content || name || '<p class=&quot;text-lg&quot;>my name</p>')\\"
     ></div>
   \`,
   styles: [
@@ -2989,6 +2999,8 @@ export default class Text {
   @Input() content;
 
   name = \\"Decadef20\\";
+
+  constructor(private sanitizer) {}
 }
 
 @NgModule({
@@ -3891,6 +3903,45 @@ export default class BasicRefAttributePassingCustomRefComponent {
   bootstrap: [SomeOtherComponent],
 })
 export class BasicRefAttributePassingCustomRefComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > changeDetection 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input, ChangeDetectionStrategy } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>{{count}}</div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() count;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -6413,6 +6464,44 @@ export class RenderStylesModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > sanitizeInnerHTML 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"sanitizeInnerHTML\\":true}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div [innerHTML]=\\"html\\"></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() html;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > self-referencing component 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7170,6 +7259,7 @@ exports[`Angular with Import Mapper Tests > jsx > Javascript Test > string-liter
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from '@angular/core';
+
 
 
 
@@ -9079,6 +9169,7 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > CustomCode 1
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -9091,7 +9182,7 @@ export interface CustomCodeProps {
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
   styles: [
@@ -9151,6 +9242,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -9174,6 +9267,7 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > Embed 1`] = 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -9186,7 +9280,7 @@ export interface CustomCodeProps {
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
   styles: [
@@ -9246,6 +9340,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -10190,6 +10286,7 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > RawText 1`] 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface RawTextProps {
   attributes?: any;
@@ -10201,7 +10298,7 @@ export interface RawTextProps {
   template: \`
     <span
       [class]=\\"attributes?.class || attributes?.className\\"
-      [innerHTML]=\\"text || ''\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || '')\\"
     ></span>
   \`,
   styles: [
@@ -10215,6 +10312,8 @@ export interface RawTextProps {
 export default class RawText {
   @Input() attributes!: RawTextProps[\\"attributes\\"];
   @Input() text!: RawTextProps[\\"text\\"];
+
+  constructor(private sanitizer: DomSanitizer) {}
 }
 
 @NgModule({
@@ -11052,6 +11151,7 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > Text 1`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface TextProps {
   attributes?: any;
@@ -11071,7 +11171,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.data-name]=\\"{
           test: name || 'any name'
         }\\"
-      [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || content || name || '<p class=&quot;text-lg&quot;>my name</p>')\\"
     ></div>
   \`,
   styles: [
@@ -11087,6 +11187,8 @@ export default class Text {
   @Input() content!: TextProps[\\"content\\"];
 
   name = \\"Decadef20\\";
+
+  constructor(private sanitizer: DomSanitizer) {}
 }
 
 @NgModule({
@@ -12053,6 +12155,45 @@ export default class BasicRefAttributePassingCustomRefComponent {
   bootstrap: [SomeOtherComponent],
 })
 export class BasicRefAttributePassingCustomRefComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > changeDetection 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input, ChangeDetectionStrategy } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>{{count}}</div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() count!: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -14722,6 +14863,44 @@ export class RenderStylesModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > sanitizeInnerHTML 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"sanitizeInnerHTML\\":true}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div [innerHTML]=\\"html\\"></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() html!: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Typescript Test > self-referencing component 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -15513,6 +15692,7 @@ exports[`Angular with Import Mapper Tests > jsx > Typescript Test > string-liter
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from '@angular/core';
+
 
 
 
@@ -16496,11 +16676,12 @@ exports[`Angular with Import Mapper Tests > svelte > Javascript Test > html 1`] 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <div [innerHTML]=\\"html\\"></div>
+    <div [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(html)\\"></div>
   \`,
   styles: [
     \`
@@ -16512,6 +16693,8 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MyComponent {
   html = \\"<b>bold</b>\\";
+
+  constructor(private sanitizer) {}
 }
 
 @NgModule({
@@ -17166,11 +17349,12 @@ exports[`Angular with Import Mapper Tests > svelte > Typescript Test > html 1`] 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <div [innerHTML]=\\"html\\"></div>
+    <div [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(html)\\"></div>
   \`,
   styles: [
     \`
@@ -17182,6 +17366,8 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MyComponent {
   html = \\"<b>bold</b>\\";
+
+  constructor(private sanitizer: DomSanitizer) {}
 }
 
 @NgModule({

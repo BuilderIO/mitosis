@@ -40,6 +40,15 @@ export type AngularMetadata = {
    * Overwrite default selector for component. Default will be kebab case (MyComponent -> my-component)
    */
   selector?: string;
+  /**
+   * Overwrite default change detection strategy.
+   * `OnPush` adds `changeDetection: ChangeDetectionStrategy.OnPush` to the component metadata.
+   */
+  changeDetection?: 'Default' | 'OnPush';
+  /**
+   * Overwrite default sanitizeInnerHTML. Default is `false`
+   */
+  sanitizeInnerHTML?: boolean;
 };
 
 export type AngularBlockOptions = {

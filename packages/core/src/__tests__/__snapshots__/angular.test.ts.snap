@@ -77,6 +77,7 @@ export class MyBasicForShowComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > Advanced 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -218,6 +219,7 @@ export class MyBasicRefComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > AdvancedRef 2`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -384,6 +386,7 @@ export class MyBasicForShowComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > Basic 3`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export const DEFAULT_VALUES = {
@@ -430,6 +433,7 @@ export default class MyBasicComponent {
 
 exports[`Angular > jsx > Javascript Test > Basic 4`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -525,6 +529,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > Basic Context 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
@@ -617,6 +622,7 @@ export class MyBasicOnMountUpdateComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > Basic OnMount Update 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -698,6 +704,7 @@ export class MyBasicOutputsComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > Basic Outputs 2`] = `
 "import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -789,6 +796,7 @@ exports[`Angular > jsx > Javascript Test > Basic Outputs Meta 2`] = `
           */
 
 import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -856,6 +864,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > BasicAttribute 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -927,6 +936,7 @@ export class MyBooleanAttributeModule {}
 
 exports[`Angular > jsx > Javascript Test > BasicBooleanAttribute 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
@@ -1016,6 +1026,7 @@ export class MyBasicChildComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > BasicChildComponent 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
@@ -1106,6 +1117,7 @@ export class MyBasicForComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > BasicFor 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -1219,6 +1231,7 @@ export class MyBasicRefComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > BasicRef 2`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -1317,6 +1330,7 @@ export class MyBasicRefAssignmentComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > BasicRefAssignment 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -1404,6 +1418,7 @@ export class MyPreviousComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > BasicRefPrevious 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export function usePrevious(value) {
@@ -1572,6 +1587,7 @@ exports[`Angular > jsx > Javascript Test > Button 2`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -1745,6 +1761,7 @@ export class ColumnModule {}
 
 exports[`Angular > jsx > Javascript Test > Columns 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -1845,6 +1862,7 @@ export class ContentSlotCodeModule {}
 
 exports[`Angular > jsx > Javascript Test > ContentSlotHtml 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -1997,6 +2015,7 @@ exports[`Angular > jsx > Javascript Test > ContentSlotJSX 2`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 const defaultProps = {
@@ -2106,6 +2125,7 @@ exports[`Angular > jsx > Javascript Test > CustomCode 1`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"custom-code\\",
@@ -2113,7 +2133,7 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
   styles: [
@@ -2173,6 +2193,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(private sanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -2192,6 +2214,7 @@ export class CustomCodeModule {}
 
 exports[`Angular > jsx > Javascript Test > CustomCode 2`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2200,7 +2223,7 @@ import { CommonModule } from \\"@angular/common\\";
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
   styles: [
@@ -2263,6 +2286,8 @@ export default class CustomCode {
     }
   }
 
+  constructor(private sanitizer) {}
+
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
       this.findAndRunScripts();
@@ -2277,6 +2302,7 @@ exports[`Angular > jsx > Javascript Test > Embed 1`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"custom-code\\",
@@ -2284,7 +2310,7 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
   styles: [
@@ -2344,6 +2370,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(private sanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -2363,6 +2391,7 @@ export class CustomCodeModule {}
 
 exports[`Angular > jsx > Javascript Test > Embed 2`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2371,7 +2400,7 @@ import { CommonModule } from \\"@angular/common\\";
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
   styles: [
@@ -2433,6 +2462,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(private sanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -2837,6 +2868,7 @@ exports[`Angular > jsx > Javascript Test > Form 2`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import { Builder, builder } from \\"@builder.io/sdk\\";
@@ -3320,6 +3352,7 @@ export class ImageModule {}
 
 exports[`Angular > jsx > Javascript Test > Image 2`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3462,6 +3495,7 @@ export class ImgStateComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > Image State 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3604,6 +3638,7 @@ exports[`Angular > jsx > Javascript Test > Img 2`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -3809,6 +3844,7 @@ exports[`Angular > jsx > Javascript Test > Input 2`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -3944,6 +3980,7 @@ export class StepperModule {}
 
 exports[`Angular > jsx > Javascript Test > InputParent 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import FormInputComponent from \\"./input.raw\\";
@@ -4018,6 +4055,7 @@ export class NestedStoreModule {}
 
 exports[`Angular > jsx > Javascript Test > NestedStore 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4055,13 +4093,14 @@ exports[`Angular > jsx > Javascript Test > RawText 1`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"raw-text\\",
   template: \`
     <span
       [class]=\\"attributes?.class || attributes?.className\\"
-      [innerHTML]=\\"text || ''\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || '')\\"
     ></span>
   \`,
   styles: [
@@ -4075,6 +4114,8 @@ import { Component, Input } from \\"@angular/core\\";
 export default class RawText {
   @Input() attributes;
   @Input() text;
+
+  constructor(private sanitizer) {}
 }
 
 @NgModule({
@@ -4088,6 +4129,7 @@ export class RawTextModule {}
 
 exports[`Angular > jsx > Javascript Test > RawText 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4095,7 +4137,7 @@ import { CommonModule } from \\"@angular/common\\";
   template: \`
     <span
       [class]=\\"attributes?.class || attributes?.className\\"
-      [innerHTML]=\\"text || ''\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || '')\\"
     ></span>
   \`,
   styles: [
@@ -4111,6 +4153,8 @@ import { CommonModule } from \\"@angular/common\\";
 export default class RawText {
   @Input() attributes;
   @Input() text;
+
+  constructor(private sanitizer) {}
 }
 "
 `;
@@ -4324,6 +4368,7 @@ exports[`Angular > jsx > Javascript Test > Section 3`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4415,6 +4460,7 @@ exports[`Angular > jsx > Javascript Test > Section 4`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4618,6 +4664,7 @@ exports[`Angular > jsx > Javascript Test > Select 2`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -4744,6 +4791,7 @@ export class SlotCodeModule {}
 
 exports[`Angular > jsx > Javascript Test > SlotDefault 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4805,6 +4853,7 @@ export class SlotCodeModule {}
 
 exports[`Angular > jsx > Javascript Test > SlotHtml 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
@@ -4868,6 +4917,7 @@ export class SlotCodeModule {}
 
 exports[`Angular > jsx > Javascript Test > SlotJsx 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
@@ -4930,6 +4980,7 @@ export class SlotCodeModule {}
 
 exports[`Angular > jsx > Javascript Test > SlotNamed 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5074,6 +5125,7 @@ export class SmileReviewsModule {}
 
 exports[`Angular > jsx > Javascript Test > Stamped.io 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import { kebabCase, snakeCase } from \\"lodash\\";
@@ -5216,6 +5268,7 @@ export class StringLiteralStoreModule {}
 
 exports[`Angular > jsx > Javascript Test > StoreComment 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5277,6 +5330,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > StoreShadowVars 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5340,6 +5394,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > StoreWithState 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5465,6 +5520,7 @@ exports[`Angular > jsx > Javascript Test > Submit 2`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5546,6 +5602,7 @@ exports[`Angular > jsx > Javascript Test > Text 1`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -5557,7 +5614,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.data-name]=\\"{
           test: name || 'any name'
         }\\"
-      [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || content || name || '<p class=&quot;text-lg&quot;>my name</p>')\\"
     ></div>
   \`,
   styles: [
@@ -5573,6 +5630,8 @@ export default class Text {
   @Input() content;
 
   name = \\"Decadef20\\";
+
+  constructor(private sanitizer) {}
 }
 
 @NgModule({
@@ -5586,6 +5645,7 @@ export class TextModule {}
 
 exports[`Angular > jsx > Javascript Test > Text 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -5598,7 +5658,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.data-name]=\\"{
           test: name || 'any name'
         }\\"
-      [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || content || name || '<p class=&quot;text-lg&quot;>my name</p>')\\"
     ></div>
   \`,
   styles: [
@@ -5616,6 +5676,8 @@ export default class Text {
   @Input() content;
 
   name = \\"Decadef20\\";
+
+  constructor(private sanitizer) {}
 }
 "
 `;
@@ -5728,6 +5790,7 @@ exports[`Angular > jsx > Javascript Test > Textarea 2`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5865,6 +5928,7 @@ export class UseValueAndFnFromStoreModule {}
 
 exports[`Angular > jsx > Javascript Test > UseValueAndFnFromStore 2`] = `
 "import { Output, EventEmitter, Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6035,6 +6099,7 @@ exports[`Angular > jsx > Javascript Test > Video 2`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6283,6 +6348,7 @@ exports[`Angular > jsx > Javascript Test > allSpread 2`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6442,6 +6508,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > arrowFunctionInUseStore 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6536,6 +6603,7 @@ export class BasicForFragmentModule {}
 
 exports[`Angular > jsx > Javascript Test > basicForFragment 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6671,6 +6739,7 @@ exports[`Angular > jsx > Javascript Test > basicForNoTagReference 2`] = `
   ViewContainerRef,
   TemplateRef,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6770,6 +6839,7 @@ export class MyBasicForwardRefComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > basicForwardRef 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6855,6 +6925,7 @@ exports[`Angular > jsx > Javascript Test > basicForwardRefMetadata 2`] = `
           */
 
 import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6940,6 +7011,7 @@ export class MyBasicOnUpdateReturnComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > basicOnUpdateReturn 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -7072,6 +7144,7 @@ exports[`Angular > jsx > Javascript Test > basicRefAttributePassing 2`] = `
           */
 
 import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -7230,6 +7303,7 @@ exports[`Angular > jsx > Javascript Test > basicRefAttributePassingCustomRef 2`]
           */
 
 import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -7298,6 +7372,76 @@ export default class BasicRefAttributePassingCustomRefComponent {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > changeDetection 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input, ChangeDetectionStrategy } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>{{count}}</div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() count;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > changeDetection 2`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { Component, Input, ChangeDetectionStrategy } from \\"@angular/core\\";
+
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>{{count}}</div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  @Input() count;
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > class + ClassName + css 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7340,6 +7484,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > class + ClassName + css 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import MyComp from \\"./my-component.js\\";
@@ -7410,6 +7555,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > class + css 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -7473,6 +7619,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > className + css 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -7536,6 +7683,7 @@ export class ClassNameCodeModule {}
 
 exports[`Angular > jsx > Javascript Test > className 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -7604,6 +7752,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > classState 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -7677,6 +7826,7 @@ exports[`Angular > jsx > Javascript Test > complexMeta 2`] = `
           */
 
 import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -7739,6 +7889,7 @@ export class ComponentWithContextModule {}
 
 exports[`Angular > jsx > Javascript Test > componentWithContext 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import Context1 from \\"@dummy/1\\";
@@ -7811,6 +7962,7 @@ export class ComponentWithContextModule {}
 
 exports[`Angular > jsx > Javascript Test > componentWithContextMultiRoot 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import Context1 from \\"@dummy/1\\";
@@ -7877,6 +8029,7 @@ export class RenderContentModule {}
 
 exports[`Angular > jsx > Javascript Test > contentState 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import BuilderContext from \\"@dummy/context.js\\";
@@ -7945,6 +8098,7 @@ exports[`Angular > jsx > Javascript Test > customSelector 2`] = `
           */
 
 import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -8105,6 +8259,7 @@ exports[`Angular > jsx > Javascript Test > defaultProps 2`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 const defaultProps = {
@@ -8353,6 +8508,7 @@ exports[`Angular > jsx > Javascript Test > defaultPropsOutsideComponent 2`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 const defaultProps = {
@@ -8502,6 +8658,7 @@ export class ComponentWithTypesModule {}
 
 exports[`Angular > jsx > Javascript Test > defaultValsWithTypes 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 const DEFAULT_VALUES = {
@@ -8580,6 +8737,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > dynamicComponent 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -8691,6 +8849,7 @@ exports[`Angular > jsx > Javascript Test > dynamicComponentWithEventArg 2`] = `
   ViewContainerRef,
   TemplateRef,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -8785,6 +8944,7 @@ export class EventInputAndChangeModule {}
 
 exports[`Angular > jsx > Javascript Test > eventInputAndChange 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -8862,6 +9022,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > expressionState 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -8948,6 +9109,7 @@ exports[`Angular > jsx > Javascript Test > figmaMeta 2`] = `
           */
 
 import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9031,6 +9193,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > functionProps 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9117,6 +9280,7 @@ export class ButtonModule {}
 
 exports[`Angular > jsx > Javascript Test > getterState 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9197,6 +9361,7 @@ export class RenderContentModule {}
 
 exports[`Angular > jsx > Javascript Test > import types 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import RenderBlock from \\"./builder-render-block.raw\\";
@@ -9261,6 +9426,7 @@ export class MyImportComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > importRaw 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9321,6 +9487,7 @@ export class MultipleOnUpdateModule {}
 
 exports[`Angular > jsx > Javascript Test > multipleOnUpdate 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9401,6 +9568,7 @@ export class MultipleOnUpdateWithDepsModule {}
 
 exports[`Angular > jsx > Javascript Test > multipleOnUpdateWithDeps 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9529,6 +9697,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > multipleSpreads 2`] = `
 "import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9654,6 +9823,7 @@ exports[`Angular > jsx > Javascript Test > nativeAttributes 2`] = `
           */
 
 import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9727,6 +9897,7 @@ export class NestedShowModule {}
 
 exports[`Angular > jsx > Javascript Test > nestedShow 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9818,6 +9989,7 @@ export class NestedStylesModule {}
 
 exports[`Angular > jsx > Javascript Test > nestedStyles 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9908,6 +10080,7 @@ export class EmbedModule {}
 
 exports[`Angular > jsx > Javascript Test > onEvent 2`] = `
 "import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9981,6 +10154,7 @@ export class OnInitModule {}
 
 exports[`Angular > jsx > Javascript Test > onInit & onMount 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10055,6 +10229,7 @@ export class OnInitModule {}
 
 exports[`Angular > jsx > Javascript Test > onInit 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export const defaultValues = {
@@ -10125,6 +10300,7 @@ export class OnInitPlainModule {}
 
 exports[`Angular > jsx > Javascript Test > onInitPlain 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10192,6 +10368,7 @@ export class CompModule {}
 
 exports[`Angular > jsx > Javascript Test > onMount 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10272,6 +10449,7 @@ export class CompModule {}
 
 exports[`Angular > jsx > Javascript Test > onMountMultiple 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10348,6 +10526,7 @@ export class OnUpdateModule {}
 
 exports[`Angular > jsx > Javascript Test > onUpdate 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10418,6 +10597,7 @@ export class OnUpdateWithDepsModule {}
 
 exports[`Angular > jsx > Javascript Test > onUpdateWithDeps 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10504,6 +10684,7 @@ exports[`Angular > jsx > Javascript Test > outputEventBinding 2`] = `
           */
 
 import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10575,6 +10756,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > preserveExportOrLocalStatement 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 const b = 3;
@@ -10636,6 +10818,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > preserveTyping 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10698,6 +10881,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > propsDestructure 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10760,6 +10944,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > propsInterface 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10817,6 +11002,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > propsType 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10888,6 +11074,7 @@ export class OnUpdateModule {}
 
 exports[`Angular > jsx > Javascript Test > referencingFunInsideHook 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11229,6 +11416,7 @@ exports[`Angular > jsx > Javascript Test > renderBlock 2`] = `
   ViewContainerRef,
   TemplateRef,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import { TARGET } from \\"../../constants/target.js\\";
@@ -11568,6 +11756,7 @@ export class RenderContentModule {}
 
 exports[`Angular > jsx > Javascript Test > renderContentExample 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import BuilderContext from \\"@dummy/context.js\\";
@@ -11741,6 +11930,7 @@ exports[`Angular > jsx > Javascript Test > rootFragmentMultiNode 2`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11874,6 +12064,7 @@ export class RenderStylesModule {}
 
 exports[`Angular > jsx > Javascript Test > rootShow 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11894,6 +12085,74 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class RenderStyles {
   @Input() foo;
+}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > sanitizeInnerHTML 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"sanitizeInnerHTML\\":true}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div [innerHTML]=\\"html\\"></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() html;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > sanitizeInnerHTML 2`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"sanitizeInnerHTML\\":true}}
+          */
+
+import { Component, Input } from \\"@angular/core\\";
+
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div [innerHTML]=\\"html\\"></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  @Input() html;
 }
 "
 `;
@@ -11937,6 +12196,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > self-referencing component 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12005,6 +12265,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > self-referencing component with children 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12071,6 +12332,7 @@ export class SetStateModule {}
 
 exports[`Angular > jsx > Javascript Test > setState 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12179,6 +12441,7 @@ export class ShowWithOtherValuesModule {}
 
 exports[`Angular > jsx > Javascript Test > showExpressions 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12298,6 +12561,7 @@ export class NestedShowModule {}
 
 exports[`Angular > jsx > Javascript Test > showWithFor 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12379,6 +12643,7 @@ export class ShowWithOtherValuesModule {}
 
 exports[`Angular > jsx > Javascript Test > showWithOtherValues 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12449,6 +12714,7 @@ export class ShowRootTextModule {}
 
 exports[`Angular > jsx > Javascript Test > showWithRootText 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12520,6 +12786,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > signalsOnUpdate 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12638,6 +12905,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > spreadAttrs 2`] = `
 "import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12809,6 +13077,7 @@ exports[`Angular > jsx > Javascript Test > spreadNestedProps 2`] = `
   Renderer2,
   Input,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12916,6 +13185,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > spreadProps 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12995,6 +13265,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > stateInit 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13095,6 +13366,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > stateInitSequence 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13179,6 +13451,7 @@ export class StringLiteralStoreModule {}
 
 exports[`Angular > jsx > Javascript Test > store-async-function 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13244,6 +13517,7 @@ export class StringLiteralStoreModule {}
 
 exports[`Angular > jsx > Javascript Test > string-literal-store 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13272,6 +13546,7 @@ exports[`Angular > jsx > Javascript Test > string-literal-store-kebab 1`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from '@angular/core';
+
 
 
 
@@ -13338,6 +13613,7 @@ export class StringLiteralStoreModule {}"
 
 exports[`Angular > jsx > Javascript Test > string-literal-store-kebab 2`] = `
 "import { Component } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 
 
@@ -13436,6 +13712,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > styleClassAndCss 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13506,6 +13783,7 @@ export class StylePropClassAndCssModule {}
 
 exports[`Angular > jsx > Javascript Test > stylePropClassAndCss 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13566,6 +13844,7 @@ export class SubComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > subComponent 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import Foo from \\"./foo-sub-component.js\\";
@@ -13642,6 +13921,7 @@ export class SvgComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > svgComponent 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13731,6 +14011,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > twoForsTrackBy 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13801,6 +14082,7 @@ export class TypeDependencyModule {}
 
 exports[`Angular > jsx > Javascript Test > typeDependency 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13858,6 +14140,7 @@ export class TypeExternalStoreModule {}
 
 exports[`Angular > jsx > Javascript Test > typeExternalStore 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13925,6 +14208,7 @@ export class TypeGetterStoreModule {}
 
 exports[`Angular > jsx > Javascript Test > typeGetterStore 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13996,6 +14280,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > use-style 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14064,6 +14349,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > use-style-and-css 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14132,6 +14418,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > use-style-outside-component 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14238,6 +14525,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > useObjectWrapper 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14352,6 +14640,7 @@ export class UseTargetComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > useTarget 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14429,6 +14718,7 @@ export class MyBasicWebComponentModule {}
 
 exports[`Angular > jsx > Javascript Test > webComponent 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import { register } from \\"swiper/element/bundle\\";
@@ -14494,6 +14784,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Remove Internal mitosis package 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14594,6 +14885,7 @@ export class MyBasicForShowComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > Advanced 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14751,6 +15043,7 @@ exports[`Angular > jsx > Typescript Test > AdvancedRef 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface Props {
@@ -14925,6 +15218,7 @@ export class MyBasicForShowComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > Basic 3`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface MyBasicComponentProps {
@@ -14975,6 +15269,7 @@ export default class MyBasicComponent {
 
 exports[`Angular > jsx > Typescript Test > Basic 4`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -15070,6 +15365,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > Basic Context 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
@@ -15167,6 +15463,7 @@ export class MyBasicOnMountUpdateComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > Basic OnMount Update 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface Props {
@@ -15253,6 +15550,7 @@ export class MyBasicOutputsComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > Basic Outputs 2`] = `
 "import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -15344,6 +15642,7 @@ exports[`Angular > jsx > Typescript Test > Basic Outputs Meta 2`] = `
           */
 
 import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -15411,6 +15710,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > BasicAttribute 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -15487,6 +15787,7 @@ export class MyBooleanAttributeModule {}
 
 exports[`Angular > jsx > Typescript Test > BasicBooleanAttribute 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -15581,6 +15882,7 @@ export class MyBasicChildComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > BasicChildComponent 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
@@ -15671,6 +15973,7 @@ export class MyBasicForComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > BasicFor 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -15788,6 +16091,7 @@ export class MyBasicRefComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > BasicRef 2`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface Props {
@@ -15894,6 +16198,7 @@ export class MyBasicRefAssignmentComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > BasicRefAssignment 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface Props {
@@ -15989,6 +16294,7 @@ export class MyPreviousComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > BasicRefPrevious 2`] = `
 "import { Component, SimpleChanges } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface Props {
@@ -16170,6 +16476,7 @@ exports[`Angular > jsx > Typescript Test > Button 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -16365,6 +16672,7 @@ export class ColumnModule {}
 
 exports[`Angular > jsx > Typescript Test > Columns 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Column = {
@@ -16487,6 +16795,7 @@ export class ContentSlotCodeModule {}
 
 exports[`Angular > jsx > Typescript Test > ContentSlotHtml 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -16653,6 +16962,7 @@ exports[`Angular > jsx > Typescript Test > ContentSlotJSX 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -16767,6 +17077,7 @@ exports[`Angular > jsx > Typescript Test > CustomCode 1`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -16779,7 +17090,7 @@ export interface CustomCodeProps {
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
   styles: [
@@ -16839,6 +17150,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -16858,6 +17171,7 @@ export class CustomCodeModule {}
 
 exports[`Angular > jsx > Typescript Test > CustomCode 2`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface CustomCodeProps {
@@ -16871,7 +17185,7 @@ export interface CustomCodeProps {
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
   styles: [
@@ -16934,6 +17248,8 @@ export default class CustomCode {
     }
   }
 
+  constructor(private sanitizer: DomSanitizer) {}
+
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
       this.findAndRunScripts();
@@ -16948,6 +17264,7 @@ exports[`Angular > jsx > Typescript Test > Embed 1`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -16960,7 +17277,7 @@ export interface CustomCodeProps {
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
   styles: [
@@ -17020,6 +17337,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -17039,6 +17358,7 @@ export class CustomCodeModule {}
 
 exports[`Angular > jsx > Typescript Test > Embed 2`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface CustomCodeProps {
@@ -17052,7 +17372,7 @@ export interface CustomCodeProps {
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
   styles: [
@@ -17114,6 +17434,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -17551,6 +17873,7 @@ exports[`Angular > jsx > Typescript Test > Form 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface FormProps {
@@ -18084,6 +18407,7 @@ export class ImageModule {}
 
 exports[`Angular > jsx > Typescript Test > Image 2`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 // TODO: AMP Support?
@@ -18245,6 +18569,7 @@ export class ImgStateComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > Image State 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -18406,6 +18731,7 @@ exports[`Angular > jsx > Typescript Test > Img 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ImgProps {
@@ -18641,6 +18967,7 @@ exports[`Angular > jsx > Typescript Test > Input 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface FormInputProps {
@@ -18787,6 +19114,7 @@ export class StepperModule {}
 
 exports[`Angular > jsx > Typescript Test > InputParent 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import FormInputComponent from \\"./input.raw\\";
@@ -18866,6 +19194,7 @@ export class NestedStoreModule {}
 
 exports[`Angular > jsx > Typescript Test > NestedStore 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type MyStore = {
@@ -18908,6 +19237,7 @@ exports[`Angular > jsx > Typescript Test > RawText 1`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface RawTextProps {
   attributes?: any;
@@ -18919,7 +19249,7 @@ export interface RawTextProps {
   template: \`
     <span
       [class]=\\"attributes?.class || attributes?.className\\"
-      [innerHTML]=\\"text || ''\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || '')\\"
     ></span>
   \`,
   styles: [
@@ -18933,6 +19263,8 @@ export interface RawTextProps {
 export default class RawText {
   @Input() attributes!: RawTextProps[\\"attributes\\"];
   @Input() text!: RawTextProps[\\"text\\"];
+
+  constructor(private sanitizer: DomSanitizer) {}
 }
 
 @NgModule({
@@ -18946,6 +19278,7 @@ export class RawTextModule {}
 
 exports[`Angular > jsx > Typescript Test > RawText 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface RawTextProps {
@@ -18958,7 +19291,7 @@ export interface RawTextProps {
   template: \`
     <span
       [class]=\\"attributes?.class || attributes?.className\\"
-      [innerHTML]=\\"text || ''\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || '')\\"
     ></span>
   \`,
   styles: [
@@ -18974,6 +19307,8 @@ export interface RawTextProps {
 export default class RawText {
   @Input() attributes!: RawTextProps[\\"attributes\\"];
   @Input() text!: RawTextProps[\\"text\\"];
+
+  constructor(private sanitizer: DomSanitizer) {}
 }
 "
 `;
@@ -19202,6 +19537,7 @@ exports[`Angular > jsx > Typescript Test > Section 3`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface SectionProps {
@@ -19300,6 +19636,7 @@ exports[`Angular > jsx > Typescript Test > Section 4`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface SectionProps {
@@ -19522,6 +19859,7 @@ exports[`Angular > jsx > Typescript Test > Select 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface FormSelectProps {
@@ -19663,6 +20001,7 @@ export class SlotCodeModule {}
 
 exports[`Angular > jsx > Typescript Test > SlotDefault 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -19732,6 +20071,7 @@ export class SlotCodeModule {}
 
 exports[`Angular > jsx > Typescript Test > SlotHtml 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -19803,6 +20143,7 @@ export class SlotCodeModule {}
 
 exports[`Angular > jsx > Typescript Test > SlotJsx 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -19873,6 +20214,7 @@ export class SlotCodeModule {}
 
 exports[`Angular > jsx > Typescript Test > SlotNamed 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -20026,6 +20368,7 @@ export class SmileReviewsModule {}
 
 exports[`Angular > jsx > Typescript Test > Stamped.io 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type SmileReviewsProps = {
@@ -20173,6 +20516,7 @@ export class StringLiteralStoreModule {}
 
 exports[`Angular > jsx > Typescript Test > StoreComment 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -20234,6 +20578,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > StoreShadowVars 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -20297,6 +20642,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > StoreWithState 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -20429,6 +20775,7 @@ exports[`Angular > jsx > Typescript Test > Submit 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -20515,6 +20862,7 @@ exports[`Angular > jsx > Typescript Test > Text 1`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface TextProps {
   attributes?: any;
@@ -20534,7 +20882,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.data-name]=\\"{
           test: name || 'any name'
         }\\"
-      [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || content || name || '<p class=&quot;text-lg&quot;>my name</p>')\\"
     ></div>
   \`,
   styles: [
@@ -20550,6 +20898,8 @@ export default class Text {
   @Input() content!: TextProps[\\"content\\"];
 
   name = \\"Decadef20\\";
+
+  constructor(private sanitizer: DomSanitizer) {}
 }
 
 @NgModule({
@@ -20563,6 +20913,7 @@ export class TextModule {}
 
 exports[`Angular > jsx > Typescript Test > Text 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface TextProps {
@@ -20583,7 +20934,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.data-name]=\\"{
           test: name || 'any name'
         }\\"
-      [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || content || name || '<p class=&quot;text-lg&quot;>my name</p>')\\"
     ></div>
   \`,
   styles: [
@@ -20601,6 +20952,8 @@ export default class Text {
   @Input() content!: TextProps[\\"content\\"];
 
   name = \\"Decadef20\\";
+
+  constructor(private sanitizer: DomSanitizer) {}
 }
 "
 `;
@@ -20723,6 +21076,7 @@ exports[`Angular > jsx > Typescript Test > Textarea 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface TextareaProps {
@@ -20877,6 +21231,7 @@ export class UseValueAndFnFromStoreModule {}
 
 exports[`Angular > jsx > Typescript Test > UseValueAndFnFromStore 2`] = `
 "import { Output, EventEmitter, Component, SimpleChanges } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type MyProps = {
@@ -21084,6 +21439,7 @@ exports[`Angular > jsx > Typescript Test > Video 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface VideoProps {
@@ -21360,6 +21716,7 @@ exports[`Angular > jsx > Typescript Test > allSpread 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -21519,6 +21876,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > arrowFunctionInUseStore 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -21613,6 +21971,7 @@ export class BasicForFragmentModule {}
 
 exports[`Angular > jsx > Typescript Test > basicForFragment 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -21750,6 +22109,7 @@ exports[`Angular > jsx > Typescript Test > basicForNoTagReference 2`] = `
   ViewContainerRef,
   TemplateRef,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -21856,6 +22216,7 @@ export class MyBasicForwardRefComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > basicForwardRef 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface Props {
@@ -21951,6 +22312,7 @@ exports[`Angular > jsx > Typescript Test > basicForwardRefMetadata 2`] = `
           */
 
 import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface Props {
@@ -22041,6 +22403,7 @@ export class MyBasicOnUpdateReturnComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > basicOnUpdateReturn 2`] = `
 "import { Component, SimpleChanges } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -22176,6 +22539,7 @@ exports[`Angular > jsx > Typescript Test > basicRefAttributePassing 2`] = `
           */
 
 import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -22340,6 +22704,7 @@ exports[`Angular > jsx > Typescript Test > basicRefAttributePassingCustomRef 2`]
           */
 
 import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -22411,6 +22776,76 @@ export default class BasicRefAttributePassingCustomRefComponent {
 "
 `;
 
+exports[`Angular > jsx > Typescript Test > changeDetection 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input, ChangeDetectionStrategy } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>{{count}}</div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() count!: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > changeDetection 2`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { Component, Input, ChangeDetectionStrategy } from \\"@angular/core\\";
+
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>{{count}}</div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  @Input() count!: any;
+}
+"
+`;
+
 exports[`Angular > jsx > Typescript Test > class + ClassName + css 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -22453,6 +22888,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > class + ClassName + css 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import MyComp from \\"./my-component.js\\";
@@ -22523,6 +22959,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > class + css 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -22586,6 +23023,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > className + css 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -22656,6 +23094,7 @@ export class ClassNameCodeModule {}
 
 exports[`Angular > jsx > Typescript Test > className 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -22731,6 +23170,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > classState 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -22804,6 +23244,7 @@ exports[`Angular > jsx > Typescript Test > complexMeta 2`] = `
           */
 
 import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -22870,6 +23311,7 @@ export class ComponentWithContextModule {}
 
 exports[`Angular > jsx > Typescript Test > componentWithContext 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ComponentWithContextProps {
@@ -22950,6 +23392,7 @@ export class ComponentWithContextModule {}
 
 exports[`Angular > jsx > Typescript Test > componentWithContextMultiRoot 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ComponentWithContextProps {
@@ -23020,6 +23463,7 @@ export class RenderContentModule {}
 
 exports[`Angular > jsx > Typescript Test > contentState 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import BuilderContext from \\"@dummy/context.js\\";
@@ -23088,6 +23532,7 @@ exports[`Angular > jsx > Typescript Test > customSelector 2`] = `
           */
 
 import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -23260,6 +23705,7 @@ exports[`Angular > jsx > Typescript Test > defaultProps 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -23528,6 +23974,7 @@ exports[`Angular > jsx > Typescript Test > defaultPropsOutsideComponent 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -23689,6 +24136,7 @@ export class ComponentWithTypesModule {}
 
 exports[`Angular > jsx > Typescript Test > defaultValsWithTypes 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -23771,6 +24219,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > dynamicComponent 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -23883,6 +24332,7 @@ exports[`Angular > jsx > Typescript Test > dynamicComponentWithEventArg 2`] = `
   ViewContainerRef,
   TemplateRef,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -23978,6 +24428,7 @@ export class EventInputAndChangeModule {}
 
 exports[`Angular > jsx > Typescript Test > eventInputAndChange 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -24055,6 +24506,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > expressionState 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -24141,6 +24593,7 @@ exports[`Angular > jsx > Typescript Test > figmaMeta 2`] = `
           */
 
 import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -24228,6 +24681,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > functionProps 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface MyBasicComponentProps {
@@ -24322,6 +24776,7 @@ export class ButtonModule {}
 
 exports[`Angular > jsx > Typescript Test > getterState 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -24413,6 +24868,7 @@ export class RenderContentModule {}
 
 exports[`Angular > jsx > Typescript Test > import types 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type RenderContentProps = {
@@ -24484,6 +24940,7 @@ export class MyImportComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > importRaw 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -24544,6 +25001,7 @@ export class MultipleOnUpdateModule {}
 
 exports[`Angular > jsx > Typescript Test > multipleOnUpdate 2`] = `
 "import { Component, SimpleChanges } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -24624,6 +25082,7 @@ export class MultipleOnUpdateWithDepsModule {}
 
 exports[`Angular > jsx > Typescript Test > multipleOnUpdateWithDeps 2`] = `
 "import { Component, SimpleChanges } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -24764,6 +25223,7 @@ exports[`Angular > jsx > Typescript Test > multipleSpreads 2`] = `
   Renderer2,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -24889,6 +25349,7 @@ exports[`Angular > jsx > Typescript Test > nativeAttributes 2`] = `
           */
 
 import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -24967,6 +25428,7 @@ export class NestedShowModule {}
 
 exports[`Angular > jsx > Typescript Test > nestedShow 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 interface Props {
@@ -25063,6 +25525,7 @@ export class NestedStylesModule {}
 
 exports[`Angular > jsx > Typescript Test > nestedStyles 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -25153,6 +25616,7 @@ export class EmbedModule {}
 
 exports[`Angular > jsx > Typescript Test > onEvent 2`] = `
 "import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -25226,6 +25690,7 @@ export class OnInitModule {}
 
 exports[`Angular > jsx > Typescript Test > onInit & onMount 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -25304,6 +25769,7 @@ export class OnInitModule {}
 
 exports[`Angular > jsx > Typescript Test > onInit 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -25378,6 +25844,7 @@ export class OnInitPlainModule {}
 
 exports[`Angular > jsx > Typescript Test > onInitPlain 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -25445,6 +25912,7 @@ export class CompModule {}
 
 exports[`Angular > jsx > Typescript Test > onMount 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -25525,6 +25993,7 @@ export class CompModule {}
 
 exports[`Angular > jsx > Typescript Test > onMountMultiple 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -25601,6 +26070,7 @@ export class OnUpdateModule {}
 
 exports[`Angular > jsx > Typescript Test > onUpdate 2`] = `
 "import { Component, SimpleChanges } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -25675,6 +26145,7 @@ export class OnUpdateWithDepsModule {}
 
 exports[`Angular > jsx > Typescript Test > onUpdateWithDeps 2`] = `
 "import { Component, Input, SimpleChanges } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -25765,6 +26236,7 @@ exports[`Angular > jsx > Typescript Test > outputEventBinding 2`] = `
           */
 
 import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -25846,6 +26318,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > preserveExportOrLocalStatement 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Types = {
@@ -25930,6 +26403,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > preserveTyping 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export type A = \\"test\\";
@@ -26010,6 +26484,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > propsDestructure 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -26082,6 +26557,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > propsInterface 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 interface Person {
@@ -26149,6 +26625,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > propsType 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Person = {
@@ -26225,6 +26702,7 @@ export class OnUpdateModule {}
 
 exports[`Angular > jsx > Typescript Test > referencingFunInsideHook 2`] = `
 "import { Component, SimpleChanges } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -26578,6 +27056,7 @@ exports[`Angular > jsx > Typescript Test > renderBlock 2`] = `
   ViewContainerRef,
   TemplateRef,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export type RenderBlockProps = {
@@ -26938,6 +27417,7 @@ export class RenderContentModule {}
 
 exports[`Angular > jsx > Typescript Test > renderContentExample 2`] = `
 "import { Component, Input, SimpleChanges } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -27128,6 +27608,7 @@ exports[`Angular > jsx > Typescript Test > rootFragmentMultiNode 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -27272,6 +27753,7 @@ export class RenderStylesModule {}
 
 exports[`Angular > jsx > Typescript Test > rootShow 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export interface RenderStylesProps {
@@ -27296,6 +27778,74 @@ export interface RenderStylesProps {
 })
 export default class RenderStyles {
   @Input() foo!: RenderStylesProps[\\"foo\\"];
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > sanitizeInnerHTML 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"sanitizeInnerHTML\\":true}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div [innerHTML]=\\"html\\"></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() html!: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > sanitizeInnerHTML 2`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"sanitizeInnerHTML\\":true}}
+          */
+
+import { Component, Input } from \\"@angular/core\\";
+
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div [innerHTML]=\\"html\\"></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  @Input() html!: any;
 }
 "
 `;
@@ -27339,6 +27889,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > self-referencing component 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -27407,6 +27958,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > self-referencing component with children 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -27473,6 +28025,7 @@ export class SetStateModule {}
 
 exports[`Angular > jsx > Typescript Test > setState 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -27586,6 +28139,7 @@ export class ShowWithOtherValuesModule {}
 
 exports[`Angular > jsx > Typescript Test > showExpressions 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 interface Props {
@@ -27715,6 +28269,7 @@ export class NestedShowModule {}
 
 exports[`Angular > jsx > Typescript Test > showWithFor 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 interface Props {
@@ -27805,6 +28360,7 @@ export class ShowWithOtherValuesModule {}
 
 exports[`Angular > jsx > Typescript Test > showWithOtherValues 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 interface Props {
@@ -27883,6 +28439,7 @@ export class ShowRootTextModule {}
 
 exports[`Angular > jsx > Typescript Test > showWithRootText 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 interface Props {
@@ -27967,6 +28524,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > signalsOnUpdate 2`] = `
 "import { Component, Input, SimpleChanges } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -28106,6 +28664,7 @@ exports[`Angular > jsx > Typescript Test > spreadAttrs 2`] = `
   Renderer2,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -28279,6 +28838,7 @@ exports[`Angular > jsx > Typescript Test > spreadNestedProps 2`] = `
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -28386,6 +28946,7 @@ export class MyBasicComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > spreadProps 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -28465,6 +29026,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > stateInit 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -28565,6 +29127,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > stateInitSequence 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -28649,6 +29212,7 @@ export class StringLiteralStoreModule {}
 
 exports[`Angular > jsx > Typescript Test > store-async-function 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -28714,6 +29278,7 @@ export class StringLiteralStoreModule {}
 
 exports[`Angular > jsx > Typescript Test > string-literal-store 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -28742,6 +29307,7 @@ exports[`Angular > jsx > Typescript Test > string-literal-store-kebab 1`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from '@angular/core';
+
 
 
 
@@ -28808,6 +29374,7 @@ export class StringLiteralStoreModule {}"
 
 exports[`Angular > jsx > Typescript Test > string-literal-store-kebab 2`] = `
 "import { Component } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 
 
@@ -28906,6 +29473,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > styleClassAndCss 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -28976,6 +29544,7 @@ export class StylePropClassAndCssModule {}
 
 exports[`Angular > jsx > Typescript Test > stylePropClassAndCss 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -29036,6 +29605,7 @@ export class SubComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > subComponent 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import Foo from \\"./foo-sub-component.js\\";
@@ -29112,6 +29682,7 @@ export class SvgComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > svgComponent 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -29201,6 +29772,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > twoForsTrackBy 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -29278,6 +29850,7 @@ export class TypeDependencyModule {}
 
 exports[`Angular > jsx > Typescript Test > typeDependency 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 export type TypeDependencyProps = {
@@ -29345,6 +29918,7 @@ export class TypeExternalStoreModule {}
 
 exports[`Angular > jsx > Typescript Test > typeExternalStore 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import { FooStore } from \\"./foo-store\\";
@@ -29420,6 +29994,7 @@ export class TypeGetterStoreModule {}
 
 exports[`Angular > jsx > Typescript Test > typeGetterStore 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 type GetterStore = {
@@ -29497,6 +30072,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > use-style 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -29565,6 +30141,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > use-style-and-css 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -29633,6 +30210,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > use-style-outside-component 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -29739,6 +30317,7 @@ export class MyComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > useObjectWrapper 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -29853,6 +30432,7 @@ export class UseTargetComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > useTarget 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -29930,6 +30510,7 @@ export class MyBasicWebComponentModule {}
 
 exports[`Angular > jsx > Typescript Test > webComponent 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import { register } from \\"swiper/element/bundle\\";
@@ -29999,6 +30580,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > basic 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -30108,6 +30690,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > bindGroup 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -30213,6 +30796,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > bindProperty 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -30276,6 +30860,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > classDirective 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 const defaultProps = {};
@@ -30341,6 +30926,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > context 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -30404,6 +30990,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > each 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -30471,6 +31058,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > eventHandlers 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -30505,11 +31093,12 @@ exports[`Angular > svelte > Javascript Test > html 1`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <div [innerHTML]=\\"html\\"></div>
+    <div [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(html)\\"></div>
   \`,
   styles: [
     \`
@@ -30521,6 +31110,8 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MyComponent {
   html = \\"<b>bold</b>\\";
+
+  constructor(private sanitizer) {}
 }
 
 @NgModule({
@@ -30534,12 +31125,13 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > html 2`] = `
 "import { Component } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <div [innerHTML]=\\"html\\"></div>
+    <div [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(html)\\"></div>
   \`,
   styles: [
     \`
@@ -30553,6 +31145,8 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class MyComponent {
   html = \\"<b>bold</b>\\";
+
+  constructor(private sanitizer) {}
 }
 "
 `;
@@ -30599,6 +31193,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > ifElse 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -30668,6 +31263,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > imports 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import Button from \\"./Button.js\\";
@@ -30745,6 +31341,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > lifecycleHooks 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -30823,6 +31420,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > reactive 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -30911,6 +31509,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > reactiveWithFn 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -30993,6 +31592,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > slots 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -31057,6 +31657,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > style 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -31126,6 +31727,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Javascript Test > textExpressions 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -31193,6 +31795,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > basic 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -31302,6 +31905,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > bindGroup 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -31407,6 +32011,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > bindProperty 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -31470,6 +32075,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > classDirective 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 const defaultProps = {};
@@ -31535,6 +32141,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > context 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -31598,6 +32205,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > each 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -31665,6 +32273,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > eventHandlers 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -31699,11 +32308,12 @@ exports[`Angular > svelte > Typescript Test > html 1`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <div [innerHTML]=\\"html\\"></div>
+    <div [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(html)\\"></div>
   \`,
   styles: [
     \`
@@ -31715,6 +32325,8 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MyComponent {
   html = \\"<b>bold</b>\\";
+
+  constructor(private sanitizer: DomSanitizer) {}
 }
 
 @NgModule({
@@ -31728,12 +32340,13 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > html 2`] = `
 "import { Component } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <div [innerHTML]=\\"html\\"></div>
+    <div [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(html)\\"></div>
   \`,
   styles: [
     \`
@@ -31747,6 +32360,8 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export default class MyComponent {
   html = \\"<b>bold</b>\\";
+
+  constructor(private sanitizer: DomSanitizer) {}
 }
 "
 `;
@@ -31793,6 +32408,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > ifElse 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -31862,6 +32478,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > imports 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 import Button from \\"./Button.js\\";
@@ -31939,6 +32556,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > lifecycleHooks 2`] = `
 "import { Component, SimpleChanges } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -32017,6 +32635,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > reactive 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -32105,6 +32724,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > reactiveWithFn 2`] = `
 "import { Component, SimpleChanges } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -32187,6 +32807,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > slots 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -32251,6 +32872,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > style 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -32320,6 +32942,7 @@ export class MyComponentModule {}
 
 exports[`Angular > svelte > Typescript Test > textExpressions 2`] = `
 "import { Component } from \\"@angular/core\\";
+
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({

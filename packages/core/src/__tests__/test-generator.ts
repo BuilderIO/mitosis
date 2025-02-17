@@ -366,6 +366,8 @@ const ANGULAR_TESTS: Tests = {
   stateInitSequence: getRawFile('./data/angular/state-init-sequence.raw.tsx'),
   useObjectWrapper: getRawFile('./data/angular/use-object-wrapper.raw.tsx'),
   allSpread: getRawFile('./data/angular/all-spread.raw.tsx'),
+  changeDetection: getRawFile('./data/angular/change-detection.raw.tsx'),
+  sanitizeInnerHTML: getRawFile('./data/angular/sanitize-inner-html.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {

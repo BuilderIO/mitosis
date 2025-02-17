@@ -130,6 +130,21 @@ const traverseToGetAllDynamicComponents = (
   };
 };
 
+const traverseAndCheckIfInnerHTMLIsUsed = (json: MitosisComponent) => {
+  let innerHTMLIsUsed = false;
+  traverse(json).forEach((item) => {
+    if (isMitosisNode(item)) {
+      Object.keys(item.bindings).forEach((key) => {
+        if (key === 'innerHTML') {
+          innerHTMLIsUsed = true;
+          return;
+        }
+      });
+    }
+  });
+  return innerHTMLIsUsed;
+};
+
 /**
  * Prefixes state identifiers with this.
  * e.g. state.foo --> this.foo
@@ -496,6 +511,9 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     }
 
     const helperFunctions = new Set<string>();
+    const shouldUseSanitizer =
+      !useMetadata?.angular?.sanitizeInnerHTML && traverseAndCheckIfInnerHTMLIsUsed(json);
+    const changeDetectionStrategy = useMetadata?.angular?.changeDetection;
 
     let template = json.children
       .map((item) => {
@@ -508,6 +526,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             childComponents,
             nativeAttributes: useMetadata?.angular?.nativeAttributes ?? [],
             nativeEvents: useMetadata?.angular?.nativeEvents ?? [],
+            sanitizeInnerHTML: !shouldUseSanitizer,
           },
         });
         if (options.state === 'inline-with-wrappers') {
@@ -569,6 +588,11 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${indent(dynamicTemplate, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
       ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
       \``,
+      ...(changeDetectionStrategy === 'OnPush'
+        ? {
+            changeDetection: 'ChangeDetectionStrategy.OnPush',
+          }
+        : {}),
       ...(styles
         ? {
             styles: `[\`${indent(styles, 8)}\`]`,
@@ -588,7 +612,10 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     });
 
     const hasConstructor =
-      Boolean(injectables.length) || dynamicComponents.size || refsForObjSpread.size;
+      Boolean(injectables.length) ||
+      dynamicComponents.size ||
+      refsForObjSpread.size ||
+      shouldUseSanitizer;
 
     const angularCoreImports = [
       ...(outputs.length ? ['Output', 'EventEmitter'] : []),
@@ -601,10 +628,25 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ...(props.size ? ['Input'] : []),
       ...(dynamicComponents.size ? ['ViewContainerRef', 'TemplateRef'] : []),
       ...(json.hooks.onUpdate?.length && options.typescript ? ['SimpleChanges'] : []),
+      ...(changeDetectionStrategy === 'OnPush' ? ['ChangeDetectionStrategy'] : []),
     ].join(', ');
+
+    const constructorInjectables = [
+      ...injectables,
+      ...(dynamicComponents.size
+        ? [`private vcRef${options.typescript ? ': ViewContainerRef' : ''}`]
+        : []),
+      ...(refsForObjSpread.size
+        ? [`private renderer${options.typescript ? ': Renderer2' : ''}`]
+        : []),
+      ...(shouldUseSanitizer
+        ? [`private sanitizer${options.typescript ? ': DomSanitizer' : ''}`]
+        : []),
+    ].join(',\n');
 
     let str = dedent`
     import { ${angularCoreImports} } from '@angular/core';
+    ${shouldUseSanitizer ? `import { DomSanitizer } from '@angular/platform-browser';` : ''}
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
@@ -698,20 +740,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         })
         .join('\n')}
 
-      ${
-        !hasConstructor
-          ? ''
-          : `constructor(\n${injectables.join(',\n')}${
-              dynamicComponents.size
-                ? `\nprivate vcRef${options.typescript ? ': ViewContainerRef' : ''},\n`
-                : ''
-            }${
-              refsForObjSpread.size
-                ? `\nprivate renderer${options.typescript ? ': Renderer2' : ''},\n`
-                : ''
-            }) {}
-          `
-      }
+      ${!hasConstructor ? '' : `constructor(\n${constructorInjectables}) {}`}
       
       ${withAttributePassing ? getAttributePassingString(options.typescript) : ''}
       
@@ -755,11 +784,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ${
         // hooks specific to Angular
         json.compileContext?.angular?.hooks
-          ? Object.entries(json.compileContext?.angular?.hooks).map(([key, value]) => {
-              return `${key}() {
+          ? Object.entries(json.compileContext?.angular?.hooks)
+              .map(([key, value]) => {
+                return `${key}() {
             ${value.code}
           }`;
-            })
+              })
+              .join('\n')
           : ''
       }
 
