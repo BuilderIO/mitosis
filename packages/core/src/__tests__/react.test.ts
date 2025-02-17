@@ -12,6 +12,14 @@ describe('React - stateType: useState', () => {
     target: 'react',
     generator: componentToReact,
   });
+  runTestsForTarget({
+    options: {
+      stateType: 'useState',
+      stylesType: 'styled-components',
+    },
+    target: 'react',
+    generator: componentToReact,
+  });
   test('stamped (useState)', () => {
     const component = parseJsx(stamped);
     const output = componentToReact({
