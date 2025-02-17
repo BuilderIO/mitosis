@@ -2,7 +2,7 @@ export default function MyLayerNameComponent() {
   return (
     <section>
       <div
-        name="🌟layer-name"
+        $name="🌟layer-name"
         css={{
           padding: '10px',
         }}
