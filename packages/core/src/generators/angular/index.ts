@@ -640,7 +640,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         ? [`private renderer${options.typescript ? ': Renderer2' : ''}`]
         : []),
       ...(shouldUseSanitizer
-        ? [`private sanitizer${options.typescript ? ': DomSanitizer' : ''}`]
+        ? [`protected sanitizer${options.typescript ? ': DomSanitizer' : ''}`]
         : []),
     ].join(',\n');
 
