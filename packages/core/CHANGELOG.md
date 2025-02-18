@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.5.38
+
+### Patch Changes
+
+- 469394f: Builder: include Column widths in generator
+
+## 0.5.37
+
+### Patch Changes
+
+- f208f94: Builder: unsupported bound styles are removed to avoid crashes
+
 ## 0.5.36
 
 ### Patch Changes

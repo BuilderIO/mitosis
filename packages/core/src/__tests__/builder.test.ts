@@ -701,6 +701,62 @@ describe('Builder', () => {
     `);
   });
 
+  test('map Column widths', () => {
+    const content = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            component: {
+              name: 'Columns',
+              options: {
+                columns: [{ blocks: [], width: 50 }, { blocks: [] }],
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    const mitosisJson = builderContentToMitosisComponent(content);
+
+    const backToBuilder = componentToBuilder()({ component: mitosisJson });
+    expect(backToBuilder).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "blocks": [
+            {
+              "@type": "@builder.io/sdk:Element",
+              "actions": {},
+              "bindings": {},
+              "children": [],
+              "code": {
+                "actions": {},
+                "bindings": {},
+              },
+              "component": {
+                "name": "Columns",
+                "options": {
+                  "columns": [
+                    {
+                      "blocks": [],
+                      "width": 50,
+                    },
+                    {
+                      "blocks": [],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          "jsCode": "",
+          "tsCode": "",
+        },
+      }
+    `);
+  });
+
   test('nodes as props', () => {
     const content = {
       data: {
@@ -829,6 +885,49 @@ describe('Builder', () => {
             },
           }
         `);
+  });
+
+  test('drop unsupported bound styles to avoid crashes', () => {
+    const jsx = `export default function MyComponent(props) {
+      return (
+        <div
+          style={{
+            fontSize: state.fontSize,
+            '&:hover': {
+              backgroundColor: state.foo === 1 ? "red" : "blue"
+            }
+          }}
+        />
+      );
+    }`;
+
+    const mitosis = parseJsx(jsx);
+
+    const json = componentToBuilder()({ component: mitosis });
+    expect(json).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "blocks": [
+            {
+              "@type": "@builder.io/sdk:Element",
+              "actions": {},
+              "bindings": {
+                "style.fontSize": "state.fontSize",
+              },
+              "children": [],
+              "code": {
+                "actions": {},
+                "bindings": {},
+              },
+              "properties": {},
+              "tagName": "div",
+            },
+          ],
+          "jsCode": "",
+          "tsCode": "",
+        },
+      }
+    `);
   });
 
   test('map custom component bindings', () => {
