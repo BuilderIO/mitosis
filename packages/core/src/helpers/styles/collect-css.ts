@@ -44,7 +44,9 @@ const collectStyles = (
         const value = parseCssObject(item.bindings.css?.code as string);
         delete item.bindings.css;
 
+        // Clean the name by keeping only alphanumeric characters, underscores, and dashes
         const cleanedName = item.properties.$name?.replace(/[^a-zA-Z0-9_-]/g, '');
+        // Remove leading numbers or dashes
         const normalizedName = cleanedName?.replace(/^[0-9-]+/, '');
         const componentName = normalizedName
           ? dashCase(normalizedName)
