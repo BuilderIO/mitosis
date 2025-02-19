@@ -77,6 +77,7 @@ const useStyleAndCss = getRawFile('./data/styles/use-style-and-css.raw.tsx');
 const styleClassAndCss = getRawFile('./data/styles/style-class-and-css.raw.tsx');
 const stylePropClassAndCss = getRawFile('./data/styles/style-prop-class-and-css.raw.tsx');
 const useTarget = getRawFile('./data/use-target.raw.tsx');
+const layerName = getRawFile('./data/layer-name.raw.tsx');
 
 const button = getRawFile('./data/blocks/button.raw.tsx');
 const classNameJsx = getRawFile('./data/blocks/classname-jsx.raw.tsx');
@@ -249,6 +250,7 @@ const BASIC_TESTS: Tests = {
   'class + ClassName + css': classAndClassName,
   'use-style': useStyle,
   'use-style-and-css': useStyleAndCss,
+  layerName,
   styleClassAndCss,
   stylePropClassAndCss,
   'use-style-outside-component': useStyleOutsideComponent,

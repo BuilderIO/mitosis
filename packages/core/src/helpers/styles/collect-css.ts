@@ -43,8 +43,13 @@ const collectStyles = (
       if (nodeHasCss(item)) {
         const value = parseCssObject(item.bindings.css?.code as string);
         delete item.bindings.css;
-        const componentName = item.properties.$name
-          ? dashCase(item.properties.$name)
+
+        // Clean the name by keeping only alphanumeric characters, underscores, and dashes
+        const cleanedName = item.properties.$name?.replace(/[^a-zA-Z0-9_-]/g, '');
+        // Remove leading numbers or dashes
+        const normalizedName = cleanedName?.replace(/^[0-9-]+/, '');
+        const componentName = normalizedName
+          ? dashCase(normalizedName)
           : /^h\d$/.test(item.name || '') // don't dashcase h1 into h-1
           ? item.name
           : dashCase(item.name || 'div');

@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.0
+
+### Minor Changes
+
+- 93575b5: Normalize name to create valid className
+
 ## 0.5.38
 
 ### Patch Changes
