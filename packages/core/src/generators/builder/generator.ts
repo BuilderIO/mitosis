@@ -502,6 +502,8 @@ const mapBoundStyles = (bindings: { [key: string]: Binding | undefined }) => {
           bindingType: 'expression',
           type: 'single',
         };
+      } else {
+        throw 'unsupported style';
       }
     } catch {
       console.warn(`The following bound styles are invalid and have been removed: ${unparsed}`);

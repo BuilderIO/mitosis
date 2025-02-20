@@ -986,6 +986,34 @@ describe('Builder', () => {
     `);
   });
 
+  test('invalid style values are removed', () => {
+    const code = dedent`  
+    export default function MyComponent(props) {
+      return (
+        <div style={false} />
+      );
+    }
+  `;
+
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
+
+    expect(builderJson.data!.blocks![0]).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {},
+        "children": [],
+        "code": {
+          "actions": {},
+          "bindings": {},
+        },
+        "properties": {},
+        "tagName": "div",
+      }
+    `);
+  });
+
   test('drop unsupported bound styles to avoid crashes', () => {
     const jsx = `export default function MyComponent(props) {
       return (
