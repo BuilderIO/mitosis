@@ -452,7 +452,7 @@ const mapBoundStyles = (bindings: { [key: string]: Binding | undefined }) => {
   if (!styles) {
     return;
   }
-  const { parsed } = parseJSObject(styles.code);
+  const { parsed, unparsed } = parseJSObject(styles.code);
 
   for (const key in parsed) {
     const mediaQueryMatch = key.match(mediaQueryRegex);
@@ -486,6 +486,27 @@ const mapBoundStyles = (bindings: { [key: string]: Binding | undefined }) => {
   }
 
   delete bindings['style'];
+
+  // unparsed data could be something else such as a function call
+  if (unparsed) {
+    try {
+      const ast = parseExpression(`(${unparsed})`, {
+        plugins: ['jsx', 'typescript'],
+        sourceType: 'module',
+      });
+
+      // style={state.getStyles()}
+      if (ast.type === 'CallExpression') {
+        bindings['style'] = {
+          code: unparsed,
+          bindingType: 'expression',
+          type: 'single',
+        };
+      }
+    } catch {
+      console.warn(`The following bound styles are invalid and have been removed: ${unparsed}`);
+    }
+  }
 };
 
 function isGlobalStyle(key: string) {
