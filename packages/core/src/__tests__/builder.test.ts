@@ -969,21 +969,21 @@ describe('Builder', () => {
       component: backToMitosis,
     });
     expect(mitosis).toMatchInlineSnapshot(`
-    "import { useStore } from \\"@builder.io/mitosis\\";
-  
-    export default function MyComponent(props) {
-      const state = useStore({
-        getStyles() {
-          return {
-            color: \\"red\\",
-          };
-        },
-      });
-  
-      return <div style={state.getStyles()} />;
-    }
-    "
-  `);
+      "import { useStore } from \\"@builder.io/mitosis\\";
+
+      export default function MyComponent(props) {
+        const state = useStore({
+          getStyles() {
+            return {
+              color: \\"red\\",
+            };
+          },
+        });
+
+        return <div style={state.getStyles()} />;
+      }
+      "
+    `);
   });
 
   test('drop unsupported bound styles to avoid crashes', () => {
