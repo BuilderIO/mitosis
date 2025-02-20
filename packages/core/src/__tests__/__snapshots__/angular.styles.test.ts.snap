@@ -1007,6 +1007,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"custom-code\\",
@@ -1014,7 +1015,7 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
 })
@@ -1067,6 +1068,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(protected sanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -1089,6 +1092,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"custom-code\\",
@@ -1096,7 +1100,7 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
 })
@@ -1149,6 +1153,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(protected sanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -1958,19 +1964,22 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"raw-text\\",
   template: \`
     <span
       [class]=\\"attributes?.class || attributes?.className\\"
-      [innerHTML]=\\"text || ''\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || '')\\"
     ></span>
   \`,
 })
 export default class RawText {
   @Input() attributes;
   @Input() text;
+
+  constructor(protected sanitizer) {}
 }
 
 @NgModule({
@@ -2662,6 +2671,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -2673,7 +2683,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.data-name]=\\"{
           test: name || 'any name'
         }\\"
-      [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || content || name || '<p class=&quot;text-lg&quot;>my name</p>')\\"
     ></div>
   \`,
 })
@@ -2682,6 +2692,8 @@ export default class Text {
   @Input() content;
 
   name = \\"Decadef20\\";
+
+  constructor(protected sanitizer) {}
 }
 
 @NgModule({
@@ -3495,6 +3507,37 @@ export default class BasicRefAttributePassingCustomRefComponent {
   exports: [BasicRefAttributePassingCustomRefComponent],
 })
 export class BasicRefAttributePassingCustomRefComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > changeDetection 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input, ChangeDetectionStrategy } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>{{count}}</div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export default class MyComponent {
+  @Input() count;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -5693,6 +5736,36 @@ export class RenderStylesModule {}
 "
 `;
 
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > sanitizeInnerHTML 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"sanitizeInnerHTML\\":true}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div [innerHTML]=\\"html\\"></div>
+  \`,
+})
+export default class MyComponent {
+  @Input() html;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > self-referencing component 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -6334,6 +6407,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from '@angular/core';
+
 
 
 
@@ -8005,6 +8079,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -8017,7 +8092,7 @@ export interface CustomCodeProps {
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
 })
@@ -8070,6 +8145,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(protected sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -8092,6 +8169,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -8104,7 +8182,7 @@ export interface CustomCodeProps {
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
 })
@@ -8157,6 +8235,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(protected sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -9052,6 +9132,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface RawTextProps {
   attributes?: any;
@@ -9063,13 +9144,15 @@ export interface RawTextProps {
   template: \`
     <span
       [class]=\\"attributes?.class || attributes?.className\\"
-      [innerHTML]=\\"text || ''\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || '')\\"
     ></span>
   \`,
 })
 export default class RawText {
   @Input() attributes!: RawTextProps[\\"attributes\\"];
   @Input() text!: RawTextProps[\\"text\\"];
+
+  constructor(protected sanitizer: DomSanitizer) {}
 }
 
 @NgModule({
@@ -9814,6 +9897,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface TextProps {
   attributes?: any;
@@ -9833,7 +9917,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.data-name]=\\"{
           test: name || 'any name'
         }\\"
-      [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || content || name || '<p class=&quot;text-lg&quot;>my name</p>')\\"
     ></div>
   \`,
 })
@@ -9842,6 +9926,8 @@ export default class Text {
   @Input() content!: TextProps[\\"content\\"];
 
   name = \\"Decadef20\\";
+
+  constructor(protected sanitizer: DomSanitizer) {}
 }
 
 @NgModule({
@@ -10719,6 +10805,37 @@ export default class BasicRefAttributePassingCustomRefComponent {
   exports: [BasicRefAttributePassingCustomRefComponent],
 })
 export class BasicRefAttributePassingCustomRefComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > changeDetection 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input, ChangeDetectionStrategy } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>{{count}}</div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export default class MyComponent {
+  @Input() count!: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -13061,6 +13178,36 @@ export class RenderStylesModule {}
 "
 `;
 
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > sanitizeInnerHTML 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"sanitizeInnerHTML\\":true}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div [innerHTML]=\\"html\\"></div>
+  \`,
+})
+export default class MyComponent {
+  @Input() html!: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > self-referencing component 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -13736,6 +13883,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from '@angular/core';
+
 
 
 
@@ -14568,15 +14716,18 @@ exports[`Angular with visuallyIgnoreHostElement = false > svelte > Javascript Te
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <div [innerHTML]=\\"html\\"></div>
+    <div [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(html)\\"></div>
   \`,
 })
 export default class MyComponent {
   html = \\"<b>bold</b>\\";
+
+  constructor(protected sanitizer) {}
 }
 
 @NgModule({
@@ -15112,15 +15263,18 @@ exports[`Angular with visuallyIgnoreHostElement = false > svelte > Typescript Te
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <div [innerHTML]=\\"html\\"></div>
+    <div [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(html)\\"></div>
   \`,
 })
 export default class MyComponent {
   html = \\"<b>bold</b>\\";
+
+  constructor(protected sanitizer: DomSanitizer) {}
 }
 
 @NgModule({

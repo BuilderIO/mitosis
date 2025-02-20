@@ -226,6 +226,10 @@ const stringifyBinding =
     ) {
       // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
       return ` [attr.${keyToUse}]="${code}" `;
+    } else if (keyToUse === 'innerHTML') {
+      return blockOptions.sanitizeInnerHTML
+        ? ` [innerHTML]="${code}" `
+        : ` [innerHTML]="sanitizer.bypassSecurityTrustHtml(${code})" `;
     } else {
       const codeToUse =
         options.state === 'inline-with-wrappers' ? processCodeBlockInTemplate(code) : code;

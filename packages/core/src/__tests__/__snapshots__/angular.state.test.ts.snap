@@ -1157,11 +1157,16 @@ exports[`Angular with manually creating and handling class properties as binding
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"custom-code\\",
   template: \`
-    <div #elem [class]=\\"node_0_div\\" [innerHTML]=\\"code\\"></div>
+    <div
+      #elem
+      [class]=\\"node_0_div\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
+    ></div>
   \`,
   styles: [
     \`
@@ -1221,6 +1226,8 @@ export default class CustomCode {
     }
   }
   node_0_div = null;
+
+  constructor(protected sanitizer) {}
 
   ngOnInit() {
     this.node_0_div =
@@ -1253,11 +1260,16 @@ exports[`Angular with manually creating and handling class properties as binding
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"custom-code\\",
   template: \`
-    <div #elem [class]=\\"node_0_div\\" [innerHTML]=\\"code\\"></div>
+    <div
+      #elem
+      [class]=\\"node_0_div\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
+    ></div>
   \`,
   styles: [
     \`
@@ -1317,6 +1329,8 @@ export default class CustomCode {
     }
   }
   node_0_div = null;
+
+  constructor(protected sanitizer) {}
 
   ngOnInit() {
     this.node_0_div =
@@ -2205,13 +2219,14 @@ exports[`Angular with manually creating and handling class properties as binding
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"raw-text\\",
   template: \`
     <span
       [class]=\\"attributes?.class || attributes?.className\\"
-      [innerHTML]=\\"text || ''\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || '')\\"
     ></span>
   \`,
   styles: [
@@ -2225,6 +2240,8 @@ import { Component, Input } from \\"@angular/core\\";
 export default class RawText {
   @Input() attributes;
   @Input() text;
+
+  constructor(protected sanitizer) {}
 }
 
 @NgModule({
@@ -3023,6 +3040,7 @@ exports[`Angular with manually creating and handling class properties as binding
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -3032,7 +3050,7 @@ import { Builder } from \\"@builder.io/sdk\\";
     <div
       [attr.contentEditable]=\\"allowEditingText || undefined\\"
       [attr.data-name]=\\"node_0_div\\"
-      [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || content || name || '<p class=&quot;text-lg&quot;>my name</p>')\\"
     ></div>
   \`,
   styles: [
@@ -3049,6 +3067,8 @@ export default class Text {
 
   name = \\"Decadef20\\";
   node_0_div = null;
+
+  constructor(protected sanitizer) {}
 
   ngOnInit() {
     this.node_0_div = {
@@ -3975,6 +3995,44 @@ export default class BasicRefAttributePassingCustomRefComponent {
   exports: [BasicRefAttributePassingCustomRefComponent],
 })
 export class BasicRefAttributePassingCustomRefComponentModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > changeDetection 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input, ChangeDetectionStrategy } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>{{count}}</div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() count;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -6606,6 +6664,43 @@ export class RenderStylesModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > sanitizeInnerHTML 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"sanitizeInnerHTML\\":true}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div [innerHTML]=\\"html\\"></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() html;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > self-referencing component 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7343,6 +7438,7 @@ exports[`Angular with manually creating and handling class properties as binding
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from '@angular/core';
+
 
 
 
@@ -9306,6 +9402,7 @@ import {
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -9315,7 +9412,11 @@ export interface CustomCodeProps {
 @Component({
   selector: \\"custom-code\\",
   template: \`
-    <div #elem [class]=\\"node_0_div\\" [innerHTML]=\\"code\\"></div>
+    <div
+      #elem
+      [class]=\\"node_0_div\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
+    ></div>
   \`,
   styles: [
     \`
@@ -9375,6 +9476,8 @@ export default class CustomCode {
     }
   }
   node_0_div = null;
+
+  constructor(protected sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     this.node_0_div =
@@ -9413,6 +9516,7 @@ import {
   Input,
   SimpleChanges,
 } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -9422,7 +9526,11 @@ export interface CustomCodeProps {
 @Component({
   selector: \\"custom-code\\",
   template: \`
-    <div #elem [class]=\\"node_0_div\\" [innerHTML]=\\"code\\"></div>
+    <div
+      #elem
+      [class]=\\"node_0_div\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
+    ></div>
   \`,
   styles: [
     \`
@@ -9482,6 +9590,8 @@ export default class CustomCode {
     }
   }
   node_0_div = null;
+
+  constructor(protected sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     this.node_0_div =
@@ -10462,6 +10572,7 @@ exports[`Angular with manually creating and handling class properties as binding
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface RawTextProps {
   attributes?: any;
@@ -10473,7 +10584,7 @@ export interface RawTextProps {
   template: \`
     <span
       [class]=\\"attributes?.class || attributes?.className\\"
-      [innerHTML]=\\"text || ''\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || '')\\"
     ></span>
   \`,
   styles: [
@@ -10487,6 +10598,8 @@ export interface RawTextProps {
 export default class RawText {
   @Input() attributes!: RawTextProps[\\"attributes\\"];
   @Input() text!: RawTextProps[\\"text\\"];
+
+  constructor(protected sanitizer: DomSanitizer) {}
 }
 
 @NgModule({
@@ -11338,6 +11451,7 @@ exports[`Angular with manually creating and handling class properties as binding
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input, SimpleChanges } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface TextProps {
   attributes?: any;
@@ -11355,7 +11469,7 @@ import { Builder } from \\"@builder.io/sdk\\";
     <div
       [attr.contentEditable]=\\"allowEditingText || undefined\\"
       [attr.data-name]=\\"node_0_div\\"
-      [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || content || name || '<p class=&quot;text-lg&quot;>my name</p>')\\"
     ></div>
   \`,
   styles: [
@@ -11372,6 +11486,8 @@ export default class Text {
 
   name = \\"Decadef20\\";
   node_0_div = null;
+
+  constructor(protected sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     this.node_0_div = {
@@ -12363,6 +12479,44 @@ export default class BasicRefAttributePassingCustomRefComponent {
   exports: [BasicRefAttributePassingCustomRefComponent],
 })
 export class BasicRefAttributePassingCustomRefComponentModule {}
+"
+`;
+
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > changeDetection 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input, ChangeDetectionStrategy } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>{{count}}</div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() count!: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -15140,6 +15294,43 @@ export class RenderStylesModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > sanitizeInnerHTML 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"sanitizeInnerHTML\\":true}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div [innerHTML]=\\"html\\"></div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  @Input() html!: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > self-referencing component 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -15911,6 +16102,7 @@ exports[`Angular with manually creating and handling class properties as binding
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from '@angular/core';
+
 
 
 
@@ -16940,11 +17132,12 @@ exports[`Angular with manually creating and handling class properties as binding
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <div [innerHTML]=\\"html\\"></div>
+    <div [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(html)\\"></div>
   \`,
   styles: [
     \`
@@ -16956,6 +17149,8 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MyComponent {
   html = \\"<b>bold</b>\\";
+
+  constructor(protected sanitizer) {}
 }
 
 @NgModule({
@@ -17617,11 +17812,12 @@ exports[`Angular with manually creating and handling class properties as binding
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <div [innerHTML]=\\"html\\"></div>
+    <div [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(html)\\"></div>
   \`,
   styles: [
     \`
@@ -17633,6 +17829,8 @@ import { Component } from \\"@angular/core\\";
 })
 export default class MyComponent {
   html = \\"<b>bold</b>\\";
+
+  constructor(protected sanitizer: DomSanitizer) {}
 }
 
 @NgModule({
