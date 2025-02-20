@@ -1,5 +1,29 @@
 # Change Log
 
+## 0.6.1
+
+### Patch Changes
+
+- 74b1a19: Angular: support to change the change detection strategy to `OnPush` using `useMetadata`
+
+  ```ts
+  useMetadata({
+    angular: {
+      changeDetection: 'OnPush',
+    },
+  });
+  ```
+
+- 74b1a19: Angular: support to bypass sanitization of innerHTML by default, this can be overriden in `useMetadata`
+
+  ```ts
+  useMetadata({
+    angular: {
+      sanitizeInnerHTML: true, // doesn't use the sanitizer.bypassSecurityTrustHtml
+    },
+  });
+  ```
+
 ## 0.6.0
 
 ### Minor Changes
