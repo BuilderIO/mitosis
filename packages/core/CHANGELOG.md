@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.2
+
+### Patch Changes
+
+- 0b55dc3: [Builder]: bound call expression styles are preserved in generator
+
 ## 0.6.1
 
 ### Patch Changes
