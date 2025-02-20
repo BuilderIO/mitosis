@@ -887,6 +887,105 @@ describe('Builder', () => {
         `);
   });
 
+  test('preserve bound call expressions for styles', () => {
+    const code = dedent`
+    import { useStore } from "@builder.io/mitosis";
+  
+    export default function MyComponent(props) {
+      const state = useStore({
+        getStyles() {
+          return {
+            color: 'red'
+          }
+        }
+      })
+      return (
+        <div style={state.getStyles()} />
+      );
+    }
+  `;
+
+    const component = parseJsx(code);
+
+    expect(component.children[0]).toMatchInlineSnapshot(`
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "style": {
+          "bindingType": "expression",
+          "code": "state.getStyles()",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    }
+  `);
+
+    const builderJson = componentToBuilder()({ component });
+
+    expect(builderJson.data!.blocks![0]).toMatchInlineSnapshot(`
+    {
+      "@type": "@builder.io/sdk:Element",
+      "actions": {},
+      "bindings": {
+        "style": "state.getStyles()",
+      },
+      "children": [],
+      "code": {
+        "actions": {},
+        "bindings": {},
+      },
+      "properties": {},
+      "tagName": "div",
+    }
+  `);
+
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+
+    expect(backToMitosis.children[0]).toMatchInlineSnapshot(`
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "style": {
+          "bindingType": "expression",
+          "code": "state.getStyles()",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+      "slots": {},
+    }
+  `);
+
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
+    });
+    expect(mitosis).toMatchInlineSnapshot(`
+    "import { useStore } from \\"@builder.io/mitosis\\";
+  
+    export default function MyComponent(props) {
+      const state = useStore({
+        getStyles() {
+          return {
+            color: \\"red\\",
+          };
+        },
+      });
+  
+      return <div style={state.getStyles()} />;
+    }
+    "
+  `);
+  });
+
   test('drop unsupported bound styles to avoid crashes', () => {
     const jsx = `export default function MyComponent(props) {
       return (
