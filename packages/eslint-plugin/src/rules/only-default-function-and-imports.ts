@@ -56,7 +56,8 @@ const rule: Rule.RuleModule = {
             (!types.isExpressionStatement(child) ||
               !types.isCallExpression(child.expression) ||
               !types.isIdentifier(child.expression.callee) ||
-              child.expression.callee.name !== HOOKS.META_DATA)
+              (child.expression.callee.name !== HOOKS.META_DATA &&
+                child.expression.callee.name !== HOOKS.DEFAULT_PROPS))
           ) {
             context.report({
               node: child as any,
