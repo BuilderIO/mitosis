@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.3
+
+### Patch Changes
+
+- 05257f2: [Builder]: parser does not strip falsey style values
+
 ## 0.6.2
 
 ### Patch Changes
