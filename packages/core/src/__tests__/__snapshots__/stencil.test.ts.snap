@@ -3145,6 +3145,54 @@ export class NestedStyles {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > normalizeLayerNames 1`] = `
+"import { Component, h, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-normalized-layer-names-component\\",
+
+  styles: \`
+        .css-0 {
+          margin: 10px;
+        }
+        .css-123 {
+          padding: 10px;
+        }
+        .name-123 {
+          border: 1px solid;
+        }
+        .name {
+          color: red;
+        }
+        .name-789 {
+          background: blue;
+        }
+\`,
+})
+export class MyNormalizedLayerNamesComponent {
+  componentDidLoad() {}
+
+  render() {
+    return (
+      <section>
+        <div>Emoji</div>
+        <div>Dashes</div>
+        <div>CamelCase</div>
+        <div>Special chars</div>
+        <div>Special chars with dashes</div>
+        <div class=\\"css-0\\">Single Number</div>
+        <div class=\\"css-123\\">Multiple Numbers</div>
+        <div class=\\"name-123\\">Chars with numbers at end</div>
+        <div class=\\"name\\">Chars with numbers at start</div>
+        <div class=\\"name-789\\">Numnbers separated by dash</div>
+        <div>Emoji</div>
+      </section>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > onEvent 1`] = `
 "import { Component, h, Fragment } from \\"@stencil/core\\";
 
@@ -7838,6 +7886,58 @@ export class NestedStyles {
 
   render() {
     return <div class=\\"div\\">Hello world</div>;
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > normalizeLayerNames 1`] = `
+"import { Component, h, Fragment } from \\"@stencil/core\\";
+
+export interface MyNormalizedLayerNamesComponentProps {
+  id: string;
+}
+
+@Component({
+  tag: \\"my-normalized-layer-names-component\\",
+
+  styles: \`
+        .css-0 {
+          margin: 10px;
+        }
+        .css-123 {
+          padding: 10px;
+        }
+        .name-123 {
+          border: 1px solid;
+        }
+        .name {
+          color: red;
+        }
+        .name-789 {
+          background: blue;
+        }
+\`,
+})
+export class MyNormalizedLayerNamesComponent {
+  componentDidLoad() {}
+
+  render() {
+    return (
+      <section>
+        <div>Emoji</div>
+        <div>Dashes</div>
+        <div>CamelCase</div>
+        <div>Special chars</div>
+        <div>Special chars with dashes</div>
+        <div class=\\"css-0\\">Single Number</div>
+        <div class=\\"css-123\\">Multiple Numbers</div>
+        <div class=\\"name-123\\">Chars with numbers at end</div>
+        <div class=\\"name\\">Chars with numbers at start</div>
+        <div class=\\"name-789\\">Numnbers separated by dash</div>
+        <div>Emoji</div>
+      </section>
+    );
   }
 }
 "
