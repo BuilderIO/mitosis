@@ -663,6 +663,47 @@ describe('Builder', () => {
     expect(mitosis.trim()).toEqual(code.trim());
   });
 
+  test('do not strip falsey style values', () => {
+    const content = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            responsiveStyles: {
+              large: {
+                background: 'blue',
+                zIndex: '0',
+              },
+            },
+            children: [
+              {
+                '@type': '@builder.io/sdk:Element' as const,
+                component: {
+                  name: 'Text',
+                  options: {
+                    text: 'AI Explained',
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    };
+
+    const mitosisJson = builderContentToMitosisComponent(content);
+
+    expect(mitosisJson.children[0].bindings).toMatchInlineSnapshot(`
+      {
+        "css": {
+          "bindingType": "expression",
+          "code": "{background:'blue',zIndex:'0'}",
+          "type": "single",
+        },
+      }
+    `);
+  });
+
   test('do not generate empty expression for width on Column', () => {
     const content = {
       data: {
