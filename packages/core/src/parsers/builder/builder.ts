@@ -1250,19 +1250,13 @@ function mapBuilderBindingsToMitosisBindingWithCode(
 
 type Styles = Record<string, any>;
 
-function removeFalsey(obj: Styles) {
-  return omitBy(
-    obj,
-    (value) => !value || value === '0' || value === '0px' || value === 'none' || value === '0%',
-  );
-}
 function combineStyles(parent: Styles, child: Styles) {
   const marginStyles = ['marginTop', 'marginBottom', 'marginLeft', 'marginRight'];
   const paddingStyles = ['paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight'];
   const distanceStylesToCombine = [...paddingStyles, ...marginStyles];
   const merged: Styles = {
-    ...omit(removeFalsey(child), distanceStylesToCombine),
-    ...removeFalsey(parent),
+    ...omit(child, distanceStylesToCombine),
+    ...parent,
   };
   for (const key of distanceStylesToCombine) {
     // Funky things happen if different alignment

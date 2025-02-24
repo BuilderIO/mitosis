@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.6.4
+
+### Patch Changes
+
+- 8e9e3c3: [All] Normalize name of mitosis node before assigning it to className
+
+## 0.6.3
+
+### Patch Changes
+
+- 05257f2: [Builder]: parser does not strip falsey style values
+
+## 0.6.2
+
+### Patch Changes
+
+- 0b55dc3: [Builder]: bound call expression styles are preserved in generator
+
 ## 0.6.1
 
 ### Patch Changes

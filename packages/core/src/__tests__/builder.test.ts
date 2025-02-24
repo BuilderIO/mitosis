@@ -663,6 +663,47 @@ describe('Builder', () => {
     expect(mitosis.trim()).toEqual(code.trim());
   });
 
+  test('do not strip falsey style values', () => {
+    const content = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            responsiveStyles: {
+              large: {
+                background: 'blue',
+                zIndex: '0',
+              },
+            },
+            children: [
+              {
+                '@type': '@builder.io/sdk:Element' as const,
+                component: {
+                  name: 'Text',
+                  options: {
+                    text: 'AI Explained',
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    };
+
+    const mitosisJson = builderContentToMitosisComponent(content);
+
+    expect(mitosisJson.children[0].bindings).toMatchInlineSnapshot(`
+      {
+        "css": {
+          "bindingType": "expression",
+          "code": "{background:'blue',zIndex:'0'}",
+          "type": "single",
+        },
+      }
+    `);
+  });
+
   test('do not generate empty expression for width on Column', () => {
     const content = {
       data: {
@@ -885,6 +926,133 @@ describe('Builder', () => {
             },
           }
         `);
+  });
+
+  test('preserve bound call expressions for styles', () => {
+    const code = dedent`
+    import { useStore } from "@builder.io/mitosis";
+  
+    export default function MyComponent(props) {
+      const state = useStore({
+        getStyles() {
+          return {
+            color: 'red'
+          }
+        }
+      })
+      return (
+        <div style={state.getStyles()} />
+      );
+    }
+  `;
+
+    const component = parseJsx(code);
+
+    expect(component.children[0]).toMatchInlineSnapshot(`
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "style": {
+          "bindingType": "expression",
+          "code": "state.getStyles()",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    }
+  `);
+
+    const builderJson = componentToBuilder()({ component });
+
+    expect(builderJson.data!.blocks![0]).toMatchInlineSnapshot(`
+    {
+      "@type": "@builder.io/sdk:Element",
+      "actions": {},
+      "bindings": {
+        "style": "state.getStyles()",
+      },
+      "children": [],
+      "code": {
+        "actions": {},
+        "bindings": {},
+      },
+      "properties": {},
+      "tagName": "div",
+    }
+  `);
+
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+
+    expect(backToMitosis.children[0]).toMatchInlineSnapshot(`
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "style": {
+          "bindingType": "expression",
+          "code": "state.getStyles()",
+          "type": "single",
+        },
+      },
+      "children": [],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+      "slots": {},
+    }
+  `);
+
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
+    });
+    expect(mitosis).toMatchInlineSnapshot(`
+      "import { useStore } from \\"@builder.io/mitosis\\";
+
+      export default function MyComponent(props) {
+        const state = useStore({
+          getStyles() {
+            return {
+              color: \\"red\\",
+            };
+          },
+        });
+
+        return <div style={state.getStyles()} />;
+      }
+      "
+    `);
+  });
+
+  test('invalid style values are removed', () => {
+    const code = dedent`  
+    export default function MyComponent(props) {
+      return (
+        <div style={false} />
+      );
+    }
+  `;
+
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
+
+    expect(builderJson.data!.blocks![0]).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {},
+        "children": [],
+        "code": {
+          "actions": {},
+          "bindings": {},
+        },
+        "properties": {},
+        "tagName": "div",
+      }
+    `);
   });
 
   test('drop unsupported bound styles to avoid crashes', () => {
