@@ -20,9 +20,6 @@ describe('Unpaired Surrogates', () => {
     };
 
     const output = builderContentToMitosisComponent(builderContent);
-
-    console.log('Output: ', output.children[0].children);
-
     // Text should be cleaned of unpaired surrogates
     expect(output.children[0].children[0].properties._text).toBe(
       'Hello  World. Welcome to section',
