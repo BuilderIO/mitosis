@@ -4,5 +4,5 @@ export const HOOKS = {
   CONTEXT: 'useContext',
   REF: 'useRef',
   META_DATA: 'useMetadata',
-  DEFAULT_PROPS: "useDefaultProps"
+  DEFAULT_PROPS: 'useDefaultProps',
 } as const;
