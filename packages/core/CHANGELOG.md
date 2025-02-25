@@ -1,5 +1,176 @@
 # Change Log
 
+## 0.6.4
+
+### Patch Changes
+
+- 8e9e3c3: [All] Normalize name of mitosis node before assigning it to className
+
+## 0.6.3
+
+### Patch Changes
+
+- 05257f2: [Builder]: parser does not strip falsey style values
+
+## 0.6.2
+
+### Patch Changes
+
+- 0b55dc3: [Builder]: bound call expression styles are preserved in generator
+
+## 0.6.1
+
+### Patch Changes
+
+- 74b1a19: Angular: support to change the change detection strategy to `OnPush` using `useMetadata`
+
+  ```ts
+  useMetadata({
+    angular: {
+      changeDetection: 'OnPush',
+    },
+  });
+  ```
+
+- 74b1a19: Angular: support to bypass sanitization of innerHTML by default, this can be overriden in `useMetadata`
+
+  ```ts
+  useMetadata({
+    angular: {
+      sanitizeInnerHTML: true, // doesn't use the sanitizer.bypassSecurityTrustHtml
+    },
+  });
+  ```
+
+## 0.6.0
+
+### Minor Changes
+
+- 93575b5: Normalize name to create valid className
+
+## 0.5.38
+
+### Patch Changes
+
+- 469394f: Builder: include Column widths in generator
+
+## 0.5.37
+
+### Patch Changes
+
+- f208f94: Builder: unsupported bound styles are removed to avoid crashes
+
+## 0.5.36
+
+### Patch Changes
+
+- a68bd42: [All] Bug: Fix arrow function expressions in non-on properties
+- b91dfa7: Builder: bound style string literals are not removed
+
+## 0.5.35
+
+### Patch Changes
+
+- b6a01ab: Fix: properly handle innerHTML properties in react codegen
+
+## 0.5.34
+
+### Patch Changes
+
+- cf666ff: check for null string
+
+## 0.5.33
+
+### Patch Changes
+
+- 50976fa: parseJsx accounts for JSX fragments when generating slots
+
+## 0.5.32
+
+### Patch Changes
+
+- a38e5bb: Builder: dynamic styles are mapped to bindings when generating
+
+## 0.5.31
+
+### Patch Changes
+
+- d24889d: [angular,stencil] Fix attribute-passing in options
+
+## 0.5.30
+
+### Patch Changes
+
+- 0c493b2: [Builder] Fix null check issue with localized values
+
+## 0.5.29
+
+### Patch Changes
+
+- 1d74164: adds support to Builder parser and generator for inline localized content
+
+## 0.5.28
+
+### Patch Changes
+
+- b63279f: [angular, stencil]: Add `attributePassing` to enable passing attributes like `data-*`, `aria-*` or `class` to correct child.
+
+  There is a wired behaviour for Angular and Stencil (without shadow DOM), where attributes are rendered on parent elements like this:
+
+  **Input**
+
+  ```angular2html
+  <!-- Angular -->
+  <my-component class="cool" data-nice="true" aria-label="wow"></my-component>
+  ```
+
+  **Output**
+
+  ```html
+  <!-- DOM -->
+  <my-component class="cool" data-nice="true" aria-label="wow">
+    <button class="my-component">My Component</button>
+  </my-component>
+  ```
+
+  In general, we want to pass those attributes down to the rendered child, like this:
+
+  ```html
+  <!-- DOM -->
+  <my-component>
+    <button class="my-component cool" data-nice="true" aria-label="wow">My Component</button>
+  </my-component>
+  ```
+
+  We provide 2 ways to enable this attribute passing:
+
+  **Metadata**
+
+  ```tsx
+  // my-component.lite.tsx
+  useMetadata({
+    attributePassing: {
+      enabled: true,
+      // customRef: "_myRef";
+    },
+  });
+  ```
+
+  **Config**
+
+  ```js
+  // mitosis.config.cjs
+  module.exports = {
+    // ... other settings
+    attributePassing: {
+      enabled: true,
+      // customRef: "_myRef";
+    },
+  };
+  ```
+
+  If you enable the `attributePassing` we add a new `ref` to the root element named `_root` to interact with the DOM element. If you wish to control the name of the ref, because you already have a `useRef` on your root element, you can use the `customRef` property to select it.
+
 ## 0.5.27
 
 ### Patch Changes

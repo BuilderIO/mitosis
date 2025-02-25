@@ -1927,6 +1927,56 @@ export default observedMyBasicOnUpdateReturnComponent;
 "
 `;
 
+exports[`React - stateType: mobx > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+
+function BasicRefAttributePassingComponent(props) {
+  const buttonRef = useRef(null);
+
+  return <button ref={buttonRef}>Attribute Passing</button>;
+}
+
+const observedBasicRefAttributePassingComponent = observer(
+  BasicRefAttributePassingComponent
+);
+export default observedBasicRefAttributePassingComponent;
+"
+`;
+
+exports[`React - stateType: mobx > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+
+function BasicRefAttributePassingCustomRefComponent(props) {
+  const buttonRef = useRef(null);
+
+  return (
+    <div>
+      <button ref={buttonRef}>Attribute Passing</button>
+    </div>
+  );
+}
+
+const observedBasicRefAttributePassingCustomRefComponent = observer(
+  BasicRefAttributePassingCustomRefComponent
+);
+export default observedBasicRefAttributePassingCustomRefComponent;
+"
+`;
+
 exports[`React - stateType: mobx > jsx > Javascript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
 import MyComp from \\"./my-component\\";
@@ -2350,6 +2400,37 @@ export default observedFigmaButton;
 "
 `;
 
+exports[`React - stateType: mobx > jsx > Javascript Test > functionProps 1`] = `
+"import * as React from \\"react\\";
+
+function MyBasicComponent(props) {
+  return (
+    <p
+      f={() => x}
+      f1={(x) => x}
+      f2={(x) => {}}
+      f3={function () {
+        return x;
+      }}
+      f4={function (x) {
+        return x;
+      }}
+      f5={function (x) {
+        return;
+      }}
+      f6={function () {
+        return;
+      }}
+      f7={(a, b, c) => a + b + c}
+    />
+  );
+}
+
+const observedMyBasicComponent = observer(MyBasicComponent);
+export default observedMyBasicComponent;
+"
+`;
+
 exports[`React - stateType: mobx > jsx > Javascript Test > getterState 1`] = `
 "import * as React from \\"react\\";
 import { useLocalObservable, observer } from \\"mobx-react-lite\\";
@@ -2405,6 +2486,31 @@ function RenderContent(props) {
 
 const observedRenderContent = observer(RenderContent);
 export default observedRenderContent;
+"
+`;
+
+exports[`React - stateType: mobx > jsx > Javascript Test > layerName 1`] = `
+"import * as React from \\"react\\";
+
+function MyLayerNameComponent(props) {
+  return (
+    <>
+      <section>
+        <div className=\\"layer-name\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </div>
+      </section>
+      <style jsx>{\`
+        .layer-name {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+const observedMyLayerNameComponent = observer(MyLayerNameComponent);
+export default observedMyLayerNameComponent;
 "
 `;
 
@@ -2547,6 +2653,59 @@ function NestedStyles(props) {
 
 const observedNestedStyles = observer(NestedStyles);
 export default observedNestedStyles;
+"
+`;
+
+exports[`React - stateType: mobx > jsx > Javascript Test > normalizeLayerNames 1`] = `
+"import * as React from \\"react\\";
+
+function MyNormalizedLayerNamesComponent(props) {
+  return (
+    <>
+      <section>
+        <div>Emoji</div>
+        <div>Dashes</div>
+        <div>CamelCase</div>
+        <div>Special chars</div>
+        <div>Special chars with dashes</div>
+        <div className=\\"css-0\\">Single Number</div>
+        <div className=\\"css-123\\">Multiple Numbers</div>
+        <div className=\\"name-123\\">Chars with numbers at end</div>
+        <div className=\\"name\\">Chars with numbers at start</div>
+        <div className=\\"name-789\\">Numnbers separated by dash</div>
+        <div>Emoji</div>
+        <div data-name=\\"1\\" className=\\"div\\">
+          Number
+        </div>
+      </section>
+      <style jsx>{\`
+        .css-0 {
+          margin: 10px;
+        }
+        .css-123 {
+          padding: 10px;
+        }
+        .name-123 {
+          border: 1px solid;
+        }
+        .name {
+          color: red;
+        }
+        .name-789 {
+          background: blue;
+        }
+        .div {
+          background: blue;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+const observedMyNormalizedLayerNamesComponent = observer(
+  MyNormalizedLayerNamesComponent
+);
+export default observedMyNormalizedLayerNamesComponent;
 "
 `;
 
@@ -5988,6 +6147,56 @@ export default observedMyBasicOnUpdateReturnComponent;
 "
 `;
 
+exports[`React - stateType: mobx > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+
+function BasicRefAttributePassingComponent(props: any) {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  return <button ref={buttonRef}>Attribute Passing</button>;
+}
+
+const observedBasicRefAttributePassingComponent = observer(
+  BasicRefAttributePassingComponent
+);
+export default observedBasicRefAttributePassingComponent;
+"
+`;
+
+exports[`React - stateType: mobx > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+\\"use client\\";
+import * as React from \\"react\\";
+import { useRef } from \\"react\\";
+
+function BasicRefAttributePassingCustomRefComponent(props: any) {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  return (
+    <div>
+      <button ref={buttonRef}>Attribute Passing</button>
+    </div>
+  );
+}
+
+const observedBasicRefAttributePassingCustomRefComponent = observer(
+  BasicRefAttributePassingCustomRefComponent
+);
+export default observedBasicRefAttributePassingCustomRefComponent;
+"
+`;
+
 exports[`React - stateType: mobx > jsx > Typescript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
 import MyComp from \\"./my-component\\";
@@ -6448,6 +6657,41 @@ export default observedFigmaButton;
 "
 `;
 
+exports[`React - stateType: mobx > jsx > Typescript Test > functionProps 1`] = `
+"import * as React from \\"react\\";
+
+export interface MyBasicComponentProps {
+  id: string;
+}
+
+function MyBasicComponent(props: MyBasicComponentProps) {
+  return (
+    <p
+      f={() => x}
+      f1={(x) => x}
+      f2={(x) => {}}
+      f3={function () {
+        return x;
+      }}
+      f4={function (x) {
+        return x;
+      }}
+      f5={function (x) {
+        return;
+      }}
+      f6={function () {
+        return;
+      }}
+      f7={(a, b, c) => a + b + c}
+    />
+  );
+}
+
+const observedMyBasicComponent = observer(MyBasicComponent);
+export default observedMyBasicComponent;
+"
+`;
+
 exports[`React - stateType: mobx > jsx > Typescript Test > getterState 1`] = `
 "import * as React from \\"react\\";
 import { useLocalObservable, observer } from \\"mobx-react-lite\\";
@@ -6512,6 +6756,31 @@ function RenderContent(props: RenderContentProps) {
 
 const observedRenderContent = observer(RenderContent);
 export default observedRenderContent;
+"
+`;
+
+exports[`React - stateType: mobx > jsx > Typescript Test > layerName 1`] = `
+"import * as React from \\"react\\";
+
+function MyLayerNameComponent(props: any) {
+  return (
+    <>
+      <section>
+        <div className=\\"layer-name\\">
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </div>
+      </section>
+      <style jsx>{\`
+        .layer-name {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+const observedMyLayerNameComponent = observer(MyLayerNameComponent);
+export default observedMyLayerNameComponent;
 "
 `;
 
@@ -6659,6 +6928,65 @@ function NestedStyles(props: any) {
 
 const observedNestedStyles = observer(NestedStyles);
 export default observedNestedStyles;
+"
+`;
+
+exports[`React - stateType: mobx > jsx > Typescript Test > normalizeLayerNames 1`] = `
+"import * as React from \\"react\\";
+
+export interface MyNormalizedLayerNamesComponentProps {
+  id: string;
+}
+
+function MyNormalizedLayerNamesComponent(
+  props: MyNormalizedLayerNamesComponentProps
+) {
+  return (
+    <>
+      <section>
+        <div>Emoji</div>
+        <div>Dashes</div>
+        <div>CamelCase</div>
+        <div>Special chars</div>
+        <div>Special chars with dashes</div>
+        <div className=\\"css-0\\">Single Number</div>
+        <div className=\\"css-123\\">Multiple Numbers</div>
+        <div className=\\"name-123\\">Chars with numbers at end</div>
+        <div className=\\"name\\">Chars with numbers at start</div>
+        <div className=\\"name-789\\">Numnbers separated by dash</div>
+        <div>Emoji</div>
+        <div data-name=\\"1\\" className=\\"div\\">
+          Number
+        </div>
+      </section>
+      <style jsx>{\`
+        .css-0 {
+          margin: 10px;
+        }
+        .css-123 {
+          padding: 10px;
+        }
+        .name-123 {
+          border: 1px solid;
+        }
+        .name {
+          color: red;
+        }
+        .name-789 {
+          background: blue;
+        }
+        .div {
+          background: blue;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+const observedMyNormalizedLayerNamesComponent = observer(
+  MyNormalizedLayerNamesComponent
+);
+export default observedMyNormalizedLayerNamesComponent;
 "
 `;
 

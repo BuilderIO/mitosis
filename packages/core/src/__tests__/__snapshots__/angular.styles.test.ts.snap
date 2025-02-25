@@ -1007,6 +1007,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"custom-code\\",
@@ -1014,7 +1015,7 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
 })
@@ -1067,6 +1068,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(protected sanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -1089,6 +1092,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"custom-code\\",
@@ -1096,7 +1100,7 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
 })
@@ -1149,6 +1153,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(protected sanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -1958,19 +1964,22 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"raw-text\\",
   template: \`
     <span
       [class]=\\"attributes?.class || attributes?.className\\"
-      [innerHTML]=\\"text || ''\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || '')\\"
     ></span>
   \`,
 })
 export default class RawText {
   @Input() attributes;
   @Input() text;
+
+  constructor(protected sanitizer) {}
 }
 
 @NgModule({
@@ -2662,6 +2671,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -2673,7 +2683,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.data-name]=\\"{
           test: name || 'any name'
         }\\"
-      [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || content || name || '<p class=&quot;text-lg&quot;>my name</p>')\\"
     ></div>
   \`,
 })
@@ -2682,6 +2692,8 @@ export default class Text {
   @Input() content;
 
   name = \\"Decadef20\\";
+
+  constructor(protected sanitizer) {}
 }
 
 @NgModule({
@@ -3344,6 +3356,188 @@ export default class MyBasicOnUpdateReturnComponent {
   exports: [MyBasicOnUpdateReturnComponent],
 })
 export class MyBasicOnUpdateReturnComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"basic-ref-attribute-passing-component\\",
+  template: \`
+    <button #buttonRef #_root>Attribute Passing</button>
+  \`,
+})
+export default class BasicRefAttributePassingComponent {
+  @ViewChild(\\"buttonRef\\") buttonRef;
+  @ViewChild(\\"_root\\") _root;
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(element, customElementSelector) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root?.nativeElement;
+    this.enableAttributePassing(
+      element,
+      \\"basic-ref-attribute-passing-component\\"
+    );
+  }
+}
+
+@NgModule({
+  declarations: [BasicRefAttributePassingComponent],
+  imports: [CommonModule],
+  exports: [BasicRefAttributePassingComponent],
+})
+export class BasicRefAttributePassingComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"basic-ref-attribute-passing-custom-ref-component\\",
+  template: \`
+    <div><button #buttonRef>Attribute Passing</button></div>
+  \`,
+})
+export default class BasicRefAttributePassingCustomRefComponent {
+  @ViewChild(\\"buttonRef\\") buttonRef;
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(element, customElementSelector) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this.buttonRef?.nativeElement;
+    this.enableAttributePassing(
+      element,
+      \\"basic-ref-attribute-passing-custom-ref-component\\"
+    );
+  }
+}
+
+@NgModule({
+  declarations: [BasicRefAttributePassingCustomRefComponent],
+  imports: [CommonModule],
+  exports: [BasicRefAttributePassingCustomRefComponent],
+})
+export class BasicRefAttributePassingCustomRefComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > changeDetection 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input, ChangeDetectionStrategy } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>{{count}}</div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export default class MyComponent {
+  @Input() count;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -4144,6 +4338,46 @@ export class FigmaButtonModule {}
 "
 `;
 
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > functionProps 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <p
+      [attr.f]=\\"() => x\\"
+      [attr.f1]=\\"x => x\\"
+      [attr.f2]=\\"x => {}\\"
+      [attr.f3]=\\"function () {
+          return x;
+        }\\"
+      [attr.f4]=\\"function (x) {
+          return x;
+        }\\"
+      [attr.f5]=\\"function (x) {
+          return;
+        }\\"
+      [attr.f6]=\\"function () {
+          return;
+        }\\"
+      [attr.f7]=\\"(a, b, c) => a + b + c\\"
+    ></p>
+  \`,
+})
+export default class MyBasicComponent {}
+
+@NgModule({
+  declarations: [MyBasicComponent],
+  imports: [CommonModule],
+  exports: [MyBasicComponent],
+})
+export class MyBasicComponentModule {}
+"
+`;
+
 exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > getterState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -4237,6 +4471,40 @@ export default class MyImportComponent {}
   exports: [MyImportComponent],
 })
 export class MyImportComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > layerName 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-layer-name-component\\",
+  template: \`
+    <section>
+      <div class=\\"layer-name\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </section>
+  \`,
+  styles: [
+    \`
+      .layer-name {
+        padding: 10px;
+      }
+    \`,
+  ],
+})
+export default class MyLayerNameComponent {}
+
+@NgModule({
+  declarations: [MyLayerNameComponent],
+  imports: [CommonModule],
+  exports: [MyLayerNameComponent],
+})
+export class MyLayerNameComponentModule {}
 "
 `;
 
@@ -4511,6 +4779,64 @@ export default class NestedStyles {}
   exports: [NestedStyles],
 })
 export class NestedStylesModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > normalizeLayerNames 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-normalized-layer-names-component\\",
+  template: \`
+    <section>
+      <div>Emoji</div>
+      <div>Dashes</div>
+      <div>CamelCase</div>
+      <div>Special chars</div>
+      <div>Special chars with dashes</div>
+      <div class=\\"css-0\\">Single Number</div>
+      <div class=\\"css-123\\">Multiple Numbers</div>
+      <div class=\\"name-123\\">Chars with numbers at end</div>
+      <div class=\\"name\\">Chars with numbers at start</div>
+      <div class=\\"name-789\\">Numnbers separated by dash</div>
+      <div>Emoji</div>
+      <div data-name=\\"1\\" class=\\"div\\">Number</div>
+    </section>
+  \`,
+  styles: [
+    \`
+      .css-0 {
+        margin: 10px;
+      }
+      .css-123 {
+        padding: 10px;
+      }
+      .name-123 {
+        border: 1px solid;
+      }
+      .name {
+        color: red;
+      }
+      .name-789 {
+        background: blue;
+      }
+      .div {
+        background: blue;
+      }
+    \`,
+  ],
+})
+export default class MyNormalizedLayerNamesComponent {}
+
+@NgModule({
+  declarations: [MyNormalizedLayerNamesComponent],
+  imports: [CommonModule],
+  exports: [MyNormalizedLayerNamesComponent],
+})
+export class MyNormalizedLayerNamesComponentModule {}
 "
 `;
 
@@ -5468,6 +5794,36 @@ export class RenderStylesModule {}
 "
 `;
 
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > sanitizeInnerHTML 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"sanitizeInnerHTML\\":true}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div [innerHTML]=\\"html\\"></div>
+  \`,
+})
+export default class MyComponent {
+  @Input() html;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > self-referencing component 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -6119,6 +6475,7 @@ import { Component } from '@angular/core';
 
 
 
+
 @Component({
   selector: 'string-literal-store',template: \`
 
@@ -6144,6 +6501,9 @@ export default class StringLiteralStore {
 
 
    foo-bar= 123
+
+
+
 
 
 
@@ -7802,6 +8162,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -7814,7 +8175,7 @@ export interface CustomCodeProps {
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
 })
@@ -7867,6 +8228,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(protected sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -7889,6 +8252,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -7901,7 +8265,7 @@ export interface CustomCodeProps {
     <div
       #elem
       [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
-      [innerHTML]=\\"code\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(code)\\"
     ></div>
   \`,
 })
@@ -7954,6 +8318,8 @@ export default class CustomCode {
       }
     }
   }
+
+  constructor(protected sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
@@ -8849,6 +9215,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface RawTextProps {
   attributes?: any;
@@ -8860,13 +9227,15 @@ export interface RawTextProps {
   template: \`
     <span
       [class]=\\"attributes?.class || attributes?.className\\"
-      [innerHTML]=\\"text || ''\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || '')\\"
     ></span>
   \`,
 })
 export default class RawText {
   @Input() attributes!: RawTextProps[\\"attributes\\"];
   @Input() text!: RawTextProps[\\"text\\"];
+
+  constructor(protected sanitizer: DomSanitizer) {}
 }
 
 @NgModule({
@@ -9611,6 +9980,7 @@ exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test 
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component, Input } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 export interface TextProps {
   attributes?: any;
@@ -9630,7 +10000,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.data-name]=\\"{
           test: name || 'any name'
         }\\"
-      [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text || content || name || '<p class=&quot;text-lg&quot;>my name</p>')\\"
     ></div>
   \`,
 })
@@ -9639,6 +10009,8 @@ export default class Text {
   @Input() content!: TextProps[\\"content\\"];
 
   name = \\"Decadef20\\";
+
+  constructor(protected sanitizer: DomSanitizer) {}
 }
 
 @NgModule({
@@ -10359,6 +10731,194 @@ export default class MyBasicOnUpdateReturnComponent {
   exports: [MyBasicOnUpdateReturnComponent],
 })
 export class MyBasicOnUpdateReturnComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"basic-ref-attribute-passing-component\\",
+  template: \`
+    <button #buttonRef #_root>Attribute Passing</button>
+  \`,
+})
+export default class BasicRefAttributePassingComponent {
+  @ViewChild(\\"buttonRef\\") buttonRef!: ElementRef;
+  @ViewChild(\\"_root\\") _root!: ElementRef;
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root?.nativeElement;
+    this.enableAttributePassing(
+      element,
+      \\"basic-ref-attribute-passing-component\\"
+    );
+  }
+}
+
+@NgModule({
+  declarations: [BasicRefAttributePassingComponent],
+  imports: [CommonModule],
+  exports: [BasicRefAttributePassingComponent],
+})
+export class BasicRefAttributePassingComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"basic-ref-attribute-passing-custom-ref-component\\",
+  template: \`
+    <div><button #buttonRef>Attribute Passing</button></div>
+  \`,
+})
+export default class BasicRefAttributePassingCustomRefComponent {
+  @ViewChild(\\"buttonRef\\") buttonRef!: ElementRef;
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this.buttonRef?.nativeElement;
+    this.enableAttributePassing(
+      element,
+      \\"basic-ref-attribute-passing-custom-ref-component\\"
+    );
+  }
+}
+
+@NgModule({
+  declarations: [BasicRefAttributePassingCustomRefComponent],
+  imports: [CommonModule],
+  exports: [BasicRefAttributePassingCustomRefComponent],
+})
+export class BasicRefAttributePassingCustomRefComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > changeDetection 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input, ChangeDetectionStrategy } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>{{count}}</div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export default class MyComponent {
+  @Input() count!: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -11199,6 +11759,50 @@ export class FigmaButtonModule {}
 "
 `;
 
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > functionProps 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+export interface MyBasicComponentProps {
+  id: string;
+}
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <p
+      [attr.f]=\\"() => x\\"
+      [attr.f1]=\\"x => x\\"
+      [attr.f2]=\\"x => {}\\"
+      [attr.f3]=\\"function () {
+          return x;
+        }\\"
+      [attr.f4]=\\"function (x) {
+          return x;
+        }\\"
+      [attr.f5]=\\"function (x) {
+          return;
+        }\\"
+      [attr.f6]=\\"function () {
+          return;
+        }\\"
+      [attr.f7]=\\"(a, b, c) => a + b + c\\"
+    ></p>
+  \`,
+})
+export default class MyBasicComponent {}
+
+@NgModule({
+  declarations: [MyBasicComponent],
+  imports: [CommonModule],
+  exports: [MyBasicComponent],
+})
+export class MyBasicComponentModule {}
+"
+`;
+
 exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > getterState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -11303,6 +11907,40 @@ export default class MyImportComponent {}
   exports: [MyImportComponent],
 })
 export class MyImportComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > layerName 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-layer-name-component\\",
+  template: \`
+    <section>
+      <div class=\\"layer-name\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </section>
+  \`,
+  styles: [
+    \`
+      .layer-name {
+        padding: 10px;
+      }
+    \`,
+  ],
+})
+export default class MyLayerNameComponent {}
+
+@NgModule({
+  declarations: [MyLayerNameComponent],
+  imports: [CommonModule],
+  exports: [MyLayerNameComponent],
+})
+export class MyLayerNameComponentModule {}
 "
 `;
 
@@ -11588,6 +12226,68 @@ export default class NestedStyles {}
   exports: [NestedStyles],
 })
 export class NestedStylesModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > normalizeLayerNames 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+export interface MyNormalizedLayerNamesComponentProps {
+  id: string;
+}
+
+@Component({
+  selector: \\"my-normalized-layer-names-component\\",
+  template: \`
+    <section>
+      <div>Emoji</div>
+      <div>Dashes</div>
+      <div>CamelCase</div>
+      <div>Special chars</div>
+      <div>Special chars with dashes</div>
+      <div class=\\"css-0\\">Single Number</div>
+      <div class=\\"css-123\\">Multiple Numbers</div>
+      <div class=\\"name-123\\">Chars with numbers at end</div>
+      <div class=\\"name\\">Chars with numbers at start</div>
+      <div class=\\"name-789\\">Numnbers separated by dash</div>
+      <div>Emoji</div>
+      <div data-name=\\"1\\" class=\\"div\\">Number</div>
+    </section>
+  \`,
+  styles: [
+    \`
+      .css-0 {
+        margin: 10px;
+      }
+      .css-123 {
+        padding: 10px;
+      }
+      .name-123 {
+        border: 1px solid;
+      }
+      .name {
+        color: red;
+      }
+      .name-789 {
+        background: blue;
+      }
+      .div {
+        background: blue;
+      }
+    \`,
+  ],
+})
+export default class MyNormalizedLayerNamesComponent {}
+
+@NgModule({
+  declarations: [MyNormalizedLayerNamesComponent],
+  imports: [CommonModule],
+  exports: [MyNormalizedLayerNamesComponent],
+})
+export class MyNormalizedLayerNamesComponentModule {}
 "
 `;
 
@@ -12623,6 +13323,36 @@ export class RenderStylesModule {}
 "
 `;
 
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > sanitizeInnerHTML 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"sanitizeInnerHTML\\":true}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div [innerHTML]=\\"html\\"></div>
+  \`,
+})
+export default class MyComponent {
+  @Input() html!: any;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > self-referencing component 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -13308,6 +14038,7 @@ import { Component } from '@angular/core';
 
 
 
+
 @Component({
   selector: 'string-literal-store',template: \`
 
@@ -13333,6 +14064,9 @@ export default class StringLiteralStore {
 
 
    foo-bar= 123
+
+
+
 
 
 
@@ -14154,15 +14888,18 @@ exports[`Angular with visuallyIgnoreHostElement = false > svelte > Javascript Te
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <div [innerHTML]=\\"html\\"></div>
+    <div [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(html)\\"></div>
   \`,
 })
 export default class MyComponent {
   html = \\"<b>bold</b>\\";
+
+  constructor(protected sanitizer) {}
 }
 
 @NgModule({
@@ -14698,15 +15435,18 @@ exports[`Angular with visuallyIgnoreHostElement = false > svelte > Typescript Te
 import { CommonModule } from \\"@angular/common\\";
 
 import { Component } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <div [innerHTML]=\\"html\\"></div>
+    <div [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(html)\\"></div>
   \`,
 })
 export default class MyComponent {
   html = \\"<b>bold</b>\\";
+
+  constructor(protected sanitizer: DomSanitizer) {}
 }
 
 @NgModule({

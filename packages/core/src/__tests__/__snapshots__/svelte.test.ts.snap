@@ -228,7 +228,7 @@ exports[`Svelte > jsx > Javascript Test > Basic Outputs Meta 1`] = `
           useMetadata:
           {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
           */
-          
+
           <script >
   import { onMount } from 'svelte'
 
@@ -1658,7 +1658,7 @@ exports[`Svelte > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
           useMetadata:
           {\\"forwardRef\\":\\"inputRef\\"}
           */
-          
+
           <script >
 
 
@@ -1725,6 +1725,88 @@ exports[`Svelte > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 </script>
 
 <div>Hello! {name}</div>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+          <script >
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  let buttonRef
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+<button  bind:this={buttonRef} >Attribute Passing</button>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+          <script >
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  let buttonRef
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+<div ><button  bind:this={buttonRef} >Attribute Passing</button></div>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > class + ClassName + css 1`] = `
@@ -1814,7 +1896,7 @@ exports[`Svelte > jsx > Javascript Test > complexMeta 1`] = `
           useMetadata:
           {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
           */
-          
+
           <script >
 
 
@@ -2032,7 +2114,7 @@ exports[`Svelte > jsx > Javascript Test > figmaMeta 1`] = `
           useMetadata:
           {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
           */
-          
+
           <script >
 
 
@@ -2070,6 +2152,27 @@ export let label;
 </script>
 
 <button  data-icon={icon}  data-disabled={interactiveState}  data-width={width}  data-size={size} >{label}</button>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > functionProps 1`] = `
+"<p
+  f={() => x}
+  f1={(x) => x}
+  f2={(x) => {}}
+  f3={function () {
+    return x;
+  }}
+  f4={function (x) {
+    return x;
+  }}
+  f5={function (x) {
+    return;
+  }}
+  f6={function () {
+    return;
+  }}
+  f7={(a, b, c) => a + b + c}
+/>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > getterState 1`] = `
@@ -2110,6 +2213,20 @@ exports[`Svelte > jsx > Javascript Test > import types 1`] = `
 </script>
 
 <RenderBlock {...getRenderContentProps(renderContentProps.block, 0)} />"
+`;
+
+exports[`Svelte > jsx > Javascript Test > layerName 1`] = `
+"<section>
+  <div class=\\"layer-name\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
+</section>
+
+<style>
+  .layer-name {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Javascript Test > multipleOnUpdate 1`] = `
@@ -2213,6 +2330,44 @@ exports[`Svelte > jsx > Javascript Test > nestedStyles 1`] = `
   }
   .div.nested-selector:active {
     display: inline-block;
+  }
+</style>"
+`;
+
+exports[`Svelte > jsx > Javascript Test > normalizeLayerNames 1`] = `
+"<section>
+  <div>Emoji</div>
+  <div>Dashes</div>
+  <div>CamelCase</div>
+  <div>Special chars</div>
+  <div>Special chars with dashes</div>
+  <div class=\\"css-0\\">Single Number</div>
+  <div class=\\"css-123\\">Multiple Numbers</div>
+  <div class=\\"name-123\\">Chars with numbers at end</div>
+  <div class=\\"name\\">Chars with numbers at start</div>
+  <div class=\\"name-789\\">Numnbers separated by dash</div>
+  <div>Emoji</div>
+  <div data-name=\\"1\\" class=\\"div\\">Number</div>
+</section>
+
+<style>
+  .css-0 {
+    margin: 10px;
+  }
+  .css-123 {
+    padding: 10px;
+  }
+  .name-123 {
+    border: 1px solid;
+  }
+  .name {
+    color: red;
+  }
+  .name-789 {
+    background: blue;
+  }
+  .div {
+    background: blue;
   }
 </style>"
 `;
@@ -3473,7 +3628,7 @@ exports[`Svelte > jsx > Typescript Test > Basic Outputs Meta 1`] = `
           useMetadata:
           {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
           */
-          
+
           <script lang='ts'>
   import { onMount } from 'svelte'
 
@@ -5240,7 +5395,7 @@ exports[`Svelte > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
           useMetadata:
           {\\"forwardRef\\":\\"inputRef\\"}
           */
-          
+
           <script context='module' lang='ts'>
       export interface Props {
 showInput: boolean;
@@ -5317,6 +5472,88 @@ exports[`Svelte > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 </script>
 
 <div>Hello! {name}</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+          <script lang='ts'>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  let buttonRef
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+<button  bind:this={buttonRef} >Attribute Passing</button>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"/**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+          <script lang='ts'>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  let buttonRef
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+<div ><button  bind:this={buttonRef} >Attribute Passing</button></div>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > class + ClassName + css 1`] = `
@@ -5421,7 +5658,7 @@ exports[`Svelte > jsx > Typescript Test > complexMeta 1`] = `
           useMetadata:
           {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
           */
-          
+
           <script lang='ts'>
 
 
@@ -5679,7 +5916,7 @@ exports[`Svelte > jsx > Typescript Test > figmaMeta 1`] = `
           useMetadata:
           {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
           */
-          
+
           <script lang='ts'>
 
 
@@ -5717,6 +5954,36 @@ export let label;
 </script>
 
 <button  data-icon={icon}  data-disabled={interactiveState}  data-width={width}  data-size={size} >{label}</button>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > functionProps 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface MyBasicComponentProps {
+    id: string;
+  }
+</script>
+
+<script lang=\\"ts\\">
+</script>
+
+<p
+  f={() => x}
+  f1={(x) => x}
+  f2={(x) => {}}
+  f3={function () {
+    return x;
+  }}
+  f4={function (x) {
+    return x;
+  }}
+  f5={function (x) {
+    return;
+  }}
+  f6={function () {
+    return;
+  }}
+  f7={(a, b, c) => a + b + c}
+/>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > getterState 1`] = `
@@ -5772,6 +6039,23 @@ exports[`Svelte > jsx > Typescript Test > import types 1`] = `
 </script>
 
 <RenderBlock {...getRenderContentProps(renderContentProps.block, 0)} />"
+`;
+
+exports[`Svelte > jsx > Typescript Test > layerName 1`] = `
+"<script lang=\\"ts\\">
+</script>
+
+<section>
+  <div class=\\"layer-name\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
+</section>
+
+<style>
+  .layer-name {
+    padding: 10px;
+  }
+</style>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > multipleOnUpdate 1`] = `
@@ -5885,6 +6169,53 @@ exports[`Svelte > jsx > Typescript Test > nestedStyles 1`] = `
   }
   .div.nested-selector:active {
     display: inline-block;
+  }
+</style>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > normalizeLayerNames 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface MyNormalizedLayerNamesComponentProps {
+    id: string;
+  }
+</script>
+
+<script lang=\\"ts\\">
+</script>
+
+<section>
+  <div>Emoji</div>
+  <div>Dashes</div>
+  <div>CamelCase</div>
+  <div>Special chars</div>
+  <div>Special chars with dashes</div>
+  <div class=\\"css-0\\">Single Number</div>
+  <div class=\\"css-123\\">Multiple Numbers</div>
+  <div class=\\"name-123\\">Chars with numbers at end</div>
+  <div class=\\"name\\">Chars with numbers at start</div>
+  <div class=\\"name-789\\">Numnbers separated by dash</div>
+  <div>Emoji</div>
+  <div data-name=\\"1\\" class=\\"div\\">Number</div>
+</section>
+
+<style>
+  .css-0 {
+    margin: 10px;
+  }
+  .css-123 {
+    padding: 10px;
+  }
+  .name-123 {
+    border: 1px solid;
+  }
+  .name {
+    color: red;
+  }
+  .name-789 {
+    background: blue;
+  }
+  .div {
+    background: blue;
   }
 </style>"
 `;

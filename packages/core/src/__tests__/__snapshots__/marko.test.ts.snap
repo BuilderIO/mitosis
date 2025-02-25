@@ -271,7 +271,7 @@ exports[`Marko > jsx > Javascript Test > Basic Outputs Meta 1`] = `
           useMetadata:
           {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
           */
-          
+
           class {
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\" };
@@ -1538,7 +1538,7 @@ exports[`Marko > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
           useMetadata:
           {\\"forwardRef\\":\\"inputRef\\"}
           */
-          
+
           class {
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\" };
@@ -1589,6 +1589,38 @@ exports[`Marko > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 }
 
 <div>Hello! \${state.name}</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+          class {
+  get buttonRef() {
+    return this.getEl(\\"buttonRef\\");
+  }
+}
+
+<button key=\\"buttonRef\\">Attribute Passing</button>"
+`;
+
+exports[`Marko > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+          class {
+  get buttonRef() {
+    return this.getEl(\\"buttonRef\\");
+  }
+}
+
+<div><button key=\\"buttonRef\\">Attribute Passing</button></div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > class + ClassName + css 1`] = `
@@ -1678,7 +1710,7 @@ exports[`Marko > jsx > Javascript Test > complexMeta 1`] = `
           useMetadata:
           {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
           */
-          
+
           class {}
 
 <div></div>"
@@ -1809,7 +1841,7 @@ exports[`Marko > jsx > Javascript Test > figmaMeta 1`] = `
           useMetadata:
           {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
           */
-          
+
           class {}
 
 <button
@@ -1820,6 +1852,29 @@ exports[`Marko > jsx > Javascript Test > figmaMeta 1`] = `
 >
   \${input.label}
 </button>"
+`;
+
+exports[`Marko > jsx > Javascript Test > functionProps 1`] = `
+"class {}
+
+<p
+  f=(() => x)
+  f1=(x => x)
+  f2=(x => {})
+  f3=(function () {
+  return x;
+})
+  f4=(function (x) {
+  return x;
+})
+  f5=(function (x) {
+  return;
+})
+  f6=(function () {
+  return;
+})
+  f7=((a, b, c) => a + b + c)
+></p>"
 `;
 
 exports[`Marko > jsx > Javascript Test > getterState 1`] = `
@@ -1858,6 +1913,21 @@ class {
   ...(state.getRenderContentProps(props.renderContentProps.block,
   0))
 ></RenderBlock>"
+`;
+
+exports[`Marko > jsx > Javascript Test > layerName 1`] = `
+"class {}
+
+style {
+  .layer-name-27ceea4e {
+    padding: 10px;
+  }
+}
+<section>
+  <div class=\\"layer-name-27ceea4e\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
+</section>"
 `;
 
 exports[`Marko > jsx > Javascript Test > multipleOnUpdate 1`] = `
@@ -1950,6 +2020,45 @@ style {
   }
 }
 <div class=\\"div-7671878a\\">Hello world</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > normalizeLayerNames 1`] = `
+"class {}
+
+style {
+  .css-0-31098cf6 {
+    margin: 10px;
+  }
+  .css-123-31098cf6 {
+    padding: 10px;
+  }
+  .name-123-31098cf6 {
+    border: 1px solid;
+  }
+  .name-31098cf6 {
+    color: red;
+  }
+  .name-789-31098cf6 {
+    background: blue;
+  }
+  .div-31098cf6 {
+    background: blue;
+  }
+}
+<section>
+  <div>Emoji</div>
+  <div>Dashes</div>
+  <div>CamelCase</div>
+  <div>Special chars</div>
+  <div>Special chars with dashes</div>
+  <div class=\\"css-0-31098cf6\\">Single Number</div>
+  <div class=\\"css-123-31098cf6\\">Multiple Numbers</div>
+  <div class=\\"name-123-31098cf6\\">Chars with numbers at end</div>
+  <div class=\\"name-31098cf6\\">Chars with numbers at start</div>
+  <div class=\\"name-789-31098cf6\\">Numnbers separated by dash</div>
+  <div>Emoji</div>
+  <div data-name=\\"1\\" class=\\"div-31098cf6\\">Number</div>
+</section>"
 `;
 
 exports[`Marko > jsx > Javascript Test > onEvent 1`] = `
@@ -3017,7 +3126,7 @@ exports[`Marko > jsx > Typescript Test > Basic Outputs Meta 1`] = `
           useMetadata:
           {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
           */
-          
+
           class {
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\" };
@@ -4295,7 +4404,7 @@ exports[`Marko > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
           useMetadata:
           {\\"forwardRef\\":\\"inputRef\\"}
           */
-          
+
           class {
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\" };
@@ -4346,6 +4455,38 @@ exports[`Marko > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 }
 
 <div>Hello! \${state.name}</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+          class {
+  get buttonRef() {
+    return this.getEl(\\"buttonRef\\");
+  }
+}
+
+<button key=\\"buttonRef\\">Attribute Passing</button>"
+`;
+
+exports[`Marko > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+          class {
+  get buttonRef() {
+    return this.getEl(\\"buttonRef\\");
+  }
+}
+
+<div><button key=\\"buttonRef\\">Attribute Passing</button></div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > class + ClassName + css 1`] = `
@@ -4437,7 +4578,7 @@ exports[`Marko > jsx > Typescript Test > complexMeta 1`] = `
           useMetadata:
           {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
           */
-          
+
           class {}
 
 <div></div>"
@@ -4568,7 +4709,7 @@ exports[`Marko > jsx > Typescript Test > figmaMeta 1`] = `
           useMetadata:
           {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
           */
-          
+
           class {}
 
 <button
@@ -4579,6 +4720,29 @@ exports[`Marko > jsx > Typescript Test > figmaMeta 1`] = `
 >
   \${input.label}
 </button>"
+`;
+
+exports[`Marko > jsx > Typescript Test > functionProps 1`] = `
+"class {}
+
+<p
+  f=(() => x)
+  f1=(x => x)
+  f2=(x => {})
+  f3=(function () {
+  return x;
+})
+  f4=(function (x) {
+  return x;
+})
+  f5=(function (x) {
+  return;
+})
+  f6=(function () {
+  return;
+})
+  f7=((a, b, c) => a + b + c)
+></p>"
 `;
 
 exports[`Marko > jsx > Typescript Test > getterState 1`] = `
@@ -4618,6 +4782,21 @@ class {
   ...(state.getRenderContentProps(props.renderContentProps.block,
   0))
 ></RenderBlock>"
+`;
+
+exports[`Marko > jsx > Typescript Test > layerName 1`] = `
+"class {}
+
+style {
+  .layer-name-27ceea4e {
+    padding: 10px;
+  }
+}
+<section>
+  <div class=\\"layer-name-27ceea4e\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
+</section>"
 `;
 
 exports[`Marko > jsx > Typescript Test > multipleOnUpdate 1`] = `
@@ -4710,6 +4889,45 @@ style {
   }
 }
 <div class=\\"div-7671878a\\">Hello world</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > normalizeLayerNames 1`] = `
+"class {}
+
+style {
+  .css-0-038fc384 {
+    margin: 10px;
+  }
+  .css-123-038fc384 {
+    padding: 10px;
+  }
+  .name-123-038fc384 {
+    border: 1px solid;
+  }
+  .name-038fc384 {
+    color: red;
+  }
+  .name-789-038fc384 {
+    background: blue;
+  }
+  .div-038fc384 {
+    background: blue;
+  }
+}
+<section>
+  <div>Emoji</div>
+  <div>Dashes</div>
+  <div>CamelCase</div>
+  <div>Special chars</div>
+  <div>Special chars with dashes</div>
+  <div class=\\"css-0-038fc384\\">Single Number</div>
+  <div class=\\"css-123-038fc384\\">Multiple Numbers</div>
+  <div class=\\"name-123-038fc384\\">Chars with numbers at end</div>
+  <div class=\\"name-038fc384\\">Chars with numbers at start</div>
+  <div class=\\"name-789-038fc384\\">Numnbers separated by dash</div>
+  <div>Emoji</div>
+  <div data-name=\\"1\\" class=\\"div-038fc384\\">Number</div>
+</section>"
 `;
 
 exports[`Marko > jsx > Typescript Test > onEvent 1`] = `

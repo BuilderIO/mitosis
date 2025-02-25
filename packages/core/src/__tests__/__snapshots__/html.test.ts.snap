@@ -4272,6 +4272,27 @@ exports[`Html > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"/** useMetadata: {\\"attributePassing\\":{\\"enabled\\":true}} */
+
+<button data-el=\\"button-1\\" data-ref=\\"undefined-buttonRef\\">
+  Attribute Passing
+</button>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"/** useMetadata: {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+*/
+
+<div>
+  <button data-el=\\"button-1\\" data-ref=\\"undefined-buttonRef\\">
+    Attribute Passing
+  </button>
+</div>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > class + ClassName + css 1`] = `
 "<div>
   <MyComp class=\\"test\\" className=\\"test2\\">
@@ -5037,6 +5058,69 @@ Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}} */
 "
 `;
 
+exports[`Html > jsx > Javascript Test > functionProps 1`] = `
+"<p data-el=\\"p-1\\"></p>
+<script>
+  (() => {
+    const state = {};
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='p-1']\\").forEach((el) => {
+        el.setAttribute(\\"f\\", () => x);
+
+        el.setAttribute(\\"f1\\", (x) => x);
+
+        el.setAttribute(\\"f2\\", (x) => {});
+
+        el.setAttribute(\\"f3\\", function () {
+          return x;
+        });
+
+        el.setAttribute(\\"f4\\", function (x) {
+          return x;
+        });
+
+        el.setAttribute(\\"f5\\", function (x) {
+          return;
+        });
+
+        el.setAttribute(\\"f6\\", function () {
+          return;
+        });
+
+        el.setAttribute(\\"f7\\", (a, b, c) => a + b + c);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > getterState 1`] = `
 "<div>
   <p>
@@ -5121,6 +5205,20 @@ exports[`Html > jsx > Javascript Test > getterState 1`] = `
 
 exports[`Html > jsx > Javascript Test > import types 1`] = `
 "<RenderBlock data-el=\\"render-block\\"></RenderBlock>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > layerName 1`] = `
+"<section>
+  <div class=\\"layer-name\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
+</section>
+<style>
+  .layer-name {
+    padding: 10px;
+  }
+</style>
 "
 `;
 
@@ -5241,6 +5339,44 @@ exports[`Html > jsx > Javascript Test > nestedStyles 1`] = `
   }
   .div.nested-selector:active {
     display: inline-block;
+  }
+</style>
+"
+`;
+
+exports[`Html > jsx > Javascript Test > normalizeLayerNames 1`] = `
+"<section>
+  <div>Emoji</div>
+  <div>Dashes</div>
+  <div>CamelCase</div>
+  <div>Special chars</div>
+  <div>Special chars with dashes</div>
+  <div class=\\"css-0\\">Single Number</div>
+  <div class=\\"css-123\\">Multiple Numbers</div>
+  <div class=\\"name-123\\">Chars with numbers at end</div>
+  <div class=\\"name\\">Chars with numbers at start</div>
+  <div class=\\"name-789\\">Numnbers separated by dash</div>
+  <div>Emoji</div>
+  <div data-name=\\"1\\" class=\\"div\\">Number</div>
+</section>
+<style>
+  .css-0 {
+    margin: 10px;
+  }
+  .css-123 {
+    padding: 10px;
+  }
+  .name-123 {
+    border: 1px solid;
+  }
+  .name {
+    color: red;
+  }
+  .name-789 {
+    background: blue;
+  }
+  .div {
+    background: blue;
   }
 </style>
 "
@@ -12175,6 +12311,27 @@ exports[`Html > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 "
 `;
 
+exports[`Html > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"/** useMetadata: {\\"attributePassing\\":{\\"enabled\\":true}} */
+
+<button data-el=\\"button-1\\" data-ref=\\"undefined-buttonRef\\">
+  Attribute Passing
+</button>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"/** useMetadata: {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+*/
+
+<div>
+  <button data-el=\\"button-1\\" data-ref=\\"undefined-buttonRef\\">
+    Attribute Passing
+  </button>
+</div>
+"
+`;
+
 exports[`Html > jsx > Typescript Test > class + ClassName + css 1`] = `
 "<div>
   <MyComp class=\\"test\\" className=\\"test2\\">
@@ -12940,6 +13097,69 @@ Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}} */
 "
 `;
 
+exports[`Html > jsx > Typescript Test > functionProps 1`] = `
+"<p data-el=\\"p-1\\"></p>
+<script>
+  (() => {
+    const state = {};
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='p-1']\\").forEach((el) => {
+        el.setAttribute(\\"f\\", () => x);
+
+        el.setAttribute(\\"f1\\", (x) => x);
+
+        el.setAttribute(\\"f2\\", (x) => {});
+
+        el.setAttribute(\\"f3\\", function () {
+          return x;
+        });
+
+        el.setAttribute(\\"f4\\", function (x) {
+          return x;
+        });
+
+        el.setAttribute(\\"f5\\", function (x) {
+          return;
+        });
+
+        el.setAttribute(\\"f6\\", function () {
+          return;
+        });
+
+        el.setAttribute(\\"f7\\", (a, b, c) => a + b + c);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Typescript Test > getterState 1`] = `
 "<div>
   <p>
@@ -13024,6 +13244,20 @@ exports[`Html > jsx > Typescript Test > getterState 1`] = `
 
 exports[`Html > jsx > Typescript Test > import types 1`] = `
 "<RenderBlock data-el=\\"render-block\\"></RenderBlock>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > layerName 1`] = `
+"<section>
+  <div class=\\"layer-name\\">
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
+</section>
+<style>
+  .layer-name {
+    padding: 10px;
+  }
+</style>
 "
 `;
 
@@ -13144,6 +13378,44 @@ exports[`Html > jsx > Typescript Test > nestedStyles 1`] = `
   }
   .div.nested-selector:active {
     display: inline-block;
+  }
+</style>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > normalizeLayerNames 1`] = `
+"<section>
+  <div>Emoji</div>
+  <div>Dashes</div>
+  <div>CamelCase</div>
+  <div>Special chars</div>
+  <div>Special chars with dashes</div>
+  <div class=\\"css-0\\">Single Number</div>
+  <div class=\\"css-123\\">Multiple Numbers</div>
+  <div class=\\"name-123\\">Chars with numbers at end</div>
+  <div class=\\"name\\">Chars with numbers at start</div>
+  <div class=\\"name-789\\">Numnbers separated by dash</div>
+  <div>Emoji</div>
+  <div data-name=\\"1\\" class=\\"div\\">Number</div>
+</section>
+<style>
+  .css-0 {
+    margin: 10px;
+  }
+  .css-123 {
+    padding: 10px;
+  }
+  .name-123 {
+    border: 1px solid;
+  }
+  .name {
+    color: red;
+  }
+  .name-789 {
+    background: blue;
+  }
+  .div {
+    background: blue;
   }
 </style>
 "

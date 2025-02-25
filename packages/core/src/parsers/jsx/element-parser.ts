@@ -282,11 +282,9 @@ export const jsxElementToJson = (
         if (types.isStringLiteral(expression)) {
           // <Foo myProp={"hello"} />
           memo.properties[key] = expression.value;
-        } else if (types.isArrowFunctionExpression(expression)) {
+        } else if (key.startsWith('on') && types.isArrowFunctionExpression(expression)) {
           // <Foo myProp={() => {}} />
-          const args = key.startsWith('on')
-            ? expression.params.map((node) => (node as babel.types.Identifier)?.name)
-            : [];
+          const args = expression.params.map((node) => (node as babel.types.Identifier)?.name);
 
           memo.bindings[key] = createSingleBinding({
             code: generate(expression.body, { compact: true }).code,
@@ -294,8 +292,9 @@ export const jsxElementToJson = (
             arguments: args.length ? args : undefined,
             bindingType: 'function',
           });
-        } else if (types.isJSXElement(expression)) {
+        } else if (types.isJSXElement(expression) || types.isJSXFragment(expression)) {
           // <Foo myProp={<MoreMitosisNode><div /></MoreMitosisNode>} />
+          // <Foo myProp={<><Node /><Node /></>} />
           const slotNode = jsxElementToJson(expression);
           if (!slotNode) return memo;
 

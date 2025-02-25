@@ -1989,7 +1989,7 @@ exports[`qwik > jsx > Javascript Test > Basic Outputs Meta 1`] = `
           useMetadata:
           {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
           */
-          
+
           import {
   Fragment,
   component$,
@@ -3711,7 +3711,7 @@ exports[`qwik > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
           useMetadata:
           {\\"forwardRef\\":\\"inputRef\\"}
           */
-          
+
           import {
   $,
   Fragment,
@@ -3745,6 +3745,50 @@ export const STYLES = \`
   color: red;
 }
 \`;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > basicRefAttributePassing 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+          import { Fragment, component$, h, useSignal } from \\"@builder.io/qwik\\";
+
+export const BasicRefAttributePassingComponent = component$((props) => {
+  const buttonRef = useSignal();
+
+  return <button ref={buttonRef}>Attribute Passing</button>;
+});
+
+export default BasicRefAttributePassingComponent;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > basicRefAttributePassingCustomRef 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+          import { Fragment, component$, h, useSignal } from \\"@builder.io/qwik\\";
+
+export const BasicRefAttributePassingCustomRefComponent = component$(
+  (props) => {
+    const buttonRef = useSignal();
+
+    return (
+      <div>
+        <button ref={buttonRef}>Attribute Passing</button>
+      </div>
+    );
+  }
+);
+
+export default BasicRefAttributePassingCustomRefComponent;
 "
 `;
 
@@ -3887,7 +3931,7 @@ exports[`qwik > jsx > Javascript Test > complexMeta 1`] = `
           useMetadata:
           {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
           */
-          
+
           import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const ComplexMetaRaw = component$((props) => {
@@ -4064,7 +4108,7 @@ exports[`qwik > jsx > Javascript Test > figmaMeta 1`] = `
           useMetadata:
           {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
           */
-          
+
           import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const FigmaButton = component$((props) => {
@@ -4082,6 +4126,35 @@ export const FigmaButton = component$((props) => {
 
 export default FigmaButton;
 "
+`;
+
+exports[`qwik > jsx > Javascript Test > functionProps 1`] = `
+"SyntaxError: Identifier expected. (5:98)
+  3 | export const MyBasicComponent=component$((props)=>{
+  4 |
+> 5 | return (<p f={(()=>{() => x})()} f1={(()=>{x => x})()} f2={(()=>{x => {}})()} f3={(()=>{function () {
+    |                                                                                                  ^
+  6 |   return x;
+  7 | }})()} f4={(()=>{function (x) {
+  8 |   return x;
+========================================================================
+import{Fragment,component$,h}from\\"@builder.io/qwik\\";
+
+export const MyBasicComponent=component$((props)=>{
+
+return (<p f={(()=>{() => x})()} f1={(()=>{x => x})()} f2={(()=>{x => {}})()} f3={(()=>{function () {
+  return x;
+}})()} f4={(()=>{function (x) {
+  return x;
+}})()} f5={(()=>{function (x) {
+  return;
+}})()} f6={(()=>{function () {
+  return;
+}})()} f7={(()=>{(a, b, c) => a + b + c})()}></p>)});
+
+export default MyBasicComponent;
+
+========================================================================"
 `;
 
 exports[`qwik > jsx > Javascript Test > getterState 1`] = `
@@ -4144,6 +4217,31 @@ export const RenderContent = component$((props) => {
 });
 
 export default RenderContent;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > layerName 1`] = `
+"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+
+export const MyLayerNameComponent = component$((props) => {
+  useStylesScoped$(STYLES);
+
+  return (
+    <section>
+      <div class=\\"layer-name-MyLayerNameComponent\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </section>
+  );
+});
+
+export default MyLayerNameComponent;
+
+export const STYLES = \`
+.layer-name-MyLayerNameComponent {
+  padding: 10px;
+}
+\`;
 "
 `;
 
@@ -4272,6 +4370,65 @@ export const STYLES = \`
 }
 .div-NestedStyles.nested-selector:active {
   display: inline-block;
+}
+\`;
+"
+`;
+
+exports[`qwik > jsx > Javascript Test > normalizeLayerNames 1`] = `
+"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+
+export const MyNormalizedLayerNamesComponent = component$((props) => {
+  useStylesScoped$(STYLES);
+
+  return (
+    <section>
+      <div>Emoji</div>
+      <div>Dashes</div>
+      <div>CamelCase</div>
+      <div>Special chars</div>
+      <div>Special chars with dashes</div>
+      <div class=\\"css-0-MyNormalizedLayerNamesComponent\\">Single Number</div>
+      <div class=\\"css-123-MyNormalizedLayerNamesComponent\\">
+        Multiple Numbers
+      </div>
+      <div class=\\"name-123-MyNormalizedLayerNamesComponent\\">
+        Chars with numbers at end
+      </div>
+      <div class=\\"name-MyNormalizedLayerNamesComponent\\">
+        Chars with numbers at start
+      </div>
+      <div class=\\"name-789-MyNormalizedLayerNamesComponent\\">
+        Numnbers separated by dash
+      </div>
+      <div>Emoji</div>
+      <div data-name=\\"1\\" class=\\"div-MyNormalizedLayerNamesComponent\\">
+        Number
+      </div>
+    </section>
+  );
+});
+
+export default MyNormalizedLayerNamesComponent;
+
+export const STYLES = \`
+.css-0-MyNormalizedLayerNamesComponent {
+  margin: 10px;
+}
+.css-123-MyNormalizedLayerNamesComponent {
+  padding: 10px;
+}
+.name-123-MyNormalizedLayerNamesComponent {
+  border: 1px solid;
+}
+.name-MyNormalizedLayerNamesComponent {
+  color: red;
+}
+.name-789-MyNormalizedLayerNamesComponent {
+  background: blue;
+}
+.div-MyNormalizedLayerNamesComponent {
+  background: blue;
 }
 \`;
 "
@@ -5735,7 +5892,7 @@ exports[`qwik > jsx > Typescript Test > Basic Outputs Meta 1`] = `
           useMetadata:
           {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
           */
-          
+
           import {
   Fragment,
   component$,
@@ -7690,7 +7847,7 @@ exports[`qwik > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
           useMetadata:
           {\\"forwardRef\\":\\"inputRef\\"}
           */
-          
+
           import {
   $,
   Fragment,
@@ -7728,6 +7885,50 @@ export const STYLES = \`
   color: red;
 }
 \`;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > basicRefAttributePassing 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true}}
+          */
+
+          import { Fragment, component$, h, useSignal } from \\"@builder.io/qwik\\";
+
+export const BasicRefAttributePassingComponent = component$((props: any) => {
+  const buttonRef = useSignal<Element>();
+
+  return <button ref={buttonRef}>Attribute Passing</button>;
+});
+
+export default BasicRefAttributePassingComponent;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > basicRefAttributePassingCustomRef 1`] = `
+"
+          /**
+          useMetadata:
+          {\\"attributePassing\\":{\\"enabled\\":true,\\"customRef\\":\\"buttonRef\\"}}
+          */
+
+          import { Fragment, component$, h, useSignal } from \\"@builder.io/qwik\\";
+
+export const BasicRefAttributePassingCustomRefComponent = component$(
+  (props: any) => {
+    const buttonRef = useSignal<Element>();
+
+    return (
+      <div>
+        <button ref={buttonRef}>Attribute Passing</button>
+      </div>
+    );
+  }
+);
+
+export default BasicRefAttributePassingCustomRefComponent;
 "
 `;
 
@@ -7876,7 +8077,7 @@ exports[`qwik > jsx > Typescript Test > complexMeta 1`] = `
           useMetadata:
           {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
           */
-          
+
           import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const ComplexMetaRaw = component$((props: any) => {
@@ -8072,7 +8273,7 @@ exports[`qwik > jsx > Typescript Test > figmaMeta 1`] = `
           useMetadata:
           {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
           */
-          
+
           import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 
 export const FigmaButton = component$((props: any) => {
@@ -8090,6 +8291,38 @@ export const FigmaButton = component$((props: any) => {
 
 export default FigmaButton;
 "
+`;
+
+exports[`qwik > jsx > Typescript Test > functionProps 1`] = `
+"SyntaxError: Identifier expected. (8:98)
+   6 | export const MyBasicComponent=component$((props:MyBasicComponentProps)=>{
+   7 |
+>  8 | return (<p f={(()=>{() => x})()} f1={(()=>{x => x})()} f2={(()=>{x => {}})()} f3={(()=>{function () {
+     |                                                                                                  ^
+   9 |   return x;
+  10 | }})()} f4={(()=>{function (x) {
+  11 |   return x;
+========================================================================
+import{Fragment,component$,h}from\\"@builder.io/qwik\\";
+
+export interface MyBasicComponentProps {
+  id: string;
+}
+export const MyBasicComponent=component$((props:MyBasicComponentProps)=>{
+
+return (<p f={(()=>{() => x})()} f1={(()=>{x => x})()} f2={(()=>{x => {}})()} f3={(()=>{function () {
+  return x;
+}})()} f4={(()=>{function (x) {
+  return x;
+}})()} f5={(()=>{function (x) {
+  return;
+}})()} f6={(()=>{function () {
+  return;
+}})()} f7={(()=>{(a, b, c) => a + b + c})()}></p>)});
+
+export default MyBasicComponent;
+
+========================================================================"
 `;
 
 exports[`qwik > jsx > Typescript Test > getterState 1`] = `
@@ -8165,6 +8398,31 @@ export const RenderContent = component$((props: RenderContentProps) => {
 });
 
 export default RenderContent;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > layerName 1`] = `
+"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+
+export const MyLayerNameComponent = component$((props: any) => {
+  useStylesScoped$(STYLES);
+
+  return (
+    <section>
+      <div class=\\"layer-name-MyLayerNameComponent\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </section>
+  );
+});
+
+export default MyLayerNameComponent;
+
+export const STYLES = \`
+.layer-name-MyLayerNameComponent {
+  padding: 10px;
+}
+\`;
 "
 `;
 
@@ -8297,6 +8555,70 @@ export const STYLES = \`
 }
 .div-NestedStyles.nested-selector:active {
   display: inline-block;
+}
+\`;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > normalizeLayerNames 1`] = `
+"import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
+
+export interface MyNormalizedLayerNamesComponentProps {
+  id: string;
+}
+export const MyNormalizedLayerNamesComponent = component$(
+  (props: MyNormalizedLayerNamesComponentProps) => {
+    useStylesScoped$(STYLES);
+
+    return (
+      <section>
+        <div>Emoji</div>
+        <div>Dashes</div>
+        <div>CamelCase</div>
+        <div>Special chars</div>
+        <div>Special chars with dashes</div>
+        <div class=\\"css-0-MyNormalizedLayerNamesComponent\\">Single Number</div>
+        <div class=\\"css-123-MyNormalizedLayerNamesComponent\\">
+          Multiple Numbers
+        </div>
+        <div class=\\"name-123-MyNormalizedLayerNamesComponent\\">
+          Chars with numbers at end
+        </div>
+        <div class=\\"name-MyNormalizedLayerNamesComponent\\">
+          Chars with numbers at start
+        </div>
+        <div class=\\"name-789-MyNormalizedLayerNamesComponent\\">
+          Numnbers separated by dash
+        </div>
+        <div>Emoji</div>
+        <div data-name=\\"1\\" class=\\"div-MyNormalizedLayerNamesComponent\\">
+          Number
+        </div>
+      </section>
+    );
+  }
+);
+
+export default MyNormalizedLayerNamesComponent;
+
+export const STYLES = \`
+.css-0-MyNormalizedLayerNamesComponent {
+  margin: 10px;
+}
+.css-123-MyNormalizedLayerNamesComponent {
+  padding: 10px;
+}
+.name-123-MyNormalizedLayerNamesComponent {
+  border: 1px solid;
+}
+.name-MyNormalizedLayerNamesComponent {
+  color: red;
+}
+.name-789-MyNormalizedLayerNamesComponent {
+  background: blue;
+}
+.div-MyNormalizedLayerNamesComponent {
+  background: blue;
 }
 \`;
 "

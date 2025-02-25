@@ -29,6 +29,27 @@ const updateClassForNode = (item: MitosisNode, className: string) => {
   }
 };
 
+export function normalizeName(name: string | undefined): string {
+  if (!name || name.trim() === '' || name.match(/^[^a-zA-Z0-9]*$/)) {
+    return '';
+  }
+
+  // Clean the name first
+  const cleaned = name.replace(/[^a-zA-Z0-9\-_]/g, '');
+
+  // If pure numeric or only contains numbers and dashes
+  if (cleaned.match(/^[0-9-]+$/)) {
+    // Extract just the numbers and format as css{number}
+    const numbers = cleaned.replace(/[^0-9]/g, '');
+    return `css${numbers}`;
+  }
+
+  // Remove leading numbers and dashes for other cases
+  const normalized = cleaned.replace(/^[0-9-]+(?=[a-zA-Z])/, '');
+
+  return normalized || '';
+}
+
 const collectStyles = (
   json: MitosisComponent,
   options: CollectStyleOptions = {},
@@ -43,11 +64,14 @@ const collectStyles = (
       if (nodeHasCss(item)) {
         const value = parseCssObject(item.bindings.css?.code as string);
         delete item.bindings.css;
-        const componentName = item.properties.$name
-          ? dashCase(item.properties.$name)
+
+        const normalizedName = normalizeName(item.properties.$name);
+
+        const componentName = normalizedName
+          ? dashCase(normalizedName)
           : /^h\d$/.test(item.name || '') // don't dashcase h1 into h-1
           ? item.name
-          : dashCase(item.name || 'div');
+          : dashCase(normalizeName(item.name) || 'div');
 
         const classNameWPrefix = `${componentName}${options.prefix ? `-${options.prefix}` : ''}`;
 

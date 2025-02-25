@@ -12,6 +12,7 @@ import {
 } from '@/generators/stencil/helpers';
 import { getCodeProcessorPlugins } from '@/generators/stencil/plugins/get-code-processor-plugins';
 import { ToStencilOptions } from '@/generators/stencil/types';
+import { dashCase } from '@/helpers/dash-case';
 import { dedent } from '@/helpers/dedent';
 import { fastClone } from '@/helpers/fast-clone';
 import { getChildComponents } from '@/helpers/get-child-components';
@@ -22,6 +23,12 @@ import { mapRefs } from '@/helpers/map-refs';
 import { initializeOptions } from '@/helpers/merge-options';
 import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import { collectCss } from '@/helpers/styles/collect-css';
+import {
+  getAddAttributePassingRef,
+  getAttributePassingString,
+  ROOT_REF,
+  shouldAddAttributePassing,
+} from '@/helpers/web-components/attribute-passing';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -80,15 +87,18 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
       getters: true,
     });
 
-    const refs = json.refs
+    let refs = json.refs
       ? Object.entries(json.refs)
-          .map(([key, value]) => {
-            return `private ${key}!: ${value.typeParameter ?? 'HTMLElement'}`;
-          })
+          .map(([key, value]) => `private ${key}!: ${value.typeParameter ?? 'HTMLElement'};`)
           .join('\n')
       : '';
 
     const wrap = needsWrap(json.children);
+    const withAttributePassing = !wrap && shouldAddAttributePassing(json, options);
+    const rootRef = getAddAttributePassingRef(json, options);
+    if (withAttributePassing && !refs.includes(rootRef)) {
+      refs += `\nprivate ${rootRef}!: HTMLElement;`;
+    }
 
     if (options.prettier !== false) {
       try {
@@ -129,14 +139,17 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
         ${getPropsAsCode(props, json, defaultProps)}
         ${dataString}
         ${methodsString}
-        
         ${getExportsAndLocal(json)}
+        ${withAttributePassing ? getAttributePassingString(true) : ''}
 
-        ${
-          !json.hooks.onMount.length
-            ? ''
-            : `componentDidLoad() { ${stringifySingleScopeOnMount(json)} }`
-        }
+        ${`componentDidLoad() { 
+            ${
+              withAttributePassing
+                ? `this.enableAttributePassing(this.${rootRef}, "${dashCase(json.name)}");`
+                : ''
+            }
+            ${json.hooks.onMount.length ? stringifySingleScopeOnMount(json) : ''} 
+            }`}
         ${
           !json.hooks.onUnMount?.code
             ? ''
@@ -152,7 +165,15 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
         return (${wrap ? '<Host>' : ''}
 
           ${json.children
-            .map((item) => blockToStencil(item, options, true, childComponents))
+            .map((item) =>
+              blockToStencil({
+                json: item,
+                options,
+                insideJsx: true,
+                childComponents,
+                rootRef: withAttributePassing && rootRef === ROOT_REF ? rootRef : undefined, // only pass rootRef if it's not the default
+              }),
+            )
             .join('\n')}
 
         ${wrap ? '</Host>' : ''})

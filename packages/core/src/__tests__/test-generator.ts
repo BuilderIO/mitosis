@@ -35,13 +35,19 @@ const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw.tsx');
 const basicChildComponent = getRawFile('./data/basic-child-component.raw.tsx');
 const basicFor = getRawFile('./data/for/basic-for.raw.tsx');
 const basicForNoTagReference = getRawFile('./data/for/basic-for-no-tag-reference.raw.tsx');
-const basicRef = getRawFile('./data/basic-ref.raw.tsx');
-const basicForwardRef = getRawFile('./data/basic-forwardRef.raw.tsx');
-const basicForwardRefMetadata = getRawFile('./data/basic-forwardRef-metadata.raw.tsx');
-const basicRefPrevious = getRawFile('./data/basic-ref-usePrevious.raw.tsx');
-const basicRefAssignment = getRawFile('./data/basic-ref-assignment.raw.tsx');
+const basicRef = getRawFile('./data/ref/basic-ref.raw.tsx');
+const basicRefAttributePassing = getRawFile('./data/ref/basic-ref-attribute-passing.raw.tsx');
+const basicRefAttributePassingCustomRef = getRawFile(
+  './data/ref/basic-ref-attribute-passing-custom-ref.raw.tsx',
+);
+const normalizeLayerNames = getRawFile('./data/normalize-layer-names.raw.tsx');
+const basicForwardRef = getRawFile('./data/ref/basic-forwardRef.raw.tsx');
+const basicForwardRefMetadata = getRawFile('./data/ref/basic-forwardRef-metadata.raw.tsx');
+const basicRefPrevious = getRawFile('./data/ref/basic-ref-usePrevious.raw.tsx');
+const basicRefAssignment = getRawFile('./data/ref/basic-ref-assignment.raw.tsx');
 const eventInputAndChange = getRawFile('./data/events/event-input-and-change.raw.tsx');
 const propsDestructure = getRawFile('./data/basic-props-destructure.raw.tsx');
+const functionProps = getRawFile('./data/function-props.raw.tsx');
 const nestedStyles = getRawFile('./data/nested-styles.raw.tsx');
 const preserveExportOrLocalStatement = getRawFile(
   './data/basic-preserve-export-or-local-statement.raw.tsx',
@@ -73,6 +79,7 @@ const useStyleAndCss = getRawFile('./data/styles/use-style-and-css.raw.tsx');
 const styleClassAndCss = getRawFile('./data/styles/style-class-and-css.raw.tsx');
 const stylePropClassAndCss = getRawFile('./data/styles/style-prop-class-and-css.raw.tsx');
 const useTarget = getRawFile('./data/use-target.raw.tsx');
+const layerName = getRawFile('./data/layer-name.raw.tsx');
 
 const button = getRawFile('./data/blocks/button.raw.tsx');
 const classNameJsx = getRawFile('./data/blocks/classname-jsx.raw.tsx');
@@ -185,12 +192,15 @@ const BASIC_TESTS: Tests = {
   BasicAttribute: basicAttribute,
   BasicBooleanAttribute: basicBooleanAttribute,
   BasicRef: basicRef,
+  basicRefAttributePassing,
+  basicRefAttributePassingCustomRef,
   BasicRefPrevious: basicRefPrevious,
   BasicRefAssignment: basicRefAssignment,
   BasicChildComponent: basicChildComponent,
   BasicFor: basicFor,
   basicForFragment,
   basicForNoTagReference: basicForNoTagReference,
+  functionProps: functionProps,
   Input: inputBlock,
   InputParent: inputParentBlock,
   Submit: submitButtonBlock,
@@ -243,6 +253,8 @@ const BASIC_TESTS: Tests = {
   'class + ClassName + css': classAndClassName,
   'use-style': useStyle,
   'use-style-and-css': useStyleAndCss,
+  layerName,
+  normalizeLayerNames,
   styleClassAndCss,
   stylePropClassAndCss,
   'use-style-outside-component': useStyleOutsideComponent,
@@ -360,6 +372,8 @@ const ANGULAR_TESTS: Tests = {
   stateInitSequence: getRawFile('./data/angular/state-init-sequence.raw.tsx'),
   useObjectWrapper: getRawFile('./data/angular/use-object-wrapper.raw.tsx'),
   allSpread: getRawFile('./data/angular/all-spread.raw.tsx'),
+  changeDetection: getRawFile('./data/angular/change-detection.raw.tsx'),
+  sanitizeInnerHTML: getRawFile('./data/angular/sanitize-inner-html.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {
@@ -593,7 +607,7 @@ const metaDataPlugin: Plugin = () => ({
           useMetadata:
           ${JSON.stringify(json.meta.useMetadata)}
           */
-          
+
           ${code}`;
       }
 
