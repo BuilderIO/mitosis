@@ -482,14 +482,68 @@ export default Button;
 `;
 
 exports[`RSC > jsx > Javascript Test > Columns 1`] = `
-"'function' is not allowed as a variable declaration name. (21:9)
-  19 |   function Column(props) {
-  20 |
-> 21 |   const function getColumns() {
-     |         ^
-  22 | return props.columns || [];
-  23 | }
-  24 | const function getGutterSize() {"
+"/**
+          useMetadata:
+          {\\"rsc\\":{\\"componentType\\":\\"server\\"}}
+          */
+
+import * as React from \\"react\\";
+
+function Column(props) {
+  const getColumns = function getColumns() {
+    return props.columns || [];
+  };
+  const getGutterSize = function getGutterSize() {
+    return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+  };
+  const getWidth = function getWidth(index) {
+    const columns = getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  };
+  const getColumnCssWidth = function getColumnCssWidth(index) {
+    const columns = getColumns();
+    const gutterSize = getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
+  };
+
+  return (
+    <>
+      <div className=\\"builder-columns div\\">
+        {props.columns?.map((column, index) => (
+          <div className=\\"builder-column div-2\\">
+            {column.content}
+            {index}
+          </div>
+        ))}
+      </div>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          line-height: normal;
+        }
+        @media (max-width: 999px) {
+          .div {
+            flex-direction: row;
+          }
+        }
+        @media (max-width: 639px) {
+          .div {
+            flex-direction: row-reverse;
+          }
+        }
+        .div-2 {
+          flex-grow: 1;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default Column;
+"
 `;
 
 exports[`RSC > jsx > Javascript Test > ContentSlotHtml 1`] = `
@@ -1161,14 +1215,30 @@ export default FormInputComponent;
 `;
 
 exports[`RSC > jsx > Javascript Test > InputParent 1`] = `
-"'function' is not allowed as a variable declaration name. (21:9)
-  19 |   function Stepper(props) {
-  20 |
-> 21 |   const function handleChange(value) {
-     |         ^
-  22 | console.log(value);
-  23 | }
-  24 |"
+"/**
+          useMetadata:
+          {\\"rsc\\":{\\"componentType\\":\\"server\\"}}
+          */
+
+import * as React from \\"react\\";
+import FormInputComponent from \\"./input.raw\\";
+
+function Stepper(props) {
+  const handleChange = function handleChange(value) {
+    console.log(value);
+  };
+
+  return (
+    <FormInputComponent
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      onChange={(value) => handleChange(value)}
+    />
+  );
+}
+
+export default Stepper;
+"
 `;
 
 exports[`RSC > jsx > Javascript Test > NestedStore 1`] = `
@@ -2365,25 +2435,63 @@ export default MyBasicComponent;
 `;
 
 exports[`RSC > jsx > Javascript Test > getterState 1`] = `
-"'function' is not allowed as a variable declaration name. (21:9)
-  19 |   function Button(props) {
-  20 |
-> 21 |   const function foo2() {
-     |         ^
-  22 | return props.foo + 'foo';
-  23 | }
-  24 | const function bar() {"
+"/**
+          useMetadata:
+          {\\"rsc\\":{\\"componentType\\":\\"server\\"}}
+          */
+
+import * as React from \\"react\\";
+
+function Button(props) {
+  const foo2 = function foo2() {
+    return props.foo + \\"foo\\";
+  };
+  const bar = function bar() {
+    return \\"bar\\";
+  };
+  const baz = function baz(i) {
+    return i + foo2().length;
+  };
+
+  return (
+    <div>
+      <p>{foo2()}</p>
+      <p>{bar()}</p>
+      <p>{baz(1)}</p>
+    </div>
+  );
+}
+
+export default Button;
+"
 `;
 
 exports[`RSC > jsx > Javascript Test > import types 1`] = `
-"'function' is not allowed as a variable declaration name. (21:9)
-  19 |   function RenderContent(props) {
-  20 |
-> 21 |   const function getRenderContentProps(block, index) {
-     |         ^
-  22 | return {
-  23 | block: block,
-  24 | index: index"
+"/**
+          useMetadata:
+          {\\"rsc\\":{\\"componentType\\":\\"server\\"}}
+          */
+
+import * as React from \\"react\\";
+import RenderBlock from \\"./builder-render-block.raw\\";
+
+function RenderContent(props) {
+  const getRenderContentProps = function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  };
+
+  return (
+    <RenderBlock
+      {...getRenderContentProps(props.renderContentProps.block, 0)}
+    />
+  );
+}
+
+export default RenderContent;
+"
 `;
 
 exports[`RSC > jsx > Javascript Test > layerName 1`] = `
@@ -2938,14 +3046,14 @@ export default OnUpdate;
 `;
 
 exports[`RSC > jsx > Javascript Test > renderBlock 1`] = `
-"'function' is not allowed as a variable declaration name. (34:10)
-  32 |    function RenderBlock(props) {
-  33 |
-> 34 |    const function component() {
-     |          ^
-  35 | const componentName = getProcessedBlock({
-  36 |  block: props.block,
-  37 |  state: props.context.state,"
+"Identifier expected. (216:8)
+  214 |    {shouldWrap() ? (
+  215 |    <>{isEmptyHtmlElement(tag()) ? (
+> 216 |    <tag()  {...(attributes())}  {...(actions())}  />
+      |        ^
+  217 |  ) : null}
+  218 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+  219 |    <>{repeatItemData()?.map((data, index) => ("
 `;
 
 exports[`RSC > jsx > Javascript Test > renderContentExample 1`] = `
@@ -4229,14 +4337,83 @@ export default Button;
 `;
 
 exports[`RSC > jsx > Typescript Test > Columns 1`] = `
-"'function' is not allowed as a variable declaration name. (34:9)
-  32 |   function Column(props:ColumnProps) {
-  33 |
-> 34 |   const function getColumns() {
-     |         ^
-  35 | return props.columns || [];
-  36 | }
-  37 | const function getGutterSize() {"
+"/**
+          useMetadata:
+          {\\"rsc\\":{\\"componentType\\":\\"server\\"}}
+          */
+
+import * as React from \\"react\\";
+
+type Column = {
+  content: any; // TODO: Implement this when support for dynamic CSS lands
+
+  width?: number;
+};
+export interface ColumnProps {
+  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+
+  space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
+  reverseColumnsWhenStacked?: boolean;
+}
+
+function Column(props: ColumnProps) {
+  const getColumns = function getColumns() {
+    return props.columns || [];
+  };
+  const getGutterSize = function getGutterSize() {
+    return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+  };
+  const getWidth = function getWidth(index: number) {
+    const columns = getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  };
+  const getColumnCssWidth = function getColumnCssWidth(index: number) {
+    const columns = getColumns();
+    const gutterSize = getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
+  };
+
+  return (
+    <>
+      <div className=\\"builder-columns div\\">
+        {props.columns?.map((column, index) => (
+          <div className=\\"builder-column div-2\\">
+            {column.content}
+            {index}
+          </div>
+        ))}
+      </div>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          line-height: normal;
+        }
+        @media (max-width: 999px) {
+          .div {
+            flex-direction: row;
+          }
+        }
+        @media (max-width: 639px) {
+          .div {
+            flex-direction: row-reverse;
+          }
+        }
+        .div-2 {
+          flex-grow: 1;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default Column;
+"
 `;
 
 exports[`RSC > jsx > Typescript Test > ContentSlotHtml 1`] = `
@@ -5009,14 +5186,30 @@ export default FormInputComponent;
 `;
 
 exports[`RSC > jsx > Typescript Test > InputParent 1`] = `
-"'function' is not allowed as a variable declaration name. (21:9)
-  19 |   function Stepper(props:any) {
-  20 |
-> 21 |   const function handleChange(value: string) {
-     |         ^
-  22 | console.log(value);
-  23 | }
-  24 |"
+"/**
+          useMetadata:
+          {\\"rsc\\":{\\"componentType\\":\\"server\\"}}
+          */
+
+import * as React from \\"react\\";
+import FormInputComponent from \\"./input.raw\\";
+
+function Stepper(props: any) {
+  const handleChange = function handleChange(value: string) {
+    console.log(value);
+  };
+
+  return (
+    <FormInputComponent
+      name=\\"kingzez\\"
+      type=\\"text\\"
+      onChange={(value) => handleChange(value)}
+    />
+  );
+}
+
+export default Stepper;
+"
 `;
 
 exports[`RSC > jsx > Typescript Test > NestedStore 1`] = `
@@ -6373,25 +6566,74 @@ export default MyBasicComponent;
 `;
 
 exports[`RSC > jsx > Typescript Test > getterState 1`] = `
-"'function' is not allowed as a variable declaration name. (23:9)
-  21 |   function Button(props:ButtonProps) {
-  22 |
-> 23 |   const function foo2() {
-     |         ^
-  24 | return props.foo + 'foo';
-  25 | }
-  26 | const function bar() {"
+"/**
+          useMetadata:
+          {\\"rsc\\":{\\"componentType\\":\\"server\\"}}
+          */
+
+import * as React from \\"react\\";
+
+export interface ButtonProps {
+  foo: string;
+}
+
+function Button(props: ButtonProps) {
+  const foo2 = function foo2() {
+    return props.foo + \\"foo\\";
+  };
+  const bar = function bar() {
+    return \\"bar\\";
+  };
+  const baz = function baz(i: number) {
+    return i + foo2().length;
+  };
+
+  return (
+    <div>
+      <p>{foo2()}</p>
+      <p>{bar()}</p>
+      <p>{baz(1)}</p>
+    </div>
+  );
+}
+
+export default Button;
+"
 `;
 
 exports[`RSC > jsx > Typescript Test > import types 1`] = `
-"'function' is not allowed as a variable declaration name. (26:9)
-  24 |   function RenderContent(props:RenderContentProps) {
-  25 |
-> 26 |   const function getRenderContentProps(block, index) {
-     |         ^
-  27 | return {
-  28 | block: block,
-  29 | index: index"
+"/**
+          useMetadata:
+          {\\"rsc\\":{\\"componentType\\":\\"server\\"}}
+          */
+
+import * as React from \\"react\\";
+
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+function RenderContent(props: RenderContentProps) {
+  const getRenderContentProps = function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  };
+
+  return (
+    <RenderBlock
+      {...getRenderContentProps(props.renderContentProps.block, 0)}
+    />
+  );
+}
+
+export default RenderContent;
+"
 `;
 
 exports[`RSC > jsx > Typescript Test > layerName 1`] = `
@@ -7003,14 +7245,14 @@ export default OnUpdate;
 `;
 
 exports[`RSC > jsx > Typescript Test > renderBlock 1`] = `
-"'function' is not allowed as a variable declaration name. (42:10)
-  40 |    function RenderBlock(props:RenderBlockProps) {
-  41 |
-> 42 |    const function component() {
-     |          ^
-  43 | const componentName = getProcessedBlock({
-  44 |  block: props.block,
-  45 |  state: props.context.state,"
+"Identifier expected. (224:8)
+  222 |    {shouldWrap() ? (
+  223 |    <>{isEmptyHtmlElement(tag()) ? (
+> 224 |    <tag()  {...(attributes())}  {...(actions())}  />
+      |        ^
+  225 |  ) : null}
+  226 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+  227 |    <>{repeatItemData()?.map((data, index) => ("
 `;
 
 exports[`RSC > jsx > Typescript Test > renderContentExample 1`] = `
@@ -8633,4 +8875,26 @@ function MyComponent(props: any) {
 
 export default MyComponent;
 "
+`;
+
+exports[`RSC local > jsx > Javascript Test > renderBlock 1`] = `
+"Identifier expected. (216:8)
+  214 |    {shouldWrap() ? (
+  215 |    <>{isEmptyHtmlElement(tag()) ? (
+> 216 |    <tag()  {...(attributes())}  {...(actions())}  />
+      |        ^
+  217 |  ) : null}
+  218 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+  219 |    <>{repeatItemData()?.map((data, index) => ("
+`;
+
+exports[`RSC local > jsx > Typescript Test > renderBlock 1`] = `
+"Identifier expected. (224:8)
+  222 |    {shouldWrap() ? (
+  223 |    <>{isEmptyHtmlElement(tag()) ? (
+> 224 |    <tag()  {...(attributes())}  {...(actions())}  />
+      |        ^
+  225 |  ) : null}
+  226 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+  227 |    <>{repeatItemData()?.map((data, index) => ("
 `;

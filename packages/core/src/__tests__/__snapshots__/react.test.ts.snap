@@ -1091,6 +1091,12 @@ import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
 function ContentSlotJsxCode(props) {
+  props = {
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+    ...props,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -1127,12 +1133,6 @@ function ContentSlotJsxCode(props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -1144,6 +1144,12 @@ import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
 function ContentSlotJsxCode(props) {
+  props = {
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+    ...props,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -1180,12 +1186,6 @@ function ContentSlotJsxCode(props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -4214,6 +4214,15 @@ exports[`React - stateType: useState > jsx > Javascript Test > defaultProps 1`] 
 import * as React from \\"react\\";
 
 function Button(props) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+    ...props,
+  };
   return (
     <div>
       {props.link ? (
@@ -4237,15 +4246,6 @@ function Button(props) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
 
 export default Button;
 "
@@ -4256,6 +4256,15 @@ exports[`React - stateType: useState > jsx > Javascript Test > defaultProps 2`] 
 import * as React from \\"react\\";
 
 function Button(props) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+    ...props,
+  };
   return (
     <div>
       {props.link ? (
@@ -4280,15 +4289,6 @@ function Button(props) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -4298,6 +4298,13 @@ exports[`React - stateType: useState > jsx > Javascript Test > defaultPropsOutsi
 import * as React from \\"react\\";
 
 function Button(props) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+    ...props,
+  };
   return (
     <div>
       {props.link ? (
@@ -4321,13 +4328,6 @@ function Button(props) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -4338,6 +4338,13 @@ exports[`React - stateType: useState > jsx > Javascript Test > defaultPropsOutsi
 import * as React from \\"react\\";
 
 function Button(props) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+    ...props,
+  };
   return (
     <div>
       {props.link ? (
@@ -4361,13 +4368,6 @@ function Button(props) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -6263,7 +6263,6 @@ function RenderContent(props) {
   useEffect(() => {
     sendComponentsToVisualEditor(props.customComponents);
   }, []);
-
   useEffect(() => {
     dispatchNewContentToVisualEditor(props.content);
   }, [props.content]);
@@ -6316,7 +6315,6 @@ function RenderContent(props) {
   useEffect(() => {
     sendComponentsToVisualEditor(props.customComponents);
   }, []);
-
   useEffect(() => {
     dispatchNewContentToVisualEditor(props.content);
   }, [props.content]);
@@ -7161,6 +7159,28 @@ function TypeDependency(props) {
 }
 
 export default TypeDependency;
+"
+`;
+
+exports[`React - stateType: useState > jsx > Javascript Test > typeExternalProps 1`] = `
+"import * as React from \\"react\\";
+
+function TypeExternalProps(props) {
+  return <div>Hello {props.name}! </div>;
+}
+
+export default TypeExternalProps;
+"
+`;
+
+exports[`React - stateType: useState > jsx > Javascript Test > typeExternalProps 2`] = `
+"import * as React from \\"react\\";
+
+function TypeExternalProps(props) {
+  return <div>Hello {props.name}! </div>;
+}
+
+export default TypeExternalProps;
 "
 `;
 
@@ -8756,6 +8776,12 @@ type Props = {
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotJsxCode(props: Props) {
+  props = {
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+    ...props,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -8792,12 +8818,6 @@ function ContentSlotJsxCode(props: Props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -8814,6 +8834,12 @@ type Props = {
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotJsxCode(props: Props) {
+  props = {
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+    ...props,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -8850,12 +8876,6 @@ function ContentSlotJsxCode(props: Props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -12342,6 +12362,15 @@ export interface ButtonProps {
 }
 
 function Button(props: ButtonProps) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+    ...props,
+  };
   return (
     <div>
       {props.link ? (
@@ -12365,15 +12394,6 @@ function Button(props: ButtonProps) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
 
 export default Button;
 "
@@ -12394,6 +12414,15 @@ export interface ButtonProps {
 }
 
 function Button(props: ButtonProps) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+    ...props,
+  };
   return (
     <div>
       {props.link ? (
@@ -12418,15 +12447,6 @@ function Button(props: ButtonProps) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -12444,6 +12464,13 @@ export interface ButtonProps {
 }
 
 function Button(props: ButtonProps) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+    ...props,
+  };
   return (
     <div>
       {props.link ? (
@@ -12467,13 +12494,6 @@ function Button(props: ButtonProps) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -12492,6 +12512,13 @@ export interface ButtonProps {
 }
 
 function Button(props: ButtonProps) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+    ...props,
+  };
   return (
     <div>
       {props.link ? (
@@ -12515,13 +12542,6 @@ function Button(props: ButtonProps) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -14603,7 +14623,6 @@ function RenderContent(props: Props) {
   useEffect(() => {
     sendComponentsToVisualEditor(props.customComponents);
   }, []);
-
   useEffect(() => {
     dispatchNewContentToVisualEditor(props.content);
   }, [props.content]);
@@ -14664,7 +14683,6 @@ function RenderContent(props: Props) {
   useEffect(() => {
     sendComponentsToVisualEditor(props.customComponents);
   }, []);
-
   useEffect(() => {
     dispatchNewContentToVisualEditor(props.content);
   }, [props.content]);
@@ -15602,6 +15620,30 @@ export default TypeDependency;
 "
 `;
 
+exports[`React - stateType: useState > jsx > Typescript Test > typeExternalProps 1`] = `
+"import * as React from \\"react\\";
+import { FooProps } from \\"./foo-props\\";
+
+function TypeExternalProps(props: FooProps) {
+  return <div>Hello {props.name}! </div>;
+}
+
+export default TypeExternalProps;
+"
+`;
+
+exports[`React - stateType: useState > jsx > Typescript Test > typeExternalProps 2`] = `
+"import * as React from \\"react\\";
+import { FooProps } from \\"./foo-props\\";
+
+function TypeExternalProps(props: FooProps) {
+  return <div>Hello {props.name}! </div>;
+}
+
+export default TypeExternalProps;
+"
+`;
+
 exports[`React - stateType: useState > jsx > Typescript Test > typeExternalStore 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -16377,8 +16419,6 @@ function MyComponent(props) {
   );
 }
 
-MyComponent.defaultProps = {};
-
 export default MyComponent;
 "
 `;
@@ -16400,32 +16440,30 @@ function MyComponent(props) {
   );
 }
 
-MyComponent.defaultProps = {};
-
 export default MyComponent;
 "
 `;
 
 exports[`React - stateType: useState > svelte > Javascript Test > context 1`] = `
-"'>' expected. (35:13)
-  33 | return (
-  34 |
-> 35 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (32:13)
+  30 | return (
+  31 |
+> 32 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  36 |
-  37 |
-  38 |"
+  33 |
+  34 |
+  35 |"
 `;
 
 exports[`React - stateType: useState > svelte > Javascript Test > context 2`] = `
-"'>' expected. (35:13)
-  33 | return (
-  34 |
-> 35 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (32:13)
+  30 | return (
+  31 |
+> 32 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  36 |
-  37 |
-  38 |"
+  33 |
+  34 |
+  35 |"
 `;
 
 exports[`React - stateType: useState > svelte > Javascript Test > each 1`] = `
@@ -16655,11 +16693,9 @@ function MyComponent(props) {
   useEffect(() => {
     console.log(\\"onMount\\");
   }, []);
-
   useEffect(() => {
     console.log(\\"onAfterUpdate\\");
   });
-
   useEffect(() => {
     return () => {
       console.log(\\"onDestroy\\");
@@ -16682,11 +16718,9 @@ function MyComponent(props) {
   useEffect(() => {
     console.log(\\"onMount\\");
   }, []);
-
   useEffect(() => {
     console.log(\\"onAfterUpdate\\");
   });
-
   useEffect(() => {
     return () => {
       console.log(\\"onDestroy\\");
@@ -17182,8 +17216,6 @@ function MyComponent(props: any) {
   );
 }
 
-MyComponent.defaultProps = {};
-
 export default MyComponent;
 "
 `;
@@ -17205,32 +17237,30 @@ function MyComponent(props: any) {
   );
 }
 
-MyComponent.defaultProps = {};
-
 export default MyComponent;
 "
 `;
 
 exports[`React - stateType: useState > svelte > Typescript Test > context 1`] = `
-"'>' expected. (35:13)
-  33 | return (
-  34 |
-> 35 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (32:13)
+  30 | return (
+  31 |
+> 32 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  36 |
-  37 |
-  38 |"
+  33 |
+  34 |
+  35 |"
 `;
 
 exports[`React - stateType: useState > svelte > Typescript Test > context 2`] = `
-"'>' expected. (35:13)
-  33 | return (
-  34 |
-> 35 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (32:13)
+  30 | return (
+  31 |
+> 32 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  36 |
-  37 |
-  38 |"
+  33 |
+  34 |
+  35 |"
 `;
 
 exports[`React - stateType: useState > svelte > Typescript Test > each 1`] = `
@@ -17460,11 +17490,9 @@ function MyComponent(props: any) {
   useEffect(() => {
     console.log(\\"onMount\\");
   }, []);
-
   useEffect(() => {
     console.log(\\"onAfterUpdate\\");
   });
-
   useEffect(() => {
     return () => {
       console.log(\\"onDestroy\\");
@@ -17487,11 +17515,9 @@ function MyComponent(props: any) {
   useEffect(() => {
     console.log(\\"onMount\\");
   }, []);
-
   useEffect(() => {
     console.log(\\"onAfterUpdate\\");
   });
-
   useEffect(() => {
     return () => {
       console.log(\\"onDestroy\\");
