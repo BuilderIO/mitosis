@@ -16,7 +16,7 @@ import {
   processBinding,
   wrapInFragment,
 } from './helpers';
-import { updateStateSettersInCode } from './state';
+import { updateStateSettersInCode } from './helpers/state';
 import { ToReactOptions } from './types';
 
 const NODE_MAPPERS: {

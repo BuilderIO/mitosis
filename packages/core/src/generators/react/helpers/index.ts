@@ -5,7 +5,7 @@ import { MitosisNode } from '@/types/mitosis-node';
 import { upperFirst } from 'lodash';
 import traverse from 'neotraverse/legacy';
 
-import { ToReactOptions } from './types';
+import { ToReactOptions } from '../types';
 
 export const processBinding = (str: string, options: ToReactOptions) => {
   // fix web-component tag transform issue with dashes by not transforming it
@@ -94,3 +94,6 @@ export function processTagReferences(json: MitosisComponent, options: ToReactOpt
     }
   });
 }
+
+export const isReactForwardRef = (json: MitosisComponent): string | undefined =>
+  json.meta.useMetadata?.forwardRef || json.meta.useMetadata?.react?.forwardRef;

@@ -571,6 +571,12 @@ import { useState } from \\"react\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function ContentSlotJsxCode(props) {
+  props = {
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+    ...props,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -606,12 +612,6 @@ function ContentSlotJsxCode(props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -2155,6 +2155,15 @@ exports[`Taro > jsx > Javascript Test > defaultProps 1`] = `
 import { View, Text, Button } from \\"@tarojs/components\\";
 
 function Button(props) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+    ...props,
+  };
   return (
     <View>
       {props.link ? (
@@ -2179,15 +2188,6 @@ function Button(props) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -2197,6 +2197,13 @@ exports[`Taro > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 import { View, Text, Button } from \\"@tarojs/components\\";
 
 function Button(props) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+    ...props,
+  };
   return (
     <View>
       {props.link ? (
@@ -2220,13 +2227,6 @@ function Button(props) {
     </View>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -3217,7 +3217,6 @@ function RenderContent(props) {
   useEffect(() => {
     sendComponentsToVisualEditor(props.customComponents);
   }, []);
-
   useEffect(() => {
     dispatchNewContentToVisualEditor(props.content);
   }, [props.content]);
@@ -3686,6 +3685,18 @@ function TypeDependency(props) {
 }
 
 export default TypeDependency;
+"
+`;
+
+exports[`Taro > jsx > Javascript Test > typeExternalProps 1`] = `
+"import * as React from \\"react\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function TypeExternalProps(props) {
+  return <View>Hello {props.name}! </View>;
+}
+
+export default TypeExternalProps;
 "
 `;
 
@@ -4524,6 +4535,12 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
 import { View, Text } from \\"@tarojs/components\\";
 
 function ContentSlotJsxCode(props: Props) {
+  props = {
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+    ...props,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -4559,12 +4576,6 @@ function ContentSlotJsxCode(props: Props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -6353,6 +6364,15 @@ export interface ButtonProps {
 import { View, Text, Button } from \\"@tarojs/components\\";
 
 function Button(props: ButtonProps) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+    ...props,
+  };
   return (
     <View>
       {props.link ? (
@@ -6377,15 +6397,6 @@ function Button(props: ButtonProps) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -6404,6 +6415,13 @@ export interface ButtonProps {
 import { View, Text, Button } from \\"@tarojs/components\\";
 
 function Button(props: ButtonProps) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+    ...props,
+  };
   return (
     <View>
       {props.link ? (
@@ -6427,13 +6445,6 @@ function Button(props: ButtonProps) {
     </View>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -7528,7 +7539,6 @@ function RenderContent(props: Props) {
   useEffect(() => {
     sendComponentsToVisualEditor(props.customComponents);
   }, []);
-
   useEffect(() => {
     dispatchNewContentToVisualEditor(props.content);
   }, [props.content]);
@@ -8051,6 +8061,19 @@ export default TypeDependency;
 "
 `;
 
+exports[`Taro > jsx > Typescript Test > typeExternalProps 1`] = `
+"import * as React from \\"react\\";
+import { FooProps } from \\"./foo-props\\";
+import { View, Text } from \\"@tarojs/components\\";
+
+function TypeExternalProps(props: FooProps) {
+  return <View>Hello {props.name}! </View>;
+}
+
+export default TypeExternalProps;
+"
+`;
+
 exports[`Taro > jsx > Typescript Test > typeExternalStore 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -8349,21 +8372,19 @@ function MyComponent(props) {
   return <Input />;
 }
 
-MyComponent.defaultProps = {};
-
 export default MyComponent;
 "
 `;
 
 exports[`Taro > svelte > Javascript Test > context 1`] = `
-"'>' expected. (37:13)
-  35 | return (
-  36 |
-> 37 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
+"'>' expected. (34:13)
+  32 | return (
+  33 |
+> 34 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
      |             ^
-  38 |
-  39 |
-  40 |"
+  35 |
+  36 |
+  37 |"
 `;
 
 exports[`Taro > svelte > Javascript Test > each 1`] = `
@@ -8489,11 +8510,9 @@ function MyComponent(props) {
   useEffect(() => {
     console.log(\\"onMount\\");
   }, []);
-
   useEffect(() => {
     console.log(\\"onAfterUpdate\\");
   });
-
   useEffect(() => {
     return () => {
       console.log(\\"onDestroy\\");
@@ -8759,21 +8778,19 @@ function MyComponent(props: any) {
   return <Input />;
 }
 
-MyComponent.defaultProps = {};
-
 export default MyComponent;
 "
 `;
 
 exports[`Taro > svelte > Typescript Test > context 1`] = `
-"'>' expected. (37:13)
-  35 | return (
-  36 |
-> 37 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
+"'>' expected. (34:13)
+  32 | return (
+  33 |
+> 34 | <'activeTab'.Provider  value={activeTab}><View>{activeTab}</View></'activeTab'.Provider>
      |             ^
-  38 |
-  39 |
-  40 |"
+  35 |
+  36 |
+  37 |"
 `;
 
 exports[`Taro > svelte > Typescript Test > each 1`] = `
@@ -8899,11 +8916,9 @@ function MyComponent(props: any) {
   useEffect(() => {
     console.log(\\"onMount\\");
   }, []);
-
   useEffect(() => {
     console.log(\\"onAfterUpdate\\");
   });
-
   useEffect(() => {
     return () => {
       console.log(\\"onDestroy\\");
