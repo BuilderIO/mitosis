@@ -72,7 +72,7 @@ export class MyBasicForShowComponent {
 `;
 
 exports[`Stencil > jsx > Javascript Test > AdvancedRef 1`] = `
-"import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Watch, Prop, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-ref-component\\",
@@ -97,10 +97,18 @@ export class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  componentDidLoad() {}
-
-  componentDidUpdate() {
+  watch0Fn() {
     console.log(\\"Received an update\\");
+  }
+
+  @Watch(\\"inputRef\\")
+  @Watch(\\"inputNoArgRef\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
   }
 
   render() {
@@ -569,7 +577,7 @@ exports[`Stencil > jsx > Javascript Test > BasicRefPrevious 1`] = `
   return ref;
 }
 
-import { Component, h, Fragment, State } from \\"@stencil/core\\";
+import { Component, h, Fragment, Watch, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-previous-component\\",
@@ -579,10 +587,17 @@ export class MyPreviousComponent {
 
   @State() count = 0;
 
-  componentDidLoad() {}
-
-  componentDidUpdate() {
+  watch0Fn() {
     this.prevCount = this.count;
+  }
+
+  @Watch(\\"count\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
   }
 
   render() {
@@ -2263,7 +2278,7 @@ export class MyBasicForwardRefComponent {
 `;
 
 exports[`Stencil > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
-"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Watch, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-on-update-return-component\\",
@@ -2271,9 +2286,7 @@ exports[`Stencil > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 export class MyBasicOnUpdateReturnComponent {
   @State() name = \\"PatrickJS\\";
 
-  componentDidLoad() {}
-
-  componentDidUpdate() {
+  watch0Fn() {
     const controller = new AbortController();
     const signal = controller.signal;
     fetch(\\"https://patrickjs.com/api/resource.json\\", {
@@ -2288,6 +2301,15 @@ export class MyBasicOnUpdateReturnComponent {
         controller.abort();
       }
     };
+  }
+
+  @Watch(\\"name\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
   }
 
   render() {
@@ -3048,7 +3070,7 @@ export class MultipleOnUpdate {
 `;
 
 exports[`Stencil > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
-"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Watch, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"multiple-on-update-with-deps\\",
@@ -3059,19 +3081,37 @@ export class MultipleOnUpdateWithDeps {
   @State() c = \\"c\\";
   @State() d = \\"d\\";
 
-  componentDidLoad() {}
-
-  componentDidUpdate() {
+  watch0Fn() {
     console.log(\\"Runs when a or b changes\\", this.a, this.b);
 
     if (this.a === \\"a\\") {
       this.a = \\"b\\";
     }
+  }
+
+  @Watch(\\"a\\")
+  @Watch(\\"b\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  watch1Fn() {
     console.log(\\"Runs when c or d changes\\", this.c, this.d);
 
     if (this.a === \\"a\\") {
       this.a = \\"b\\";
     }
+  }
+
+  @Watch(\\"c\\")
+  @Watch(\\"d\\")
+  watch1() {
+    this.watch1Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
+    this.watch1Fn();
   }
 
   render() {
@@ -3365,7 +3405,7 @@ export class OnUpdate {
 `;
 
 exports[`Stencil > jsx > Javascript Test > onUpdateWithDeps 1`] = `
-"import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Watch, Prop, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"on-update-with-deps\\",
@@ -3375,10 +3415,19 @@ export class OnUpdateWithDeps {
   @State() a = \\"a\\";
   @State() b = \\"b\\";
 
-  componentDidLoad() {}
-
-  componentDidUpdate() {
+  watch0Fn() {
     console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
+  }
+
+  @Watch(\\"a\\")
+  @Watch(\\"b\\")
+  @Watch(\\"size\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
   }
 
   render() {
@@ -3795,7 +3844,7 @@ import {
 } from \\"@dummy/injection-js\\";
 import { RenderBlocks } from \\"@dummy/RenderBlocks.lite.tsx\\";
 
-import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
+import { Component, h, Fragment, Watch, Prop } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"render-content\\",
@@ -3811,12 +3860,18 @@ export class RenderContent {
   @Prop() customComponents: any;
   @Prop() content: any;
 
-  componentDidLoad() {
-    sendComponentsToVisualEditor(this.customComponents);
+  watch0Fn() {
+    dispatchNewContentToVisualEditor(this.content);
   }
 
-  componentDidUpdate() {
-    dispatchNewContentToVisualEditor(this.content);
+  @Watch(\\"content\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  componentDidLoad() {
+    sendComponentsToVisualEditor(this.customComponents);
+    this.watch0Fn();
   }
 
   render() {
@@ -3949,7 +4004,7 @@ export class SetState {
 `;
 
 exports[`Stencil > jsx > Javascript Test > signalsOnUpdate 1`] = `
-"import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Watch, Prop } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-component\\",
@@ -3964,11 +4019,19 @@ export class MyBasicComponent {
   @Prop() id: any;
   @Prop() foo: any;
 
-  componentDidLoad() {}
-
-  componentDidUpdate() {
+  watch0Fn() {
     console.log(\\"props.id changed\\", this.id);
     console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
+  }
+
+  @Watch(\\"id\\")
+  @Watch(\\"foo.value.bar.baz\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
   }
 
   render() {
@@ -4499,7 +4562,7 @@ export class MyBasicForShowComponent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > AdvancedRef 1`] = `
-"import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Watch, Prop, State } from \\"@stencil/core\\";
 
 export interface Props {
   showInput: boolean;
@@ -4528,10 +4591,18 @@ export class MyBasicRefComponent {
     return this.name.toLowerCase();
   };
 
-  componentDidLoad() {}
-
-  componentDidUpdate() {
+  watch0Fn() {
     console.log(\\"Received an update\\");
+  }
+
+  @Watch(\\"inputRef\\")
+  @Watch(\\"inputNoArgRef\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
   }
 
   render() {
@@ -5022,7 +5093,7 @@ exports[`Stencil > jsx > Typescript Test > BasicRefPrevious 1`] = `
   return ref;
 }
 
-import { Component, h, Fragment, State } from \\"@stencil/core\\";
+import { Component, h, Fragment, Watch, State } from \\"@stencil/core\\";
 
 export interface Props {
   showInput: boolean;
@@ -5036,10 +5107,17 @@ export class MyPreviousComponent {
 
   @State() count = 0;
 
-  componentDidLoad() {}
-
-  componentDidUpdate() {
+  watch0Fn() {
     this.prevCount = this.count;
+  }
+
+  @Watch(\\"count\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
   }
 
   render() {
@@ -6963,7 +7041,7 @@ export class MyBasicForwardRefComponent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
-"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Watch, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-on-update-return-component\\",
@@ -6971,9 +7049,7 @@ exports[`Stencil > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 export class MyBasicOnUpdateReturnComponent {
   @State() name = \\"PatrickJS\\";
 
-  componentDidLoad() {}
-
-  componentDidUpdate() {
+  watch0Fn() {
     const controller = new AbortController();
     const signal = controller.signal;
     fetch(\\"https://patrickjs.com/api/resource.json\\", {
@@ -6988,6 +7064,15 @@ export class MyBasicOnUpdateReturnComponent {
         controller.abort();
       }
     };
+  }
+
+  @Watch(\\"name\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
   }
 
   render() {
@@ -7800,7 +7885,7 @@ export class MultipleOnUpdate {
 `;
 
 exports[`Stencil > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
-"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Watch, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"multiple-on-update-with-deps\\",
@@ -7811,19 +7896,37 @@ export class MultipleOnUpdateWithDeps {
   @State() c = \\"c\\";
   @State() d = \\"d\\";
 
-  componentDidLoad() {}
-
-  componentDidUpdate() {
+  watch0Fn() {
     console.log(\\"Runs when a or b changes\\", this.a, this.b);
 
     if (this.a === \\"a\\") {
       this.a = \\"b\\";
     }
+  }
+
+  @Watch(\\"a\\")
+  @Watch(\\"b\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  watch1Fn() {
     console.log(\\"Runs when c or d changes\\", this.c, this.d);
 
     if (this.a === \\"a\\") {
       this.a = \\"b\\";
     }
+  }
+
+  @Watch(\\"c\\")
+  @Watch(\\"d\\")
+  watch1() {
+    this.watch1Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
+    this.watch1Fn();
   }
 
   render() {
@@ -8125,7 +8228,7 @@ export class OnUpdate {
 `;
 
 exports[`Stencil > jsx > Typescript Test > onUpdateWithDeps 1`] = `
-"import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Watch, Prop, State } from \\"@stencil/core\\";
 
 type Props = {
   size: string;
@@ -8139,10 +8242,19 @@ export class OnUpdateWithDeps {
   @State() a = \\"a\\";
   @State() b = \\"b\\";
 
-  componentDidLoad() {}
-
-  componentDidUpdate() {
+  watch0Fn() {
     console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
+  }
+
+  @Watch(\\"a\\")
+  @Watch(\\"b\\")
+  @Watch(\\"size\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
   }
 
   render() {
@@ -8610,7 +8722,7 @@ import {
 } from \\"@dummy/injection-js\\";
 import { RenderBlocks } from \\"@dummy/RenderBlocks.lite.tsx\\";
 
-import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
+import { Component, h, Fragment, Watch, Prop } from \\"@stencil/core\\";
 
 type Props = {
   customComponents: string[];
@@ -8634,12 +8746,18 @@ export class RenderContent {
   @Prop() customComponents: Props[\\"customComponents\\"];
   @Prop() content: Props[\\"content\\"];
 
-  componentDidLoad() {
-    sendComponentsToVisualEditor(this.customComponents);
+  watch0Fn() {
+    dispatchNewContentToVisualEditor(this.content);
   }
 
-  componentDidUpdate() {
-    dispatchNewContentToVisualEditor(this.content);
+  @Watch(\\"content\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  componentDidLoad() {
+    sendComponentsToVisualEditor(this.customComponents);
+    this.watch0Fn();
   }
 
   render() {
@@ -8779,7 +8897,7 @@ export class SetState {
 `;
 
 exports[`Stencil > jsx > Typescript Test > signalsOnUpdate 1`] = `
-"import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Watch, Prop } from \\"@stencil/core\\";
 
 type Props = {
   id: string;
@@ -8803,11 +8921,19 @@ export class MyBasicComponent {
   @Prop() id: Props[\\"id\\"];
   @Prop() foo: Props[\\"foo\\"];
 
-  componentDidLoad() {}
-
-  componentDidUpdate() {
+  watch0Fn() {
     console.log(\\"props.id changed\\", this.id);
     console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
+  }
+
+  @Watch(\\"id\\")
+  @Watch(\\"foo.bar.baz\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
   }
 
   render() {
@@ -9597,7 +9723,7 @@ export class MyComponent {
 `;
 
 exports[`Stencil > svelte > Javascript Test > reactiveWithFn 1`] = `
-"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Watch, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-component\\",
@@ -9611,10 +9737,18 @@ export class MyComponent {
     this.result = a_ * b_;
   };
 
-  componentDidLoad() {}
-
-  componentDidUpdate() {
+  watch0Fn() {
     this.calculateResult(this.a, this.b);
+  }
+
+  @Watch(\\"a\\")
+  @Watch(\\"b\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
   }
 
   render() {
@@ -10054,7 +10188,7 @@ export class MyComponent {
 `;
 
 exports[`Stencil > svelte > Typescript Test > reactiveWithFn 1`] = `
-"import { Component, h, Fragment, State } from \\"@stencil/core\\";
+"import { Component, h, Fragment, Watch, State } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-component\\",
@@ -10068,10 +10202,18 @@ export class MyComponent {
     this.result = a_ * b_;
   };
 
-  componentDidLoad() {}
-
-  componentDidUpdate() {
+  watch0Fn() {
     this.calculateResult(this.a, this.b);
+  }
+
+  @Watch(\\"a\\")
+  @Watch(\\"b\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
   }
 
   render() {
@@ -10168,110 +10310,6 @@ export class MyComponent {
         {this.a > 2 ? \\"hello\\" : \\"bye\\"}
       </div>
     );
-  }
-}
-"
-`;
-
-exports[`Stencil local > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
-"import { Component, h, Fragment, Watch, State } from \\"@stencil/core\\";
-
-@Component({
-  tag: \\"multiple-on-update-with-deps\\",
-})
-export class MultipleOnUpdateWithDeps {
-  @State() a = \\"a\\";
-  @State() b = \\"b\\";
-  @State() c = \\"c\\";
-  @State() d = \\"d\\";
-
-  watch0Fn() {
-    console.log(\\"Runs when a or b changes\\", this.a, this.b);
-
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
-    }
-  }
-
-  @Watch(\\"undefinedundefineda\\")
-  @Watch(\\" undefinedbundefined\\")
-  watch0() {
-    this.watch0Fn();
-  }
-
-  watch1Fn() {
-    console.log(\\"Runs when c or d changes\\", this.c, this.d);
-
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
-    }
-  }
-
-  @Watch(\\"undefinedundefinedc\\")
-  @Watch(\\" undefineddundefined\\")
-  watch1() {
-    this.watch1Fn();
-  }
-
-  componentDidLoad() {
-    this.watch0Fn();
-    this.watch1Fn();
-  }
-
-  render() {
-    return <div></div>;
-  }
-}
-"
-`;
-
-exports[`Stencil local > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
-"import { Component, h, Fragment, Watch, State } from \\"@stencil/core\\";
-
-@Component({
-  tag: \\"multiple-on-update-with-deps\\",
-})
-export class MultipleOnUpdateWithDeps {
-  @State() a = \\"a\\";
-  @State() b = \\"b\\";
-  @State() c = \\"c\\";
-  @State() d = \\"d\\";
-
-  watch0Fn() {
-    console.log(\\"Runs when a or b changes\\", this.a, this.b);
-
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
-    }
-  }
-
-  @Watch(\\"undefinedundefineda\\")
-  @Watch(\\" undefinedbundefined\\")
-  watch0() {
-    this.watch0Fn();
-  }
-
-  watch1Fn() {
-    console.log(\\"Runs when c or d changes\\", this.c, this.d);
-
-    if (this.a === \\"a\\") {
-      this.a = \\"b\\";
-    }
-  }
-
-  @Watch(\\"undefinedundefinedc\\")
-  @Watch(\\" undefineddundefined\\")
-  watch1() {
-    this.watch1Fn();
-  }
-
-  componentDidLoad() {
-    this.watch0Fn();
-    this.watch1Fn();
-  }
-
-  render() {
-    return <div></div>;
   }
 }
 "

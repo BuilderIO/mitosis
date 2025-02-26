@@ -25,7 +25,7 @@ export default function ComponentOnUpdate(props: any) {
   }, [_ref, state.initial]);
 
   onUpdate(() => {
-    console.log(state);
+    console.log(state.counter, state.label, state.initial);
   });
 
   onUpdate(() => {
