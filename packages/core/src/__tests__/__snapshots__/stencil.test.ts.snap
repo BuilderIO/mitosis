@@ -10172,3 +10172,107 @@ export class MyComponent {
 }
 "
 `;
+
+exports[`Stencil local > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
+"import { Component, h, Fragment, Watch, State } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"multiple-on-update-with-deps\\",
+})
+export class MultipleOnUpdateWithDeps {
+  @State() a = \\"a\\";
+  @State() b = \\"b\\";
+  @State() c = \\"c\\";
+  @State() d = \\"d\\";
+
+  watch0Fn() {
+    console.log(\\"Runs when a or b changes\\", this.a, this.b);
+
+    if (this.a === \\"a\\") {
+      this.a = \\"b\\";
+    }
+  }
+
+  @Watch(\\"undefinedundefineda\\")
+  @Watch(\\" undefinedbundefined\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  watch1Fn() {
+    console.log(\\"Runs when c or d changes\\", this.c, this.d);
+
+    if (this.a === \\"a\\") {
+      this.a = \\"b\\";
+    }
+  }
+
+  @Watch(\\"undefinedundefinedc\\")
+  @Watch(\\" undefineddundefined\\")
+  watch1() {
+    this.watch1Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
+    this.watch1Fn();
+  }
+
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;
+
+exports[`Stencil local > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
+"import { Component, h, Fragment, Watch, State } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"multiple-on-update-with-deps\\",
+})
+export class MultipleOnUpdateWithDeps {
+  @State() a = \\"a\\";
+  @State() b = \\"b\\";
+  @State() c = \\"c\\";
+  @State() d = \\"d\\";
+
+  watch0Fn() {
+    console.log(\\"Runs when a or b changes\\", this.a, this.b);
+
+    if (this.a === \\"a\\") {
+      this.a = \\"b\\";
+    }
+  }
+
+  @Watch(\\"undefinedundefineda\\")
+  @Watch(\\" undefinedbundefined\\")
+  watch0() {
+    this.watch0Fn();
+  }
+
+  watch1Fn() {
+    console.log(\\"Runs when c or d changes\\", this.c, this.d);
+
+    if (this.a === \\"a\\") {
+      this.a = \\"b\\";
+    }
+  }
+
+  @Watch(\\"undefinedundefinedc\\")
+  @Watch(\\" undefineddundefined\\")
+  watch1() {
+    this.watch1Fn();
+  }
+
+  componentDidLoad() {
+    this.watch0Fn();
+    this.watch1Fn();
+  }
+
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;

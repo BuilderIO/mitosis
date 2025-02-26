@@ -80,27 +80,40 @@ test.describe('e2e', () => {
       const div = page.locator('.wrap');
       await expect(div).toHaveCSS('background-color', 'rgb(255, 0, 0)');
     });
+  });
 
-    test('simple input disabled', async ({ page, packageName }) => {
-      await page.goto('/disabled-input/');
+  test('simple input disabled', async ({ page, packageName }) => {
+    await page.goto('/disabled-input/');
 
-      const disabled = page.getByTestId('simple-input-disabled');
+    const disabled = page.getByTestId('simple-input-disabled');
+    await expect(disabled).toBeDisabled();
+
+    const enabled = page.getByTestId('simple-input-enabled');
+    if (['e2e-angular'].includes(packageName)) {
+      // this is the exception for angular it will generate [attr.disabled]
+      // which will be a string, so it is always true
       await expect(disabled).toBeDisabled();
+    } else {
+      await expect(enabled).toBeEditable();
+    }
 
-      const enabled = page.getByTestId('simple-input-enabled');
-      if (['e2e-angular'].includes(packageName)) {
-        // this is the exception for angular it will generate [attr.disabled]
-        // which will be a string, so it is always true
-        await expect(disabled).toBeDisabled();
-      } else {
-        await expect(enabled).toBeEditable();
-      }
+    const nativeDisabled = page.getByTestId('native-input-disabled');
+    await expect(nativeDisabled).toBeDisabled();
 
-      const nativeDisabled = page.getByTestId('native-input-disabled');
-      await expect(nativeDisabled).toBeDisabled();
+    const nativeEnabled = page.getByTestId('native-input-enabled');
+    await expect(nativeEnabled).toBeEditable();
+  });
 
-      const nativeEnabled = page.getByTestId('native-input-enabled');
-      await expect(nativeEnabled).toBeEditable();
-    });
+  test('on update', async ({ page, packageName }) => {
+    await page.goto('/component-on-update/');
+
+    const container = page.getByTestId('container');
+    const button = page.getByTestId('button');
+    const labelBefore = await container.getAttribute('aria-label');
+    expect(labelBefore).toEqual('Label: 0');
+
+    await button.click();
+    const labelAfter = await container.getAttribute('aria-label');
+    expect(labelAfter).toEqual('Label: 1');
   });
 });
