@@ -8,7 +8,7 @@ import isMitosisPath from '../helpers/isMitosisPath';
 // ------------------------------------------------------------------------------
 
 export const onlyDefaultFunctionAndImportsMessage =
-  'Mitosis component files should only contain import declarations, the component itself (in a default export), and type declarations';
+  'Mitosis component files should only contain import declarations, the component itself (in a default export), module-scope hooks, and type declarations';
 
 const rule: Rule.RuleModule = {
   meta: {
