@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.5
+
+### Patch Changes
+
+- 3a6216e: [Builder]: Remove broken emoji from text
+
 ## 0.6.4
 
 ### Patch Changes
