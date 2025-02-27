@@ -409,7 +409,23 @@ export const blockToAngular = ({
         continue;
       }
       const value = json.properties[key];
-      str += ` ${key}="${value}" `;
+
+      // Special handling for innerHTML property to ensure double quotes are converted to single quotes
+      if (key === 'innerHTML') {
+        // Apply the same conversions as we do for innerHTML bindings
+        const escapedValue = String(value)
+          .replace(/([^\\])"/g, "$1'") // Replace unescaped double quotes preceded by a character
+          .replace(/^"/, "'") // Replace double quote at the beginning
+          .replace(/\\"/g, "\\'"); // Replace escaped double quotes with escaped single quotes
+
+        if (blockOptions.sanitizeInnerHTML) {
+          str += ` innerHTML="${escapedValue}" `;
+        } else {
+          str += ` [innerHTML]="sanitizer.bypassSecurityTrustHtml('${escapedValue}')" `;
+        }
+      } else {
+        str += ` ${key}="${value}" `;
+      }
     }
 
     for (const key in json.bindings) {
