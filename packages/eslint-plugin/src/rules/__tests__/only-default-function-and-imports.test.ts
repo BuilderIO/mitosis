@@ -1,5 +1,5 @@
 import { RuleTester } from 'eslint';
-import rule from '../only-default-function-and-imports';
+import rule, { onlyDefaultFunctionAndImportsMessage } from '../only-default-function-and-imports';
 
 const opts = {
   filename: 'component.lite.tsx',
@@ -79,6 +79,20 @@ ruleTester.run('only-default-function-and-imports', rule, {
     {
       ...opts,
       code: `
+      useDefaultProps({
+        test: "XXX"
+      });
+      
+      export default function RenderComponent(props) {
+        return (
+      <div>{props.test}</div>
+        );
+      }
+    `,
+    },
+    {
+      ...opts,
+      code: `
       export const x = y;
   
       export default function MyComponent(props) {
@@ -102,9 +116,7 @@ ruleTester.run('only-default-function-and-imports', rule, {
       }
       export const x = y;
     `,
-      errors: [
-        'Mitosis component files should only contain import declarations, the component itself (in a default export), and type declarations',
-      ],
+      errors: [onlyDefaultFunctionAndImportsMessage],
     },
     {
       ...opts,
@@ -123,9 +135,22 @@ ruleTester.run('only-default-function-and-imports', rule, {
         );
       }
     `,
-      errors: [
-        'Mitosis component files should only contain import declarations, the component itself (in a default export), and type declarations',
-      ],
+      errors: [onlyDefaultFunctionAndImportsMessage],
+    },
+    {
+      ...opts,
+      code: `
+      useDefault({
+        test: "XXX"
+      });
+      
+      export default function RenderComponent(props) {
+        return (
+      <div>{props.test}</div>
+        );
+      }
+    `,
+      errors: [onlyDefaultFunctionAndImportsMessage],
     },
   ],
 });
