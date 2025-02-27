@@ -63,10 +63,6 @@ describe('CustomCode component with double quotes in Angular', () => {
       typescript: true,
     })({ component: transformedComponent });
 
-    // Console log for debugging
-    console.log('MITOSIS NODE:', JSON.stringify(transformedComponent, null, 2));
-    console.log('ANGULAR CODE:', angularCode);
-
     // Step 5: Verify that double quotes in the innerHTML are properly escaped to single quotes
     expect(angularCode).toContain(
       "href='https://fonts.googleapis.com/css2?family=Inter&display=swap'",
