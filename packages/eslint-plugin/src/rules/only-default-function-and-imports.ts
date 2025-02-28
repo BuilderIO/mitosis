@@ -7,12 +7,15 @@ import isMitosisPath from '../helpers/isMitosisPath';
 // Rule Definition
 // ------------------------------------------------------------------------------
 
+export const onlyDefaultFunctionAndImportsMessage =
+  'Mitosis component files should only contain import declarations, the component itself (in a default export), module-scope hooks, and type declarations';
+
 const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
       description:
-        'disallow anything other than import declarations, the component itself (in a default export), and type declarations inside the component file.',
+        'disallow anything other than import declarations, the component itself (in a default export), module-scope hooks, and type declarations inside the component file.',
       recommended: true,
     },
   },
@@ -56,12 +59,12 @@ const rule: Rule.RuleModule = {
             (!types.isExpressionStatement(child) ||
               !types.isCallExpression(child.expression) ||
               !types.isIdentifier(child.expression.callee) ||
-              child.expression.callee.name !== HOOKS.META_DATA)
+              (child.expression.callee.name !== HOOKS.META_DATA &&
+                child.expression.callee.name !== HOOKS.DEFAULT_PROPS))
           ) {
             context.report({
               node: child as any,
-              message:
-                'Mitosis component files should only contain import declarations, the component itself (in a default export), and type declarations',
+              message: onlyDefaultFunctionAndImportsMessage,
             });
           }
         }
