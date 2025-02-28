@@ -1,4 +1,6 @@
 import { capitalize } from '@/helpers/capitalize';
+import { getFunctionString } from '@/helpers/get-function-string';
+import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
 import { getTypedFunction } from '@/helpers/get-typed-function';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { prefixWithFunction, replaceGetterWithFunction } from '@/helpers/patterns';
@@ -7,8 +9,8 @@ import { MitosisComponent, StateValue } from '@/types/mitosis-component';
 import { types } from '@babel/core';
 import { pipe } from 'fp-ts/lib/function';
 import traverse from 'neotraverse/legacy';
-import { processBinding } from './helpers';
-import { ToReactOptions } from './types';
+import { processBinding } from '../helpers';
+import { ToReactOptions } from '../types';
 
 /**
  * Removes all `this.` references.
@@ -97,4 +99,78 @@ export const updateStateSettersInCode = (value: string, options: ToReactOptions)
     transformer: ({ path, propertyName }) =>
       types.callExpression(types.identifier(getSetStateFnName(propertyName)), [path.node.right]),
   });
+};
+
+export const getReactVariantStateImportString = (hasState: boolean, options: ToReactOptions) => {
+  return !hasState
+    ? ''
+    : options.stateType === 'valtio'
+    ? `import { useLocalProxy } from 'valtio/utils';`
+    : options.stateType === 'solid'
+    ? `import { useMutable } from 'react-solid-state';`
+    : options.stateType === 'mobx'
+    ? `import { useLocalObservable, observer } from 'mobx-react-lite';`
+    : '';
+};
+
+export const getReactVariantStateString = ({
+  hasState,
+  options,
+  json,
+  useStateCode,
+}: {
+  useStateCode: string;
+  hasState: boolean;
+  json: MitosisComponent;
+  options: ToReactOptions;
+}) =>
+  hasState
+    ? options.stateType === 'mobx'
+      ? `const state = useLocalObservable(() => (${getStateObjectStringFromComponent(json)}));`
+      : options.stateType === 'useState'
+      ? useStateCode
+      : options.stateType === 'solid'
+      ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
+      : options.stateType === 'builder'
+      ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
+      : options.stateType === 'variables'
+      ? getStateObjectStringFromComponent(json, {
+          format: 'variables',
+          keyPrefix: 'const',
+          valueMapper: (code, type, _, key) => {
+            if (key) {
+              const constPrefix = !code.startsWith('function') ? `${key} = ` : '';
+
+              if (type === 'getter')
+                return `${constPrefix}${getFunctionString(code.replace('get ', ''))}`;
+              if (type === 'function')
+                return code.startsWith('async') ? code : `${constPrefix}${getFunctionString(code)}`;
+            }
+            return code;
+          },
+        })
+      : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
+    : '';
+
+export const getDefaultImport = (options: ToReactOptions): string => {
+  const { preact, type } = options;
+  if (preact) {
+    return `
+    /** @jsx h */
+    import { h, Fragment } from 'preact';
+    `;
+  }
+  if (type === 'native') {
+    return `
+    import * as React from 'react';
+    import { FlatList, ScrollView, View, StyleSheet, Image, Text, Pressable, TextInput, TouchableOpacity, Button, Linking } from 'react-native';
+    `;
+  }
+  if (type === 'taro') {
+    return `
+    import * as React from 'react';
+    `;
+  }
+
+  return "import * as React from 'react';";
 };

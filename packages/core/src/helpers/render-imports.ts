@@ -237,11 +237,13 @@ export const renderPreComponent = ({
   componentsUsed = [],
   importMapper,
   explicitImportFileExtension = false,
+  excludeExportAndLocal = false,
 }: Omit<ImportArgs, 'explicitImportFileExtension' | 'asyncComponentImports'> &
   Partial<Pick<ImportArgs, 'explicitImportFileExtension' | 'asyncComponentImports'>> & {
     component: MitosisComponent;
     target: Target;
     excludeMitosisComponents?: boolean;
+    excludeExportAndLocal?: boolean;
   }): string => `
     ${renderImports({
       imports: component.imports,
@@ -254,7 +256,7 @@ export const renderPreComponent = ({
       importMapper,
       explicitImportFileExtension,
     })}
-    ${renderExportAndLocal(component)}
+    ${excludeExportAndLocal ? '' : renderExportAndLocal(component)}
     ${component.hooks.preComponent?.code || ''}
   `;
 

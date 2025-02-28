@@ -23,8 +23,21 @@ const appendEmits = (str: string, events: string[]): string => {
 
 export type ProcessBindingOptions = { events: string[] };
 
-export const processBinding = (code: string, { events }: ProcessBindingOptions) => {
-  return stripStateAndPropsRefs(appendEmits(code, events), { replaceWith: 'this.' });
+export const processBinding = (
+  json: MitosisComponent,
+  code: string,
+  { events }: ProcessBindingOptions,
+) => {
+  let resolvedCode = stripStateAndPropsRefs(appendEmits(code, events), { replaceWith: 'this.' });
+  if (json.exports) {
+    // We need to use local exports with `this.` in stencil
+    Object.entries(json.exports)
+      .filter(([, value]) => value.usedInLocal)
+      .forEach(([key]) => {
+        resolvedCode = resolvedCode.replaceAll(key, `this.${key}`);
+      });
+  }
+  return resolvedCode;
 };
 
 export const getTagName = (name: string, { prefix }: ToStencilOptions): string => {
@@ -42,9 +55,14 @@ export const getTagName = (name: string, { prefix }: ToStencilOptions): string =
 
 export const getPropsAsCode = (
   props: string[],
+  json: MitosisComponent,
   defaultProps?: MitosisState | undefined,
-  propsTypeRef?: string,
 ): string => {
+  const propsTypeRef: string | undefined = json.propsTypeRef;
+  const internalTypes: string[] | undefined = json.types;
+  const isInternalType =
+    propsTypeRef && internalTypes && internalTypes.find((iType) => iType.includes(propsTypeRef));
+
   return props
     .map((item: string) => {
       const defaultProp: string | undefined = defaultProps ? defaultProps[item]?.code : undefined;
@@ -58,7 +76,8 @@ export const getPropsAsCode = (
         propsTypeRef &&
         propsTypeRef !== 'any' &&
         propsTypeRef !== 'unknown' &&
-        propsTypeRef !== 'never'
+        propsTypeRef !== 'never' &&
+        !isInternalType
           ? `${propsTypeRef}["${item}"]`
           : 'any';
       return `@Prop() ${item}: ${type}${defaultPropString}`;
@@ -129,6 +148,7 @@ export const getImports = (
     explicitImportFileExtension: options.explicitImportFileExtension,
     component: json,
     target: 'stencil',
+    excludeExportAndLocal: true,
     importMapper: (_: any, theImport: any, importedValues: any) => {
       const childImport = importedValues.defaultImport;
       if (childImport && childComponents.includes(childImport)) {
@@ -151,4 +171,16 @@ export const getDepsAsArray = (deps: string): string[] => {
     .replaceAll('this.', '')
     .split(',')
     .map((dep) => dep.trim());
+};
+
+export const getExportsAndLocal = (json: MitosisComponent) => {
+  return Object.entries(json.exports || {})
+    .map(([key, { usedInLocal, code }]) => {
+      if (usedInLocal) {
+        return `${key} = ${code.substring(code.indexOf('=') + 1)}`;
+      }
+
+      return '';
+    })
+    .join('\n');
 };

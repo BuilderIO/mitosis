@@ -7676,6 +7676,64 @@ exports[`Html > jsx > Javascript Test > typeDependency 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > typeExternalProps 1`] = `
+"<div>
+  Hello
+  <template data-el=\\"div-1\\"><!-- props.name --></template>
+  !
+</div>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, props.name);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > typeExternalStore 1`] = `
 "<div>
   Hello
@@ -15633,6 +15691,64 @@ exports[`Html > jsx > Typescript Test > typeDependency 1`] = `
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         renderTextNode(el, props.foo);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > typeExternalProps 1`] = `
+"<div>
+  Hello
+  <template data-el=\\"div-1\\"><!-- props.name --></template>
+  !
+</div>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, props.name);
       });
 
       destroyAnyNodes();

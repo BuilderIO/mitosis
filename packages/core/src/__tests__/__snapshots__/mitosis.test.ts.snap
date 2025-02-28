@@ -3129,6 +3129,18 @@ exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascr
 "
 `;
 
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > typeExternalProps 1`] = `
+"export default function TypeExternalProps(props) {
+  return [
+    <div>
+      Hello
+      {props.name}!{\\" \\"}
+    </div>,
+  ];
+}
+"
+`;
+
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > typeExternalStore 1`] = `
 "import { useStore } from \\"@builder.io/mitosis\\";
 
@@ -6808,6 +6820,20 @@ import type { Foo as Foo2 } from \\"./type-export.js\\";
 
 export default function TypeDependency(props) {
   return [<div>{props.foo}</div>];
+}
+"
+`;
+
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > typeExternalProps 1`] = `
+"import { FooProps } from \\"./foo-props\\";
+
+export default function TypeExternalProps(props) {
+  return [
+    <div>
+      Hello
+      {props.name}!{\\" \\"}
+    </div>,
+  ];
 }
 "
 `;
@@ -10823,6 +10849,18 @@ exports[`Mitosis, format: legacy > jsx > Javascript Test > typeDependency 1`] = 
 "
 `;
 
+exports[`Mitosis, format: legacy > jsx > Javascript Test > typeExternalProps 1`] = `
+"export default function TypeExternalProps(props) {
+  return (
+    <div>
+      Hello
+      {props.name}!{\\" \\"}
+    </div>
+  );
+}
+"
+`;
+
 exports[`Mitosis, format: legacy > jsx > Javascript Test > typeExternalStore 1`] = `
 "import { useStore } from \\"@builder.io/mitosis\\";
 
@@ -14575,6 +14613,20 @@ export default function TypeDependency(props) {
 "
 `;
 
+exports[`Mitosis, format: legacy > jsx > Typescript Test > typeExternalProps 1`] = `
+"import { FooProps } from \\"./foo-props\\";
+
+export default function TypeExternalProps(props) {
+  return (
+    <div>
+      Hello
+      {props.name}!{\\" \\"}
+    </div>
+  );
+}
+"
+`;
+
 exports[`Mitosis, format: legacy > jsx > Typescript Test > typeExternalStore 1`] = `
 "import { useStore } from \\"@builder.io/mitosis\\";
 
@@ -16033,6 +16085,12 @@ import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
 function ContentSlotJsxCode(props) {
+  props = {
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+    ...props,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -16069,12 +16127,6 @@ function ContentSlotJsxCode(props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -17588,6 +17640,15 @@ exports[`Mitosis, format: react > jsx > Javascript Test > defaultProps 1`] = `
 import * as React from \\"react\\";
 
 function Button(props) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+    ...props,
+  };
   return (
     <div>
       {props.link ? (
@@ -17612,15 +17673,6 @@ function Button(props) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -17630,6 +17682,13 @@ exports[`Mitosis, format: react > jsx > Javascript Test > defaultPropsOutsideCom
 import * as React from \\"react\\";
 
 function Button(props) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+    ...props,
+  };
   return (
     <div>
       {props.link ? (
@@ -17653,13 +17712,6 @@ function Button(props) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -18621,7 +18673,6 @@ function RenderContent(props) {
   useEffect(() => {
     sendComponentsToVisualEditor(props.customComponents);
   }, []);
-
   useEffect(() => {
     dispatchNewContentToVisualEditor(props.content);
   }, [props.content]);
@@ -19054,6 +19105,17 @@ function TypeDependency(props) {
 }
 
 export default TypeDependency;
+"
+`;
+
+exports[`Mitosis, format: react > jsx > Javascript Test > typeExternalProps 1`] = `
+"import * as React from \\"react\\";
+
+function TypeExternalProps(props) {
+  return <div>Hello {props.name}! </div>;
+}
+
+export default TypeExternalProps;
 "
 `;
 
@@ -19889,6 +19951,12 @@ import { useState } from \\"react\\";
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotJsxCode(props) {
+  props = {
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+    ...props,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -19925,12 +19993,6 @@ function ContentSlotJsxCode(props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -21452,6 +21514,15 @@ exports[`Mitosis, format: react > jsx > Typescript Test > defaultProps 1`] = `
 import * as React from \\"react\\";
 
 function Button(props) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+    ...props,
+  };
   return (
     <div>
       {props.link ? (
@@ -21476,15 +21547,6 @@ function Button(props) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -21494,6 +21556,13 @@ exports[`Mitosis, format: react > jsx > Typescript Test > defaultPropsOutsideCom
 import * as React from \\"react\\";
 
 function Button(props) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+    ...props,
+  };
   return (
     <div>
       {props.link ? (
@@ -21517,13 +21586,6 @@ function Button(props) {
     </div>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -22494,7 +22556,6 @@ function RenderContent(props) {
   useEffect(() => {
     sendComponentsToVisualEditor(props.customComponents);
   }, []);
-
   useEffect(() => {
     dispatchNewContentToVisualEditor(props.content);
   }, [props.content]);
@@ -22932,6 +22993,18 @@ export default TypeDependency;
 "
 `;
 
+exports[`Mitosis, format: react > jsx > Typescript Test > typeExternalProps 1`] = `
+"import * as React from \\"react\\";
+import { FooProps } from \\"./foo-props\\";
+
+function TypeExternalProps(props) {
+  return <div>Hello {props.name}! </div>;
+}
+
+export default TypeExternalProps;
+"
+`;
+
 exports[`Mitosis, format: react > jsx > Typescript Test > typeExternalStore 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -23227,21 +23300,19 @@ function MyComponent(props) {
   );
 }
 
-MyComponent.defaultProps = {};
-
 export default MyComponent;
 "
 `;
 
 exports[`Mitosis, format: react > svelte > Javascript Test > context 1`] = `
-"'>' expected. (35:13)
-  33 | return (
-  34 |
-> 35 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (32:13)
+  30 | return (
+  31 |
+> 32 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  36 |
-  37 |
-  38 |"
+  33 |
+  34 |
+  35 |"
 `;
 
 exports[`Mitosis, format: react > svelte > Javascript Test > each 1`] = `
@@ -23362,11 +23433,9 @@ function MyComponent(props) {
   useEffect(() => {
     console.log(\\"onMount\\");
   }, []);
-
   useEffect(() => {
     console.log(\\"onAfterUpdate\\");
   });
-
   useEffect(() => {
     return () => {
       console.log(\\"onDestroy\\");
@@ -23630,21 +23699,19 @@ function MyComponent(props) {
   );
 }
 
-MyComponent.defaultProps = {};
-
 export default MyComponent;
 "
 `;
 
 exports[`Mitosis, format: react > svelte > Typescript Test > context 1`] = `
-"'>' expected. (35:13)
-  33 | return (
-  34 |
-> 35 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+"'>' expected. (32:13)
+  30 | return (
+  31 |
+> 32 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  36 |
-  37 |
-  38 |"
+  33 |
+  34 |
+  35 |"
 `;
 
 exports[`Mitosis, format: react > svelte > Typescript Test > each 1`] = `
@@ -23765,11 +23832,9 @@ function MyComponent(props) {
   useEffect(() => {
     console.log(\\"onMount\\");
   }, []);
-
   useEffect(() => {
     console.log(\\"onAfterUpdate\\");
   });
-
   useEffect(() => {
     return () => {
       console.log(\\"onDestroy\\");

@@ -145,3 +145,21 @@ jobs:
 
       - name: Run E2E tests
         run: yarn ci:e2e
+
+      - name: 🆙 Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: ./e2e/e2e-app/test-results
+          retention-days: 14
+
+      - name: 🆙 Upload e2e builds
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-builds
+          path: |
+            ./e2e/**/dist
+            !**/node_modules/**
+          retention-days: 14
