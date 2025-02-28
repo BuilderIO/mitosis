@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.0.17
+
+### Patch Changes
+
+- 0f2a9ee: Fix issue with plugin marking 'useDefaultProps' as an error
+
 ## 0.0.16
 
 ### Patch Changes
