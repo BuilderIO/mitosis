@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.7
+
+### Patch Changes
+
+- 781ad7b: [react]: Changed `defaultProps` generation for react, because defaultProps for function components is deprecated
+
 ## 0.6.6
 
 ### Patch Changes
