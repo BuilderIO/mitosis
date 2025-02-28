@@ -4612,6 +4612,29 @@ export default class TypeDependency extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > typeExternalProps 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"type-external-props\\")
+export default class TypeExternalProps extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() name: any;
+
+  render() {
+    return html\`
+
+          <div>Hello \${this.name} !</div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > typeExternalStore 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -9892,6 +9915,31 @@ export default class TypeDependency extends LitElement {
     return html\`
 
           <div>\${this.foo}</div>
+
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > typeExternalProps 1`] = `
+"import { FooProps } from \\"./foo-props\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"type-external-props\\")
+export default class TypeExternalProps extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() name: any;
+
+  render() {
+    return html\`
+
+          <div>Hello \${this.name} !</div>
 
         \`;
   }

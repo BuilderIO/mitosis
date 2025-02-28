@@ -7,6 +7,18 @@ const test = playwrightTest.extend<{ packageName: PackageName | 'DEFAULT' }>({
 });
 
 test.describe('e2e', () => {
+  test('default props', async ({ page, packageName }) => {
+    // TODO: Some targets don't support `defaultProps` :(
+    if (['e2e-qwik', 'e2e-solid'].includes(packageName)) {
+      test.skip();
+    }
+
+    await page.goto('/default-props/');
+    const text = await page.getByTestId('default-props').textContent();
+
+    expect(text?.includes('abc')).toBeTruthy();
+    expect(text?.includes('xyz')).toBeTruthy();
+  });
   test('todo list add', async ({ page }) => {
     await page.goto('/one-component/');
 

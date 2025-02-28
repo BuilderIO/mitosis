@@ -14290,6 +14290,64 @@ export default class TypeDependency {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > typeExternalProps 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"type-external-props\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeExternalProps {
+  @Input() name;
+}
+
+@NgModule({
+  declarations: [TypeExternalProps],
+  imports: [CommonModule],
+  exports: [TypeExternalProps],
+})
+export class TypeExternalPropsModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > typeExternalProps 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"type-external-props\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class TypeExternalProps {
+  @Input() name;
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > typeExternalStore 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -30254,6 +30312,68 @@ import type { Foo as Foo2 } from \\"./type-export.js\\";
 })
 export default class TypeDependency {
   @Input() foo!: TypeDependencyProps[\\"foo\\"];
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > typeExternalProps 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+import { FooProps } from \\"./foo-props\\";
+
+@Component({
+  selector: \\"type-external-props\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class TypeExternalProps {
+  @Input() name!: FooProps[\\"name\\"];
+}
+
+@NgModule({
+  declarations: [TypeExternalProps],
+  imports: [CommonModule],
+  exports: [TypeExternalProps],
+})
+export class TypeExternalPropsModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > typeExternalProps 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+import { CommonModule } from \\"@angular/common\\";
+
+import { FooProps } from \\"./foo-props\\";
+
+@Component({
+  selector: \\"type-external-props\\",
+  template: \`
+    <div>Hello {{name}} !</div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class TypeExternalProps {
+  @Input() name!: FooProps[\\"name\\"];
 }
 "
 `;

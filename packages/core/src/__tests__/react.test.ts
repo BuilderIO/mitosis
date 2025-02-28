@@ -38,3 +38,15 @@ describe('React - stateType: useState', () => {
     expect(output).toMatchSnapshot();
   });
 });
+
+/*describe('React - test', () => {
+  runTestsForTarget({
+    options: {
+      stateType: 'useState',
+    },
+    target: 'react',
+    generator: componentToReact,
+    only: ['defaultProps'],
+    logOutput: true,
+  });
+});*/

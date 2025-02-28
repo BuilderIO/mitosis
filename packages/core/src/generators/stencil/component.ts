@@ -2,6 +2,7 @@ import { stringifySingleScopeOnMount } from '@/generators/helpers/on-mount';
 import { blockToStencil } from '@/generators/stencil/blocks';
 import {
   getDepsAsArray,
+  getExportsAndLocal,
   getImports,
   getPropsAsCode,
   getStencilCoreImportsAsString,
@@ -65,7 +66,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
     const childComponents: string[] = getChildComponents(json);
     const processBindingOptions: ProcessBindingOptions = { events };
 
-    options.plugins = getCodeProcessorPlugins(options, processBindingOptions);
+    options.plugins = getCodeProcessorPlugins(json, options, processBindingOptions);
 
     if (options.plugins) {
       json = runPostJsonPlugins({ json, plugins: options.plugins });
@@ -137,8 +138,6 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
     ${getImports(json, options, childComponents)}
     
     import { ${coreImports} } from '@stencil/core';
-        
-    ${json.types ? json.types.join('\n') : ''}
     
     @Component({
       tag: '${tagName}',
@@ -152,10 +151,10 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
     })
     export class ${json.name} {
         ${refs}
-        ${getPropsAsCode(props, defaultProps, json.propsTypeRef)}
+        ${getPropsAsCode(props, json, defaultProps)}
         ${dataString}
         ${methodsString}
-        
+        ${getExportsAndLocal(json)}
         ${withAttributePassing ? getAttributePassingString(true) : ''}
         
         ${dependencyOnUpdateHooks

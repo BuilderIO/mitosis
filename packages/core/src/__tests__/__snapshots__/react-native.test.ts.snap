@@ -824,6 +824,12 @@ import {
 import { useState } from \\"react\\";
 
 function ContentSlotJsxCode(props) {
+  props = {
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+    ...props,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -859,12 +865,6 @@ function ContentSlotJsxCode(props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -2917,6 +2917,15 @@ import {
 } from \\"react-native\\";
 
 function Button(props) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+    ...props,
+  };
   return (
     <View>
       {props.link ? (
@@ -2940,15 +2949,6 @@ function Button(props) {
   );
 }
 
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
-
 export default Button;
 "
 `;
@@ -2970,6 +2970,13 @@ import {
 } from \\"react-native\\";
 
 function Button(props) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+    ...props,
+  };
   return (
     <View>
       {props.link ? (
@@ -2992,13 +2999,6 @@ function Button(props) {
     </View>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -4427,7 +4427,6 @@ function RenderContent(props) {
   useEffect(() => {
     sendComponentsToVisualEditor(props.customComponents);
   }, []);
-
   useEffect(() => {
     dispatchNewContentToVisualEditor(props.content);
   }, [props.content]);
@@ -5293,6 +5292,36 @@ function TypeDependency(props) {
 }
 
 export default TypeDependency;
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > typeExternalProps 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+
+function TypeExternalProps(props) {
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{props.name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeExternalProps;
 "
 `;
 
@@ -6402,6 +6431,12 @@ type Props = {
 import type { JSX } from \\"../../../../jsx-runtime\\";
 
 function ContentSlotJsxCode(props: Props) {
+  props = {
+    content: \\"\\",
+    slotReference: undefined,
+    slotContent: undefined,
+    ...props,
+  };
   const [name, setName] = useState(() => \\"king\\");
 
   const [showContent, setShowContent] = useState(() => false);
@@ -6437,12 +6472,6 @@ function ContentSlotJsxCode(props: Props) {
     </>
   );
 }
-
-ContentSlotJsxCode.defaultProps = {
-  content: \\"\\",
-  slotReference: undefined,
-  slotContent: undefined,
-};
 
 export default ContentSlotJsxCode;
 "
@@ -8729,6 +8758,15 @@ export interface ButtonProps {
 }
 
 function Button(props: ButtonProps) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {
+      console.log(\\"hi\\");
+    },
+    ...props,
+  };
   return (
     <View>
       {props.link ? (
@@ -8751,15 +8789,6 @@ function Button(props: ButtonProps) {
     </View>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {
-    console.log(\\"hi\\");
-  },
-};
 
 export default Button;
 "
@@ -8790,6 +8819,13 @@ export interface ButtonProps {
 }
 
 function Button(props: ButtonProps) {
+  props = {
+    text: \\"default text\\",
+    link: \\"https://builder.io/\\",
+    openLinkInNewTab: false,
+    onClick: () => {},
+    ...props,
+  };
   return (
     <View>
       {props.link ? (
@@ -8812,13 +8848,6 @@ function Button(props: ButtonProps) {
     </View>
   );
 }
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-  onClick: () => {},
-};
 
 export default Button;
 "
@@ -10344,7 +10373,6 @@ function RenderContent(props: Props) {
   useEffect(() => {
     sendComponentsToVisualEditor(props.customComponents);
   }, []);
-
   useEffect(() => {
     dispatchNewContentToVisualEditor(props.content);
   }, [props.content]);
@@ -11258,6 +11286,37 @@ export default TypeDependency;
 "
 `;
 
+exports[`React Native > jsx > Typescript Test > typeExternalProps 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { FooProps } from \\"./foo-props\\";
+
+function TypeExternalProps(props: FooProps) {
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{props.name}</Text>
+      <Text>! </Text>
+    </View>
+  );
+}
+
+export default TypeExternalProps;
+"
+`;
+
 exports[`React Native > jsx > Typescript Test > typeExternalStore 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -11721,21 +11780,19 @@ function MyComponent(props) {
   return <TextInput />;
 }
 
-MyComponent.defaultProps = {};
-
 export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Javascript Test > context 1`] = `
-"'>' expected. (36:13)
-  34 | return (
-  35 |
-> 36 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
+"'>' expected. (33:13)
+  31 | return (
+  32 |
+> 33 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
      |             ^
-  37 |
-  38 |
-  39 |"
+  34 |
+  35 |
+  36 |"
 `;
 
 exports[`React Native > svelte > Javascript Test > each 1`] = `
@@ -11940,11 +11997,9 @@ function MyComponent(props) {
   useEffect(() => {
     console.log(\\"onMount\\");
   }, []);
-
   useEffect(() => {
     console.log(\\"onAfterUpdate\\");
   });
-
   useEffect(() => {
     return () => {
       console.log(\\"onDestroy\\");
@@ -12316,21 +12371,19 @@ function MyComponent(props: any) {
   return <TextInput />;
 }
 
-MyComponent.defaultProps = {};
-
 export default MyComponent;
 "
 `;
 
 exports[`React Native > svelte > Typescript Test > context 1`] = `
-"'>' expected. (36:13)
-  34 | return (
-  35 |
-> 36 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
+"'>' expected. (33:13)
+  31 | return (
+  32 |
+> 33 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
      |             ^
-  37 |
-  38 |
-  39 |"
+  34 |
+  35 |
+  36 |"
 `;
 
 exports[`React Native > svelte > Typescript Test > each 1`] = `
@@ -12535,11 +12588,9 @@ function MyComponent(props: any) {
   useEffect(() => {
     console.log(\\"onMount\\");
   }, []);
-
   useEffect(() => {
     console.log(\\"onAfterUpdate\\");
   });
-
   useEffect(() => {
     return () => {
       console.log(\\"onDestroy\\");

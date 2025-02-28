@@ -8,13 +8,12 @@ describe('Stencil', () => {
     options: {},
   });
 });
-/*
-describe('Stencil local', () => {
+/*describe('Stencil local', () => {
   runTestsForTarget({
     target: 'stencil',
     generator: componentToStencil,
     options: {},
     logOutput: true,
-    only: ['subComponent'],
+    only: ['defaultValsWithTypes'],
   });
 });*/
