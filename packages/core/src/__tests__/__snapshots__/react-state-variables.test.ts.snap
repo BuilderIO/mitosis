@@ -1,171 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`React - only > jsx > Javascript Test > AdvancedRef 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useRef, useEffect } from \\"react\\";
-
-function MyBasicRefComponent(props) {
-  const inputRef = useRef(null);
-  const inputNoArgRef = useRef(null);
-  const name = \\"PatrickJS\\";
-  const onBlur = function onBlur() {
-    // Maintain focus
-    inputRef.current.focus();
-  };
-  const lowerCaseName = function lowerCaseName() {
-    return name.toLowerCase();
-  };
-
-  useEffect(() => {
-    console.log(\\"Received an update\\");
-  }, [inputRef.current, inputNoArgRef.current]);
-
-  return (
-    <>
-      <div>
-        {props.showInput ? (
-          <>
-            <input
-              className=\\"input\\"
-              ref={inputRef}
-              value={name}
-              onBlur={(event) => onBlur()}
-              onChange={(event) => (name = event.target.value)}
-            />
-            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
-              Choose a car:
-            </label>
-            <select name=\\"cars\\" id=\\"cars\\">
-              <option value=\\"supra\\">GR Supra</option>
-              <option value=\\"86\\">GR 86</option>
-            </select>
-          </>
-        ) : null}
-        Hello
-        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
-        Component!
-      </div>
-      <style jsx>{\`
-        .input {
-          color: red;
-        }
-      \`}</style>
-    </>
-  );
-}
-
-export default MyBasicRefComponent;
-"
-`;
-
-exports[`React - only > jsx > Javascript Test > InputParent 1`] = `
-"import * as React from \\"react\\";
-import FormInputComponent from \\"./input.raw\\";
-
-function Stepper(props) {
-  const handleChange = function handleChange(value) {
-    console.log(value);
-  };
-
-  return (
-    <FormInputComponent
-      name=\\"kingzez\\"
-      type=\\"text\\"
-      onChange={(value) => handleChange(value)}
-    />
-  );
-}
-
-export default Stepper;
-"
-`;
-
-exports[`React - only > jsx > Typescript Test > AdvancedRef 1`] = `
-"\\"use client\\";
-import * as React from \\"react\\";
-import { useRef, useEffect } from \\"react\\";
-
-export interface Props {
-  showInput: boolean;
-}
-
-function MyBasicRefComponent(props: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef<HTMLLabelElement>(null);
-  const name = \\"PatrickJS\\";
-  const onBlur = function onBlur() {
-    // Maintain focus
-    inputRef.current.focus();
-  };
-  const lowerCaseName = function lowerCaseName() {
-    return name.toLowerCase();
-  };
-
-  useEffect(() => {
-    console.log(\\"Received an update\\");
-  }, [inputRef.current, inputNoArgRef.current]);
-
-  return (
-    <>
-      <div>
-        {props.showInput ? (
-          <>
-            <input
-              className=\\"input\\"
-              ref={inputRef}
-              value={name}
-              onBlur={(event) => onBlur()}
-              onChange={(event) => (name = event.target.value)}
-            />
-            <label htmlFor=\\"cars\\" ref={inputNoArgRef}>
-              Choose a car:
-            </label>
-            <select name=\\"cars\\" id=\\"cars\\">
-              <option value=\\"supra\\">GR Supra</option>
-              <option value=\\"86\\">GR 86</option>
-            </select>
-          </>
-        ) : null}
-        Hello
-        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
-        Component!
-      </div>
-      <style jsx>{\`
-        .input {
-          color: red;
-        }
-      \`}</style>
-    </>
-  );
-}
-
-export default MyBasicRefComponent;
-"
-`;
-
-exports[`React - only > jsx > Typescript Test > InputParent 1`] = `
-"import * as React from \\"react\\";
-import FormInputComponent from \\"./input.raw\\";
-
-function Stepper(props: any) {
-  const handleChange = function handleChange(value: string) {
-    console.log(value);
-  };
-
-  return (
-    <FormInputComponent
-      name=\\"kingzez\\"
-      type=\\"text\\"
-      onChange={(value) => handleChange(value)}
-    />
-  );
-}
-
-export default Stepper;
-"
-`;
-
 exports[`React - stateType: variables > jsx > Javascript Test > AdvancedRef 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -175,13 +9,13 @@ function MyBasicRefComponent(props) {
   const inputRef = useRef(null);
   const inputNoArgRef = useRef(null);
   const name = \\"PatrickJS\\";
-  const onBlur = (onBlur = function onBlur() {
+  const onBlur = function onBlur() {
     // Maintain focus
     inputRef.current.focus();
-  });
-  const lowerCaseName = (lowerCaseName = function lowerCaseName() {
+  };
+  const lowerCaseName = function lowerCaseName() {
     return name.toLowerCase();
-  });
+  };
 
   useEffect(() => {
     console.log(\\"Received an update\\");
@@ -271,10 +105,10 @@ import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
   const name = \\"PatrickJS\\";
-  const onChange = (onChange = function onChange() {
+  const onChange = function onChange() {
     const change = myService.method(\\"change\\");
     console.log(change);
-  });
+  };
 
   const myService = useContext(MyService);
 
@@ -480,13 +314,13 @@ function MyBasicRefComponent(props) {
   const inputRef = useRef(null);
   const inputNoArgRef = useRef(null);
   const name = \\"PatrickJS\\";
-  const onBlur = (onBlur = function onBlur() {
+  const onBlur = function onBlur() {
     // Maintain focus
     inputRef.current?.focus();
-  });
-  const lowerCaseName = (lowerCaseName = function lowerCaseName() {
+  };
+  const lowerCaseName = function lowerCaseName() {
     return name.toLowerCase();
-  });
+  };
 
   return (
     <>
@@ -533,11 +367,11 @@ import { useRef } from \\"react\\";
 
 function MyBasicRefAssignmentComponent(props) {
   const holdValueRef = useRef(\\"Patrick\\");
-  const handlerClick = (handlerClick = function handlerClick(event) {
+  const handlerClick = function handlerClick(event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef.current);
     holdValueRef.current = holdValueRef.current + \\"JS\\";
-  });
+  };
 
   return (
     <div>
@@ -916,11 +750,11 @@ function Image(props) {
     // TODO: Add more checks here, like testing for real web browsers
     return !!props.lazy && isBrowser();
   };
-  const isBrowser = (isBrowser = function isBrowser() {
+  const isBrowser = function isBrowser() {
     return (
       typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
     );
-  });
+  };
   const load = false;
 
   useEffect(() => {
@@ -2691,13 +2525,13 @@ import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
 function OnUpdate(props) {
-  const foo = (foo = function foo(params) {});
-  const bar = (bar = function bar() {});
-  const zoo = (zoo = function zoo() {
+  const foo = function foo(params) {};
+  const bar = function bar() {};
+  const zoo = function zoo() {
     const params = {
       cb: bar,
     };
-  });
+  };
 
   useEffect(() => {
     foo({
@@ -3387,13 +3221,13 @@ function MyBasicRefComponent(props: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const inputNoArgRef = useRef<HTMLLabelElement>(null);
   const name = \\"PatrickJS\\";
-  const onBlur = (onBlur = function onBlur() {
+  const onBlur = function onBlur() {
     // Maintain focus
     inputRef.current.focus();
-  });
-  const lowerCaseName = (lowerCaseName = function lowerCaseName() {
+  };
+  const lowerCaseName = function lowerCaseName() {
     return name.toLowerCase();
-  });
+  };
 
   useEffect(() => {
     console.log(\\"Received an update\\");
@@ -3487,10 +3321,10 @@ import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props: any) {
   const name = \\"PatrickJS\\";
-  const onChange = (onChange = function onChange() {
+  const onChange = function onChange() {
     const change = myService.method(\\"change\\");
     console.log(change);
-  });
+  };
 
   const myService = useContext(MyService);
 
@@ -3710,13 +3544,13 @@ function MyBasicRefComponent(props: Props) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const inputNoArgRef = useRef<HTMLLabelElement | null>(null);
   const name = \\"PatrickJS\\";
-  const onBlur = (onBlur = function onBlur() {
+  const onBlur = function onBlur() {
     // Maintain focus
     inputRef.current?.focus();
-  });
-  const lowerCaseName = (lowerCaseName = function lowerCaseName() {
+  };
+  const lowerCaseName = function lowerCaseName() {
     return name.toLowerCase();
-  });
+  };
 
   return (
     <>
@@ -3767,11 +3601,11 @@ export interface Props {
 
 function MyBasicRefAssignmentComponent(props: Props) {
   const holdValueRef = useRef(\\"Patrick\\");
-  const handlerClick = (handlerClick = function handlerClick(event: Event) {
+  const handlerClick = function handlerClick(event: Event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef.current);
     holdValueRef.current = holdValueRef.current + \\"JS\\";
-  });
+  };
 
   return (
     <div>
@@ -4216,11 +4050,11 @@ function Image(props: ImageProps) {
     // TODO: Add more checks here, like testing for real web browsers
     return !!props.lazy && isBrowser();
   };
-  const isBrowser = (isBrowser = function isBrowser() {
+  const isBrowser = function isBrowser() {
     return (
       typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
     );
-  });
+  };
   const load = false;
 
   useEffect(() => {
@@ -6247,13 +6081,13 @@ import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
 function OnUpdate(props: any) {
-  const foo = (foo = function foo(params) {});
-  const bar = (bar = function bar() {});
-  const zoo = (zoo = function zoo() {
+  const foo = function foo(params) {};
+  const bar = function bar() {};
+  const zoo = function zoo() {
     const params = {
       cb: bar,
     };
-  });
+  };
 
   useEffect(() => {
     foo({
@@ -7128,9 +6962,9 @@ exports[`React - stateType: variables > svelte > Javascript Test > eventHandlers
 import * as React from \\"react\\";
 
 function MyComponent(props) {
-  const log = (log = function log(msg = \\"hello\\") {
+  const log = function log(msg = \\"hello\\") {
     console.log(msg);
-  });
+  };
 
   return (
     <div>
@@ -7165,9 +6999,9 @@ import * as React from \\"react\\";
 
 function MyComponent(props) {
   const show = true;
-  const toggle = (toggle = function toggle() {
+  const toggle = function toggle() {
     show = !show;
-  });
+  };
 
   return (
     <>
@@ -7263,9 +7097,9 @@ function MyComponent(props) {
   const a = 2;
   const b = 5;
   const result = null;
-  const calculateResult = (calculateResult = function calculateResult(a_, b_) {
+  const calculateResult = function calculateResult(a_, b_) {
     result = a_ * b_;
-  });
+  };
 
   useEffect(() => {
     calculateResult(a, b);
@@ -7509,9 +7343,9 @@ exports[`React - stateType: variables > svelte > Typescript Test > eventHandlers
 import * as React from \\"react\\";
 
 function MyComponent(props: any) {
-  const log = (log = function log(msg = \\"hello\\") {
+  const log = function log(msg = \\"hello\\") {
     console.log(msg);
-  });
+  };
 
   return (
     <div>
@@ -7546,9 +7380,9 @@ import * as React from \\"react\\";
 
 function MyComponent(props: any) {
   const show = true;
-  const toggle = (toggle = function toggle() {
+  const toggle = function toggle() {
     show = !show;
-  });
+  };
 
   return (
     <>
@@ -7644,9 +7478,9 @@ function MyComponent(props: any) {
   const a = 2;
   const b = 5;
   const result = null;
-  const calculateResult = (calculateResult = function calculateResult(a_, b_) {
+  const calculateResult = function calculateResult(a_, b_) {
     result = a_ * b_;
-  });
+  };
 
   useEffect(() => {
     calculateResult(a, b);
