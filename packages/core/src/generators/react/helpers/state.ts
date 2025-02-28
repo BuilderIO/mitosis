@@ -139,12 +139,12 @@ export const getReactVariantStateString = ({
           keyPrefix: 'const',
           valueMapper: (code, type, _, key) => {
             if (key) {
-              const rscPrefix = options.rsc ? `${key} = ` : '';
+              const constPrefix = !code.startsWith('function') ? `${key} = ` : '';
 
               if (type === 'getter')
-                return `${rscPrefix}${getFunctionString(code.replace('get ', ''))}`;
+                return `${constPrefix}${getFunctionString(code.replace('get ', ''))}`;
               if (type === 'function')
-                return code.startsWith('async') ? code : `${rscPrefix}${getFunctionString(code)}`;
+                return code.startsWith('async') ? code : `${constPrefix}${getFunctionString(code)}`;
             }
             return code;
           },
