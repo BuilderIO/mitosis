@@ -89,18 +89,27 @@ export const needsWrap = (children: MitosisNode[]): boolean => {
  * @param events
  * @param props
  * @param dataString
+ * @param watch
  */
-export const getStencilCoreImportsAsString = (
-  wrap: boolean,
-  events: string[],
-  props: string[],
-  dataString: string,
-): string => {
+export const getStencilCoreImportsAsString = ({
+  wrap,
+  events,
+  props,
+  dataString,
+  watch,
+}: {
+  wrap: boolean;
+  events: string[];
+  props: string[];
+  dataString: string;
+  watch: boolean;
+}): string => {
   const stencilCoreImports: Record<string, boolean> = {
     Component: true,
     h: true,
     Fragment: true,
     Host: wrap,
+    Watch: watch,
     Event: events.length > 0,
     Prop: props.length > 0,
     State: dataString.length > 0,
@@ -129,4 +138,17 @@ export const getImports = (
       return undefined;
     },
   });
+};
+
+/**
+ * Converts the deps string into an array of strings
+ * @param deps The hook dependencies as string e.g.: "[this.a,this.b]"
+ */
+export const getDepsAsArray = (deps: string): string[] => {
+  return deps
+    .replace('[', '')
+    .replace(']', '')
+    .replaceAll('this.', '')
+    .split(',')
+    .map((dep) => dep.trim());
 };

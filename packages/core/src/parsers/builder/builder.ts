@@ -1135,7 +1135,14 @@ const builderContentPartToMitosisComponent = (
 
       try {
         if (elem.component?.name === 'Text') {
-          elem.component.options.text = elem.component.options.text.replace(voidElemRegex, '$1 />');
+          const text = elem.component.options.text;
+          elem.component.options.text = text.replace(voidElemRegex, '$1 />');
+          // Remove broken emojis
+          const hasUnpairedSurrogate =
+            /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/g;
+          if (hasUnpairedSurrogate.test(text)) {
+            elem.component.options.text = text.replace(hasUnpairedSurrogate, '');
+          }
         }
       } catch (_error) {
         // pass
@@ -1243,19 +1250,13 @@ function mapBuilderBindingsToMitosisBindingWithCode(
 
 type Styles = Record<string, any>;
 
-function removeFalsey(obj: Styles) {
-  return omitBy(
-    obj,
-    (value) => !value || value === '0' || value === '0px' || value === 'none' || value === '0%',
-  );
-}
 function combineStyles(parent: Styles, child: Styles) {
   const marginStyles = ['marginTop', 'marginBottom', 'marginLeft', 'marginRight'];
   const paddingStyles = ['paddingTop', 'paddingBottom', 'paddingLeft', 'paddingRight'];
   const distanceStylesToCombine = [...paddingStyles, ...marginStyles];
   const merged: Styles = {
-    ...omit(removeFalsey(child), distanceStylesToCombine),
-    ...removeFalsey(parent),
+    ...omit(child, distanceStylesToCombine),
+    ...parent,
   };
   for (const key of distanceStylesToCombine) {
     // Funky things happen if different alignment

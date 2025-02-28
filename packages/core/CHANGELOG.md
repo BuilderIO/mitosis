@@ -1,5 +1,29 @@
 # Change Log
 
+## 0.6.6
+
+### Patch Changes
+
+- 997f673: [stencil] add dependency handling for onUpdate hook
+
+## 0.6.5
+
+### Patch Changes
+
+- 3a6216e: [Builder]: Remove broken emoji from text
+
+## 0.6.4
+
+### Patch Changes
+
+- 8e9e3c3: [All] Normalize name of mitosis node before assigning it to className
+
+## 0.6.3
+
+### Patch Changes
+
+- 05257f2: [Builder]: parser does not strip falsey style values
+
 ## 0.6.2
 
 ### Patch Changes

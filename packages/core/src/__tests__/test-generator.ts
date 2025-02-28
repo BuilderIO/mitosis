@@ -40,6 +40,7 @@ const basicRefAttributePassing = getRawFile('./data/ref/basic-ref-attribute-pass
 const basicRefAttributePassingCustomRef = getRawFile(
   './data/ref/basic-ref-attribute-passing-custom-ref.raw.tsx',
 );
+const normalizeLayerNames = getRawFile('./data/normalize-layer-names.raw.tsx');
 const basicForwardRef = getRawFile('./data/ref/basic-forwardRef.raw.tsx');
 const basicForwardRefMetadata = getRawFile('./data/ref/basic-forwardRef-metadata.raw.tsx');
 const basicRefPrevious = getRawFile('./data/ref/basic-ref-usePrevious.raw.tsx');
@@ -251,6 +252,7 @@ const BASIC_TESTS: Tests = {
   'use-style': useStyle,
   'use-style-and-css': useStyleAndCss,
   layerName,
+  normalizeLayerNames,
   styleClassAndCss,
   stylePropClassAndCss,
   'use-style-outside-component': useStyleOutsideComponent,
