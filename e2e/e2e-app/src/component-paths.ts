@@ -7,4 +7,5 @@ export const COMPONENT_PATHS = [
   '/special-tags/',
   '/signals/',
   '/disabled-input/',
+  '/component-on-update/',
 ];

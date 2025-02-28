@@ -1,5 +1,6 @@
 import { For, onMount, Show, useStore } from '@builder.io/mitosis';
 import { COMPONENT_PATHS } from './component-paths';
+import ComponentOnUpdate from './components/component-on-update.lite';
 import ComponentWithTypes from './components/component-with-types.lite';
 import DefaultProps from './components/default-props/use-default-props.lite';
 import DisabledInput from './components/disabled-input/disabled-input.lite';
@@ -65,6 +66,10 @@ export default function Homepage(props: { pathname?: string }) {
 
       <Show when={state.pathToUse.startsWith('/disabled-input')}>
         <DisabledInput />
+      </Show>
+
+      <Show when={state.pathToUse.startsWith('/component-on-update')}>
+        <ComponentOnUpdate />
       </Show>
     </div>
   );

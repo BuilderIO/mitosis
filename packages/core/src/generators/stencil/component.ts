@@ -1,6 +1,7 @@
 import { stringifySingleScopeOnMount } from '@/generators/helpers/on-mount';
 import { blockToStencil } from '@/generators/stencil/blocks';
 import {
+  getDepsAsArray,
   getExportsAndLocal,
   getImports,
   getPropsAsCode,
@@ -35,7 +36,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '@/modules/plugins';
-import { MitosisState } from '@/types/mitosis-component';
+import { BaseHook, MitosisState } from '@/types/mitosis-component';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { format } from 'prettier/standalone';
 
@@ -117,7 +118,21 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
       tagName = json.meta.useMetadata?.tagName;
     }
 
-    const coreImports = getStencilCoreImportsAsString(wrap, events, props, dataString);
+    const noDependencyOnUpdateHooks = json.hooks.onUpdate?.filter((hook) => !hook.deps) ?? [];
+    /*
+     * We want to create a function for every onUpdate hook that has dependencies.
+     * We call the function once in "componentDidLoad"
+     * And we create "Watch" decorators for every dependency
+     */
+    const dependencyOnUpdateHooks = json.hooks.onUpdate?.filter((hook) => hook.deps) ?? [];
+
+    const coreImports = getStencilCoreImportsAsString({
+      wrap,
+      events,
+      props,
+      dataString,
+      watch: Boolean(dependencyOnUpdateHooks?.length),
+    });
 
     let str = dedent`
     ${getImports(json, options, childComponents)}
@@ -141,6 +156,23 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
         ${methodsString}
         ${getExportsAndLocal(json)}
         ${withAttributePassing ? getAttributePassingString(true) : ''}
+        
+        ${dependencyOnUpdateHooks
+          .map((hook: BaseHook, index: number) => {
+            return `
+          watch${index}Fn() { 
+            ${hook.code} 
+          }
+          
+          ${getDepsAsArray(hook.deps!)
+            .map((dep) => `@Watch("${dep}")`)
+            .join('\n')}
+            watch${index}(){
+              this.watch${index}Fn();
+            }            
+          `;
+          })
+          .join('\n')}
 
         ${`componentDidLoad() { 
             ${
@@ -149,6 +181,9 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
                 : ''
             }
             ${json.hooks.onMount.length ? stringifySingleScopeOnMount(json) : ''} 
+            ${dependencyOnUpdateHooks
+              .map((_, index: number) => `this.watch${index}Fn();`)
+              .join('\n')}
             }`}
         ${
           !json.hooks.onUnMount?.code
@@ -156,9 +191,11 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
             : `disconnectedCallback() { ${json.hooks.onUnMount.code} }`
         }
         ${
-          !json.hooks.onUpdate?.length
-            ? ''
-            : `componentDidUpdate() { ${json.hooks.onUpdate.map((hook) => hook.code).join('\n')} }`
+          noDependencyOnUpdateHooks.length
+            ? `componentDidUpdate() { ${noDependencyOnUpdateHooks
+                .map((hook) => hook.code)
+                .join('\n')} }`
+            : ''
         }
 
       render() {

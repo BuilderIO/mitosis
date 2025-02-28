@@ -1135,7 +1135,14 @@ const builderContentPartToMitosisComponent = (
 
       try {
         if (elem.component?.name === 'Text') {
-          elem.component.options.text = elem.component.options.text.replace(voidElemRegex, '$1 />');
+          const text = elem.component.options.text;
+          elem.component.options.text = text.replace(voidElemRegex, '$1 />');
+          // Remove broken emojis
+          const hasUnpairedSurrogate =
+            /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/g;
+          if (hasUnpairedSurrogate.test(text)) {
+            elem.component.options.text = text.replace(hasUnpairedSurrogate, '');
+          }
         }
       } catch (_error) {
         // pass
