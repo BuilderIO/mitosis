@@ -1,5 +1,12 @@
 # @builder.io/mitosis-cli
 
+## 0.6.8
+
+### Patch Changes
+
+- Updated dependencies [db70010]
+  - @builder.io/mitosis@0.6.8
+
 ## 0.6.7
 
 ### Patch Changes

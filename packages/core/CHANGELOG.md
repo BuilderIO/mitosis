@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.8
+
+### Patch Changes
+
+- db70010: Builder: generator does not generate duplicate option mappings
+
 ## 0.6.7
 
 ### Patch Changes
