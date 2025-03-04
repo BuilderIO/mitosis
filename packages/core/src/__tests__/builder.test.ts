@@ -1330,6 +1330,48 @@ describe('Builder', () => {
       }
     `);
   });
+
+  test('map each component option to either component.options or bindings but not both', () => {
+    const jsx = `export default function MyComponent(props) {
+      return (
+        <Image aspectRatio={1} src={state.src} />
+      );
+    }`;
+
+    const mitosis = parseJsx(jsx);
+
+    const json = componentToBuilder()({ component: mitosis });
+    expect(json).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "blocks": [
+            {
+              "@type": "@builder.io/sdk:Element",
+              "actions": {},
+              "bindings": {
+                "component.options.src": "state.src",
+              },
+              "children": [],
+              "code": {
+                "actions": {},
+                "bindings": {
+                  "component.options.src": "state.src",
+                },
+              },
+              "component": {
+                "name": "Image",
+                "options": {
+                  "aspectRatio": 1,
+                },
+              },
+            },
+          ],
+          "jsCode": "",
+          "tsCode": "",
+        },
+      }
+    `);
+  });
 });
 
 const bindingJson = {
