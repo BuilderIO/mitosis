@@ -651,14 +651,6 @@ export const blockToBuilder = (
     delete json.bindings.css;
   }
 
-  if (thisIsComponent) {
-    for (const key in json.bindings) {
-      if (!json.slots?.[key]) {
-        builderBindings[`component.options.${key}`] = json.bindings[key]!.code;
-      }
-    }
-  }
-
   const element = el(
     {
       tagName: thisIsComponent ? undefined : json.name,
