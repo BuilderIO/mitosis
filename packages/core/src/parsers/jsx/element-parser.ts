@@ -146,7 +146,7 @@ export const jsxElementToJson = (
     return createMitosisNode({
       name: 'Show',
       meta: {
-        ...(elseCase ? { else: elseCase } : undefined),
+        ...(checkIsDefined(elseCase) ? { else: elseCase } : undefined),
       },
       bindings: {
         when: createSingleBinding({ code: generate(node.test, { compact: true }).code }),
