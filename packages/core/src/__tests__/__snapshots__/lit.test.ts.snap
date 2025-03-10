@@ -2572,6 +2572,39 @@ export default class MyBasicComponent extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > classnameProps 1`] = `
+"/**
+          useMetadata:
+          {\\"stencil\\":{\\"propOptions\\":{\\"className\\":{\\"attribute\\":\\"classname\\",\\"mutable\\":false,\\"reflect\\":false}}}}
+          */
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() className: any;
+  @property() children: any;
+  @property() type: any;
+
+  render() {
+    return html\`
+
+          <div class=\\"{props.className}\\">
+          \${this.children} \${this.type} Hello! I can run in React, Vue, Solid, or
+          Liquid!
+        </div>
+
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > complexMeta 1`] = `
 "/**
           useMetadata:
@@ -7709,6 +7742,45 @@ export default class MyBasicComponent extends LitElement {
           <div  class={state.classState + ' div'}  .style=\${this.styleState} >
               Hello! I can run in React, Vue, Solid, or Liquid!
             </div>
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > classnameProps 1`] = `
+"/**
+          useMetadata:
+          {\\"stencil\\":{\\"propOptions\\":{\\"className\\":{\\"attribute\\":\\"classname\\",\\"mutable\\":false,\\"reflect\\":false}}}}
+          */
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+type Props = {
+  children: any;
+  className: string;
+  type: string;
+};
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() className: any;
+  @property() children: any;
+  @property() type: any;
+
+  render() {
+    return html\`
+
+          <div class=\\"{props.className}\\">
+          \${this.children} \${this.type} Hello! I can run in React, Vue, Solid, or
+          Liquid!
+        </div>
+
         \`;
   }
 }

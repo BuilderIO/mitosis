@@ -4427,6 +4427,73 @@ exports[`Html > jsx > Javascript Test > classState 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > classnameProps 1`] = `
+"/** useMetadata:
+{\\"stencil\\":{\\"propOptions\\":{\\"className\\":{\\"attribute\\":\\"classname\\",\\"mutable\\":false,\\"reflect\\":false}}}}
+*/
+
+<div data-el=\\"div-1\\">
+  <slot></slot>
+  <template data-el=\\"div-3\\"><!-- props.type --></template>
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        el.className = props.className;
+      });
+
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
+        renderTextNode(el, props.type);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > complexMeta 1`] = `
 "/** useMetadata:
 {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
@@ -12461,6 +12528,73 @@ exports[`Html > jsx > Typescript Test > classState 1`] = `
 
     // Update with initial state on first load
     update();
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > classnameProps 1`] = `
+"/** useMetadata:
+{\\"stencil\\":{\\"propOptions\\":{\\"className\\":{\\"attribute\\":\\"classname\\",\\"mutable\\":false,\\"reflect\\":false}}}}
+*/
+
+<div data-el=\\"div-1\\">
+  <slot></slot>
+  <template data-el=\\"div-3\\"><!-- props.type --></template>
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        el.className = props.className;
+      });
+
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
+        renderTextNode(el, props.type);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "

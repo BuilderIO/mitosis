@@ -37,9 +37,18 @@ export const HTML_ATTR_FROM_JSX = {
   htmlFor: 'for',
 };
 
+export const JSX_TO_HTML_ATTR = {
+  for: 'htmlFor',
+};
+
 export const transformAttributeName = (name: string) => {
   if (objectHasKey(HTML_ATTR_FROM_JSX, name)) return HTML_ATTR_FROM_JSX[name];
   return name;
+};
+
+export const transformAttributeToJSX = (key: string) => {
+  if (objectHasKey(JSX_TO_HTML_ATTR, key)) return JSX_TO_HTML_ATTR[key];
+  return key;
 };
 
 export const babelStripTypes = (code: string, typescript?: boolean): string =>
