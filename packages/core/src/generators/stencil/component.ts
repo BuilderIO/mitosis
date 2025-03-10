@@ -1,18 +1,18 @@
 import { stringifySingleScopeOnMount } from '@/generators/helpers/on-mount';
 import { blockToStencil } from '@/generators/stencil/blocks';
 import {
-getDepsAsArray,
-getExportsAndLocal,
-getImports,
-getPropsAsCode,
-getStencilCoreImportsAsString,
-getTagName,
-isEvent,
-needsWrap,
-ProcessBindingOptions,
+  getDepsAsArray,
+  getExportsAndLocal,
+  getImports,
+  getPropsAsCode,
+  getStencilCoreImportsAsString,
+  getTagName,
+  isEvent,
+  needsWrap,
+  ProcessBindingOptions,
 } from '@/generators/stencil/helpers';
 import { getCodeProcessorPlugins } from '@/generators/stencil/plugins/get-code-processor-plugins';
-import { StencilPropOption,ToStencilOptions } from '@/generators/stencil/types';
+import { StencilPropOption, ToStencilOptions } from '@/generators/stencil/types';
 import { dashCase } from '@/helpers/dash-case';
 import { dedent } from '@/helpers/dedent';
 import { getEventNameWithoutOn } from '@/helpers/event-handlers';
@@ -26,18 +26,18 @@ import { initializeOptions } from '@/helpers/merge-options';
 import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import { collectCss } from '@/helpers/styles/collect-css';
 import {
-getAddAttributePassingRef,
-getAttributePassingString,
-ROOT_REF,
-shouldAddAttributePassing,
+  getAddAttributePassingRef,
+  getAttributePassingString,
+  ROOT_REF,
+  shouldAddAttributePassing,
 } from '@/helpers/web-components/attribute-passing';
 import {
-runPostCodePlugins,
-runPostJsonPlugins,
-runPreCodePlugins,
-runPreJsonPlugins,
+  runPostCodePlugins,
+  runPostJsonPlugins,
+  runPreCodePlugins,
+  runPreJsonPlugins,
 } from '@/modules/plugins';
-import { BaseHook,MitosisState } from '@/types/mitosis-component';
+import { BaseHook, MitosisState } from '@/types/mitosis-component';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { format } from 'prettier/standalone';
 
