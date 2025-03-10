@@ -78,7 +78,7 @@ exports[`Stencil > jsx > Javascript Test > AdvancedRef 1`] = `
   tag: \\"my-basic-ref-component\\",
 
   styles: \`
-        .input {
+          .input {
           color: red;
         }
 \`,
@@ -126,7 +126,7 @@ export class MyBasicRefComponent {
               onChange={(event) => (this.name = event.target.value)}
             />
             <label
-              for=\\"cars\\"
+              htmlFor=\\"cars\\"
               ref={(el: any) => {
                 this.inputNoArgRef = el;
               }}
@@ -156,7 +156,7 @@ exports[`Stencil > jsx > Javascript Test > Basic 1`] = `
   tag: \\"my-basic-component\\",
 
   styles: \`
-        .div {
+          .div {
           padding: 10px;
         }
 \`,
@@ -297,14 +297,14 @@ exports[`Stencil > jsx > Javascript Test > Basic Outputs 1`] = `
   tag: \\"my-basic-outputs-component\\",
 })
 export class MyBasicOutputsComponent {
-  @Event() onMessage: any;
-  @Event() onEvent: any;
+  @Prop() message: any;
+  @Prop() event: any;
   @Prop() message: any;
   @State() name = \\"PatrickJS\\";
 
   componentDidLoad() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    this.message.emit(this.name);
+    this.event.emit(this.message);
   }
 
   render() {
@@ -326,14 +326,14 @@ import { Component, h, Fragment, Event, Prop, State } from \\"@stencil/core\\";
   tag: \\"my-basic-outputs-component\\",
 })
 export class MyBasicOutputsComponent {
-  @Event() onMessage: any;
-  @Event() onEvent: any;
+  @Prop() message: any;
+  @Prop() event: any;
   @Prop() message: any;
   @State() name = \\"PatrickJS\\";
 
   componentDidLoad() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    this.message.emit(this.name);
+    this.event.emit(this.message);
   }
 
   render() {
@@ -368,7 +368,6 @@ import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
   tag: \\"my-boolean-attribute\\",
 })
 export class MyBooleanAttribute {
-  @Prop() children: any;
   @Prop() type: any;
 
   componentDidLoad() {}
@@ -474,7 +473,7 @@ exports[`Stencil > jsx > Javascript Test > BasicRef 1`] = `
   tag: \\"my-basic-ref-component\\",
 
   styles: \`
-        .input {
+          .input {
           color: red;
         }
 \`,
@@ -510,7 +509,7 @@ export class MyBasicRefComponent {
               onChange={(event) => (this.name = event.target.value)}
             />
             <label
-              for=\\"cars\\"
+              htmlFor=\\"cars\\"
               ref={(el: any) => {
                 this.inputNoArgRef = el;
               }}
@@ -648,7 +647,7 @@ exports[`Stencil > jsx > Javascript Test > Columns 1`] = `
   tag: \\"column\\",
 
   styles: \`
-        .div {
+          .div {
           display: flex;
           flex-direction: column;
           align-items: stretch;
@@ -744,7 +743,6 @@ exports[`Stencil > jsx > Javascript Test > ContentSlotJSX 1`] = `
 })
 export class ContentSlotJsxCode {
   @Prop() slotContent: any = undefined;
-  @Prop() children: any;
   @Prop() slotReference: any = undefined;
   @Prop() attributes: any;
   @Prop() content: any = \\"\\";
@@ -956,7 +954,7 @@ import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
   tag: \\"form-component\\",
 
   styles: \`
-        .pre {
+          .pre {
           padding: 10px;
           color: red;
           text-align: center;
@@ -1265,7 +1263,7 @@ exports[`Stencil > jsx > Javascript Test > Image 1`] = `
   tag: \\"image\\",
 
   styles: \`
-        .img {
+          .img {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
@@ -1281,7 +1279,6 @@ export class Image {
   @Prop() image: any;
   @Prop() srcset: any;
   @Prop() sizes: any;
-  @Prop() children: any;
   @State() scrollListener = null;
   @State() imageLoaded = false;
   @State() load = false;
@@ -1440,7 +1437,7 @@ export class FormInputComponent {
   @Prop() name: any;
   @Prop() value: any;
   @Prop() required: any;
-  @Event() onChange: any;
+  @Prop() change: any;
 
   componentDidLoad() {}
 
@@ -1552,7 +1549,6 @@ exports[`Stencil > jsx > Javascript Test > Section 1`] = `
 export class SectionComponent {
   @Prop() attributes: any;
   @Prop() maxWidth: any;
-  @Prop() children: any;
 
   componentDidLoad() {}
 
@@ -1584,7 +1580,6 @@ exports[`Stencil > jsx > Javascript Test > Section 2`] = `
 })
 export class SectionStateComponent {
   @Prop() attributes: any;
-  @Prop() children: any;
   @State() max = 42;
   @State() items = [42];
 
@@ -1754,7 +1749,7 @@ import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
   tag: \\"smile-reviews\\",
 
   styles: \`
-        .input {
+          .input {
           display: block;
         }
         .textarea {
@@ -2009,7 +2004,7 @@ exports[`Stencil > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
   tag: \\"use-value-and-fn-from-store\\",
 })
 export class UseValueAndFnFromStore {
-  @Event() onChange: any;
+  @Prop() change: any;
   @State() _id = \\"abc\\";
   @State() _active = false;
 
@@ -2017,7 +2012,7 @@ export class UseValueAndFnFromStore {
     this._active = !!id;
 
     if (this.onChange) {
-      this.onChange.emit(this._active);
+      this.change.emit(this._active);
     }
   }
 
@@ -2194,7 +2189,7 @@ exports[`Stencil > jsx > Javascript Test > basicForwardRef 1`] = `
   tag: \\"my-basic-forward-ref-component\\",
 
   styles: \`
-        .input {
+          .input {
           color: red;
         }
 \`,
@@ -2235,7 +2230,7 @@ import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
   tag: \\"my-basic-forward-ref-component\\",
 
   styles: \`
-        .input {
+          .input {
           color: red;
         }
 \`,
@@ -2476,7 +2471,7 @@ import { Component, h, Fragment } from \\"@stencil/core\\";
   tag: \\"my-basic-component\\",
 
   styles: \`
-        .div {
+          .div {
           padding: 10px;
         }
 \`,
@@ -2507,7 +2502,7 @@ exports[`Stencil > jsx > Javascript Test > class + css 1`] = `
   tag: \\"my-basic-component\\",
 
   styles: \`
-        .div {
+          .div {
           padding: 10px;
         }
 \`,
@@ -2533,7 +2528,7 @@ exports[`Stencil > jsx > Javascript Test > className + css 1`] = `
   tag: \\"my-basic-component\\",
 
   styles: \`
-        .div {
+          .div {
           padding: 10px;
         }
 \`,
@@ -2582,7 +2577,7 @@ exports[`Stencil > jsx > Javascript Test > classState 1`] = `
   tag: \\"my-basic-component\\",
 
   styles: \`
-        .div {
+          .div {
           padding: 10px;
         }
 \`,
@@ -2598,6 +2593,37 @@ export class MyBasicComponent {
   render() {
     return (
       <div class={this.classState + \\" div\\"} style={this.styleState}>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > classnameProps 1`] = `
+"/**
+          useMetadata:
+          {\\"stencil\\":{\\"propOptions\\":{\\"className\\":{\\"attribute\\":\\"classname\\",\\"mutable\\":false,\\"reflect\\":false}}}}
+          */
+
+import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+})
+export class MyBasicComponent {
+  @Prop({ attribute: \\"classname\\", mutable: false, reflect: false })
+  className: any;
+  @Prop() type: any;
+
+  componentDidLoad() {}
+
+  render() {
+    return (
+      <div class={this.className}>
+        <slot></slot>
+        {this.type}
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
     );
@@ -2710,9 +2736,7 @@ export class Button {
   @Prop() attributes: any;
   @Prop() openLinkInNewTab: any = false;
   @Prop() text: any = \\"default text\\";
-  @Event() onClick: any = () => {
-    console.log(\\"hi\\");
-  };
+  @Prop() click: any;
   @Prop() buttonText: any;
 
   componentDidLoad() {}
@@ -2733,7 +2757,7 @@ export class Button {
           <button
             type=\\"button\\"
             {...this.attributes}
-            onClick={() => this.onClick.emit()}
+            onClick={() => this.click.emit()}
           >
             {this.buttonText}
           </button>
@@ -2756,7 +2780,7 @@ export class Button {
   @Prop() attributes: any;
   @Prop() openLinkInNewTab: any = false;
   @Prop() text: any = \\"default text\\";
-  @Event() onClick: any = () => {};
+  @Prop() click: any;
 
   componentDidLoad() {}
 
@@ -2776,7 +2800,7 @@ export class Button {
           <button
             type=\\"button\\"
             {...this.attributes}
-            onClick={(event) => this.onClick.emit(event)}
+            onClick={(event) => this.click.emit(event)}
           >
             {this.text}
           </button>
@@ -2823,7 +2847,7 @@ exports[`Stencil > jsx > Javascript Test > eventInputAndChange 1`] = `
   tag: \\"event-input-and-change\\",
 
   styles: \`
-        .input {
+          .input {
           color: red;
         }
 \`,
@@ -3014,7 +3038,7 @@ exports[`Stencil > jsx > Javascript Test > layerName 1`] = `
   tag: \\"my-layer-name-component\\",
 
   styles: \`
-        .layer-name {
+          .layer-name {
           padding: 10px;
         }
 \`,
@@ -3135,7 +3159,7 @@ exports[`Stencil > jsx > Javascript Test > nestedStyles 1`] = `
   tag: \\"nested-styles\\",
 
   styles: \`
-        .div {
+          .div {
           display: flex;
           --bar: red;
           color: var(--bar);
@@ -3179,7 +3203,7 @@ exports[`Stencil > jsx > Javascript Test > normalizeLayerNames 1`] = `
   tag: \\"my-normalized-layer-names-component\\",
 
   styles: \`
-        .css-0 {
+          .css-0 {
           margin: 10px;
         }
         .css-123 {
@@ -3466,7 +3490,6 @@ exports[`Stencil > jsx > Javascript Test > propsDestructure 1`] = `
   tag: \\"my-basic-component\\",
 })
 export class MyBasicComponent {
-  @Prop() children: any;
   @Prop() type: any;
   @State() name = \\"Decadef20\\";
 
@@ -3827,7 +3850,7 @@ import { Component, h, Fragment, Watch, Prop } from \\"@stencil/core\\";
   tag: \\"render-content\\",
 
   styles: \`
-        .div {
+          .div {
           display: flex;
           flex-direction: columns;
         }
@@ -3933,7 +3956,6 @@ exports[`Stencil > jsx > Javascript Test > self-referencing component with child
 })
 export class MyComponent {
   @Prop() name: any;
-  @Prop() children: any;
 
   componentDidLoad() {}
 
@@ -3987,7 +4009,7 @@ exports[`Stencil > jsx > Javascript Test > signalsOnUpdate 1`] = `
   tag: \\"my-basic-component\\",
 
   styles: \`
-        .div {
+          .div {
           padding: 10px;
         }
 \`,
@@ -4124,7 +4146,7 @@ exports[`Stencil > jsx > Javascript Test > styleClassAndCss 1`] = `
   tag: \\"my-component\\",
 
   styles: \`
-        .div {
+          .div {
           display: flex;
           flex-direction: column;
           align-items: stretch;
@@ -4155,7 +4177,7 @@ exports[`Stencil > jsx > Javascript Test > stylePropClassAndCss 1`] = `
   tag: \\"style-prop-class-and-css\\",
 
   styles: \`
-        .div {
+          .div {
           display: flex;
           flex-direction: column;
           align-items: stretch;
@@ -4341,7 +4363,7 @@ exports[`Stencil > jsx > Javascript Test > use-style 1`] = `
   tag: \\"my-component\\",
 
   styles: \`
-        button {
+          button {
           background: blue;
           color: white;
           font-size: 12px;
@@ -4366,7 +4388,7 @@ exports[`Stencil > jsx > Javascript Test > use-style-and-css 1`] = `
   tag: \\"my-component\\",
 
   styles: \`
-        button {
+          button {
           font-size: 12px;
           outline: 1px solid black;
         }
@@ -4398,7 +4420,7 @@ exports[`Stencil > jsx > Javascript Test > use-style-outside-component 1`] = `
   tag: \\"my-component\\",
 
   styles: \`
-        button {
+          button {
           background: blue;
           color: white;
           font-size: 12px;
@@ -4568,7 +4590,7 @@ exports[`Stencil > jsx > Typescript Test > AdvancedRef 1`] = `
   tag: \\"my-basic-ref-component\\",
 
   styles: \`
-        .input {
+          .input {
           color: red;
         }
 \`,
@@ -4616,7 +4638,7 @@ export class MyBasicRefComponent {
               onChange={(event) => (this.name = event.target.value)}
             />
             <label
-              for=\\"cars\\"
+              htmlFor=\\"cars\\"
               ref={(el: any) => {
                 this.inputNoArgRef = el;
               }}
@@ -4646,7 +4668,7 @@ exports[`Stencil > jsx > Typescript Test > Basic 1`] = `
   tag: \\"my-basic-component\\",
 
   styles: \`
-        .div {
+          .div {
           padding: 10px;
         }
 \`,
@@ -4787,14 +4809,14 @@ exports[`Stencil > jsx > Typescript Test > Basic Outputs 1`] = `
   tag: \\"my-basic-outputs-component\\",
 })
 export class MyBasicOutputsComponent {
-  @Event() onMessage: any;
-  @Event() onEvent: any;
+  @Prop() message: any;
+  @Prop() event: any;
   @Prop() message: any;
   @State() name = \\"PatrickJS\\";
 
   componentDidLoad() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    this.message.emit(this.name);
+    this.event.emit(this.message);
   }
 
   render() {
@@ -4816,14 +4838,14 @@ import { Component, h, Fragment, Event, Prop, State } from \\"@stencil/core\\";
   tag: \\"my-basic-outputs-component\\",
 })
 export class MyBasicOutputsComponent {
-  @Event() onMessage: any;
-  @Event() onEvent: any;
+  @Prop() message: any;
+  @Prop() event: any;
   @Prop() message: any;
   @State() name = \\"PatrickJS\\";
 
   componentDidLoad() {
-    this.onMessage.emit(this.name);
-    this.onEvent.emit(this.message);
+    this.message.emit(this.name);
+    this.event.emit(this.message);
   }
 
   render() {
@@ -4858,7 +4880,6 @@ import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
   tag: \\"my-boolean-attribute\\",
 })
 export class MyBooleanAttribute {
-  @Prop() children: any;
   @Prop() type: any;
 
   componentDidLoad() {}
@@ -4964,7 +4985,7 @@ exports[`Stencil > jsx > Typescript Test > BasicRef 1`] = `
   tag: \\"my-basic-ref-component\\",
 
   styles: \`
-        .input {
+          .input {
           color: red;
         }
 \`,
@@ -5000,7 +5021,7 @@ export class MyBasicRefComponent {
               onChange={(event) => (this.name = event.target.value)}
             />
             <label
-              for=\\"cars\\"
+              htmlFor=\\"cars\\"
               ref={(el: any) => {
                 this.inputNoArgRef = el;
               }}
@@ -5138,7 +5159,7 @@ exports[`Stencil > jsx > Typescript Test > Columns 1`] = `
   tag: \\"column\\",
 
   styles: \`
-        .div {
+          .div {
           display: flex;
           flex-direction: column;
           align-items: stretch;
@@ -5238,7 +5259,6 @@ import { Component, h, Fragment, Host, Prop, State } from \\"@stencil/core\\";
 })
 export class ContentSlotJsxCode {
   @Prop() slotContent: any = undefined;
-  @Prop() children: any;
   @Prop() slotReference: any = undefined;
   @Prop() attributes: any;
   @Prop() content: any = \\"\\";
@@ -5450,7 +5470,7 @@ import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
   tag: \\"form-component\\",
 
   styles: \`
-        .pre {
+          .pre {
           padding: 10px;
           color: red;
           text-align: center;
@@ -5766,7 +5786,7 @@ exports[`Stencil > jsx > Typescript Test > Image 1`] = `
   tag: \\"image\\",
 
   styles: \`
-        .img {
+          .img {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
@@ -5782,7 +5802,6 @@ export class Image {
   @Prop() image: any;
   @Prop() srcset: any;
   @Prop() sizes: any;
-  @Prop() children: any;
   @State() scrollListener = null;
   @State() imageLoaded = false;
   @State() load = false;
@@ -5941,7 +5960,7 @@ export class FormInputComponent {
   @Prop() name: any;
   @Prop() value: any;
   @Prop() required: any;
-  @Event() onChange: any;
+  @Prop() change: any;
 
   componentDidLoad() {}
 
@@ -6053,7 +6072,6 @@ exports[`Stencil > jsx > Typescript Test > Section 1`] = `
 export class SectionComponent {
   @Prop() attributes: any;
   @Prop() maxWidth: any;
-  @Prop() children: any;
 
   componentDidLoad() {}
 
@@ -6085,7 +6103,6 @@ exports[`Stencil > jsx > Typescript Test > Section 2`] = `
 })
 export class SectionStateComponent {
   @Prop() attributes: any;
-  @Prop() children: any;
   @State() max = 42;
   @State() items = [42];
 
@@ -6255,7 +6272,7 @@ import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
   tag: \\"smile-reviews\\",
 
   styles: \`
-        .input {
+          .input {
           display: block;
         }
         .textarea {
@@ -6510,7 +6527,7 @@ exports[`Stencil > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
   tag: \\"use-value-and-fn-from-store\\",
 })
 export class UseValueAndFnFromStore {
-  @Event() onChange: any;
+  @Prop() change: any;
   @State() _id = \\"abc\\";
   @State() _active = false;
 
@@ -6518,7 +6535,7 @@ export class UseValueAndFnFromStore {
     this._active = !!id;
 
     if (this.onChange) {
-      this.onChange.emit(this._active);
+      this.change.emit(this._active);
     }
   }
 
@@ -6695,7 +6712,7 @@ exports[`Stencil > jsx > Typescript Test > basicForwardRef 1`] = `
   tag: \\"my-basic-forward-ref-component\\",
 
   styles: \`
-        .input {
+          .input {
           color: red;
         }
 \`,
@@ -6736,7 +6753,7 @@ import { Component, h, Fragment, Prop, State } from \\"@stencil/core\\";
   tag: \\"my-basic-forward-ref-component\\",
 
   styles: \`
-        .input {
+          .input {
           color: red;
         }
 \`,
@@ -6977,7 +6994,7 @@ import { Component, h, Fragment } from \\"@stencil/core\\";
   tag: \\"my-basic-component\\",
 
   styles: \`
-        .div {
+          .div {
           padding: 10px;
         }
 \`,
@@ -7008,7 +7025,7 @@ exports[`Stencil > jsx > Typescript Test > class + css 1`] = `
   tag: \\"my-basic-component\\",
 
   styles: \`
-        .div {
+          .div {
           padding: 10px;
         }
 \`,
@@ -7034,7 +7051,7 @@ exports[`Stencil > jsx > Typescript Test > className + css 1`] = `
   tag: \\"my-basic-component\\",
 
   styles: \`
-        .div {
+          .div {
           padding: 10px;
         }
 \`,
@@ -7085,7 +7102,7 @@ exports[`Stencil > jsx > Typescript Test > classState 1`] = `
   tag: \\"my-basic-component\\",
 
   styles: \`
-        .div {
+          .div {
           padding: 10px;
         }
 \`,
@@ -7101,6 +7118,37 @@ export class MyBasicComponent {
   render() {
     return (
       <div class={this.classState + \\" div\\"} style={this.styleState}>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > classnameProps 1`] = `
+"/**
+          useMetadata:
+          {\\"stencil\\":{\\"propOptions\\":{\\"className\\":{\\"attribute\\":\\"classname\\",\\"mutable\\":false,\\"reflect\\":false}}}}
+          */
+
+import { Component, h, Fragment, Prop } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+})
+export class MyBasicComponent {
+  @Prop({ attribute: \\"classname\\", mutable: false, reflect: false })
+  className: any;
+  @Prop() type: any;
+
+  componentDidLoad() {}
+
+  render() {
+    return (
+      <div class={this.className}>
+        <slot></slot>
+        {this.type}
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
     );
@@ -7213,9 +7261,7 @@ export class Button {
   @Prop() attributes: any;
   @Prop() openLinkInNewTab: any = false;
   @Prop() text: any = \\"default text\\";
-  @Event() onClick: any = () => {
-    console.log(\\"hi\\");
-  };
+  @Prop() click: any;
   @Prop() buttonText: any;
 
   componentDidLoad() {}
@@ -7236,7 +7282,7 @@ export class Button {
           <button
             type=\\"button\\"
             {...this.attributes}
-            onClick={() => this.onClick.emit()}
+            onClick={() => this.click.emit()}
           >
             {this.buttonText}
           </button>
@@ -7259,7 +7305,7 @@ export class Button {
   @Prop() attributes: any;
   @Prop() openLinkInNewTab: any = false;
   @Prop() text: any = \\"default text\\";
-  @Event() onClick: any = () => {};
+  @Prop() click: any;
 
   componentDidLoad() {}
 
@@ -7279,7 +7325,7 @@ export class Button {
           <button
             type=\\"button\\"
             {...this.attributes}
-            onClick={(event) => this.onClick.emit(event)}
+            onClick={(event) => this.click.emit(event)}
           >
             {this.text}
           </button>
@@ -7326,7 +7372,7 @@ exports[`Stencil > jsx > Typescript Test > eventInputAndChange 1`] = `
   tag: \\"event-input-and-change\\",
 
   styles: \`
-        .input {
+          .input {
           color: red;
         }
 \`,
@@ -7518,7 +7564,7 @@ exports[`Stencil > jsx > Typescript Test > layerName 1`] = `
   tag: \\"my-layer-name-component\\",
 
   styles: \`
-        .layer-name {
+          .layer-name {
           padding: 10px;
         }
 \`,
@@ -7639,7 +7685,7 @@ exports[`Stencil > jsx > Typescript Test > nestedStyles 1`] = `
   tag: \\"nested-styles\\",
 
   styles: \`
-        .div {
+          .div {
           display: flex;
           --bar: red;
           color: var(--bar);
@@ -7683,7 +7729,7 @@ exports[`Stencil > jsx > Typescript Test > normalizeLayerNames 1`] = `
   tag: \\"my-normalized-layer-names-component\\",
 
   styles: \`
-        .css-0 {
+          .css-0 {
           margin: 10px;
         }
         .css-123 {
@@ -7970,7 +8016,6 @@ exports[`Stencil > jsx > Typescript Test > propsDestructure 1`] = `
   tag: \\"my-basic-component\\",
 })
 export class MyBasicComponent {
-  @Prop() children: any;
   @Prop() type: any;
   @State() name = \\"Decadef20\\";
 
@@ -8339,7 +8384,7 @@ import { Component, h, Fragment, Watch, Prop } from \\"@stencil/core\\";
   tag: \\"render-content\\",
 
   styles: \`
-        .div {
+          .div {
           display: flex;
           flex-direction: columns;
         }
@@ -8445,7 +8490,6 @@ exports[`Stencil > jsx > Typescript Test > self-referencing component with child
 })
 export class MyComponent {
   @Prop() name: any;
-  @Prop() children: any;
 
   componentDidLoad() {}
 
@@ -8499,7 +8543,7 @@ exports[`Stencil > jsx > Typescript Test > signalsOnUpdate 1`] = `
   tag: \\"my-basic-component\\",
 
   styles: \`
-        .div {
+          .div {
           padding: 10px;
         }
 \`,
@@ -8636,7 +8680,7 @@ exports[`Stencil > jsx > Typescript Test > styleClassAndCss 1`] = `
   tag: \\"my-component\\",
 
   styles: \`
-        .div {
+          .div {
           display: flex;
           flex-direction: column;
           align-items: stretch;
@@ -8667,7 +8711,7 @@ exports[`Stencil > jsx > Typescript Test > stylePropClassAndCss 1`] = `
   tag: \\"style-prop-class-and-css\\",
 
   styles: \`
-        .div {
+          .div {
           display: flex;
           flex-direction: column;
           align-items: stretch;
@@ -8860,7 +8904,7 @@ exports[`Stencil > jsx > Typescript Test > use-style 1`] = `
   tag: \\"my-component\\",
 
   styles: \`
-        button {
+          button {
           background: blue;
           color: white;
           font-size: 12px;
@@ -8885,7 +8929,7 @@ exports[`Stencil > jsx > Typescript Test > use-style-and-css 1`] = `
   tag: \\"my-component\\",
 
   styles: \`
-        button {
+          button {
           font-size: 12px;
           outline: 1px solid black;
         }
@@ -8917,7 +8961,7 @@ exports[`Stencil > jsx > Typescript Test > use-style-outside-component 1`] = `
   tag: \\"my-component\\",
 
   styles: \`
-        button {
+          button {
           background: blue;
           color: white;
           font-size: 12px;
@@ -9404,7 +9448,7 @@ exports[`Stencil > svelte > Javascript Test > style 1`] = `
   tag: \\"my-component\\",
 
   styles: \`
-        input {
+          input {
           color: red;
           font-size: 12px;
         }
@@ -9869,7 +9913,7 @@ exports[`Stencil > svelte > Typescript Test > style 1`] = `
   tag: \\"my-component\\",
 
   styles: \`
-        input {
+          input {
           color: red;
           font-size: 12px;
         }

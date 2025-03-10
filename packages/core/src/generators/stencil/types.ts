@@ -1,6 +1,32 @@
 import { BaseTranspilerOptions } from '@/types/transpiler';
 
-export interface ToStencilOptions extends BaseTranspilerOptions {
+// https://stenciljs.com/docs/properties#prop-options
+export interface StencilPropOption {
+  attribute?: string;
+  mutable?: boolean;
+  reflect?: boolean;
+}
+
+export interface StencilPropOptions {
+  /**
+   * Add additional options for Stencil properties: https://stenciljs.com/docs/properties#prop-options.
+   * You need to map your properties you provide to the component.
+   *
+   * Example:
+   * ```tsx
+   *  propOptions: {
+   *             className: {
+   *                 attribute: 'classname',
+   *                 mutable: false,
+   *                 reflect: false,
+   *             },
+   *         }
+   * ```
+   */
+  propOptions?: Record<string, StencilPropOption>;
+}
+
+export interface ToStencilOptions extends BaseTranspilerOptions, StencilPropOptions {
   /**
    * Add a prefix for every component like `my`.
    * A Stencil component needs a prefix with a dash.
@@ -13,4 +39,4 @@ export interface ToStencilOptions extends BaseTranspilerOptions {
   prefix?: string;
 }
 
-export type StencilMetadata = {};
+export type StencilMetadata = {} & StencilPropOptions;
