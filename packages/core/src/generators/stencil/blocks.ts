@@ -4,7 +4,7 @@ import { collectClassString } from '@/generators/stencil/helpers/collect-class-s
 import { ToStencilOptions } from '@/generators/stencil/types';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import { getForArguments } from '@/helpers/nodes/for';
-import { transformAttributeToJSX } from '@/parsers/jsx/helpers';
+import { transformAttributeToJSX } from '@/helpers/transform-to-jsx';
 import { MitosisNode, checkIsForNode } from '@/types/mitosis-node';
 
 export const blockToStencil = ({
