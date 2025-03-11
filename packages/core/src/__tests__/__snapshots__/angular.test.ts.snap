@@ -7784,6 +7784,82 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > classnameProps 1`] = `
+"/**
+          useMetadata:
+          {\\"stencil\\":{\\"propOptions\\":{\\"className\\":{\\"attribute\\":\\"classname\\",\\"mutable\\":false,\\"reflect\\":false}}}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div [class]=\\"className\\">
+      <ng-content></ng-content>
+      {{type}} Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicComponent {
+  @Input() className;
+  @Input() type;
+}
+
+@NgModule({
+  declarations: [MyBasicComponent],
+  imports: [CommonModule],
+  exports: [MyBasicComponent],
+})
+export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > classnameProps 2`] = `
+"/**
+          useMetadata:
+          {\\"stencil\\":{\\"propOptions\\":{\\"className\\":{\\"attribute\\":\\"classname\\",\\"mutable\\":false,\\"reflect\\":false}}}}
+          */
+
+import { Component, Input } from \\"@angular/core\\";
+
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div [class]=\\"className\\">
+      <ng-content></ng-content>
+      {{type}} Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyBasicComponent {
+  @Input() className;
+  @Input() type;
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > complexMeta 1`] = `
 "/**
           useMetadata:
@@ -23440,6 +23516,94 @@ export default class MyBasicComponent {
   styleState = {
     color: \\"red\\",
   };
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > classnameProps 1`] = `
+"/**
+          useMetadata:
+          {\\"stencil\\":{\\"propOptions\\":{\\"className\\":{\\"attribute\\":\\"classname\\",\\"mutable\\":false,\\"reflect\\":false}}}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+type Props = {
+  children: any;
+  className: string;
+  type: string;
+};
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div [class]=\\"className\\">
+      <ng-content></ng-content>
+      {{type}} Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyBasicComponent {
+  @Input() className!: Props[\\"className\\"];
+  @Input() type!: Props[\\"type\\"];
+}
+
+@NgModule({
+  declarations: [MyBasicComponent],
+  imports: [CommonModule],
+  exports: [MyBasicComponent],
+})
+export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > classnameProps 2`] = `
+"/**
+          useMetadata:
+          {\\"stencil\\":{\\"propOptions\\":{\\"className\\":{\\"attribute\\":\\"classname\\",\\"mutable\\":false,\\"reflect\\":false}}}}
+          */
+
+import { Component, Input } from \\"@angular/core\\";
+
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  children: any;
+  className: string;
+  type: string;
+};
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div [class]=\\"className\\">
+      <ng-content></ng-content>
+      {{type}} Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyBasicComponent {
+  @Input() className!: Props[\\"className\\"];
+  @Input() type!: Props[\\"type\\"];
 }
 "
 `;

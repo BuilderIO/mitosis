@@ -12,9 +12,10 @@ import {
   ProcessBindingOptions,
 } from '@/generators/stencil/helpers';
 import { getCodeProcessorPlugins } from '@/generators/stencil/plugins/get-code-processor-plugins';
-import { ToStencilOptions } from '@/generators/stencil/types';
+import { StencilPropOption, ToStencilOptions } from '@/generators/stencil/types';
 import { dashCase } from '@/helpers/dash-case';
 import { dedent } from '@/helpers/dedent';
+import { getEventNameWithoutOn } from '@/helpers/event-handlers';
 import { fastClone } from '@/helpers/fast-clone';
 import { getChildComponents } from '@/helpers/get-child-components';
 import { getProps } from '@/helpers/get-props';
@@ -40,13 +41,12 @@ import { BaseHook, MitosisState } from '@/types/mitosis-component';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { format } from 'prettier/standalone';
 
-export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
-  (
-    _options = {
-      typescript: true, // Stencil is uses .tsx always
-    },
-  ) =>
-  ({ component }) => {
+export const componentToStencil: TranspilerGenerator<ToStencilOptions> = (
+  _options = {
+    typescript: true, // Stencil is uses .tsx always
+  },
+) => {
+  return ({ component }) => {
     let json = fastClone(component);
     const options: ToStencilOptions = initializeOptions({
       target: 'stencil',
@@ -60,11 +60,26 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
 
     mapRefs(json, (refName) => `this.${refName}`);
     let css = collectCss(json);
-    const props: string[] = Array.from(getProps(json));
+    let props: string[] = Array.from(getProps(json));
     const events: string[] = props.filter((prop) => isEvent(prop));
     const defaultProps: MitosisState | undefined = json.defaultProps;
     const childComponents: string[] = getChildComponents(json);
     const processBindingOptions: ProcessBindingOptions = { events };
+
+    props = props
+      .map((prop) => {
+        // Stencil adds "on" to every `@Event` so we need to remove "on" from event props
+        // https://stenciljs.com/docs/events#using-events-in-jsx
+        if (isEvent(prop)) {
+          return getEventNameWithoutOn(prop);
+        }
+
+        return prop;
+      })
+      .filter((prop) => {
+        // Stencil doesn't need children as a prop
+        return prop !== 'children';
+      });
 
     options.plugins = getCodeProcessorPlugins(json, options, processBindingOptions);
 
@@ -134,89 +149,94 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
       watch: Boolean(dependencyOnUpdateHooks?.length),
     });
 
-    let str = dedent`
-    ${getImports(json, options, childComponents)}
-    
-    import { ${coreImports} } from '@stencil/core';
-    
-    @Component({
-      tag: '${tagName}',
-      ${json.meta.useMetadata?.isAttachedToShadowDom ? 'shadow: true,' : ''}
-      ${
-        css.length
-          ? `styles: \`
-        ${indent(css, 8)}\`,`
-          : ''
-      }
-    })
-    export class ${json.name} {
-        ${refs}
-        ${getPropsAsCode(props, json, defaultProps)}
-        ${dataString}
-        ${methodsString}
-        ${getExportsAndLocal(json)}
-        ${withAttributePassing ? getAttributePassingString(true) : ''}
-        
-        ${dependencyOnUpdateHooks
-          .map((hook: BaseHook, index: number) => {
-            return `
-          watch${index}Fn() { 
-            ${hook.code} 
-          }
-          
-          ${getDepsAsArray(hook.deps!)
-            .map((dep) => `@Watch("${dep}")`)
-            .join('\n')}
-            watch${index}(){
-              this.watch${index}Fn();
-            }            
-          `;
-          })
-          .join('\n')}
+    const propOptions: Record<string, StencilPropOption> = {
+      ...options.propOptions,
+      ...json.meta.useMetadata?.stencil?.propOptions,
+    };
 
-        ${`componentDidLoad() { 
-            ${
-              withAttributePassing
-                ? `this.enableAttributePassing(this.${rootRef}, "${dashCase(json.name)}");`
-                : ''
-            }
-            ${json.hooks.onMount.length ? stringifySingleScopeOnMount(json) : ''} 
-            ${dependencyOnUpdateHooks
-              .map((_, index: number) => `this.watch${index}Fn();`)
-              .join('\n')}
-            }`}
+    let str = dedent`
+      ${getImports(json, options, childComponents)}
+      
+      import { ${coreImports} } from '@stencil/core';
+      
+      @Component({
+        tag: '${tagName}',
+        ${json.meta.useMetadata?.isAttachedToShadowDom ? 'shadow: true,' : ''}
         ${
-          !json.hooks.onUnMount?.code
-            ? ''
-            : `disconnectedCallback() { ${json.hooks.onUnMount.code} }`
-        }
-        ${
-          noDependencyOnUpdateHooks.length
-            ? `componentDidUpdate() { ${noDependencyOnUpdateHooks
-                .map((hook) => hook.code)
-                .join('\n')} }`
+          css.length
+            ? `styles: \`
+          ${indent(css, 8)}\`,`
             : ''
         }
-
-      render() {
-        return (${wrap ? '<Host>' : ''}
-
-          ${json.children
-            .map((item) =>
-              blockToStencil({
-                json: item,
-                options,
-                insideJsx: true,
-                childComponents,
-                rootRef: withAttributePassing && rootRef === ROOT_REF ? rootRef : undefined, // only pass rootRef if it's not the default
-              }),
-            )
+      })
+      export class ${json.name} {
+          ${refs}
+          ${getPropsAsCode({ props, json, defaultProps, propOptions })}
+          ${dataString}
+          ${methodsString}
+          ${getExportsAndLocal(json)}
+          ${withAttributePassing ? getAttributePassingString(true) : ''}
+          
+          ${dependencyOnUpdateHooks
+            .map((hook: BaseHook, index: number) => {
+              return `
+            watch${index}Fn() { 
+              ${hook.code} 
+            }
+            
+            ${getDepsAsArray(hook.deps!)
+              .map((dep) => `@Watch("${dep}")`)
+              .join('\n')}
+              watch${index}(){
+                this.watch${index}Fn();
+              }            
+            `;
+            })
             .join('\n')}
-
-        ${wrap ? '</Host>' : ''})
+  
+          ${`componentDidLoad() { 
+              ${
+                withAttributePassing
+                  ? `this.enableAttributePassing(this.${rootRef}, "${dashCase(json.name)}");`
+                  : ''
+              }
+              ${json.hooks.onMount.length ? stringifySingleScopeOnMount(json) : ''} 
+              ${dependencyOnUpdateHooks
+                .map((_, index: number) => `this.watch${index}Fn();`)
+                .join('\n')}
+              }`}
+          ${
+            !json.hooks.onUnMount?.code
+              ? ''
+              : `disconnectedCallback() { ${json.hooks.onUnMount.code} }`
+          }
+          ${
+            noDependencyOnUpdateHooks.length
+              ? `componentDidUpdate() { ${noDependencyOnUpdateHooks
+                  .map((hook) => hook.code)
+                  .join('\n')} }`
+              : ''
+          }
+  
+        render() {
+          return (${wrap ? '<Host>' : ''}
+  
+            ${json.children
+              .map((item) =>
+                blockToStencil({
+                  json: item,
+                  options,
+                  insideJsx: true,
+                  childComponents,
+                  rootRef: withAttributePassing && rootRef === ROOT_REF ? rootRef : undefined, // only pass rootRef if it's not the default
+                }),
+              )
+              .join('\n')}
+  
+          ${wrap ? '</Host>' : ''})
+        }
       }
-    }
-  `;
+    `;
 
     if (options.plugins) {
       str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
@@ -232,3 +252,4 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> =
     }
     return str;
   };
+};

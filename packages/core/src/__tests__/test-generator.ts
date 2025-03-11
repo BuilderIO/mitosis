@@ -30,6 +30,7 @@ const componentWithContextMultiRoot = getRawFile(
 );
 
 const basic = getRawFile('./data/basic.raw.tsx');
+const classnameProps = getRawFile('./data/props/classname-props.raw.tsx');
 const basicAttribute = getRawFile('./data/basic-attribute.raw.tsx');
 const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw.tsx');
 const basicChildComponent = getRawFile('./data/basic-child-component.raw.tsx');
@@ -46,7 +47,7 @@ const basicForwardRefMetadata = getRawFile('./data/ref/basic-forwardRef-metadata
 const basicRefPrevious = getRawFile('./data/ref/basic-ref-usePrevious.raw.tsx');
 const basicRefAssignment = getRawFile('./data/ref/basic-ref-assignment.raw.tsx');
 const eventInputAndChange = getRawFile('./data/events/event-input-and-change.raw.tsx');
-const propsDestructure = getRawFile('./data/basic-props-destructure.raw.tsx');
+const propsDestructure = getRawFile('./data/props/basic-props-destructure.raw.tsx');
 const functionProps = getRawFile('./data/function-props.raw.tsx');
 const nestedStyles = getRawFile('./data/nested-styles.raw.tsx');
 const preserveExportOrLocalStatement = getRawFile(
@@ -260,6 +261,7 @@ const BASIC_TESTS: Tests = {
   'use-style-outside-component': useStyleOutsideComponent,
   'self-referencing component with children': selfRefCompWChildren,
   'self-referencing component': selfRefComp,
+  classnameProps,
   rootFragmentMultiNode,
   multipleSpreads,
   spreadAttrs,

@@ -1,6 +1,6 @@
-import { ToStencilOptions } from '@/generators/stencil/types';
+import { StencilPropOption, ToStencilOptions } from '@/generators/stencil/types';
 import { dashCase } from '@/helpers/dash-case';
-import { checkIsEvent } from '@/helpers/event-handlers';
+import { checkIsEvent, getEventNameWithoutOn } from '@/helpers/event-handlers';
 import { renderPreComponent } from '@/helpers/render-imports';
 import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
 import { MitosisComponent, MitosisState } from '@/types/mitosis-component';
@@ -15,7 +15,7 @@ const appendEmits = (str: string, events: string[]): string => {
   let code = str;
   if (events.length) {
     for (const event of events) {
-      code = code.replaceAll(`props.${event}(`, `props.${event}.emit(`);
+      code = code.replaceAll(`props.${event}(`, `props.${getEventNameWithoutOn(event)}.emit(`);
     }
   }
   return code;
@@ -53,11 +53,17 @@ export const getTagName = (name: string, { prefix }: ToStencilOptions): string =
   return dashName;
 };
 
-export const getPropsAsCode = (
-  props: string[],
-  json: MitosisComponent,
-  defaultProps?: MitosisState | undefined,
-): string => {
+export const getPropsAsCode = ({
+  props,
+  propOptions,
+  defaultProps,
+  json,
+}: {
+  props: string[];
+  json: MitosisComponent;
+  defaultProps?: MitosisState | undefined;
+  propOptions: Record<string, StencilPropOption>;
+}): string => {
   const propsTypeRef: string | undefined = json.propsTypeRef;
   const internalTypes: string[] | undefined = json.types;
   const isInternalType =
@@ -67,6 +73,7 @@ export const getPropsAsCode = (
     .map((item: string) => {
       const defaultProp: string | undefined = defaultProps ? defaultProps[item]?.code : undefined;
       const defaultPropString = defaultProp ? ` = ${defaultProp}` : '';
+      const propOption = propOptions[item];
 
       if (isEvent(item)) {
         return `@Event() ${item}: any${defaultPropString}`;
@@ -80,7 +87,9 @@ export const getPropsAsCode = (
         !isInternalType
           ? `${propsTypeRef}["${item}"]`
           : 'any';
-      return `@Prop() ${item}: ${type}${defaultPropString}`;
+      return `@Prop(${
+        propOption ? JSON.stringify(propOption) : ''
+      }) ${item}: ${type}${defaultPropString}`;
     })
     .join(';\n');
 };
