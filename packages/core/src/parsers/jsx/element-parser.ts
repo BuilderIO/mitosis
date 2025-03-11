@@ -88,7 +88,7 @@ export const jsxElementToJson = (
             }),
           },
           scope: forArguments,
-          children: [jsxElementToJson(bodyExpression)!],
+          children: [jsxElementToJson(bodyExpression)!].filter(checkIsDefined),
         });
       }
     } else if (isArrayFrom) {
@@ -133,7 +133,7 @@ export const jsxElementToJson = (
             }).code!,
           }),
         },
-        children: [jsxElementToJson(node.right as any)!],
+        children: [jsxElementToJson(node.right as any)!].filter(checkIsDefined),
       });
     } else {
       // TODO: good warning system for unsupported operators
@@ -141,10 +141,12 @@ export const jsxElementToJson = (
   } else if (types.isConditionalExpression(node)) {
     // {foo ? <div /> : <span />} -> <Show when={foo} else={<span />}>...</Show>
     const child = jsxElementToJson(node.consequent as any);
+    const elseCase = jsxElementToJson(node.alternate as any);
+
     return createMitosisNode({
       name: 'Show',
       meta: {
-        else: jsxElementToJson(node.alternate as any),
+        ...(checkIsDefined(elseCase) ? { else: elseCase } : undefined),
       },
       bindings: {
         when: createSingleBinding({ code: generate(node.test, { compact: true }).code }),
