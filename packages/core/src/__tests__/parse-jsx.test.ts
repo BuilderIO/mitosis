@@ -28,3 +28,182 @@ describe('Parse JSX', () => {
 
   runTestsForJsx();
 });
+
+describe('null values', () => {
+  test('null is removed from For', () => {
+    const result = parseJsx(`
+     export default function MyComponent() {
+       return (
+         <>
+            <For>
+             {null}
+            </For>
+         </>
+       );
+     }
+    `);
+    expect(result.children[0].children[0]).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/node",
+        "bindings": {},
+        "children": [],
+        "meta": {},
+        "name": "For",
+        "properties": {},
+        "scope": {},
+      }
+    `);
+  });
+  test('null expression is removed', () => {
+    const result = parseJsx(`
+     export default function MyComponent() {
+       return (
+         <>
+            {null}
+         </>
+       );
+     }
+    `);
+    expect(result.children[0].children).toMatchInlineSnapshot('[]');
+  });
+
+  test('null in logical expression is removed', () => {
+    const result = parseJsx(`
+     export default function MyComponent() {
+       return (
+         <>
+            {foo && null}
+         </>
+       );
+     }
+    `);
+    expect(result.children[0].children[0]).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/node",
+        "bindings": {
+          "when": {
+            "bindingType": "expression",
+            "code": "foo",
+            "type": "single",
+          },
+        },
+        "children": [],
+        "meta": {},
+        "name": "Show",
+        "properties": {},
+        "scope": {},
+      }
+    `);
+  });
+
+  test('null in conditional expression is removed', () => {
+    const result = parseJsx(`
+     export default function MyComponent() {
+       return (
+         <>
+            {foo ? "A" : null}
+         </>
+       );
+     }
+    `);
+    expect(result.children[0].children[0]).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/node",
+        "bindings": {
+          "when": {
+            "bindingType": "expression",
+            "code": "foo",
+            "type": "single",
+          },
+        },
+        "children": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {},
+            "children": [],
+            "meta": {},
+            "name": "div",
+            "properties": {
+              "_text": "A",
+            },
+            "scope": {},
+          },
+        ],
+        "meta": {},
+        "name": "Show",
+        "properties": {},
+        "scope": {},
+      }
+    `);
+  });
+  test('null in map is removed', () => {
+    const result = parseJsx(`
+     export default function MyComponent() {
+       return (
+         <>
+            {[].map(() => {
+              return null;
+            })}
+         </>
+       );
+     }
+    `);
+    expect(result.children[0].children[0]).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/node",
+        "bindings": {
+          "each": {
+            "bindingType": "expression",
+            "code": "[]",
+            "type": "single",
+          },
+        },
+        "children": [],
+        "meta": {},
+        "name": "For",
+        "properties": {},
+        "scope": {},
+      }
+    `);
+  });
+  test('null in Show is removed', () => {
+    const result = parseJsx(`
+     export default function MyComponent() {
+       return (
+         <>
+            <Show when={true} else={null}>A</Show>
+         </>
+       );
+     }
+    `);
+    expect(result.children[0].children[0]).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/node",
+        "bindings": {
+          "when": {
+            "bindingType": "expression",
+            "code": "true",
+            "type": "single",
+          },
+        },
+        "children": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {},
+            "children": [],
+            "meta": {},
+            "name": "div",
+            "properties": {
+              "_text": "A",
+            },
+            "scope": {},
+          },
+        ],
+        "meta": {},
+        "name": "Show",
+        "properties": {},
+        "scope": {},
+      }
+    `);
+  });
+});
