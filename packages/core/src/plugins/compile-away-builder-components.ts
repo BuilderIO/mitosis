@@ -279,6 +279,7 @@ export const components: CompileAwayComponentsMap = {
           css: createSingleBinding({
             code: JSON.stringify({
               gap: `${gutterSize}px`,
+              alignItems: 'stretch',
               display: 'flex',
               ...(properties.stackColumnsAt === 'never'
                 ? {}
@@ -289,8 +290,6 @@ export const components: CompileAwayComponentsMap = {
                           properties.reverseColumnsWhenStacked === 'true'
                             ? 'column-reverse'
                             : 'column',
-                        alignItems: 'stretch',
-                        gap: `0px`,
                       },
                   }),
             }),
@@ -308,10 +307,7 @@ export const components: CompileAwayComponentsMap = {
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'stretch',
-                  lineHeight: 'normal',
-
                   width: `${getColumnWidth(index)}`,
-                  marginLeft: `${index === 0 ? 0 : gutterSize}px`,
                   ...(properties.stackColumnsAt === 'never'
                     ? {}
                     : {
@@ -319,7 +315,6 @@ export const components: CompileAwayComponentsMap = {
                           properties.stackColumnsAt === 'mobile' ? 640 : 991
                         }px)`]: {
                           width: '100%',
-                          marginLeft: 0,
                         },
                       }),
                 }),
