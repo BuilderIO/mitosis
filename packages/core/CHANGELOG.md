@@ -1,5 +1,39 @@
 # Change Log
 
+## 0.7.0
+
+### Minor Changes
+
+- de31a91: [stencil]: Improve props
+
+  - Fix issue with props starting with `on` converted to "wrong" `@Events` - Stencil adds `on` automatically to events
+  - Remove `children` prop from `@Prop` - Stencil uses `<slot>` for children
+  - Add [`PropOptions`](https://stenciljs.com/docs/properties#prop-options) to `ToStencilOptions` and `StencilMetadata`. You can use it like this:
+
+  ```tsx
+  import { useMetadata } from '@builder.io/mitosis';
+
+  useMetadata({
+      stencil: {
+          propOptions: {
+              className: {
+                  attribute: 'classname',
+                  mutable: false,
+                  reflect: false,
+              },
+          },
+      },
+  });
+
+  export default function MyBasicComponent(props: {className:string}) {
+      ...
+  }
+  ```
+
+### Patch Changes
+
+- d5f3eea: JSX Parser: remove standalone null expressions
+
 ## 0.6.8
 
 ### Patch Changes
