@@ -1,5 +1,11 @@
 # @builder.io/create-mitosis
 
+## 0.1.0
+
+### Minor Changes
+
+- 383b022: @template/server-react: upgrade all dependencies to latest
+
 ## 0.0.8
 
 ### Patch Changes
