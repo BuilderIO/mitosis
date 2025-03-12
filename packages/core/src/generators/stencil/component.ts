@@ -15,7 +15,6 @@ import { getCodeProcessorPlugins } from '@/generators/stencil/plugins/get-code-p
 import { StencilPropOption, ToStencilOptions } from '@/generators/stencil/types';
 import { dashCase } from '@/helpers/dash-case';
 import { dedent } from '@/helpers/dedent';
-import { getEventNameWithoutOn } from '@/helpers/event-handlers';
 import { fastClone } from '@/helpers/fast-clone';
 import { getChildComponents } from '@/helpers/get-child-components';
 import { getProps } from '@/helpers/get-props';
@@ -66,11 +65,10 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> = (
     const childComponents: string[] = getChildComponents(json);
     const processBindingOptions: ProcessBindingOptions = { events };
 
-    props = props
-      .filter((prop) => {
-        // Stencil doesn't need children as a prop
-        return prop !== 'children';
-      });
+    props = props.filter((prop) => {
+      // Stencil doesn't need children as a prop
+      return prop !== 'children';
+    });
 
     options.plugins = getCodeProcessorPlugins(json, options, processBindingOptions);
 

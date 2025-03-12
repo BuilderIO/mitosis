@@ -88,7 +88,9 @@ export const getPropsAsCode = ({
       if (isEvent(item)) {
         // Stencil adds "on" to every `@Event` so we need to remove "on" from event props
         // https://stenciljs.com/docs/events#using-events-in-jsx
-        const eventType = hasTyping ? `EventEmitter<ReturnType<Required<${propsTypeRef}>["${item}"]>>` : 'any';
+        const eventType = hasTyping
+          ? `EventEmitter<ReturnType<Required<${propsTypeRef}>["${item}"]>>`
+          : 'any';
 
         return `@Event() ${getEventNameWithoutOn(item)}: ${eventType}${defaultPropString}`;
       }

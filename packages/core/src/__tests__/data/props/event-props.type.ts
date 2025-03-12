@@ -1,8 +1,8 @@
 export type EventProps = {
-    onGetVoid: () => void;
-    onEnter: () => string;
+  onGetVoid: () => void;
+  onEnter: () => string;
 };
 
 export type EventState = {
-    handleClick: () => void;
+  handleClick: () => void;
 };
