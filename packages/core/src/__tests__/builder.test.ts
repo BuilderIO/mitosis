@@ -1353,6 +1353,7 @@ describe('Builder', () => {
                         },
                         code: {
                           actions: {
+                            // newline here
                             click: 'state.pasttime = !state.pasttime;\n',
                           },
                         },
@@ -1391,6 +1392,7 @@ describe('Builder', () => {
       }
     `);
 
+    // crash here
     const jsx = componentToMitosis()({ component });
     expect(jsx).toMatchInlineSnapshot();
   });
