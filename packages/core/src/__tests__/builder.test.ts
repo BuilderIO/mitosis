@@ -1393,6 +1393,33 @@ describe('Builder', () => {
     `);
 
     // crash here
+    /*    
+    FAIL  src/__tests__/builder.test.ts > Builder > carousel
+    SyntaxError: Unterminated string literal. (32:48)
+      30 |   code: {
+      31 |     actions: {
+    > 32 |       click: 'state.pasttime = !state.pasttime;
+         |                                                ^
+      33 | '
+      34 |     }
+      35 |   },
+     ❯ v node_modules/prettier/parser-typescript.js:1:14679
+     ❯ _H node_modules/prettier/parser-typescript.js:49:10722
+     ❯ Object.cH [as parse] node_modules/prettier/parser-typescript.js:49:11028
+     ❯ Object.h [as parse] node_modules/prettier/standalone.js:40:1337
+     ❯ N node_modules/prettier/standalone.js:41:15055
+     ❯ T node_modules/prettier/standalone.js:45:576
+     ❯ node_modules/prettier/standalone.js:116:7321
+     ❯ Proxy.format node_modules/prettier/standalone.js:116:7412
+     ❯ src/generators/mitosis/generator.ts:316:15
+        314|     if (options.prettier !== false) {
+        315|       try {
+        316|         str = format(str, {
+           |               ^
+        317|           parser: 'typescript',
+        318|           plugins: [
+     ❯ src/__tests__/builder.test.ts:1410:36
+      */
     const jsx = componentToMitosis()({ component });
     expect(jsx).toMatchInlineSnapshot();
   });
