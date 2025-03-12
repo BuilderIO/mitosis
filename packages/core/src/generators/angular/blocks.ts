@@ -6,7 +6,7 @@ import {
   addCodeToOnUpdate,
   makeReactiveState,
 } from '@/generators/angular/helpers/hooks';
-import { parse } from '@/generators/angular/parse-selector';
+import { parseSelector } from '@/generators/angular/helpers/parse-selector';
 import { AngularBlockOptions, ToAngularOptions } from '@/generators/angular/types';
 import { createSingleBinding } from '@/helpers/bindings';
 import { checkIsBindingNativeEvent, checkIsEvent } from '@/helpers/event-handlers';
@@ -375,7 +375,7 @@ export const blockToAngular = ({
       const selector = json.meta.selector || blockOptions?.selector;
       if (selector) {
         try {
-          ({ element, classNames, attributes } = parse(`${selector}`));
+          ({ element, classNames, attributes } = parseSelector(`${selector}`));
         } catch {
           element = kebabCase(json.name);
         }

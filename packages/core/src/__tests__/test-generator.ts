@@ -376,6 +376,7 @@ const ANGULAR_TESTS: Tests = {
   allSpread: getRawFile('./data/angular/all-spread.raw.tsx'),
   changeDetection: getRawFile('./data/angular/change-detection.raw.tsx'),
   sanitizeInnerHTML: getRawFile('./data/angular/sanitize-inner-html.raw.tsx'),
+  signals: getRawFile('./data/angular/signals-test.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {

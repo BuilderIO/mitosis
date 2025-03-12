@@ -1,4 +1,4 @@
-import { processBinding, ProcessBindingOptions } from '@/generators/stencil/helpers/index';
+import { processBinding, ProcessBindingOptions } from '@/generators/stencil/helpers';
 import { ToStencilOptions } from '@/generators/stencil/types';
 import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
 import { MitosisComponent } from '@/types/mitosis-component';

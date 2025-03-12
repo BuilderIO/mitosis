@@ -1,9 +1,11 @@
-import { MitosisComponent } from '@/types/mitosis-component';
 import { BaseTranspilerOptions } from '@/types/transpiler';
 
 export const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment', 'Slot']);
 
+export type AngularApi = 'classic' | 'signals';
+
 export interface ToAngularOptions extends BaseTranspilerOptions {
+  api?: AngularApi;
   state?: 'class-properties' | 'inline-with-wrappers';
   standalone?: boolean;
   preserveImports?: boolean;
@@ -14,11 +16,11 @@ export interface ToAngularOptions extends BaseTranspilerOptions {
   experimental?: {
     injectables?: (variableName: string, variableType: string) => string;
     inject?: boolean;
-    outputs?: (json: MitosisComponent, variableName: string) => string;
   };
 }
 
 export const DEFAULT_ANGULAR_OPTIONS: ToAngularOptions = {
+  api: 'classic',
   state: 'inline-with-wrappers',
   preserveImports: false,
   preserveFileExtensions: false,
@@ -49,6 +51,12 @@ export type AngularMetadata = {
    * Overwrite default sanitizeInnerHTML. Default is `false`
    */
   sanitizeInnerHTML?: boolean;
+
+  /**
+   * Add additional @Output() properties to the component.
+   * Can be used with `useTarget({angular: ()=> ...})` if needed.
+   */
+  outputs?: string[];
 };
 
 export type AngularBlockOptions = {

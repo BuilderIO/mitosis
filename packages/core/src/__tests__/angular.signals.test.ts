@@ -1,21 +1,22 @@
 import { componentToAngular } from '@/generators/angular';
 import { runTestsForTarget } from './test-generator';
 
-describe('Angular', () => {
-  runTestsForTarget({ options: {}, target: 'angular', generator: componentToAngular });
+describe('Angular signals', () => {
   runTestsForTarget({
     options: {
       standalone: true,
+      api: 'signals',
     },
     target: 'angular',
     generator: componentToAngular,
   });
 });
 
-describe('Angular local', () => {
+describe('Angular signals local', () => {
   runTestsForTarget({
     options: {
       standalone: true,
+      api: 'signals',
     },
     target: 'angular',
     generator: componentToAngular,

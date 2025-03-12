@@ -1,0 +1,135 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Angular local > jsx > Javascript Test > signals 1`] = `
+"import { output, Component, input } from \\"@angular/core\\";
+
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"signals-test-component\\",
+  template: \`
+    <button (click)=\\"handleOutput()\\">{{testInput}}</button>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class SignalsTestComponent {
+  testInput = input<any>();
+  testOutput = output<any>();
+
+  handleOutput() {
+    if (this.testOutput) {
+      this.testOutput.emit();
+    }
+  }
+}
+"
+`;
+
+exports[`Angular local > jsx > Typescript Test > signals 1`] = `
+"import { output, Component, input } from \\"@angular/core\\";
+
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  testInput: string;
+  testOutput?: () => void;
+};
+type Store = {
+  handleOutput: () => void;
+};
+
+@Component({
+  selector: \\"signals-test-component\\",
+  template: \`
+    <button (click)=\\"handleOutput()\\">{{testInput}}</button>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class SignalsTestComponent {
+  testInput = input<Props[\\"testInput\\"]>();
+  testOutput = output<any>();
+
+  handleOutput(): ReturnType<Store[\\"handleOutput\\"]> {
+    if (this.testOutput) {
+      this.testOutput.emit();
+    }
+  }
+}
+"
+`;
+
+exports[`Angular local > svelte > Javascript Test > basic 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>
+      <input (change)=\\"name = $event.target.value\\" [attr.value]=\\"name\\" />
+
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  name = \\"Steve\\";
+}
+"
+`;
+
+exports[`Angular local > svelte > Typescript Test > basic 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>
+      <input (change)=\\"name = $event.target.value\\" [attr.value]=\\"name\\" />
+
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  name = \\"Steve\\";
+}
+"
+`;

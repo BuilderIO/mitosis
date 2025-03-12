@@ -33631,3 +33631,120 @@ export default class MyComponent {
 }
 "
 `;
+
+exports[`Angular local > jsx > Javascript Test > signals 1`] = `
+"import {
+  Output,
+  EventEmitter,
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+} from \\"@angular/core\\";
+
+import { CommonModule } from \\"@angular/common\\";
+
+const defaultProps = { testInput: \\"Test\\" };
+
+@Component({
+  selector: \\"signals-test-component\\",
+  template: \`
+    <button #buttonRef (click)=\\"handleOutput()\\">{{testInput}}</button>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class SignalsTestComponent {
+  @Input() testInput = defaultProps[\\"testInput\\"];
+  @Output() testOutput = new EventEmitter<any>();
+
+  @ViewChild(\\"buttonRef\\") buttonRef;
+
+  _counter = 0;
+  handleOutput() {
+    console.log(this.testInput, this._counter);
+    this._counter++;
+
+    if (this.testOutput) {
+      this.testOutput.emit();
+    }
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(this._counter, this.buttonRef.nativeElement);
+    }
+  }
+}
+"
+`;
+
+exports[`Angular local > jsx > Typescript Test > signals 1`] = `
+"import {
+  Output,
+  EventEmitter,
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
+
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  testInput: string;
+  testOutput?: () => void;
+};
+type Store = {
+  _counter: number;
+  handleOutput: () => void;
+};
+const defaultProps = { testInput: \\"Test\\" };
+
+@Component({
+  selector: \\"signals-test-component\\",
+  template: \`
+    <button #buttonRef (click)=\\"handleOutput()\\">{{testInput}}</button>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class SignalsTestComponent {
+  @Input() testInput: Props[\\"testInput\\"] = defaultProps[\\"testInput\\"];
+  @Output() testOutput = new EventEmitter<any>();
+
+  @ViewChild(\\"buttonRef\\") buttonRef!: ElementRef;
+
+  _counter: Store[\\"_counter\\"] = 0;
+  handleOutput(): ReturnType<Store[\\"handleOutput\\"]> {
+    console.log(this.testInput, this._counter);
+    this._counter++;
+
+    if (this.testOutput) {
+      this.testOutput.emit();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(this._counter, this.buttonRef.nativeElement);
+    }
+  }
+}
+"
+`;
