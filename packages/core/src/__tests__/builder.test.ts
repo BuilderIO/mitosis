@@ -1331,6 +1331,97 @@ describe('Builder', () => {
     `);
   });
 
+  test.only('carousel', () => {
+    const builderContent = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            '@version': 2,
+            id: 'builder-01964d9c9f664d708ce2c0f2ce60d6bf',
+            component: {
+              name: 'Builder:Carousel',
+              options: {
+                slides: [
+                  {
+                    content: [
+                      {
+                        '@type': '@builder.io/sdk:Element',
+                        '@version': 2,
+                        actions: {
+                          click: 'state.pasttime=!state.pasttime',
+                        },
+                        code: {
+                          actions: {
+                            click: 'state.pasttime = !state.pasttime;\n',
+                          },
+                        },
+                        id: 'builder-885fec6ed5c14957a492c29c4ea7efc4',
+                        children: [],
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    const component = builderContentToMitosisComponent(builderContent, {});
+    expect(component.children[0]).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/node",
+        "bindings": {
+          "slides": {
+            "bindingType": "expression",
+            "code": "[{\\"content\\":[{\\"@type\\":\\"@builder.io/sdk:Element\\",\\"@version\\":2,\\"actions\\":{\\"click\\":\\"state.pasttime=!state.pasttime\\"},\\"code\\":{\\"actions\\":{\\"click\\":\\"state.pasttime = !state.pasttime;\\\\n\\"}},\\"id\\":\\"builder-885fec6ed5c14957a492c29c4ea7efc4\\",\\"children\\":[]}]}]",
+            "type": "single",
+          },
+        },
+        "children": [],
+        "meta": {},
+        "name": "BuilderCarousel",
+        "properties": {
+          "$tagName": undefined,
+        },
+        "scope": {},
+        "slots": {},
+      }
+    `);
+
+    const jsx = componentToMitosis()({ component });
+    expect(jsx).toMatchInlineSnapshot(`
+      "import { BuilderCarousel } from \\"@components\\";
+
+      export default function MyComponent(props) {
+        return (
+          <BuilderCarousel
+            slides={\`[{
+        \\"content\\": [{
+          \\"@type\\": \\"@builder.io/sdk:Element\\",
+          \\"@version\\": 2,
+          \\"actions\\": {
+            \\"click\\": \\"state.pasttime=!state.pasttime\\"
+          },
+          \\"code\\": {
+            \\"actions\\": {
+              \\"click\\": \\"state.pasttime = !state.pasttime;
+      \\"
+            }
+          },
+          \\"id\\": \\"builder-885fec6ed5c14957a492c29c4ea7efc4\\",
+          \\"children\\": []
+        }]
+      }]\`}
+          />
+        );
+      }
+      "
+    `);
+  });
+
   test('map each component option to either component.options or bindings but not both', () => {
     const jsx = `export default function MyComponent(props) {
       return (
