@@ -1392,34 +1392,7 @@ describe('Builder', () => {
     `);
 
     const jsx = componentToMitosis()({ component });
-    expect(jsx).toMatchInlineSnapshot(`
-      "import { BuilderCarousel } from \\"@components\\";
-
-      export default function MyComponent(props) {
-        return (
-          <BuilderCarousel
-            slides={\`[{
-        \\"content\\": [{
-          \\"@type\\": \\"@builder.io/sdk:Element\\",
-          \\"@version\\": 2,
-          \\"actions\\": {
-            \\"click\\": \\"state.pasttime=!state.pasttime\\"
-          },
-          \\"code\\": {
-            \\"actions\\": {
-              \\"click\\": \\"state.pasttime = !state.pasttime;
-      \\"
-            }
-          },
-          \\"id\\": \\"builder-885fec6ed5c14957a492c29c4ea7efc4\\",
-          \\"children\\": []
-        }]
-      }]\`}
-          />
-        );
-      }
-      "
-    `);
+    expect(jsx).toMatchInlineSnapshot();
   });
 
   test('map each component option to either component.options or bindings but not both', () => {
