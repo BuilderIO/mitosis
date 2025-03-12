@@ -2296,6 +2296,28 @@ export default EventInputAndChange;
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > eventProps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+function EventPropsComponent(props) {
+  function handleClick() {
+    if (props.onGetVoid) {
+      props.onGetVoid();
+    }
+
+    if (props.onEnter) {
+      console.log(props.onEnter());
+    }
+  }
+
+  return <button onClick={(event) => handleClick()}>Test</button>;
+}
+
+export default EventPropsComponent;
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > expressionState 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -6554,6 +6576,29 @@ function EventInputAndChange(props: any) {
 }
 
 export default EventInputAndChange;
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > eventProps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { EventProps, EventState } from \\"./event-props.type\\";
+
+function EventPropsComponent(props: EventProps) {
+  function handleClick(): ReturnType<EventState[\\"handleClick\\"]> {
+    if (props.onGetVoid) {
+      props.onGetVoid();
+    }
+
+    if (props.onEnter) {
+      console.log(props.onEnter());
+    }
+  }
+
+  return <button onClick={(event) => handleClick()}>Test</button>;
+}
+
+export default EventPropsComponent;
 "
 `;
 

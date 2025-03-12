@@ -291,14 +291,22 @@ export class MyBasicOnMountUpdateComponent {
 `;
 
 exports[`Stencil > jsx > Javascript Test > Basic Outputs 1`] = `
-"import { Component, h, Fragment, Event, Prop, State } from \\"@stencil/core\\";
+"import {
+  Component,
+  h,
+  Fragment,
+  Event,
+  EventEmitter,
+  Prop,
+  State,
+} from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-outputs-component\\",
 })
 export class MyBasicOutputsComponent {
-  @Prop() message: any;
-  @Prop() event: any;
+  @Event() message: any;
+  @Event() event: any;
   @Prop() message: any;
   @State() name = \\"PatrickJS\\";
 
@@ -320,14 +328,22 @@ exports[`Stencil > jsx > Javascript Test > Basic Outputs Meta 1`] = `
           {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
           */
 
-import { Component, h, Fragment, Event, Prop, State } from \\"@stencil/core\\";
+import {
+  Component,
+  h,
+  Fragment,
+  Event,
+  EventEmitter,
+  Prop,
+  State,
+} from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-outputs-component\\",
 })
 export class MyBasicOutputsComponent {
-  @Prop() message: any;
-  @Prop() event: any;
+  @Event() message: any;
+  @Event() event: any;
   @Prop() message: any;
   @State() name = \\"PatrickJS\\";
 
@@ -1424,7 +1440,14 @@ export class ImgComponent {
 exports[`Stencil > jsx > Javascript Test > Input 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
-import { Component, h, Fragment, Event, Prop } from \\"@stencil/core\\";
+import {
+  Component,
+  h,
+  Fragment,
+  Event,
+  EventEmitter,
+  Prop,
+} from \\"@stencil/core\\";
 
 @Component({
   tag: \\"form-input-component\\",
@@ -1437,7 +1460,7 @@ export class FormInputComponent {
   @Prop() name: any;
   @Prop() value: any;
   @Prop() required: any;
-  @Prop() change: any;
+  @Event() change: any;
 
   componentDidLoad() {}
 
@@ -1456,7 +1479,7 @@ export class FormInputComponent {
         value={this.value}
         defaultValue={this.defaultValue}
         required={this.required}
-        onChange={(event) => this.onChange?.(event.target.value)}
+        onChange={(event) => this.change?.(event.target.value)}
       />
     );
   }
@@ -1998,20 +2021,28 @@ export class Textarea {
 `;
 
 exports[`Stencil > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
-"import { Component, h, Fragment, Event, Prop, State } from \\"@stencil/core\\";
+"import {
+  Component,
+  h,
+  Fragment,
+  Event,
+  EventEmitter,
+  Prop,
+  State,
+} from \\"@stencil/core\\";
 
 @Component({
   tag: \\"use-value-and-fn-from-store\\",
 })
 export class UseValueAndFnFromStore {
-  @Prop() change: any;
+  @Event() change: any;
   @State() _id = \\"abc\\";
   @State() _active = false;
 
   _do(id) {
     this._active = !!id;
 
-    if (this.onChange) {
+    if (this.change) {
       this.change.emit(this._active);
     }
   }
@@ -2726,7 +2757,14 @@ export class RenderContent {
 `;
 
 exports[`Stencil > jsx > Javascript Test > defaultProps 1`] = `
-"import { Component, h, Fragment, Event, Prop } from \\"@stencil/core\\";
+"import {
+  Component,
+  h,
+  Fragment,
+  Event,
+  EventEmitter,
+  Prop,
+} from \\"@stencil/core\\";
 
 @Component({
   tag: \\"button\\",
@@ -2736,7 +2774,9 @@ export class Button {
   @Prop() attributes: any;
   @Prop() openLinkInNewTab: any = false;
   @Prop() text: any = \\"default text\\";
-  @Prop() click: any;
+  @Event() click: any = () => {
+    console.log(\\"hi\\");
+  };
   @Prop() buttonText: any;
 
   componentDidLoad() {}
@@ -2770,7 +2810,14 @@ export class Button {
 `;
 
 exports[`Stencil > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
-"import { Component, h, Fragment, Event, Prop } from \\"@stencil/core\\";
+"import {
+  Component,
+  h,
+  Fragment,
+  Event,
+  EventEmitter,
+  Prop,
+} from \\"@stencil/core\\";
 
 @Component({
   tag: \\"button\\",
@@ -2780,7 +2827,7 @@ export class Button {
   @Prop() attributes: any;
   @Prop() openLinkInNewTab: any = false;
   @Prop() text: any = \\"default text\\";
-  @Prop() click: any;
+  @Event() click: any = () => {};
 
   componentDidLoad() {}
 
@@ -2869,6 +2916,42 @@ export class EventInputAndChange {
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Javascript Test > eventProps 1`] = `
+"import {
+  Component,
+  h,
+  Fragment,
+  Event,
+  EventEmitter,
+  Prop,
+} from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"event-props-component\\",
+})
+export class EventPropsComponent {
+  @Event() getVoid: any;
+  @Event() enter: any;
+
+  handleClick() {
+    if (this.getVoid) {
+      this.getVoid.emit();
+    }
+
+    if (this.enter) {
+      console.log(this.enter.emit());
+    }
+  }
+
+  componentDidLoad() {}
+
+  render() {
+    return <button onClick={() => this.handleClick()}>Test</button>;
   }
 }
 "
@@ -4803,14 +4886,22 @@ export class MyBasicOnMountUpdateComponent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > Basic Outputs 1`] = `
-"import { Component, h, Fragment, Event, Prop, State } from \\"@stencil/core\\";
+"import {
+  Component,
+  h,
+  Fragment,
+  Event,
+  EventEmitter,
+  Prop,
+  State,
+} from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-outputs-component\\",
 })
 export class MyBasicOutputsComponent {
-  @Prop() message: any;
-  @Prop() event: any;
+  @Event() message: any;
+  @Event() event: any;
   @Prop() message: any;
   @State() name = \\"PatrickJS\\";
 
@@ -4832,14 +4923,22 @@ exports[`Stencil > jsx > Typescript Test > Basic Outputs Meta 1`] = `
           {\\"outputs\\":[\\"onMessage\\",\\"onEvent\\"],\\"baz\\":\\"metadata inside component\\"}
           */
 
-import { Component, h, Fragment, Event, Prop, State } from \\"@stencil/core\\";
+import {
+  Component,
+  h,
+  Fragment,
+  Event,
+  EventEmitter,
+  Prop,
+  State,
+} from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-outputs-component\\",
 })
 export class MyBasicOutputsComponent {
-  @Prop() message: any;
-  @Prop() event: any;
+  @Event() message: any;
+  @Event() event: any;
   @Prop() message: any;
   @State() name = \\"PatrickJS\\";
 
@@ -5947,7 +6046,14 @@ export class ImgComponent {
 exports[`Stencil > jsx > Typescript Test > Input 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
-import { Component, h, Fragment, Event, Prop } from \\"@stencil/core\\";
+import {
+  Component,
+  h,
+  Fragment,
+  Event,
+  EventEmitter,
+  Prop,
+} from \\"@stencil/core\\";
 
 @Component({
   tag: \\"form-input-component\\",
@@ -5960,7 +6066,7 @@ export class FormInputComponent {
   @Prop() name: any;
   @Prop() value: any;
   @Prop() required: any;
-  @Prop() change: any;
+  @Event() change: any;
 
   componentDidLoad() {}
 
@@ -5979,7 +6085,7 @@ export class FormInputComponent {
         value={this.value}
         defaultValue={this.defaultValue}
         required={this.required}
-        onChange={(event) => this.onChange?.(event.target.value)}
+        onChange={(event) => this.change?.(event.target.value)}
       />
     );
   }
@@ -6521,20 +6627,28 @@ export class Textarea {
 `;
 
 exports[`Stencil > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
-"import { Component, h, Fragment, Event, Prop, State } from \\"@stencil/core\\";
+"import {
+  Component,
+  h,
+  Fragment,
+  Event,
+  EventEmitter,
+  Prop,
+  State,
+} from \\"@stencil/core\\";
 
 @Component({
   tag: \\"use-value-and-fn-from-store\\",
 })
 export class UseValueAndFnFromStore {
-  @Prop() change: any;
+  @Event() change: any;
   @State() _id = \\"abc\\";
   @State() _active = false;
 
   _do(id?: string) {
     this._active = !!id;
 
-    if (this.onChange) {
+    if (this.change) {
       this.change.emit(this._active);
     }
   }
@@ -7251,7 +7365,14 @@ export class RenderContent {
 `;
 
 exports[`Stencil > jsx > Typescript Test > defaultProps 1`] = `
-"import { Component, h, Fragment, Event, Prop } from \\"@stencil/core\\";
+"import {
+  Component,
+  h,
+  Fragment,
+  Event,
+  EventEmitter,
+  Prop,
+} from \\"@stencil/core\\";
 
 @Component({
   tag: \\"button\\",
@@ -7261,7 +7382,9 @@ export class Button {
   @Prop() attributes: any;
   @Prop() openLinkInNewTab: any = false;
   @Prop() text: any = \\"default text\\";
-  @Prop() click: any;
+  @Event() click: any = () => {
+    console.log(\\"hi\\");
+  };
   @Prop() buttonText: any;
 
   componentDidLoad() {}
@@ -7295,7 +7418,14 @@ export class Button {
 `;
 
 exports[`Stencil > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
-"import { Component, h, Fragment, Event, Prop } from \\"@stencil/core\\";
+"import {
+  Component,
+  h,
+  Fragment,
+  Event,
+  EventEmitter,
+  Prop,
+} from \\"@stencil/core\\";
 
 @Component({
   tag: \\"button\\",
@@ -7305,7 +7435,7 @@ export class Button {
   @Prop() attributes: any;
   @Prop() openLinkInNewTab: any = false;
   @Prop() text: any = \\"default text\\";
-  @Prop() click: any;
+  @Event() click: any = () => {};
 
   componentDidLoad() {}
 
@@ -7394,6 +7524,44 @@ export class EventInputAndChange {
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > eventProps 1`] = `
+"import { EventProps, EventState } from \\"./event-props.type\\";
+
+import {
+  Component,
+  h,
+  Fragment,
+  Event,
+  EventEmitter,
+  Prop,
+} from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"event-props-component\\",
+})
+export class EventPropsComponent {
+  @Event() getVoid: EventEmitter<ReturnType<Required<EventProps>[\\"onGetVoid\\"]>>;
+  @Event() enter: EventEmitter<ReturnType<Required<EventProps>[\\"onEnter\\"]>>;
+
+  handleClick() {
+    if (this.getVoid) {
+      this.getVoid.emit();
+    }
+
+    if (this.enter) {
+      console.log(this.enter.emit());
+    }
+  }
+
+  componentDidLoad() {}
+
+  render() {
+    return <button onClick={() => this.handleClick()}>Test</button>;
   }
 }
 "

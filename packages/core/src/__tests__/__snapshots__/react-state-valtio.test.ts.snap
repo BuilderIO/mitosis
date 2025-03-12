@@ -2301,6 +2301,31 @@ export default EventInputAndChange;
 "
 `;
 
+exports[`React - stateType: valtio > jsx > Javascript Test > eventProps 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalProxy } from \\"valtio/utils\\";
+
+function EventPropsComponent(props) {
+  const state = useLocalProxy({
+    handleClick() {
+      if (props.onGetVoid) {
+        props.onGetVoid();
+      }
+
+      if (props.onEnter) {
+        console.log(props.onEnter());
+      }
+    },
+  });
+
+  return <button onClick={(event) => state.handleClick()}>Test</button>;
+}
+
+export default EventPropsComponent;
+"
+`;
+
 exports[`React - stateType: valtio > jsx > Javascript Test > expressionState 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -6449,6 +6474,32 @@ function EventInputAndChange(props: any) {
 }
 
 export default EventInputAndChange;
+"
+`;
+
+exports[`React - stateType: valtio > jsx > Typescript Test > eventProps 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalProxy } from \\"valtio/utils\\";
+import { EventProps, EventState } from \\"./event-props.type\\";
+
+function EventPropsComponent(props: EventProps) {
+  const state = useLocalProxy({
+    handleClick() {
+      if (props.onGetVoid) {
+        props.onGetVoid();
+      }
+
+      if (props.onEnter) {
+        console.log(props.onEnter());
+      }
+    },
+  });
+
+  return <button onClick={(event) => state.handleClick()}>Test</button>;
+}
+
+export default EventPropsComponent;
 "
 `;
 

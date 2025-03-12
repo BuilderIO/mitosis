@@ -67,15 +67,6 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> = (
     const processBindingOptions: ProcessBindingOptions = { events };
 
     props = props
-      .map((prop) => {
-        // Stencil adds "on" to every `@Event` so we need to remove "on" from event props
-        // https://stenciljs.com/docs/events#using-events-in-jsx
-        if (isEvent(prop)) {
-          return getEventNameWithoutOn(prop);
-        }
-
-        return prop;
-      })
       .filter((prop) => {
         // Stencil doesn't need children as a prop
         return prop !== 'children';

@@ -1,7 +1,6 @@
 import { For, onMount, Show, useStore } from '@builder.io/mitosis';
 import { COMPONENT_PATHS } from './component-paths';
 import ComponentOnUpdate from './components/component-on-update.lite';
-import ComponentWithTypes from './components/component-with-types.lite';
 import DefaultProps from './components/default-props/use-default-props.lite';
 import DisabledInput from './components/disabled-input/disabled-input.lite';
 import NestedParent from './components/nested/nested-parent.lite';
@@ -9,10 +8,15 @@ import OneComponent from './components/one-component.lite';
 import ShowForComponent from './components/show-for-component.lite';
 import SignalParent from './components/signals/signal-parent.lite';
 import SpecialTags from './components/special-tags.lite';
+import ComponentWithInsideTypes from './components/types/component-with-inside-types.lite';
+import ComponentWithOutsideTypes from './components/types/component-with-outside-types.lite';
 
 export default function Homepage(props: { pathname?: string }) {
   const state = useStore({
     pathToUse: '',
+    log: () => {
+      console.log('logging');
+    },
   });
 
   onMount(() => {
@@ -49,7 +53,7 @@ export default function Homepage(props: { pathname?: string }) {
       </Show>
 
       <Show when={state.pathToUse.startsWith('/types')}>
-        <ComponentWithTypes name="Lorem ipsum" />
+        <ComponentWithInsideTypes name="Lorem ipsum" />
       </Show>
 
       <Show when={state.pathToUse.startsWith('/show-for-component')}>
@@ -70,6 +74,14 @@ export default function Homepage(props: { pathname?: string }) {
 
       <Show when={state.pathToUse.startsWith('/component-on-update')}>
         <ComponentOnUpdate />
+      </Show>
+
+      <Show when={state.pathToUse.startsWith('/component-with-outside-types')}>
+        <ComponentWithOutsideTypes
+          text="Before"
+          onGetClicked={() => state.log()}
+          onEnter={() => state.log()}
+        />
       </Show>
     </div>
   );
