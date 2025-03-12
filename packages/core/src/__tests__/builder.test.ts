@@ -1376,7 +1376,7 @@ describe('Builder', () => {
         "bindings": {
           "slides": {
             "bindingType": "expression",
-            "code": "[{\\"content\\":[{\\"@type\\":\\"@builder.io/sdk:Element\\",\\"@version\\":2,\\"actions\\":{\\"click\\":\\"state.pasttime=!state.pasttime\\"},\\"code\\":{\\"actions\\":{\\"click\\":\\"state.pasttime = !state.pasttime;\\\\n\\"}},\\"id\\":\\"builder-885fec6ed5c14957a492c29c4ea7efc4\\",\\"children\\":[]}]}]",
+            "code": "[{content:[{'@type':'@builder.io/sdk:Element','@version':2,actions:{click:'state.pasttime=!state.pasttime'},code:{actions:{click:'state.pasttime = !state.pasttime;\\\\n'}},id:'builder-885fec6ed5c14957a492c29c4ea7efc4',children:[]}]}]",
             "type": "single",
           },
         },
