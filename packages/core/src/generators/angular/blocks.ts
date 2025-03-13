@@ -365,7 +365,7 @@ export const blockToAngular = ({
 
     str += `</ng-container>`;
   } else {
-    let element: string | undefined,
+    let element: string | null = null,
       classNames: string[] = [],
       attributes;
 
