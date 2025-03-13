@@ -14,9 +14,6 @@ import ComponentWithOutsideTypes from './components/types/component-with-outside
 export default function Homepage(props: { pathname?: string }) {
   const state = useStore({
     pathToUse: '',
-    log: () => {
-      console.log('logging');
-    },
   });
 
   onMount(() => {
@@ -77,11 +74,7 @@ export default function Homepage(props: { pathname?: string }) {
       </Show>
 
       <Show when={state.pathToUse.startsWith('/component-with-outside-types')}>
-        <ComponentWithOutsideTypes
-          text="Before"
-          onGetClicked={() => state.log()}
-          onEnter={() => state.log()}
-        />
+        <ComponentWithOutsideTypes text="Before" />
       </Show>
     </div>
   );

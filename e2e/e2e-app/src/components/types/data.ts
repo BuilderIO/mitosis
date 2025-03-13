@@ -1,7 +1,7 @@
-export type Props = {
+export type OutsideProps = {
   text: string;
-  onGetClicked: () => void;
-  onEnter: () => void;
+  onGetClicked?: () => void;
+  onEnter?: () => void;
 };
 
 export type OutsideState = {

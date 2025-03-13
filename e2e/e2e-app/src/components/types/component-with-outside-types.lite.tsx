@@ -1,7 +1,7 @@
 import { useStore } from '@builder.io/mitosis';
-import { OutsideState, Props } from './data';
+import type { OutsideProps, OutsideState } from './data';
 
-export default function ComponentWithOutsideTypes(props: Props) {
+export default function ComponentWithOutsideTypes(props: OutsideProps) {
   const state = useStore<OutsideState>({
     _text: undefined,
     handleClick: () => {
