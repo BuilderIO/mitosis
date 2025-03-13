@@ -1,8 +1,7 @@
 import { useStore } from '@builder.io/mitosis';
 import type { OutsideProps, OutsideState } from './data';
 
-// any type is a workaround for qwik
-export default function ComponentWithOutsideTypes(props: OutsideProps | any) {
+export default function ComponentWithOutsideTypes(props: OutsideProps) {
   const state = useStore<OutsideState>({
     _text: undefined,
     handleClick: () => {
