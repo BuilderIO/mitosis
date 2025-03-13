@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.2
+
+### Patch Changes
+
+- f87bd64: [Angular] Use tagName to generate
+
 ## 0.7.1
 
 ### Patch Changes
