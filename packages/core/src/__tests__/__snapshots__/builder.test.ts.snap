@@ -680,6 +680,38 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Builder > Custom Component Tags in Angular 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <mitosis-navigation builderTag=\\"mitosis-navigation\\"></mitosis-navigation>
+    <button></button>
+    <my-button></my-button>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, NavigationModule, ButtonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Builder > CustomCode 1`] = `
 {
   "data": {
