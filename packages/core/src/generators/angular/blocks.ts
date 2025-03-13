@@ -371,20 +371,20 @@ export const blockToAngular = ({
 
     const isComponent = childComponents.find((impName) => impName === json.name);
     const tagName = json.properties.$tagName;
-    if (isComponent) {
-      const selector = json.meta.selector || blockOptions?.selector;
-      if (selector) {
-        try {
-          ({ element, classNames, attributes } = parse(`${selector}`));
-        } catch {
-          element = tagName ?? kebabCase(json.name);
-        }
-      } else {
+    const selector = json.meta.selector || blockOptions?.selector;
+    if (selector) {
+      try {
+        ({ element, classNames, attributes } = parse(`${selector}`));
+      } catch {
         element = tagName ?? kebabCase(json.name);
       }
     }
     if (!element) {
-      element = tagName ?? json.name;
+      if (isComponent) {
+        element = tagName ?? kebabCase(json.name);
+      } else {
+        element = tagName ?? json.name;
+      }
     }
 
     str += `<${element} `;

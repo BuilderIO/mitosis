@@ -155,7 +155,9 @@ describe('Builder', () => {
 
   test('Custom Component Tags in Angular', async () => {
     const originalBuilder = JSON.parse(customComponentTags);
-    const component = builderContentToMitosisComponent(originalBuilder);
+    const component = builderContentToMitosisComponent(originalBuilder, {
+      includeMeta: true,
+    });
     const angularJsx = componentToAngular()({ component });
 
     expect(angularJsx).toMatchSnapshot();
