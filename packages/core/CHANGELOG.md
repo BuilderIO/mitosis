@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.1
+
+### Patch Changes
+
+- 3d44b65: Properly encode "<", ">", and other chars in text in Mitosis JSX output
+
 ## 0.7.0
 
 ### Minor Changes
