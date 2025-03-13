@@ -135,6 +135,10 @@ test.describe('e2e', () => {
   });
 
   test('component with outside types', async ({ page, packageName }) => {
+    if (['e2e-qwik'].includes(packageName)) {
+      // Qwik: Events are not working as properties
+      test.skip();
+    }
     await page.goto('/component-with-outside-types/');
 
     const button: Locator = page.locator('button');
