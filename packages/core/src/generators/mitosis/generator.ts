@@ -109,7 +109,13 @@ export const blockToMitosis = (
   }
 
   if (json.properties._text) {
-    const encodedText = json.properties._text.replace(/>/g, '&gt;').replace(/</g, '&lt;');
+    const encodedText = json.properties._text
+      .replace(/>/g, '&gt;')
+      .replace(/</g, '&lt;')
+      .replace(/{/g, '&#123;')
+      .replace(/}/g, '&#125;')
+      .replace(/&/g, '&amp;');
+
     if (insideJsx) {
       return `${encodedText}`;
     } else {

@@ -40,7 +40,7 @@ describe('Can encode <> in text', () => {
       component: createMitosisComponent({
         children: [
           createMitosisNode({
-            properties: { _text: '<>' },
+            properties: { _text: '<>{}' },
           }),
         ],
         hooks: {},

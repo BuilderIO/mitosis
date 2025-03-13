@@ -2,4 +2,4 @@
 '@builder.io/mitosis': patch
 ---
 
-Properly encode "<" and ">" in Mitosis JSX output
+Properly encode "<", ">", and other chars in text in Mitosis JSX output
