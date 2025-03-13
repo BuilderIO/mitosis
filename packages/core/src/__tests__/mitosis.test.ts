@@ -49,4 +49,18 @@ describe('Can encode <> in text', () => {
 
     expect(result).toMatchSnapshot();
   });
+  it('should not encode valid jsx', () => {
+    const result = componentToMitosis()({
+      component: createMitosisComponent({
+        children: [
+          createMitosisNode({
+            properties: { _text: 'hello <b>world</b>' },
+          }),
+        ],
+        hooks: {},
+      }),
+    });
+
+    expect(result).toMatchSnapshot();
+  });
 });

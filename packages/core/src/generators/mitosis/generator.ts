@@ -21,6 +21,8 @@ import {
 import { MitosisComponent } from '@/types/mitosis-component';
 import { MitosisNode, checkIsForNode, checkIsShowNode } from '@/types/mitosis-node';
 import { TranspilerGenerator } from '@/types/transpiler';
+import * as babel from '@babel/core';
+import tsPlugin from '@babel/plugin-syntax-typescript';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
 
@@ -109,17 +111,37 @@ export const blockToMitosis = (
   }
 
   if (json.properties._text) {
-    const encodedText = json.properties._text
-      .replace(/>/g, '&gt;')
-      .replace(/</g, '&lt;')
-      .replace(/{/g, '&#123;')
-      .replace(/}/g, '&#125;')
-      .replace(/&/g, '&amp;');
+    let text = json.properties._text
+      // Convert HTML <br> to JSX-valid <br />
+      .replace(/<br\s*>/g, '<br />');
+
+    let isInvalidJsx = text.includes('{') || text.includes('}');
+
+    if (text.includes('<') || text.includes('>')) {
+      // test if this can parse as jsx
+      try {
+        babel.parse(`let _ = <>${text}</>;`, {
+          plugins: [[tsPlugin, { isTSX: true }]],
+        });
+        isInvalidJsx = false;
+      } catch (e) {
+        isInvalidJsx = true;
+      }
+    }
+
+    if (isInvalidJsx) {
+      text = text
+        .replace(/>/g, '&gt;')
+        .replace(/</g, '&lt;')
+        .replace(/{/g, '&#123;')
+        .replace(/}/g, '&#125;')
+        .replace(/&/g, '&amp;');
+    }
 
     if (insideJsx) {
-      return `${encodedText}`;
+      return `${text}`;
     } else {
-      return `<>${encodedText}</>`;
+      return `<>${text}</>`;
     }
   }
 
