@@ -830,10 +830,6 @@ export const builderElementToMitosisNode = (
     }
   }
 
-  if (block.component && block.tagName && block.tagName !== 'div') {
-    properties.builderTag = block.tagName;
-  }
-
   const css = getCssFromBlock(block);
   let styleString = getStyleStringFromBlock(block, options);
   const actionBindings = getActionBindingsFromBlock(block, options);

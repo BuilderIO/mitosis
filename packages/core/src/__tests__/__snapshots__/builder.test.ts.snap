@@ -680,6 +680,38 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Builder > Custom Component Tags in Angular 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <mitosis-navigation></mitosis-navigation>
+    <button mui></button>
+    <custom-element></custom-element>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule, NavigationModule, MyButtonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Builder > CustomCode 1`] = `
 {
   "data": {
@@ -4151,7 +4183,6 @@ exports[`Builder > localization 1`] = `
       "name": "CustomCode",
       "properties": {
         "$tagName": "a",
-        "builderTag": "a",
         "code": "<a>Link</a>
 ",
         "href": "http://builder.io",
@@ -4202,7 +4233,6 @@ export default function MyComponent(props) {
         href=\\"http://builder.io\\"
         code=\\"<a>Link</a>
 \\"
-        builderTag=\\"a\\"
         scriptsClientOnly={false}
         css={{
           display: \\"flex\\",
@@ -4332,7 +4362,6 @@ exports[`Builder > localization 3`] = `
         "component": {
           "name": "Custom Code",
           "options": {
-            "builderTag": "a",
             "code": "<a>Link</a>
 ",
             "href": "http://builder.io",
