@@ -1343,6 +1343,99 @@ describe('Builder', () => {
     `);
   });
 
+  test.only('carousel', () => {
+    const builderContent = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            '@version': 2,
+            id: 'builder-01964d9c9f664d708ce2c0f2ce60d6bf',
+            component: {
+              name: 'Builder:Carousel',
+              options: {
+                slides: [
+                  {
+                    content: [
+                      {
+                        '@type': '@builder.io/sdk:Element',
+                        '@version': 2,
+                        actions: {
+                          click: 'state.pasttime=!state.pasttime',
+                        },
+                        code: {
+                          actions: {
+                            // newline here
+                            click: 'state.pasttime = !state.pasttime;\n',
+                          },
+                        },
+                        id: 'builder-885fec6ed5c14957a492c29c4ea7efc4',
+                        children: [],
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    const component = builderContentToMitosisComponent(builderContent, {});
+    expect(component.children[0]).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/node",
+        "bindings": {
+          "slides": {
+            "bindingType": "expression",
+            "code": "[{content:[{'@type':'@builder.io/sdk:Element','@version':2,actions:{click:'state.pasttime=!state.pasttime'},code:{actions:{click:'state.pasttime = !state.pasttime;\\\\n'}},id:'builder-885fec6ed5c14957a492c29c4ea7efc4',children:[]}]}]",
+            "type": "single",
+          },
+        },
+        "children": [],
+        "meta": {},
+        "name": "BuilderCarousel",
+        "properties": {
+          "$tagName": undefined,
+        },
+        "scope": {},
+        "slots": {},
+      }
+    `);
+
+    // crash here
+    /*    
+    FAIL  src/__tests__/builder.test.ts > Builder > carousel
+    SyntaxError: Unterminated string literal. (32:48)
+      30 |   code: {
+      31 |     actions: {
+    > 32 |       click: 'state.pasttime = !state.pasttime;
+         |                                                ^
+      33 | '
+      34 |     }
+      35 |   },
+     ❯ v node_modules/prettier/parser-typescript.js:1:14679
+     ❯ _H node_modules/prettier/parser-typescript.js:49:10722
+     ❯ Object.cH [as parse] node_modules/prettier/parser-typescript.js:49:11028
+     ❯ Object.h [as parse] node_modules/prettier/standalone.js:40:1337
+     ❯ N node_modules/prettier/standalone.js:41:15055
+     ❯ T node_modules/prettier/standalone.js:45:576
+     ❯ node_modules/prettier/standalone.js:116:7321
+     ❯ Proxy.format node_modules/prettier/standalone.js:116:7412
+     ❯ src/generators/mitosis/generator.ts:316:15
+        314|     if (options.prettier !== false) {
+        315|       try {
+        316|         str = format(str, {
+           |               ^
+        317|           parser: 'typescript',
+        318|           plugins: [
+     ❯ src/__tests__/builder.test.ts:1410:36
+      */
+    const jsx = componentToMitosis()({ component });
+    expect(jsx).toMatchInlineSnapshot();
+  });
+
   test('map each component option to either component.options or bindings but not both', () => {
     const jsx = `export default function MyComponent(props) {
       return (
