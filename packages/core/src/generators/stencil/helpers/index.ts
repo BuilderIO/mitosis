@@ -15,7 +15,10 @@ const appendEmits = (str: string, events: string[]): string => {
   let code = str;
   if (events.length) {
     for (const event of events) {
-      code = code.replaceAll(`props.${event}(`, `props.${getEventNameWithoutOn(event)}.emit(`);
+      const eventWithoutOn = getEventNameWithoutOn(event);
+      code = code
+        .replaceAll(`props.${event}(`, `props.${eventWithoutOn}.emit(`)
+        .replaceAll(`props.${event}`, `props.${eventWithoutOn}`);
     }
   }
   return code;
@@ -75,21 +78,27 @@ export const getPropsAsCode = ({
       const defaultPropString = defaultProp ? ` = ${defaultProp}` : '';
       const propOption = propOptions[item];
 
-      if (isEvent(item)) {
-        return `@Event() ${item}: any${defaultPropString}`;
-      }
-
-      const type =
+      const hasTyping =
         propsTypeRef &&
         propsTypeRef !== 'any' &&
         propsTypeRef !== 'unknown' &&
         propsTypeRef !== 'never' &&
-        !isInternalType
-          ? `${propsTypeRef}["${item}"]`
+        !isInternalType;
+
+      if (isEvent(item)) {
+        // Stencil adds "on" to every `@Event` so we need to remove "on" from event props
+        // https://stenciljs.com/docs/events#using-events-in-jsx
+        const eventType = hasTyping
+          ? `EventEmitter<ReturnType<Required<${propsTypeRef}>["${item}"]>>`
           : 'any';
+
+        return `@Event() ${getEventNameWithoutOn(item)}: ${eventType}${defaultPropString}`;
+      }
+
+      const propType = hasTyping ? `${propsTypeRef}["${item}"]` : 'any';
       return `@Prop(${
         propOption ? JSON.stringify(propOption) : ''
-      }) ${item}: ${type}${defaultPropString}`;
+      }) ${item}: ${propType}${defaultPropString}`;
     })
     .join(';\n');
 };
@@ -139,6 +148,7 @@ export const getStencilCoreImportsAsString = ({
     Host: wrap,
     Watch: watch,
     Event: events.length > 0,
+    EventEmitter: events.length > 0,
     Prop: props.length > 0,
     State: dataString.length > 0,
   };

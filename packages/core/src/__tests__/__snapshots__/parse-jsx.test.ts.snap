@@ -7940,6 +7940,70 @@ exports[`Parse JSX > Javascript > eventInputAndChange 1`] = `
 }
 `;
 
+exports[`Parse JSX > Javascript > eventProps 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "onClick": {
+          "bindingType": "function",
+          "code": "state.handleClick()",
+          "type": "single",
+        },
+      },
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "Test",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "button",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "EventPropsComponent",
+  "refs": {},
+  "state": {
+    "handleClick": {
+      "code": "handleClick() {
+  if (props.onGetVoid) {
+    props.onGetVoid();
+  }
+
+  if (props.onEnter) {
+    console.log(props.onEnter());
+  }
+}",
+      "type": "method",
+    },
+  },
+  "subComponents": [],
+}
+`;
+
 exports[`Parse JSX > Javascript > expressionState 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -22147,6 +22211,81 @@ exports[`Parse JSX > Typescript > eventInputAndChange 1`] = `
       "code": "'Steve'",
       "propertyType": "normal",
       "type": "property",
+    },
+  },
+  "subComponents": [],
+}
+`;
+
+exports[`Parse JSX > Typescript > eventProps 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {
+        "onClick": {
+          "bindingType": "function",
+          "code": "state.handleClick()",
+          "type": "single",
+        },
+      },
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "Test",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "button",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onEvent": [],
+    "onMount": [],
+  },
+  "imports": [
+    {
+      "importKind": "value",
+      "imports": {
+        "EventProps": "EventProps",
+        "EventState": "EventState",
+      },
+      "path": "./event-props.type",
+    },
+  ],
+  "inputs": [],
+  "meta": {},
+  "name": "EventPropsComponent",
+  "propsTypeRef": "EventProps",
+  "refs": {},
+  "state": {
+    "handleClick": {
+      "code": "handleClick() {
+  if (props.onGetVoid) {
+    props.onGetVoid();
+  }
+
+  if (props.onEnter) {
+    console.log(props.onEnter());
+  }
+}",
+      "type": "method",
+      "typeParameter": "EventState[\\"handleClick\\"]",
     },
   },
   "subComponents": [],

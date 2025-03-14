@@ -2049,6 +2049,27 @@ export default function EventInputAndChange(props) {
 "
 `;
 
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > eventProps 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export default function EventPropsComponent(props) {
+  const state = useStore({
+    handleClick() {
+      if (props.onGetVoid) {
+        props.onGetVoid();
+      }
+
+      if (props.onEnter) {
+        console.log(props.onEnter());
+      }
+    },
+  });
+
+  return [<button onClick={(event) => state.handleClick()}>Test</button>];
+}
+"
+`;
+
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > expressionState 1`] = `
 "import { useStore } from \\"@builder.io/mitosis\\";
 
@@ -5645,6 +5666,29 @@ export default function EventInputAndChange(props) {
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>,
   ];
+}
+"
+`;
+
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > eventProps 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+import { EventProps, EventState } from \\"./event-props.type\\";
+
+export default function EventPropsComponent(props) {
+  const state = useStore({
+    handleClick() {
+      if (props.onGetVoid) {
+        props.onGetVoid();
+      }
+
+      if (props.onEnter) {
+        console.log(props.onEnter());
+      }
+    },
+  });
+
+  return [<button onClick={(event) => state.handleClick()}>Test</button>];
 }
 "
 `;
@@ -9798,6 +9842,27 @@ export default function EventInputAndChange(props) {
 "
 `;
 
+exports[`Mitosis, format: legacy > jsx > Javascript Test > eventProps 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export default function EventPropsComponent(props) {
+  const state = useStore({
+    handleClick() {
+      if (props.onGetVoid) {
+        props.onGetVoid();
+      }
+
+      if (props.onEnter) {
+        console.log(props.onEnter());
+      }
+    },
+  });
+
+  return <button onClick={(event) => state.handleClick()}>Test</button>;
+}
+"
+`;
+
 exports[`Mitosis, format: legacy > jsx > Javascript Test > expressionState 1`] = `
 "import { useStore } from \\"@builder.io/mitosis\\";
 
@@ -13457,6 +13522,29 @@ export default function EventInputAndChange(props) {
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
   );
+}
+"
+`;
+
+exports[`Mitosis, format: legacy > jsx > Typescript Test > eventProps 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+import { EventProps, EventState } from \\"./event-props.type\\";
+
+export default function EventPropsComponent(props) {
+  const state = useStore({
+    handleClick() {
+      if (props.onGetVoid) {
+        props.onGetVoid();
+      }
+
+      if (props.onEnter) {
+        console.log(props.onEnter());
+      }
+    },
+  });
+
+  return <button onClick={(event) => state.handleClick()}>Test</button>;
 }
 "
 `;
@@ -17910,6 +17998,28 @@ export default EventInputAndChange;
 "
 `;
 
+exports[`Mitosis, format: react > jsx > Javascript Test > eventProps 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+
+function EventPropsComponent(props) {
+  function handleClick() {
+    if (props.onGetVoid) {
+      props.onGetVoid();
+    }
+
+    if (props.onEnter) {
+      console.log(props.onEnter());
+    }
+  }
+
+  return <button onClick={(event) => handleClick()}>Test</button>;
+}
+
+export default EventPropsComponent;
+"
+`;
+
 exports[`Mitosis, format: react > jsx > Javascript Test > expressionState 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -21798,6 +21908,29 @@ function EventInputAndChange(props) {
 }
 
 export default EventInputAndChange;
+"
+`;
+
+exports[`Mitosis, format: react > jsx > Typescript Test > eventProps 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { EventProps, EventState } from \\"./event-props.type\\";
+
+function EventPropsComponent(props) {
+  function handleClick() {
+    if (props.onGetVoid) {
+      props.onGetVoid();
+    }
+
+    if (props.onEnter) {
+      console.log(props.onEnter());
+    }
+  }
+
+  return <button onClick={(event) => handleClick()}>Test</button>;
+}
+
+export default EventPropsComponent;
 "
 `;
 

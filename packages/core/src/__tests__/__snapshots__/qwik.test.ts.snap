@@ -4108,6 +4108,30 @@ export const STYLES = \`
 "
 `;
 
+exports[`qwik > jsx > Javascript Test > eventProps 1`] = `
+"import { $, Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const handleClick = function handleClick(props, state) {
+  if (props.onGetVoid) {
+    props.onGetVoid();
+  }
+
+  if (props.onEnter) {
+    console.log(props.onEnter());
+  }
+};
+export const EventPropsComponent = component$((props) => {
+  const state = {};
+
+  return (
+    <button onClick$={$((event) => handleClick(props, state))}>Test</button>
+  );
+});
+
+export default EventPropsComponent;
+"
+`;
+
 exports[`qwik > jsx > Javascript Test > expressionState 1`] = `
 "import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
@@ -8298,6 +8322,32 @@ export const STYLES = \`
   color: red;
 }
 \`;
+"
+`;
+
+exports[`qwik > jsx > Typescript Test > eventProps 1`] = `
+"import { EventProps, EventState } from \\"./event-props.type\\";
+
+import { $, Fragment, component$, h } from \\"@builder.io/qwik\\";
+
+export const handleClick = function handleClick(props, state) {
+  if (props.onGetVoid) {
+    props.onGetVoid();
+  }
+
+  if (props.onEnter) {
+    console.log(props.onEnter());
+  }
+};
+export const EventPropsComponent = component$((props: EventProps) => {
+  const state: any = {};
+
+  return (
+    <button onClick$={$((event) => handleClick(props, state))}>Test</button>
+  );
+});
+
+export default EventPropsComponent;
 "
 `;
 

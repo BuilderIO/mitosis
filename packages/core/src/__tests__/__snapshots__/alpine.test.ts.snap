@@ -1975,6 +1975,26 @@ exports[`Alpine.js > jsx > Javascript Test > eventInputAndChange 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > eventProps 1`] = `
+"<button x-data=\\"eventPropsComponent()\\" x-on:click=\\"handleClick()\\">Test</button>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"eventPropsComponent\\", () => ({
+      handleClick() {
+        if (props.onGetVoid) {
+          props.onGetVoid();
+        }
+
+        if (props.onEnter) {
+          console.log(props.onEnter());
+        }
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > expressionState 1`] = `
 "<div x-data=\\"myComponent()\\"><span x-html=\\"refToUse\\"></span></div>
 <script>
@@ -5236,6 +5256,26 @@ exports[`Alpine.js > jsx > Typescript Test > eventInputAndChange 1`] = `
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"eventInputAndChange\\", () => ({
       name: \\"Steve\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > eventProps 1`] = `
+"<button x-data=\\"eventPropsComponent()\\" x-on:click=\\"handleClick()\\">Test</button>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"eventPropsComponent\\", () => ({
+      handleClick() {
+        if (props.onGetVoid) {
+          props.onGetVoid();
+        }
+
+        if (props.onEnter) {
+          console.log(props.onEnter());
+        }
+      },
     }));
   });
 </script>

@@ -48,6 +48,7 @@ const basicRefPrevious = getRawFile('./data/ref/basic-ref-usePrevious.raw.tsx');
 const basicRefAssignment = getRawFile('./data/ref/basic-ref-assignment.raw.tsx');
 const eventInputAndChange = getRawFile('./data/events/event-input-and-change.raw.tsx');
 const propsDestructure = getRawFile('./data/props/basic-props-destructure.raw.tsx');
+const eventProps = getRawFile('./data/props/event-props.raw.tsx');
 const functionProps = getRawFile('./data/function-props.raw.tsx');
 const nestedStyles = getRawFile('./data/nested-styles.raw.tsx');
 const preserveExportOrLocalStatement = getRawFile(
@@ -238,7 +239,8 @@ const BASIC_TESTS: Tests = {
   'import types': builderRenderContent,
   subComponent,
   nestedStyles,
-  propsDestructure: propsDestructure,
+  eventProps,
+  propsDestructure,
   'onInit & onMount': onInitonMount,
   'Basic Context': basicContext,
   'Basic Outputs Meta': basicOutputsMeta,

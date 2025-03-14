@@ -8,4 +8,5 @@ export const COMPONENT_PATHS = [
   '/signals/',
   '/disabled-input/',
   '/component-on-update/',
+  '/component-with-outside-types/',
 ];

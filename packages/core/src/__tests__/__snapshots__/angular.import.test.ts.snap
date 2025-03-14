@@ -4750,6 +4750,49 @@ export class EventInputAndChangeModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > eventProps 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Output, EventEmitter, Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"event-props-component\\",
+  template: \`
+    <button (click)=\\"handleClick()\\">Test</button>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class EventPropsComponent {
+  @Output() onGetVoid = new EventEmitter();
+  @Output() onEnter = new EventEmitter();
+
+  handleClick() {
+    if (this.onGetVoid) {
+      this.onGetVoid.emit();
+    }
+
+    if (this.onEnter) {
+      console.log(this.onEnter.emit());
+    }
+  }
+}
+
+@NgModule({
+  declarations: [EventPropsComponent],
+  imports: [CommonModule],
+  exports: [EventPropsComponent],
+})
+export class EventPropsComponentModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > jsx > Javascript Test > expressionState 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -13083,6 +13126,51 @@ export default class EventInputAndChange {
   exports: [EventInputAndChange],
 })
 export class EventInputAndChangeModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > jsx > Typescript Test > eventProps 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Output, EventEmitter, Component } from \\"@angular/core\\";
+
+import { EventProps, EventState } from \\"./event-props.type\\";
+
+@Component({
+  selector: \\"event-props-component\\",
+  template: \`
+    <button (click)=\\"handleClick()\\">Test</button>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class EventPropsComponent {
+  @Output() onGetVoid = new EventEmitter();
+  @Output() onEnter = new EventEmitter();
+
+  handleClick(): ReturnType<EventState[\\"handleClick\\"]> {
+    if (this.onGetVoid) {
+      this.onGetVoid.emit();
+    }
+
+    if (this.onEnter) {
+      console.log(this.onEnter.emit());
+    }
+  }
+}
+
+@NgModule({
+  declarations: [EventPropsComponent],
+  imports: [CommonModule],
+  exports: [EventPropsComponent],
+})
+export class EventPropsComponentModule {}
 "
 `;
 

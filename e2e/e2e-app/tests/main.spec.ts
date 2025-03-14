@@ -1,4 +1,4 @@
-import { expect, test as playwrightTest } from '@playwright/test';
+import { expect, Locator, test as playwrightTest } from '@playwright/test';
 import { PackageName } from '../src/testConfig';
 
 const test = playwrightTest.extend<{ packageName: PackageName | 'DEFAULT' }>({
@@ -132,5 +132,18 @@ test.describe('e2e', () => {
     await button.click();
     const labelAfter = await container.getAttribute('aria-label');
     expect(labelAfter).toEqual('Label: 1');
+  });
+
+  test('component with outside types', async ({ page, packageName }) => {
+    if (['e2e-qwik'].includes(packageName)) {
+      // Qwik: Events are not working as properties
+      test.skip();
+    }
+    await page.goto('/component-with-outside-types/');
+
+    const button: Locator = page.locator('button');
+    await expect(button).toContainText('Before');
+    await button.click();
+    await expect(button).toContainText('After');
   });
 });

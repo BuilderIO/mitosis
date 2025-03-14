@@ -2144,6 +2144,29 @@ exports[`Svelte > jsx > Javascript Test > eventInputAndChange 1`] = `
 </style>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > eventProps 1`] = `
+"<script>
+  export let onGetVoid;
+  export let onEnter;
+
+  function handleClick() {
+    if (onGetVoid) {
+      onGetVoid();
+    }
+
+    if (onEnter) {
+      console.log(onEnter());
+    }
+  }
+</script>
+
+<button
+  on:click={(event) => {
+    handleClick();
+  }}>Test</button
+>"
+`;
+
 exports[`Svelte > jsx > Javascript Test > expressionState 1`] = `
 "<script>
   export let componentRef;
@@ -6000,6 +6023,31 @@ exports[`Svelte > jsx > Typescript Test > eventInputAndChange 1`] = `
     color: red;
   }
 </style>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > eventProps 1`] = `
+"<script lang=\\"ts\\">
+  import { EventProps, EventState } from \\"./event-props.type\\";
+
+  export let onGetVoid: EventProps[\\"onGetVoid\\"];
+  export let onEnter: EventProps[\\"onEnter\\"];
+
+  function handleClick() {
+    if (onGetVoid) {
+      onGetVoid();
+    }
+
+    if (onEnter) {
+      console.log(onEnter());
+    }
+  }
+</script>
+
+<button
+  on:click={(event) => {
+    handleClick();
+  }}>Test</button
+>"
 `;
 
 exports[`Svelte > jsx > Typescript Test > expressionState 1`] = `

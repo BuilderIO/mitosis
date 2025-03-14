@@ -3111,6 +3111,44 @@ export default EventInputAndChange;
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > eventProps 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+
+function EventPropsComponent(props) {
+  function handleClick() {
+    if (props.onGetVoid) {
+      props.onGetVoid();
+    }
+
+    if (props.onEnter) {
+      console.log(props.onEnter());
+    }
+  }
+
+  return (
+    <Button onPress={(event) => handleClick()}>
+      <Text>Test</Text>
+    </Button>
+  );
+}
+
+export default EventPropsComponent;
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > expressionState 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -9002,6 +9040,45 @@ function EventInputAndChange(props: any) {
 const styles = StyleSheet.create({ textInput1: { color: \\"red\\" } });
 
 export default EventInputAndChange;
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > eventProps 1`] = `
+"import * as React from \\"react\\";
+import {
+  FlatList,
+  ScrollView,
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Linking,
+} from \\"react-native\\";
+import { EventProps, EventState } from \\"./event-props.type\\";
+
+function EventPropsComponent(props: EventProps) {
+  function handleClick(): ReturnType<EventState[\\"handleClick\\"]> {
+    if (props.onGetVoid) {
+      props.onGetVoid();
+    }
+
+    if (props.onEnter) {
+      console.log(props.onEnter());
+    }
+  }
+
+  return (
+    <Button onPress={(event) => handleClick()}>
+      <Text>Test</Text>
+    </Button>
+  );
+}
+
+export default EventPropsComponent;
 "
 `;
 

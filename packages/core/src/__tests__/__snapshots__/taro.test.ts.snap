@@ -2303,6 +2303,28 @@ export default EventInputAndChange;
 "
 `;
 
+exports[`Taro > jsx > Javascript Test > eventProps 1`] = `
+"import * as React from \\"react\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
+
+function EventPropsComponent(props) {
+  function handleClick() {
+    if (props.onGetVoid) {
+      props.onGetVoid();
+    }
+
+    if (props.onEnter) {
+      console.log(props.onEnter());
+    }
+  }
+
+  return <Button onClick={(event) => handleClick()}>Test</Button>;
+}
+
+export default EventPropsComponent;
+"
+`;
+
 exports[`Taro > jsx > Javascript Test > expressionState 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -6551,6 +6573,29 @@ function EventInputAndChange(props: any) {
 }
 
 export default EventInputAndChange;
+"
+`;
+
+exports[`Taro > jsx > Typescript Test > eventProps 1`] = `
+"import * as React from \\"react\\";
+import { EventProps, EventState } from \\"./event-props.type\\";
+import { Button, View, Text } from \\"@tarojs/components\\";
+
+function EventPropsComponent(props: EventProps) {
+  function handleClick(): ReturnType<EventState[\\"handleClick\\"]> {
+    if (props.onGetVoid) {
+      props.onGetVoid();
+    }
+
+    if (props.onEnter) {
+      console.log(props.onEnter());
+    }
+  }
+
+  return <Button onClick={(event) => handleClick()}>Test</Button>;
+}
+
+export default EventPropsComponent;
 "
 `;
 
