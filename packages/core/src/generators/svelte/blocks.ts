@@ -262,6 +262,18 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     });
   }
 
+  // Handling key binding by wrapping the element in a #key block
+  if (json.bindings.key) {
+    const keyCode = json.bindings.key.code;
+    delete json.bindings.key;
+    const str = `
+      {#key ${keyCode}}
+        ${blockToSvelte({ json, options, parentComponent })}
+      {/key}
+      `;
+    return str;
+  }
+
   const tagName = getTagName({ json, parentComponent, options });
 
   if (isChildren({ node: json, extraMatches: ['$$slots.default'] })) {
@@ -311,18 +323,6 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     str += '>';
     str += BINDINGS_MAPPER.innerHTML(json, options);
     str += `</${tagName}>`;
-    return str;
-  }
-
-  // Handling key binding by wrapping the element in a #key block
-  if (json.bindings.key) {
-    const keyCode = json.bindings.key.code;
-    delete json.bindings.key;
-    const str = `
-      {#key ${keyCode}}
-        ${blockToSvelte({ json, options, parentComponent })}
-      {/key}
-      `;
     return str;
   }
 
