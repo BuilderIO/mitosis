@@ -27,7 +27,7 @@
 
 Using Mitosis, you can:
 
-- Maintain a consistent design system across multiple frameworks ([example](https://github.com/db-ui/mono))
+- Maintain a consistent design system across multiple frameworks ([example](https://github.com/db-ux-design-system/core-web))
 - Sync your [design systems from Figma to code](https://mitosis.builder.io/docs/figma/) and publish them to npm across frameworks
 - Avoid the [pitfalls of web components](https://mitosis.builder.io/docs/overview/) by compiling to native framework code
 
