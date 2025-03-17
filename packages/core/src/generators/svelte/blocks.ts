@@ -314,6 +314,18 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     return str;
   }
 
+  // Handling key binding by wrapping the element in a #key block
+  if (json.bindings.key) {
+    const keyCode = json.bindings.key.code;
+    delete json.bindings.key;
+    const str = `
+      {#key ${keyCode}}
+        ${blockToSvelte({ json, options, parentComponent })}
+      {/key}
+      `;
+    return str;
+  }
+
   if (SELF_CLOSING_HTML_TAGS.has(tagName)) {
     return str + ' />';
   }
