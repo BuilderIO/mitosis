@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.7.3
+
+### Patch Changes
+
+- 8d94333: [Svelte] Bug: Fixed handling for key attribute due to its unique syntax and absence in the standard props
+- 2ad4262: [stencil]: Fix issue with `@Event` props not using [`EventEmitter`](https://stenciljs.com/docs/events#event-decorator)
+
 ## 0.7.2
 
 ### Patch Changes
