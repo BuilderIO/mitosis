@@ -254,14 +254,6 @@ const stringifyBinding =
   };
 
 export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent }) => {
-  if (mappers[json.name as keyof typeof mappers]) {
-    return mappers[json.name as keyof typeof mappers]({
-      json: json as any,
-      options,
-      parentComponent,
-    });
-  }
-
   // Handling key binding by wrapping the element in a #key block
   if (json.bindings.key) {
     const keyCode = json.bindings.key.code;
@@ -272,6 +264,14 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
       {/key}
       `;
     return str;
+  }
+
+  if (mappers[json.name as keyof typeof mappers]) {
+    return mappers[json.name as keyof typeof mappers]({
+      json: json as any,
+      options,
+      parentComponent,
+    });
   }
 
   const tagName = getTagName({ json, parentComponent, options });
