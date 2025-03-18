@@ -1108,7 +1108,15 @@ exports[`Svelte > jsx > Javascript Test > Img 1`] = `
 </script>
 
 {#key (Builder.isEditing && imgSrc) || \\"default-key\\"}
-  <img {...attributes} alt={altText} src={imgSrc} />
+  <img
+    style={stringifyStyles({
+      objectFit: backgroundSize || \\"cover\\",
+      objectPosition: backgroundPosition || \\"center\\",
+    })}
+    {...attributes}
+    alt={altText}
+    src={imgSrc}
+  />
 {/key}"
 `;
 
@@ -1548,6 +1556,16 @@ exports[`Svelte > jsx > Javascript Test > Video 1`] = `
 
 {#key video || \\"no-src\\"}
   <video
+    style={stringifyStyles({
+      width: \\"100%\\",
+      height: \\"100%\\",
+      ...attributes?.style,
+      objectFit: fit,
+      objectPosition: position,
+      // Hack to get object fit to work as expected and
+      // not have the video overflow
+      borderRadius: 1,
+    })}
     preload=\\"none\\"
     {...attributes}
     poster={posterImage}
@@ -4701,7 +4719,15 @@ exports[`Svelte > jsx > Typescript Test > Img 1`] = `
 </script>
 
 {#key (Builder.isEditing && imgSrc) || \\"default-key\\"}
-  <img {...attributes} alt={altText} src={imgSrc} />
+  <img
+    style={stringifyStyles({
+      objectFit: backgroundSize || \\"cover\\",
+      objectPosition: backgroundPosition || \\"center\\",
+    })}
+    {...attributes}
+    alt={altText}
+    src={imgSrc}
+  />
 {/key}"
 `;
 
@@ -5306,6 +5332,16 @@ exports[`Svelte > jsx > Typescript Test > Video 1`] = `
 
 {#key video || \\"no-src\\"}
   <video
+    style={stringifyStyles({
+      width: \\"100%\\",
+      height: \\"100%\\",
+      ...attributes?.style,
+      objectFit: fit,
+      objectPosition: position,
+      // Hack to get object fit to work as expected and
+      // not have the video overflow
+      borderRadius: 1,
+    })}
     preload=\\"none\\"
     {...attributes}
     poster={posterImage}
