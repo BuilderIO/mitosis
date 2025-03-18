@@ -2587,6 +2587,34 @@ export default defineComponent({
 </style>"
 `;
 
+exports[`Vue > jsx > Javascript Test > eventProps 1`] = `
+"<template>
+  <button @click=\\"async (event) => handleClick()\\">Test</button>
+</template>
+
+<script>
+import { defineComponent } from \\"vue\\";
+
+export default defineComponent({
+  name: \\"event-props-component\\",
+
+  props: [\\"onGetVoid\\", \\"onEnter\\"],
+
+  methods: {
+    handleClick() {
+      if (this.onGetVoid) {
+        this.onGetVoid();
+      }
+
+      if (this.onEnter) {
+        console.log(this.onEnter());
+      }
+    },
+  },
+});
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > expressionState 1`] = `
 "<template>
   <div>{{ refToUse }}</div>
@@ -7350,6 +7378,36 @@ export default defineComponent({
   color: red;
 }
 </style>"
+`;
+
+exports[`Vue > jsx > Typescript Test > eventProps 1`] = `
+"<template>
+  <button @click=\\"async (event) => handleClick()\\">Test</button>
+</template>
+
+<script lang=\\"ts\\">
+import { defineComponent } from \\"vue\\";
+
+import { EventProps, EventState } from \\"./event-props.type\\";
+
+export default defineComponent({
+  name: \\"event-props-component\\",
+
+  props: [\\"onGetVoid\\", \\"onEnter\\"],
+
+  methods: {
+    handleClick() {
+      if (this.onGetVoid) {
+        this.onGetVoid();
+      }
+
+      if (this.onEnter) {
+        console.log(this.onEnter());
+      }
+    },
+  },
+});
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > expressionState 1`] = `

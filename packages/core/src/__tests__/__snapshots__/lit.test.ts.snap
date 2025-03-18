@@ -2874,6 +2874,39 @@ export default class EventInputAndChange extends LitElement {
 "
 `;
 
+exports[`Lit > jsx > Javascript Test > eventProps 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"event-props-component\\")
+export default class EventPropsComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() onGetVoid: any;
+  @property() onEnter: any;
+
+  handleClick() {
+    if (this.onGetVoid) {
+      this.onGetVoid();
+    }
+
+    if (this.onEnter) {
+      console.log(this.onEnter());
+    }
+  }
+
+  render() {
+    return html\`
+
+          <button  @click=\${(event) => this.handleClick()} >Test</button>
+        \`;
+  }
+}
+"
+`;
+
 exports[`Lit > jsx > Javascript Test > expressionState 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -8080,6 +8113,41 @@ export default class EventInputAndChange extends LitElement {
           React, Vue, Solid, or Liquid!
         </div>
 
+        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > jsx > Typescript Test > eventProps 1`] = `
+"import { EventProps, EventState } from \\"./event-props.type\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"event-props-component\\")
+export default class EventPropsComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() onGetVoid: any;
+  @property() onEnter: any;
+
+  handleClick() {
+    if (this.onGetVoid) {
+      this.onGetVoid();
+    }
+
+    if (this.onEnter) {
+      console.log(this.onEnter());
+    }
+  }
+
+  render() {
+    return html\`
+
+          <button  @click=\${(event) => this.handleClick()} >Test</button>
         \`;
   }
 }
