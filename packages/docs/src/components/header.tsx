@@ -12,10 +12,9 @@ export default component$(() => {
   const canonicalURL = useComputed$(() => {
     return new URL(
       location.url.pathname + location.url.search + location.url.hash,
-      'https://mitosis.builder.io'
+      'https://mitosis.builder.io',
     ).toString();
   });
-  
 
   return (
     <>
