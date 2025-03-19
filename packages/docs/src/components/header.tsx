@@ -1,4 +1,4 @@
-import { component$ } from '@builder.io/qwik';
+import { component$, useComputed$ } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
 import { TbBrandDiscord, TbBrandFigma, TbBrandGithub } from '@qwikest/icons/tablericons';
 import { Search } from './search';
@@ -8,6 +8,14 @@ export default component$(() => {
 
   const isPlayground = location.url.pathname === '/playground/';
   const isDocs = location.url.pathname.startsWith('/docs/');
+
+  const canonicalURL = useComputed$(() => {
+    return new URL(
+      location.url.pathname + location.url.search + location.url.hash,
+      'https://mitosis.builder.io'
+    ).toString();
+  });
+  
 
   return (
     <>
@@ -20,7 +28,7 @@ export default component$(() => {
         Welcome to our new site! Please{' '}
         <a
           href={`https://docs.google.com/forms/d/e/1FAIpQLSc6jOAOPMRHviiXv4Pkk28fmdFhcX-IprhHvKCIBhjuZKmgiA/viewform?usp=pp_url&entry.1953883676=${encodeURIComponent(
-            location.url.pathname + location.url.search,
+            canonicalURL.value,
           )}`}
           target="_blank"
           class="underline"
