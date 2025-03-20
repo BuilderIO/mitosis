@@ -410,18 +410,16 @@ export const blockToAngular = ({
       }
       const value = json.properties[key];
 
-      // Special handling for innerHTML property to ensure double quotes are converted to single quotes
       if (key === 'innerHTML') {
-        // Apply the same conversions as we do for innerHTML bindings
-        const escapedValue = String(value)
-          .replace(/([^\\])"/g, "$1'") // Replace unescaped double quotes preceded by a character
-          .replace(/^"/, "'") // Replace double quote at the beginning
-          .replace(/\\"/g, "\\'"); // Replace escaped double quotes with escaped single quotes
+        // Convert to string and replace double quotes with HTML entities
+        const safeValue = String(value).replace(/"/g, '&quot;');
 
         if (blockOptions.sanitizeInnerHTML) {
-          str += ` innerHTML="${escapedValue}" `;
+          // For [innerHTML] property binding
+          str += ` [innerHTML]="sanitizer.bypassSecurityTrustHtml('${safeValue}')" `;
         } else {
-          str += ` [innerHTML]="sanitizer.bypassSecurityTrustHtml('${escapedValue}')" `;
+          // For standard attribute (though this won't work in Angular)
+          str += ` innerHTML="${safeValue}" `;
         }
       } else {
         str += ` ${key}="${value}" `;

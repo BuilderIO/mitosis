@@ -74,9 +74,9 @@ describe('CustomCode component with double quotes in Angular', () => {
         template: \`
           <div builder-id=\\"builder-8e8834315d504381ad92024148b9a924\\">
             <div
-              innerHTML=\\"<link href='https://fonts.googleapis.com/css2?family=Inter&display=swap' rel='stylesheet'>
-                          <script src='https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js' defer></script>
-                          <script src='https://unpkg.com/@tailwindcss/browser@4'></script>\\"
+              [innerHTML]='sanitizer.bypassSecurityTrustHtml(&apos;<link href=\\"https://fonts.googleapis.com/css2?family=Inter&display=swap\\" rel=\\"stylesheet\\">
+                          <script src=\\"https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js\\" defer></script>
+                          <script src=\\"https://unpkg.com/@tailwindcss/browser@4\\"></script>&apos;)'
             ></div>
           </div>
         \`,
@@ -146,7 +146,7 @@ describe('CustomCode component with double quotes in Angular', () => {
     });
 
     expect(template).toMatchInlineSnapshot(
-      "\"<div  [innerHTML]=\\\"sanitizer.bypassSecurityTrustHtml('<div class='test-class' id='test-id'><p>Text with 'quoted' content</p><script src='https://example.com/script.js'></script></div>')\\\" ></div>\"",
+      '"<div  innerHTML=\\"<div class=&quot;test-class&quot; id=&quot;test-id&quot;><p>Text with &quot;quoted&quot; content</p><script src=&quot;https://example.com/script.js&quot;></script></div>\\" ></div>"',
     );
   });
 });
