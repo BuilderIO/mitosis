@@ -409,7 +409,7 @@ export const blockToAngular = ({
         continue;
       }
       const value = json.properties[key];
-
+      // Better parsing for innerHTML
       if (key === 'innerHTML') {
         // Convert to string and replace double quotes with HTML entities
         const safeValue = String(value).replace(/"/g, '&quot;');
