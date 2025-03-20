@@ -1,5 +1,6 @@
-import { blockToAngular } from '@/generators/angular/blocks';
+import { blockToAngular } from '@/generators/angular/classic/blocks';
 import { AngularBlockOptions, ToAngularOptions } from '@/generators/angular/types';
+import { indent } from '@/helpers/indent';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { replaceNodes } from '@/helpers/replace-identifiers';
 import {
@@ -165,6 +166,9 @@ export const traverseToGetAllDynamicComponents = (
     dynamicTemplate,
   };
 };
+
+export const getTemplateFormat = (template: string): string =>
+  indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
 
 export const traverseAndCheckIfInnerHTMLIsUsed = (json: MitosisComponent) => {
   let innerHTMLIsUsed = false;

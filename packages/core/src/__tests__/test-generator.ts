@@ -693,16 +693,23 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   logOutput?: boolean;
   only?: string[]; // Test only some tests based on key
 }) => {
-  const configurations: { options: X; testName: string }[] = [
-    {
-      options: { ...options, typescript: false, plugins: [metaDataPlugin] },
-      testName: 'Javascript Test',
-    },
-    {
-      options: { ...options, typescript: true, plugins: [metaDataPlugin] },
-      testName: 'Typescript Test',
-    },
-  ];
+  const configurations: { options: X; testName: string }[] = only
+    ? [
+        {
+          options: { ...options, plugins: [metaDataPlugin] },
+          testName: 'Only Test',
+        },
+      ]
+    : [
+        {
+          options: { ...options, typescript: false, plugins: [metaDataPlugin] },
+          testName: 'Javascript Test',
+        },
+        {
+          options: { ...options, typescript: true, plugins: [metaDataPlugin] },
+          testName: 'Typescript Test',
+        },
+      ];
 
   type ParserConfig = {
     name: 'jsx' | 'svelte';

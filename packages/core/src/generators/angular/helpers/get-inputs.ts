@@ -1,13 +1,5 @@
-import { AngularApi, ToAngularOptions } from '@/generators/angular/types';
+import { ToAngularOptions } from '@/generators/angular/types';
 import type { MitosisComponent } from '@/types/mitosis-component';
-
-export const getInputImports = (api?: AngularApi): string[] => {
-  if (api === 'signals') {
-    return ['input'];
-  }
-
-  return ['Input'];
-};
 
 export const getInputs = ({
   props,

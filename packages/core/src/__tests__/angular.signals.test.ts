@@ -17,12 +17,11 @@ describe('Angular signals local', () => {
     options: {
       standalone: true,
       api: 'signals',
+      typescript: true,
     },
     target: 'angular',
     generator: componentToAngular,
-    only: [
-      'signals'
-    ],
+    only: ['signals'],
     logOutput: true,
   });
 });

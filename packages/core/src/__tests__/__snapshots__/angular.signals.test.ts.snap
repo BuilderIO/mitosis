@@ -133,3 +133,52 @@ export default class MyComponent {
 }
 "
 `;
+
+exports[`Angular signals local > jsx > Javascript Test > signals 1`] = `"Cannot access 'useMetadata' before initialization"`;
+
+exports[`Angular signals local > jsx > Only Test > signals 1`] = `
+"import { Component, viewChild, ElementRef, output, input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
+
+@Component({
+  selector: \\"signals-test-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <button
+      [attr.aria-label]=\\"this.label\\"
+      #buttonRef
+      (click)=\\"this.handleOutput()\\"
+    >
+      {{this.testInput}}
+    </button>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export default class SignalsTestComponent {
+  testInput = input<any>(defaultProps[\\"testInput\\"]);
+  testOutput = input<any>();
+  label = input<any>(defaultProps[\\"label\\"]);
+  onTestOutput = output();
+
+  buttonRef = viewChild<ElementRef>(\\"buttonRef\\");
+
+  _counter = 0;
+
+  handleOutput() {
+    console.log(this.testInput, this._counter);
+    this._counter++;
+
+    if (this.onTestOutput) {
+      this.testOutput.emit();
+    }
+  }
+
+  constructor() {}
+}
+"
+`;
+
+exports[`Angular signals local > jsx > Typescript Test > signals 1`] = `"Cannot access 'useMetadata' before initialization"`;

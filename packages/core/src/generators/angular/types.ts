@@ -39,6 +39,7 @@ export type AngularMetadata = {
    */
   nativeEvents?: string[];
   /**
+   * @deprecated Rename component in *.lite.tsx
    * Overwrite default selector for component. Default will be kebab case (MyComponent -> my-component)
    */
   selector?: string;
@@ -53,6 +54,7 @@ export type AngularMetadata = {
   sanitizeInnerHTML?: boolean;
 
   /**
+   * @deprecated Only for api=classic
    * Add additional @Output() properties to the component.
    * Can be used with `useTarget({angular: ()=> ...})` if needed.
    */

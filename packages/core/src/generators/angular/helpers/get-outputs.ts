@@ -1,13 +1,6 @@
 import { AngularApi } from '@/generators/angular/types';
+import { getEventNameWithoutOn } from '@/helpers/event-handlers';
 import type { MitosisComponent } from '@/types/mitosis-component';
-
-export const getOutputImports = (api?: AngularApi): string[] => {
-  if (api === 'signals') {
-    return ['output'];
-  }
-
-  return ['Output', 'EventEmitter'];
-};
 
 export const getOutputs = ({
   json,
@@ -22,8 +15,10 @@ export const getOutputs = ({
   if (api === 'signals') {
     return outputVars
       .map((output) => {
-        const propType = propsTypeRef ? `<ReturnType<Required<${propsTypeRef}>["${output}"]>>` : '';
-        return `${output} = output${propType}()`;
+        const propType = propsTypeRef
+          ? `<Parameters<Required<${propsTypeRef}>["${output}"]>[number] | void> `
+          : '';
+        return `${getEventNameWithoutOn(output)} = output${propType}()`;
       })
       .join('\n');
   }
