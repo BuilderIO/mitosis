@@ -35,6 +35,14 @@ const isValidAttributeName = (str: string) => {
   return Boolean(str && /^[$a-z0-9\-_:]+$/i.test(str));
 };
 
+const isInvalidJsxAttributeName = (str: string) => {
+  let attr = str.trim();
+  if (attr.startsWith(':') || str.startsWith('@')) {
+    return true;
+  }
+  return false;
+};
+
 export const blockToMitosis = (
   json: MitosisNode,
   toMitosisOptions: Partial<ToMitosisOptions> = {},
@@ -158,6 +166,10 @@ export const blockToMitosis = (
   str += `<${json.name} `;
 
   for (const key in json.properties) {
+    if (isInvalidJsxAttributeName(key)) {
+      console.warn('Skipping invalid attribute name:', key);
+      continue;
+    }
     const value = (json.properties[key] || '').replace(/"/g, '&quot;').replace(/\n/g, '\\n');
 
     if (!isValidAttributeName(key)) {
@@ -167,6 +179,10 @@ export const blockToMitosis = (
     }
   }
   for (const key in json.bindings) {
+    if (isInvalidJsxAttributeName(key)) {
+      console.warn('Skipping invalid attribute name:', key);
+      continue;
+    }
     const value = json.bindings[key]?.code as string;
 
     if (!value || json.slots?.[key]) {
