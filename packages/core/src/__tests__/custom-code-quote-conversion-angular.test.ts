@@ -63,17 +63,42 @@ describe('CustomCode component with double quotes in Angular', () => {
       typescript: true,
     })({ component: transformedComponent });
 
-    // Step 5: Verify that double quotes in the innerHTML are properly escaped to single quotes
-    expect(angularCode).toContain(
-      "href='https://fonts.googleapis.com/css2?family=Inter&display=swap'",
-    );
-    expect(angularCode).not.toContain('href="https://fonts.googleapis.com');
+    // Use toMatchInlineSnapshot instead of individual assertions
+    expect(angularCode).toMatchInlineSnapshot(`
+      "import { NgModule } from \\"@angular/core\\";
+      import { CommonModule } from \\"@angular/common\\";
 
-    // Make sure all script tags are using single quotes
-    expect(angularCode).toContain(
-      "src='https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js'",
-    );
-    expect(angularCode).toContain("src='https://unpkg.com/@tailwindcss/browser@4'");
+      import { Component } from \\"@angular/core\\";
+
+      @Component({
+        selector: \\"test-component\\",
+        template: \`
+          <div builder-id=\\"builder-8e8834315d504381ad92024148b9a924\\">
+            <div
+              innerHTML=\\"<link href='https://fonts.googleapis.com/css2?family=Inter&display=swap' rel='stylesheet'>
+                          <script src='https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js' defer></script>
+                          <script src='https://unpkg.com/@tailwindcss/browser@4'></script>\\"
+            ></div>
+          </div>
+        \`,
+        styles: [
+          \`
+            :host {
+              display: contents;
+            }
+          \`,
+        ],
+      })
+      export default class TestComponent {}
+
+      @NgModule({
+        declarations: [TestComponent],
+        imports: [CommonModule],
+        exports: [TestComponent],
+      })
+      export class TestComponentModule {}
+      "
+    `);
   });
 
   // Adding a test specifically for innerHTML as a property
@@ -121,17 +146,7 @@ describe('CustomCode component with double quotes in Angular', () => {
       blockOptions: { sanitizeInnerHTML: false },
     });
 
-    console.log('PROPERTY INNERHTML TEMPLATE:', template);
-
-    // Verify quotes are properly handled
-    expect(template).toContain("sanitizer.bypassSecurityTrustHtml('");
-    expect(template).toContain("class='test-class'");
-    expect(template).toContain("id='test-id'");
-    expect(template).toContain("src='https://example.com/script.js'");
-    expect(template).not.toContain('class="test-class"');
-    expect(template).not.toContain('id="test-id"');
-
-    // The generated Angular code should not have nested double quotes
-    expect(template).not.toMatch(/="[^"]*"[^"]*"/);
+    // Use toMatchInlineSnapshot instead of individual assertions
+    expect(template).toMatchInlineSnapshot('"<div  [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(\'<div class=\'test-class\' id=\'test-id\'><p>Text with \'quoted\' content</p><script src=\'https://example.com/script.js\'></script></div>\')\\" ></div>"');
   });
 });
