@@ -254,6 +254,18 @@ const stringifyBinding =
   };
 
 export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent }) => {
+  // Handling key binding by wrapping the element in a #key block
+  if (json.bindings.key) {
+    const keyCode = json.bindings.key.code;
+    delete json.bindings.key;
+    const str = `
+      {#key ${keyCode}}
+        ${blockToSvelte({ json, options, parentComponent })}
+      {/key}
+      `;
+    return str;
+  }
+
   if (mappers[json.name as keyof typeof mappers]) {
     return mappers[json.name as keyof typeof mappers]({
       json: json as any,

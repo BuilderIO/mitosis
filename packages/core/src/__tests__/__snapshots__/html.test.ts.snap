@@ -4988,6 +4988,63 @@ exports[`Html > jsx > Javascript Test > eventInputAndChange 1`] = `
 "
 `;
 
+exports[`Html > jsx > Javascript Test > eventProps 1`] = `
+"<button data-el=\\"button-1\\">Test</button>
+<script>
+  (() => {
+    const state = {
+      handleClick() {
+        if (props.onGetVoid) {
+          props.onGetVoid();
+        }
+
+        if (props.onEnter) {
+          console.log(props.onEnter());
+        }
+      },
+    };
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'click' event on button-1
+    function onButton1Click(event) {
+      state.handleClick();
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Html > jsx > Javascript Test > expressionState 1`] = `
 "<div>
   <template data-el=\\"div-1\\"><!-- state.refToUse --></template>
@@ -13085,6 +13142,63 @@ exports[`Html > jsx > Typescript Test > eventInputAndChange 1`] = `
     function onInput1Change(event) {
       state.name = event.target.value;
       update();
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html > jsx > Typescript Test > eventProps 1`] = `
+"<button data-el=\\"button-1\\">Test</button>
+<script>
+  (() => {
+    const state = {
+      handleClick() {
+        if (props.onGetVoid) {
+          props.onGetVoid();
+        }
+
+        if (props.onEnter) {
+          console.log(props.onEnter());
+        }
+      },
+    };
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'click' event on button-1
+    function onButton1Click(event) {
+      state.handleClick();
     }
 
     // Update with initial state on first load

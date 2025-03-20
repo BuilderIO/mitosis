@@ -2377,6 +2377,32 @@ export default observedEventInputAndChange;
 "
 `;
 
+exports[`React - stateType: mobx > jsx > Javascript Test > eventProps 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
+
+function EventPropsComponent(props) {
+  const state = useLocalObservable(() => ({
+    handleClick() {
+      if (props.onGetVoid) {
+        props.onGetVoid();
+      }
+
+      if (props.onEnter) {
+        console.log(props.onEnter());
+      }
+    },
+  }));
+
+  return <button onClick={(event) => state.handleClick()}>Test</button>;
+}
+
+const observedEventPropsComponent = observer(EventPropsComponent);
+export default observedEventPropsComponent;
+"
+`;
+
 exports[`React - stateType: mobx > jsx > Javascript Test > expressionState 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
@@ -6660,6 +6686,33 @@ function EventInputAndChange(props: any) {
 
 const observedEventInputAndChange = observer(EventInputAndChange);
 export default observedEventInputAndChange;
+"
+`;
+
+exports[`React - stateType: mobx > jsx > Typescript Test > eventProps 1`] = `
+"\\"use client\\";
+import * as React from \\"react\\";
+import { useLocalObservable, observer } from \\"mobx-react-lite\\";
+import { EventProps, EventState } from \\"./event-props.type\\";
+
+function EventPropsComponent(props: EventProps) {
+  const state = useLocalObservable(() => ({
+    handleClick() {
+      if (props.onGetVoid) {
+        props.onGetVoid();
+      }
+
+      if (props.onEnter) {
+        console.log(props.onEnter());
+      }
+    },
+  }));
+
+  return <button onClick={(event) => state.handleClick()}>Test</button>;
+}
+
+const observedEventPropsComponent = observer(EventPropsComponent);
+export default observedEventPropsComponent;
 "
 `;
 

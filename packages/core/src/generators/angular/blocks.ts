@@ -365,25 +365,26 @@ export const blockToAngular = ({
 
     str += `</ng-container>`;
   } else {
-    let element,
+    let element: string | null = null,
       classNames: string[] = [],
       attributes;
 
     const isComponent = childComponents.find((impName) => impName === json.name);
-
-    if (isComponent) {
-      const selector = json.meta.selector || blockOptions?.selector;
-      if (selector) {
-        try {
-          ({ element, classNames, attributes } = parseSelector(`${selector}`));
-        } catch {
-          element = kebabCase(json.name);
-        }
-      } else {
-        element = kebabCase(json.name);
+    const tagName = json.properties.$tagName;
+    const selector = json.meta.selector || blockOptions?.selector;
+    if (selector) {
+      try {
+        ({ element, classNames, attributes } = parseSelector(`${selector}`));
+      } catch {
+        element = tagName ?? kebabCase(json.name);
       }
-    } else {
-      element = json.name;
+    }
+    if (!element) {
+      if (isComponent) {
+        element = tagName ?? kebabCase(json.name);
+      } else {
+        element = tagName ?? json.name;
+      }
     }
 
     str += `<${element} `;

@@ -2142,6 +2142,26 @@ const name = ref(\\"Steve\\");
 </style>"
 `;
 
+exports[`Vue > jsx > Javascript Test > eventProps 1`] = `
+"<template>
+  <button @click=\\"async (event) => handleClick()\\">Test</button>
+</template>
+
+<script setup>
+const props = defineProps([\\"onGetVoid\\", \\"onEnter\\"]);
+
+function handleClick() {
+  if (props.onGetVoid) {
+    props.onGetVoid();
+  }
+
+  if (props.onEnter) {
+    console.log(props.onEnter());
+  }
+}
+</script>"
+`;
+
 exports[`Vue > jsx > Javascript Test > expressionState 1`] = `
 "<template>
   <div>{{ refToUse }}</div>
@@ -5952,6 +5972,28 @@ const name = ref(\\"Steve\\");
   color: red;
 }
 </style>"
+`;
+
+exports[`Vue > jsx > Typescript Test > eventProps 1`] = `
+"<template>
+  <button @click=\\"async (event) => handleClick()\\">Test</button>
+</template>
+
+<script setup lang=\\"ts\\">
+import { EventProps, EventState } from \\"./event-props.type\\";
+
+const props = defineProps<EventProps>();
+
+function handleClick(): ReturnType<EventState[\\"handleClick\\"]> {
+  if (props.onGetVoid) {
+    props.onGetVoid();
+  }
+
+  if (props.onEnter) {
+    console.log(props.onEnter());
+  }
+}
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > expressionState 1`] = `
