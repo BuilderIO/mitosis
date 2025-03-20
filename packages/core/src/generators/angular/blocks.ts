@@ -414,13 +414,7 @@ export const blockToAngular = ({
         // Convert to string and replace double quotes with HTML entities
         const safeValue = String(value).replace(/"/g, '&quot;');
 
-        if (blockOptions.sanitizeInnerHTML) {
-          // For [innerHTML] property binding
-          str += ` [innerHTML]="sanitizer.bypassSecurityTrustHtml('${safeValue}')" `;
-        } else {
-          // For standard attribute (though this won't work in Angular)
-          str += ` innerHTML="${safeValue}" `;
-        }
+        str += ` [innerHTML]="sanitizer.bypassSecurityTrustHtml('${safeValue}')" `;
       } else {
         str += ` ${key}="${value}" `;
       }
