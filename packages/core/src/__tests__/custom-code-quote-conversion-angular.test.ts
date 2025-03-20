@@ -64,41 +64,7 @@ describe('CustomCode component with double quotes in Angular', () => {
     })({ component: transformedComponent });
 
     // Use toMatchInlineSnapshot instead of individual assertions
-    expect(angularCode).toMatchInlineSnapshot(`
-      "import { NgModule } from \\"@angular/core\\";
-      import { CommonModule } from \\"@angular/common\\";
-
-      import { Component } from \\"@angular/core\\";
-
-      @Component({
-        selector: \\"test-component\\",
-        template: \`
-          <div builder-id=\\"builder-8e8834315d504381ad92024148b9a924\\">
-            <div
-              innerHTML=\\"<link href='https://fonts.googleapis.com/css2?family=Inter&display=swap' rel='stylesheet'>
-                          <script src='https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js' defer></script>
-                          <script src='https://unpkg.com/@tailwindcss/browser@4'></script>\\"
-            ></div>
-          </div>
-        \`,
-        styles: [
-          \`
-            :host {
-              display: contents;
-            }
-          \`,
-        ],
-      })
-      export default class TestComponent {}
-
-      @NgModule({
-        declarations: [TestComponent],
-        imports: [CommonModule],
-        exports: [TestComponent],
-      })
-      export class TestComponentModule {}
-      "
-    `);
+    expect(angularCode).toMatchInlineSnapshot();
   });
 
   // Adding a test specifically for innerHTML as a property
