@@ -8898,6 +8898,85 @@ export default class MyComponent {
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > escapeQuotesInnerHTML 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, ChangeDetectionStrategy } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div
+      [innerHTML]='sanitizer.bypassSecurityTrustHtml(\\\\\`<link href=\\"https://fonts.googleapis.com/css2?family=Inter&display=swap\\" rel=\\"stylesheet\\">
+                        <script src=\\"URL_1\\" defer></script>
+                        <script src=\\"URL_2\\"></script>\\\\\`)'
+    ></div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  constructor(protected sanitizer) {}
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > escapeQuotesInnerHTML 2`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { Component, ChangeDetectionStrategy } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div
+      [innerHTML]='sanitizer.bypassSecurityTrustHtml(\\\\\`<link href=\\"https://fonts.googleapis.com/css2?family=Inter&display=swap\\" rel=\\"stylesheet\\">
+                        <script src=\\"URL_1\\" defer></script>
+                        <script src=\\"URL_2\\"></script>\\\\\`)'
+    ></div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  constructor(protected sanitizer) {}
+}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > eventInputAndChange 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -24562,6 +24641,93 @@ export default class MyComponent {
       this.vcRef.createEmbeddedView(this.componentTemplateRef).rootNodes,
     ];
   }
+}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > escapeQuotesInnerHTML 1`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component, ChangeDetectionStrategy } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
+
+export interface MyComponentProps {
+  text?: string;
+}
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div
+      [innerHTML]='sanitizer.bypassSecurityTrustHtml(\\\\\`<link href=\\"https://fonts.googleapis.com/css2?family=Inter&display=swap\\" rel=\\"stylesheet\\">
+                        <script src=\\"URL_1\\" defer></script>
+                        <script src=\\"URL_2\\"></script>\\\\\`)'
+    ></div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {
+  constructor(protected sanitizer: DomSanitizer) {}
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [CommonModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > escapeQuotesInnerHTML 2`] = `
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"changeDetection\\":\\"OnPush\\"}}
+          */
+
+import { Component, ChangeDetectionStrategy } from \\"@angular/core\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface MyComponentProps {
+  text?: string;
+}
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div
+      [innerHTML]='sanitizer.bypassSecurityTrustHtml(\\\\\`<link href=\\"https://fonts.googleapis.com/css2?family=Inter&display=swap\\" rel=\\"stylesheet\\">
+                        <script src=\\"URL_1\\" defer></script>
+                        <script src=\\"URL_2\\"></script>\\\\\`)'
+    ></div>
+  \`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class MyComponent {
+  constructor(protected sanitizer: DomSanitizer) {}
 }
 "
 `;
