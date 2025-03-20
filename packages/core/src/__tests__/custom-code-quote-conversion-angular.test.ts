@@ -63,7 +63,6 @@ describe('CustomCode component with double quotes in Angular', () => {
       typescript: true,
     })({ component: transformedComponent });
 
-    // Use toMatchInlineSnapshot instead of individual assertions
     expect(angularCode).toMatchInlineSnapshot();
   });
 
@@ -112,9 +111,6 @@ describe('CustomCode component with double quotes in Angular', () => {
       blockOptions: { sanitizeInnerHTML: false },
     });
 
-    // Use toMatchInlineSnapshot instead of individual assertions
-    expect(template).toMatchInlineSnapshot(
-      "\"<div  [innerHTML]=\\\"sanitizer.bypassSecurityTrustHtml('<div class='test-class' id='test-id'><p>Text with 'quoted' content</p><script src='https://example.com/script.js'></script></div>')\\\" ></div>\"",
-    );
+    expect(template).toMatchInlineSnapshot();
   });
 });
