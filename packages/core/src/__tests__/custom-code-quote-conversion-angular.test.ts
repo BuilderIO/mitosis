@@ -63,7 +63,41 @@ describe('CustomCode component with double quotes in Angular', () => {
       typescript: true,
     })({ component: transformedComponent });
 
-    expect(angularCode).toMatchInlineSnapshot();
+    expect(angularCode).toMatchInlineSnapshot(`
+      "import { NgModule } from \\"@angular/core\\";
+      import { CommonModule } from \\"@angular/common\\";
+
+      import { Component } from \\"@angular/core\\";
+
+      @Component({
+        selector: \\"test-component\\",
+        template: \`
+          <div builder-id=\\"builder-8e8834315d504381ad92024148b9a924\\">
+            <div
+              innerHTML=\\"<link href='https://fonts.googleapis.com/css2?family=Inter&display=swap' rel='stylesheet'>
+                          <script src='https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js' defer></script>
+                          <script src='https://unpkg.com/@tailwindcss/browser@4'></script>\\"
+            ></div>
+          </div>
+        \`,
+        styles: [
+          \`
+            :host {
+              display: contents;
+            }
+          \`,
+        ],
+      })
+      export default class TestComponent {}
+
+      @NgModule({
+        declarations: [TestComponent],
+        imports: [CommonModule],
+        exports: [TestComponent],
+      })
+      export class TestComponentModule {}
+      "
+    `);
   });
 
   // Adding a test specifically for innerHTML as a property
@@ -111,6 +145,8 @@ describe('CustomCode component with double quotes in Angular', () => {
       blockOptions: { sanitizeInnerHTML: false },
     });
 
-    expect(template).toMatchInlineSnapshot();
+    expect(template).toMatchInlineSnapshot(
+      "\"<div  [innerHTML]=\\\"sanitizer.bypassSecurityTrustHtml('<div class='test-class' id='test-id'><p>Text with 'quoted' content</p><script src='https://example.com/script.js'></script></div>')\\\" ></div>\"",
+    );
   });
 });
