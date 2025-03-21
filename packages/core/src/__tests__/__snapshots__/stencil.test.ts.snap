@@ -7545,8 +7545,12 @@ import {
   tag: \\"event-props-component\\",
 })
 export class EventPropsComponent {
-  @Event() getVoid: EventEmitter<ReturnType<Required<EventProps>[\\"onGetVoid\\"]>>;
-  @Event() enter: EventEmitter<ReturnType<Required<EventProps>[\\"onEnter\\"]>>;
+  @Event() getVoid: EventEmitter<
+    Parameters<Required<EventProps>[\\"onGetVoid\\"]>[number]
+  > | void;
+  @Event() enter: EventEmitter<
+    Parameters<Required<EventProps>[\\"onEnter\\"]>[number]
+  > | void;
 
   handleClick() {
     if (this.getVoid) {
