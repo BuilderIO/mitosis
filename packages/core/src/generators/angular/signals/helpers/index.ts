@@ -15,6 +15,7 @@ export const getAngularCoreImportsAsString = ({
 }): string => {
   const angularCoreImports: Record<string, boolean> = {
     Component: true,
+    AfterViewInit: true,
     viewChild: refs,
     ElementRef: refs,
     output,

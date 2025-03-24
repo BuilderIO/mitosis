@@ -3,8 +3,14 @@ import { babelTransformExpression } from '@/helpers/babel-transform';
 import { ProcessBindingOptions, processClassComponentBinding } from '@/helpers/class-components';
 import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
 import { MitosisComponent } from '@/types/mitosis-component';
-import { Node, types } from '@babel/core';
-import { isCallExpression, isIdentifier, isMemberExpression } from '@babel/types';
+import { Node, NodePath, types } from '@babel/core';
+import {
+  AssignmentExpression,
+  BinaryExpression,
+  isCallExpression,
+  isIdentifier,
+  isMemberExpression,
+} from '@babel/types';
 
 const isStateOrPropsExpression = (node: Node) => {
   return (
@@ -21,20 +27,29 @@ const addCallExpressionExtra = (node: Node) => {
   }
 };
 
+const handleAssignmentExpression = (path: NodePath<AssignmentExpression | BinaryExpression>) => {
+  if (
+    isMemberExpression(path.node.left) &&
+    isIdentifier(path.node.left.object) &&
+    isIdentifier(path.node.left.property) &&
+    path.node.left.object.name === 'state'
+  ) {
+    const root = types.memberExpression(path.node.left, types.identifier('set'));
+    root.extra = { updateExpression: true };
+    const call = types.callExpression(root, [path.node.right]);
+    call.extra = { updateExpression: true };
+    path.replaceWith(call);
+  }
+};
+
 const transformToSignals = (json: MitosisComponent, code: string) => {
   return babelTransformExpression(code, {
+    BinaryExpression(path) {
+      addCallExpressionExtra(path.node.left);
+      addCallExpressionExtra(path.node.right);
+    },
     AssignmentExpression(path) {
-      if (
-        isMemberExpression(path.node.left) &&
-        isIdentifier(path.node.left.object) &&
-        isIdentifier(path.node.left.property) &&
-        path.node.left.object.name === 'state'
-      ) {
-        const root = types.memberExpression(path.node.left, types.identifier('set'));
-        const call = types.callExpression(root, [path.node.right]);
-        call.extra = { updateExpression: true };
-        path.replaceWith(call);
-      }
+      handleAssignmentExpression(path);
     },
     UpdateExpression(path) {
       /*
@@ -116,11 +131,22 @@ export const getCodeProcessorPlugins = (
         case 'bindings':
           return (code) => {
             code = babelTransformExpression(code, {
+              StringLiteral(path) {
+                if (path.node.extra?.raw) {
+                  path.node.extra.raw = (path.node.extra.raw as string).replaceAll('"', "'");
+                }
+              },
+              AssignmentExpression(path) {
+                // TODO: This may not be possible in angular e.g. `state.name = event.target.value`
+                // TODO: We should consider to add a warning to eslint or throw an error directly
+                handleAssignmentExpression(path);
+              },
               MemberExpression(path) {
                 if (
                   !isCallExpression(path.parent) && // Don't add a function if it is already one
                   isStateOrPropsExpression(path.node) &&
-                  !path.node.extra?.makeCallExpressionDone
+                  !path.node.extra?.makeCallExpressionDone &&
+                  !path.parent.extra?.updateExpression
                 ) {
                   path.node.extra = { ...path.node.extra, makeCallExpressionDone: true };
                   path.replaceWith(types.callExpression(path.node, []));
@@ -135,6 +161,14 @@ export const getCodeProcessorPlugins = (
           };
         case 'hooks':
         case 'state':
+          return (code) => {
+            return processClassComponentBinding(
+              json,
+              transformToSignals(json, code),
+              processBindingOptions,
+            );
+          };
+        case 'hooks-deps-array':
           return (code) => {
             return processClassComponentBinding(
               json,

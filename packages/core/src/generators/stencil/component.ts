@@ -63,12 +63,12 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> = (
     const events: string[] = props.filter((prop) => checkIsEvent(prop));
     const defaultProps: MitosisState | undefined = json.defaultProps;
     const childComponents: string[] = getChildComponents(json);
-    const processBindingOptions: ProcessBindingOptions = { events };
 
     props = props.filter((prop) => {
       // Stencil doesn't need children as a prop
       return prop !== 'children';
     });
+    const processBindingOptions: ProcessBindingOptions = { events, props, target: 'stencil' };
 
     options.plugins = getCodeProcessorPlugins(json, options, processBindingOptions);
 

@@ -16,6 +16,7 @@ export const getCodeProcessorPlugins = (
         case 'properties':
         case 'hooks':
         case 'hooks-deps':
+        case 'hooks-deps-array':
         case 'state':
         case 'context-set':
         case 'dynamic-jsx-elements':

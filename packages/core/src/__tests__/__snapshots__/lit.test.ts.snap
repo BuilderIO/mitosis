@@ -277,14 +277,14 @@ export default class MyBasicOutputsComponent extends LitElement {
     return this;
   }
 
-  @property() onMessage: any;
+  @property() onMessageChange: any;
   @property() onEvent: any;
   @property() message: any;
 
   @state() name = \\"PatrickJS\\";
 
   connectedCallback() {
-    this.onMessage(this.name);
+    this.onMessageChange(this.name);
     this.onEvent(this.message);
   }
 
@@ -314,14 +314,14 @@ export default class MyBasicOutputsComponent extends LitElement {
     return this;
   }
 
-  @property() onMessage: any;
+  @property() onMessageChange: any;
   @property() onEvent: any;
   @property() message: any;
 
   @state() name = \\"PatrickJS\\";
 
   connectedCallback() {
-    this.onMessage(this.name);
+    this.onMessageChange(this.name);
     this.onEvent(this.message);
   }
 
@@ -396,6 +396,7 @@ export default class MyBooleanAttribute extends LitElement {
 
 exports[`Lit > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 import { LitElement, html, css } from \\"lit\\";
@@ -410,19 +411,20 @@ export default class MyBasicChildComponent extends LitElement {
   @state() name = \\"Steve\\";
   @state() dev = \\"PatrickJS\\";
 
+  log = function log(message) {
+    console.log(message);
+  };
+
   render() {
     return html\`
 
-          <div>
-          <my-basic-component .id=\\"\${this.dev}\\"></my-basic-component>
-          <div>
-            <my-basic-on-mount-update-component
-              .hi=\\"\${this.name}\\"
-              .bye=\\"\${this.dev}\\"
-            ></my-basic-on-mount-update-component>
-          </div>
-        </div>
-
+          <div ><my-basic-component  .id=\${this.dev} ></my-basic-component>
+        <div ><my-basic-on-mount-update-component  .hi=\${this.name}  .bye=\${
+      this.dev
+    } ></my-basic-on-mount-update-component>
+        <my-basic-outputs-component  message=\\"Test\\"  @messagechange=\${(name) =>
+          (this.name = name)}  @event=\${(event) =>
+      this.log(\\"Test\\")} ></my-basic-outputs-component></div></div>
         \`;
   }
 }
@@ -5216,14 +5218,14 @@ export default class MyBasicOutputsComponent extends LitElement {
     return this;
   }
 
-  @property() onMessage: any;
+  @property() onMessageChange: any;
   @property() onEvent: any;
   @property() message: any;
 
   @state() name = \\"PatrickJS\\";
 
   connectedCallback() {
-    this.onMessage(this.name);
+    this.onMessageChange(this.name);
     this.onEvent(this.message);
   }
 
@@ -5253,14 +5255,14 @@ export default class MyBasicOutputsComponent extends LitElement {
     return this;
   }
 
-  @property() onMessage: any;
+  @property() onMessageChange: any;
   @property() onEvent: any;
   @property() message: any;
 
   @state() name = \\"PatrickJS\\";
 
   connectedCallback() {
-    this.onMessage(this.name);
+    this.onMessageChange(this.name);
     this.onEvent(this.message);
   }
 
@@ -5340,6 +5342,7 @@ export default class MyBooleanAttribute extends LitElement {
 
 exports[`Lit > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 import { LitElement, html, css } from \\"lit\\";
@@ -5354,19 +5357,20 @@ export default class MyBasicChildComponent extends LitElement {
   @state() name = \\"Steve\\";
   @state() dev = \\"PatrickJS\\";
 
+  log = function log(message: string) {
+    console.log(message);
+  };
+
   render() {
     return html\`
 
-          <div>
-          <my-basic-component .id=\\"\${this.dev}\\"></my-basic-component>
-          <div>
-            <my-basic-on-mount-update-component
-              .hi=\\"\${this.name}\\"
-              .bye=\\"\${this.dev}\\"
-            ></my-basic-on-mount-update-component>
-          </div>
-        </div>
-
+          <div ><my-basic-component  .id=\${this.dev} ></my-basic-component>
+        <div ><my-basic-on-mount-update-component  .hi=\${this.name}  .bye=\${
+      this.dev
+    } ></my-basic-on-mount-update-component>
+        <my-basic-outputs-component  message=\\"Test\\"  @messagechange=\${(name) =>
+          (this.name = name)}  @event=\${(event) =>
+      this.log(\\"Test\\")} ></my-basic-outputs-component></div></div>
         \`;
   }
 }

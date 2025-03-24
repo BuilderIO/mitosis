@@ -33,7 +33,6 @@ import {
   ROOT_REF,
   getAddAttributePassingRef,
   getAttributePassingString,
-  shouldAddAttributePassing,
 } from '@/helpers/web-components/attribute-passing';
 import {
   runPostCodePlugins,
@@ -64,20 +63,27 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
       json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
 
-    const domRefs = getDomRefs({ json, options });
-    const withAttributePassing = shouldAddAttributePassing(json, options);
+    const withAttributePassing = true; // We always want to pass attributes
     const rootRef = getAddAttributePassingRef(json, options);
+    const domRefs = getDomRefs({ json, options, rootRef, withAttributePassing });
 
     let props: string[] = Array.from(getProps(json));
     const events: string[] = props.filter((prop) => checkIsEvent(prop));
     const childComponents: string[] = getChildComponents(json);
-    const processBindingOptions: ProcessBindingOptions = { events };
 
     props = props.filter((prop) => {
       // Best practise for Angular is to use Events without "on"
       // Stencil doesn't need children as a prop
       return prop !== 'children' && !checkIsEvent(prop);
     });
+    const processBindingOptions: ProcessBindingOptions = { events, props, target: 'angular' };
+
+    // Context
+    const injectables: string[] = Object.entries(json?.context?.get || {}).map(
+      ([variableName, { name }]) => {
+        return `public ${variableName} : ${name}`;
+      },
+    );
 
     options.plugins = getCodeProcessorPlugins(json, options, processBindingOptions);
 
@@ -154,6 +160,15 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
       data: false,
       functions: true,
       getters: true,
+      onlyValueMapper: true,
+      valueMapper: (
+        code: string,
+        type: 'data' | 'function' | 'getter',
+        _: string | undefined,
+        key: string | undefined,
+      ) => {
+        return code.startsWith('function') ? code.replace('function', '').trim() : code;
+      },
     });
 
     // Imports
@@ -190,7 +205,7 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
             .map(([k, v]) => `${k}: ${v}`)
             .join(',')}
         })
-        export class ${json.name} {    
+        export class ${json.name} implements AfterViewInit {    
           ${getInputs({
             json,
             options,
@@ -205,13 +220,22 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
           ${dataString}
           ${methodsString}
     
-          constructor() {          
+          constructor(${injectables.join(',\n')}) {          
           ${
             json.hooks.onUpdate?.length
               ? json.hooks.onUpdate
                   ?.map(
-                    ({ code }) =>
+                    ({ code, depsArray }) =>
                       `effect(() => {
+                      ${
+                        depsArray
+                          ? `
+                      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+                      ${depsArray.join('\n')}
+                      // --- 
+                      `
+                          : ''
+                      }
                       ${code}
                       });`,
                   )

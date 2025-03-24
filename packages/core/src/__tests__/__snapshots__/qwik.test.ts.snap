@@ -1972,7 +1972,7 @@ exports[`qwik > jsx > Javascript Test > Basic Outputs 1`] = `
 export const MyBasicOutputsComponent = component$((props) => {
   const state = useStore({ name: \\"PatrickJS\\" });
   useVisibleTask$(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   });
 
@@ -2001,7 +2001,7 @@ exports[`qwik > jsx > Javascript Test > Basic Outputs Meta 1`] = `
 export const MyBasicOutputsComponent = component$((props) => {
   const state = useStore({ name: \\"PatrickJS\\" });
   useVisibleTask$(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   });
 
@@ -2051,10 +2051,15 @@ export default MyBooleanAttribute;
 exports[`qwik > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
+
 import MyBasicComponent from \\"./basic.raw\\";
 
-import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+import { $, Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
+export const log = function log(props, state, message) {
+  console.log(message);
+};
 export const MyBasicChildComponent = component$((props) => {
   const state = useStore({ dev: \\"PatrickJS\\", name: \\"Steve\\" });
 
@@ -2066,6 +2071,11 @@ export const MyBasicChildComponent = component$((props) => {
           hi={state.name}
           bye={state.dev}
         ></MyBasicOnMountUpdateComponent>
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange$={$((event) => (state.name = name))}
+          onEvent$={$((event) => state.log(\\"Test\\"))}
+        ></MyBasicOutputsComponent>
       </div>
     </div>
   );
@@ -5922,7 +5932,7 @@ exports[`qwik > jsx > Typescript Test > Basic Outputs 1`] = `
 export const MyBasicOutputsComponent = component$((props: any) => {
   const state = useStore<any>({ name: \\"PatrickJS\\" });
   useVisibleTask$(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   });
 
@@ -5951,7 +5961,7 @@ exports[`qwik > jsx > Typescript Test > Basic Outputs Meta 1`] = `
 export const MyBasicOutputsComponent = component$((props: any) => {
   const state = useStore<any>({ name: \\"PatrickJS\\" });
   useVisibleTask$(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   });
 
@@ -6005,10 +6015,15 @@ export default MyBooleanAttribute;
 exports[`qwik > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
+
 import MyBasicComponent from \\"./basic.raw\\";
 
-import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+import { $, Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 
+export const log = function log(props, state, message: string) {
+  console.log(message);
+};
 export const MyBasicChildComponent = component$((props: any) => {
   const state = useStore<any>({ dev: \\"PatrickJS\\", name: \\"Steve\\" });
 
@@ -6020,6 +6035,11 @@ export const MyBasicChildComponent = component$((props: any) => {
           hi={state.name}
           bye={state.dev}
         ></MyBasicOnMountUpdateComponent>
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange$={$((event) => (state.name = name))}
+          onEvent$={$((event) => state.log(\\"Test\\"))}
+        ></MyBasicOutputsComponent>
       </div>
     </div>
   );

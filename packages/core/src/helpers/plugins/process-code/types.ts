@@ -4,6 +4,7 @@ import { MitosisNode } from '../../../types/mitosis-node';
 export type CodeType =
   | 'hooks'
   | 'hooks-deps'
+  | 'hooks-deps-array'
   | 'bindings'
   | 'properties'
   | 'state'

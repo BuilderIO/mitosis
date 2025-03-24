@@ -208,14 +208,14 @@ exports[`Svelte > jsx > Javascript Test > Basic Outputs 1`] = `
 "<script>
   import { onMount } from \\"svelte\\";
 
-  export let onMessage;
+  export let onMessageChange;
   export let onEvent;
   export let message;
 
   let name = \\"PatrickJS\\";
 
   onMount(() => {
-    onMessage(name);
+    onMessageChange(name);
     onEvent(message);
   });
 </script>
@@ -240,7 +240,7 @@ exports[`Svelte > jsx > Javascript Test > Basic Outputs Meta 1`] = `
 
 
 
-  export let onMessage;
+  export let onMessageChange;
 export let onEvent;
 export let message;
 
@@ -254,7 +254,7 @@ export let message;
   let name = 'PatrickJS';
 
 
-  onMount(() => { onMessage(name);
+  onMount(() => { onMessageChange(name);
 onEvent(message); });
 
 
@@ -289,7 +289,12 @@ exports[`Svelte > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 exports[`Svelte > jsx > Javascript Test > BasicChildComponent 1`] = `
 "<script>
   import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+  import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
   import MyBasicComponent from \\"./basic.raw\\";
+
+  function log(message) {
+    console.log(message);
+  }
 
   let name = \\"Steve\\";
   let dev = \\"PatrickJS\\";
@@ -297,7 +302,16 @@ exports[`Svelte > jsx > Javascript Test > BasicChildComponent 1`] = `
 
 <div>
   <MyBasicComponent id={dev} />
-  <div><MyBasicOnMountUpdateComponent hi={name} bye={dev} /></div>
+  <div>
+    <MyBasicOnMountUpdateComponent
+      hi={name}
+      bye={dev}
+    /><MyBasicOutputsComponent
+      message=\\"Test\\"
+      onMessageChange={(name) => (name = name)}
+      onEvent={(event) => log(\\"Test\\")}
+    />
+  </div>
 </div>"
 `;
 
@@ -3677,14 +3691,14 @@ exports[`Svelte > jsx > Typescript Test > Basic Outputs 1`] = `
 "<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
-  export let onMessage;
+  export let onMessageChange;
   export let onEvent;
   export let message;
 
   let name = \\"PatrickJS\\";
 
   onMount(() => {
-    onMessage(name);
+    onMessageChange(name);
     onEvent(message);
   });
 </script>
@@ -3709,7 +3723,7 @@ exports[`Svelte > jsx > Typescript Test > Basic Outputs Meta 1`] = `
 
 
 
-  export let onMessage;
+  export let onMessageChange;
 export let onEvent;
 export let message;
 
@@ -3723,7 +3737,7 @@ export let message;
   let name = 'PatrickJS';
 
 
-  onMount(() => { onMessage(name);
+  onMount(() => { onMessageChange(name);
 onEvent(message); });
 
 
@@ -3770,7 +3784,12 @@ exports[`Svelte > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 exports[`Svelte > jsx > Typescript Test > BasicChildComponent 1`] = `
 "<script lang=\\"ts\\">
   import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+  import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
   import MyBasicComponent from \\"./basic.raw\\";
+
+  function log(message: string) {
+    console.log(message);
+  }
 
   let name = \\"Steve\\";
   let dev = \\"PatrickJS\\";
@@ -3778,7 +3797,16 @@ exports[`Svelte > jsx > Typescript Test > BasicChildComponent 1`] = `
 
 <div>
   <MyBasicComponent id={dev} />
-  <div><MyBasicOnMountUpdateComponent hi={name} bye={dev} /></div>
+  <div>
+    <MyBasicOnMountUpdateComponent
+      hi={name}
+      bye={dev}
+    /><MyBasicOutputsComponent
+      message=\\"Test\\"
+      onMessageChange={(name) => (name = name)}
+      onEvent={(event) => log(\\"Test\\")}
+    />
+  </div>
 </div>"
 `;
 

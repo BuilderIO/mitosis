@@ -137,7 +137,7 @@ export default class MyBasicRefComponent {
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.nativeElement.focus();
+    this.inputRef?.nativeElement.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -391,15 +391,14 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 })
 export default class MyBasicOutputsComponent {
   @Input() message;
-
-  @Output() onMessage = new EventEmitter();
-  @Output() onEvent = new EventEmitter();
+  @Output() onMessageChange = new EventEmitter<any>();
+  @Output() onEvent = new EventEmitter<any>();
 
   name = \\"PatrickJS\\";
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
-      this.onMessage.emit(this.name);
+      this.onMessageChange.emit(this.name);
       this.onEvent.emit(this.message);
     }
   }
@@ -440,15 +439,15 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 })
 export default class MyBasicOutputsComponent {
   @Input() message;
-
-  @Output() onMessage = new EventEmitter();
-  @Output() onEvent = new EventEmitter();
+  @Output() onMessage = new EventEmitter<any>();
+  @Output() onEvent = new EventEmitter<any>();
+  @Output() onMessageChange = new EventEmitter<any>();
 
   name = \\"PatrickJS\\";
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
-      this.onMessage.emit(this.name);
+      this.onMessageChange.emit(this.name);
       this.onEvent.emit(this.message);
     }
   }
@@ -548,6 +547,7 @@ import { CommonModule } from \\"@angular/common\\";
 import { Component } from \\"@angular/core\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 @Component({
@@ -560,6 +560,11 @@ import MyBasicComponent from \\"./basic.raw\\";
           [hi]=\\"name\\"
           [bye]=\\"dev\\"
         ></my-basic-on-mount-update-component>
+        <my-basic-outputs-component
+          message=\\"Test\\"
+          (messageChange)=\\"$event = $event\\"
+          (event)='log(\\"Test\\")'
+        ></my-basic-outputs-component>
       </div>
     </div>
   \`,
@@ -574,6 +579,9 @@ import MyBasicComponent from \\"./basic.raw\\";
 export default class MyBasicChildComponent {
   name = \\"Steve\\";
   dev = \\"PatrickJS\\";
+  log = function log(message) {
+    console.log(message);
+  };
 }
 
 @NgModule({
@@ -582,6 +590,7 @@ export default class MyBasicChildComponent {
     CommonModule,
     MyBasicComponentModule,
     MyBasicOnMountUpdateComponentModule,
+    MyBasicOutputsComponentModule,
   ],
   exports: [MyBasicChildComponent],
 })
@@ -692,7 +701,7 @@ export default class MyBasicRefComponent {
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.nativeElement?.focus();
+    this.inputRef?.nativeElement?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -1022,7 +1031,9 @@ import { Component, Input } from \\"@angular/core\\";
     \`,
   ],
 })
-export default class ContentSlotCode {}
+export default class ContentSlotCode {
+  @Input() slotTesting;
+}
 
 @NgModule({
   declarations: [ContentSlotCode],
@@ -1079,6 +1090,8 @@ const defaultProps = {
   ],
 })
 export default class ContentSlotJsxCode {
+  @Input() slotContent = defaultProps[\\"slotContent\\"];
+  @Input() slotReference = defaultProps[\\"slotReference\\"];
   @Input() attributes;
   @Input() content = defaultProps[\\"content\\"];
 
@@ -1186,9 +1199,9 @@ export default class CustomCode {
   scriptsRun = [];
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (this.elem.nativeElement && typeof window !== \\"undefined\\") {
+    if (this.elem?.nativeElement && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = this.elem.nativeElement.getElementsByTagName(\\"script\\");
+      const scripts = this.elem?.nativeElement.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -1289,9 +1302,9 @@ export default class CustomCode {
   scriptsRun = [];
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (this.elem.nativeElement && typeof window !== \\"undefined\\") {
+    if (this.elem?.nativeElement && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = this.elem.nativeElement.getElementsByTagName(\\"script\\");
+      const scripts = this.elem?.nativeElement.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -1459,7 +1472,6 @@ export default class FormComponent {
   @Input() successMessage;
 
   @ViewChild(\\"formRef\\") formRef;
-
   @ViewChild(\\"elRef0\\") elRef0;
 
   _listenerFns = new Map();
@@ -1571,8 +1583,8 @@ export default class FormComponent {
         },
       });
 
-      if (this.formRef.nativeElement) {
-        this.formRef.nativeElement.dispatchEvent(presubmitEvent);
+      if (this.formRef?.nativeElement) {
+        this.formRef?.nativeElement.dispatchEvent(presubmitEvent);
 
         if (presubmitEvent.defaultPrevented) {
           return;
@@ -1630,8 +1642,8 @@ export default class FormComponent {
               },
             });
 
-            if (this.formRef.nativeElement) {
-              this.formRef.nativeElement.dispatchEvent(submitSuccessEvent);
+            if (this.formRef?.nativeElement) {
+              this.formRef?.nativeElement.dispatchEvent(submitSuccessEvent);
 
               if (submitSuccessEvent.defaultPrevented) {
                 return;
@@ -1639,19 +1651,19 @@ export default class FormComponent {
               /* TODO: option to turn this on/off? */
 
               if (this.resetFormOnSubmit !== false) {
-                this.formRef.nativeElement.reset();
+                this.formRef?.nativeElement.reset();
               }
             }
             /* TODO: client side route event first that can be preventDefaulted */
 
             if (this.successUrl) {
-              if (this.formRef.nativeElement) {
+              if (this.formRef?.nativeElement) {
                 const event = new CustomEvent(\\"route\\", {
                   detail: {
                     url: this.successUrl,
                   },
                 });
-                this.formRef.nativeElement.dispatchEvent(event);
+                this.formRef?.nativeElement.dispatchEvent(event);
 
                 if (!event.defaultPrevented) {
                   location.href = this.successUrl;
@@ -1669,8 +1681,8 @@ export default class FormComponent {
             },
           });
 
-          if (this.formRef.nativeElement) {
-            this.formRef.nativeElement.dispatchEvent(submitErrorEvent);
+          if (this.formRef?.nativeElement) {
+            this.formRef?.nativeElement.dispatchEvent(submitErrorEvent);
 
             if (submitErrorEvent.defaultPrevented) {
               return;
@@ -1827,8 +1839,8 @@ export default class Image {
       if (this.useLazyLoading()) {
         // throttled scroll capture listener
         const listener = () => {
-          if (this.pictureRef.nativeElement) {
-            const rect = this.pictureRef.nativeElement.getBoundingClientRect();
+          if (this.pictureRef?.nativeElement) {
+            const rect = this.pictureRef?.nativeElement.getBoundingClientRect();
             const buffer = window.innerHeight / 2;
 
             if (rect.top < window.innerHeight + buffer) {
@@ -3214,7 +3226,7 @@ import { Output, EventEmitter, Component } from \\"@angular/core\\";
   ],
 })
 export default class UseValueAndFnFromStore {
-  @Output() onChange = new EventEmitter();
+  @Output() onChange = new EventEmitter<any>();
 
   _id = \\"abc\\";
   _active = false;
@@ -4501,8 +4513,7 @@ export default class Button {
   @Input() openLinkInNewTab = defaultProps[\\"openLinkInNewTab\\"];
   @Input() text = defaultProps[\\"text\\"];
   @Input() buttonText;
-
-  @Output() onClick = new EventEmitter();
+  @Output() onClick = new EventEmitter<any>();
 
   @ViewChild(\\"elRef0\\") elRef0;
   @ViewChild(\\"elRef1\\") elRef1;
@@ -4627,8 +4638,7 @@ export default class Button {
   @Input() attributes;
   @Input() openLinkInNewTab = defaultProps[\\"openLinkInNewTab\\"];
   @Input() text = defaultProps[\\"text\\"];
-
-  @Output() onClick = new EventEmitter();
+  @Output() onClick = new EventEmitter<any>();
 
   @ViewChild(\\"elRef0\\") elRef0;
   @ViewChild(\\"elRef1\\") elRef1;
@@ -4952,8 +4962,8 @@ import { Output, EventEmitter, Component } from \\"@angular/core\\";
   ],
 })
 export default class EventPropsComponent {
-  @Output() onGetVoid = new EventEmitter();
-  @Output() onEnter = new EventEmitter();
+  @Output() onGetVoid = new EventEmitter<any>();
+  @Output() onEnter = new EventEmitter<any>();
 
   handleClick() {
     if (this.onGetVoid) {
@@ -5735,7 +5745,9 @@ export default class Embed {
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
-      this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+      this.elem?.nativeElement.dispatchEvent(
+        new CustomEvent(\\"initEditingBldr\\")
+      );
     }
   }
 }
@@ -7159,6 +7171,75 @@ export class ShowRootTextModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > signals 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import {
+  Output,
+  EventEmitter,
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+} from \\"@angular/core\\";
+
+const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
+
+@Component({
+  selector: \\"signals-test-component\\",
+  template: \`
+    <button [attr.aria-label]=\\"label\\" #buttonRef (click)=\\"handleOutput()\\">
+      {{testInput}}
+    </button>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class SignalsTestComponent {
+  @Input() testInput = defaultProps[\\"testInput\\"];
+  @Input() label = defaultProps[\\"label\\"];
+  @Output() onTestOutput = new EventEmitter<any>();
+
+  @ViewChild(\\"buttonRef\\") buttonRef;
+
+  _counter = 0;
+  _innerText = \\"a\\";
+  handleOutput() {
+    this._counter++;
+    this._innerText = \\"b\\";
+    console.log(this.testInput, this._counter);
+
+    if (this.onTestOutput) {
+      this.onTestOutput.emit();
+    }
+  }
+
+  ngOnChanges(changes) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(this._counter, this.buttonRef?.nativeElement);
+      this.buttonRef?.nativeElement?.setAttribute(
+        \\"data-counter\\",
+        this._counter.toString()
+      );
+    }
+  }
+}
+
+@NgModule({
+  declarations: [SignalsTestComponent],
+  imports: [CommonModule],
+  exports: [SignalsTestComponent],
+})
+export class SignalsTestComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Javascript Test > signalsOnUpdate 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -7597,14 +7678,11 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'string-literal-store',template: \`
 
-      <div>{{'foo-bar'}}</div>
+          <div>{{'foo-bar'}}</div>
 
-      \`,styles: [\`:host { display: contents; }\`]
+          \`,styles: [\`:host { display: contents; }\`]
 })
 export default class StringLiteralStore {
-
-
-
 
 
 
@@ -8485,7 +8563,7 @@ export default class MyBasicRefComponent {
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.nativeElement.focus();
+    this.inputRef?.nativeElement.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -8748,15 +8826,14 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 })
 export default class MyBasicOutputsComponent {
   @Input() message!: any;
-
-  @Output() onMessage = new EventEmitter();
-  @Output() onEvent = new EventEmitter();
+  @Output() onMessageChange = new EventEmitter<any>();
+  @Output() onEvent = new EventEmitter<any>();
 
   name = \\"PatrickJS\\";
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
-      this.onMessage.emit(this.name);
+      this.onMessageChange.emit(this.name);
       this.onEvent.emit(this.message);
     }
   }
@@ -8797,15 +8874,15 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 })
 export default class MyBasicOutputsComponent {
   @Input() message!: any;
-
-  @Output() onMessage = new EventEmitter();
-  @Output() onEvent = new EventEmitter();
+  @Output() onMessage = new EventEmitter<any>();
+  @Output() onEvent = new EventEmitter<any>();
+  @Output() onMessageChange = new EventEmitter<any>();
 
   name = \\"PatrickJS\\";
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
-      this.onMessage.emit(this.name);
+      this.onMessageChange.emit(this.name);
       this.onEvent.emit(this.message);
     }
   }
@@ -8910,6 +8987,7 @@ import { CommonModule } from \\"@angular/common\\";
 import { Component } from \\"@angular/core\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 @Component({
@@ -8922,6 +9000,11 @@ import MyBasicComponent from \\"./basic.raw\\";
           [hi]=\\"name\\"
           [bye]=\\"dev\\"
         ></my-basic-on-mount-update-component>
+        <my-basic-outputs-component
+          message=\\"Test\\"
+          (messageChange)=\\"$event = $event\\"
+          (event)='log(\\"Test\\")'
+        ></my-basic-outputs-component>
       </div>
     </div>
   \`,
@@ -8936,6 +9019,9 @@ import MyBasicComponent from \\"./basic.raw\\";
 export default class MyBasicChildComponent {
   name = \\"Steve\\";
   dev = \\"PatrickJS\\";
+  log = function log(message: string) {
+    console.log(message);
+  };
 }
 
 @NgModule({
@@ -8944,6 +9030,7 @@ export default class MyBasicChildComponent {
     CommonModule,
     MyBasicComponentModule,
     MyBasicOnMountUpdateComponentModule,
+    MyBasicOutputsComponentModule,
   ],
   exports: [MyBasicChildComponent],
 })
@@ -9064,7 +9151,7 @@ export default class MyBasicRefComponent {
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
     // Maintain focus
-    this.inputRef.nativeElement?.focus();
+    this.inputRef?.nativeElement?.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
@@ -9432,7 +9519,9 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
     \`,
   ],
 })
-export default class ContentSlotCode {}
+export default class ContentSlotCode {
+  @Input() slotTesting!: Props[\\"slotTesting\\"];
+}
 
 @NgModule({
   declarations: [ContentSlotCode],
@@ -9495,6 +9584,9 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
   ],
 })
 export default class ContentSlotJsxCode {
+  @Input() slotContent: Props[\\"slotContent\\"] = defaultProps[\\"slotContent\\"];
+  @Input() slotReference: Props[\\"slotReference\\"] =
+    defaultProps[\\"slotReference\\"];
   @Input() attributes!: Props[\\"attributes\\"];
   @Input() content: Props[\\"content\\"] = defaultProps[\\"content\\"];
 
@@ -9613,9 +9705,9 @@ export default class CustomCode {
   scriptsRun = [];
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (this.elem.nativeElement && typeof window !== \\"undefined\\") {
+    if (this.elem?.nativeElement && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = this.elem.nativeElement.getElementsByTagName(\\"script\\");
+      const scripts = this.elem?.nativeElement.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -9727,9 +9819,9 @@ export default class CustomCode {
   scriptsRun = [];
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (this.elem.nativeElement && typeof window !== \\"undefined\\") {
+    if (this.elem?.nativeElement && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = this.elem.nativeElement.getElementsByTagName(\\"script\\");
+      const scripts = this.elem?.nativeElement.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -9922,7 +10014,6 @@ export default class FormComponent {
   @Input() successMessage!: FormProps[\\"successMessage\\"];
 
   @ViewChild(\\"formRef\\") formRef!: ElementRef;
-
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
 
   _listenerFns = new Map<string, () => void>();
@@ -10041,8 +10132,8 @@ export default class FormComponent {
         },
       });
 
-      if (this.formRef.nativeElement) {
-        this.formRef.nativeElement.dispatchEvent(presubmitEvent);
+      if (this.formRef?.nativeElement) {
+        this.formRef?.nativeElement.dispatchEvent(presubmitEvent);
 
         if (presubmitEvent.defaultPrevented) {
           return;
@@ -10100,8 +10191,8 @@ export default class FormComponent {
               },
             });
 
-            if (this.formRef.nativeElement) {
-              this.formRef.nativeElement.dispatchEvent(submitSuccessEvent);
+            if (this.formRef?.nativeElement) {
+              this.formRef?.nativeElement.dispatchEvent(submitSuccessEvent);
 
               if (submitSuccessEvent.defaultPrevented) {
                 return;
@@ -10109,19 +10200,19 @@ export default class FormComponent {
               /* TODO: option to turn this on/off? */
 
               if (this.resetFormOnSubmit !== false) {
-                this.formRef.nativeElement.reset();
+                this.formRef?.nativeElement.reset();
               }
             }
             /* TODO: client side route event first that can be preventDefaulted */
 
             if (this.successUrl) {
-              if (this.formRef.nativeElement) {
+              if (this.formRef?.nativeElement) {
                 const event = new CustomEvent(\\"route\\", {
                   detail: {
                     url: this.successUrl,
                   },
                 });
-                this.formRef.nativeElement.dispatchEvent(event);
+                this.formRef?.nativeElement.dispatchEvent(event);
 
                 if (!event.defaultPrevented) {
                   location.href = this.successUrl;
@@ -10139,8 +10230,8 @@ export default class FormComponent {
             },
           });
 
-          if (this.formRef.nativeElement) {
-            this.formRef.nativeElement.dispatchEvent(submitErrorEvent);
+          if (this.formRef?.nativeElement) {
+            this.formRef?.nativeElement.dispatchEvent(submitErrorEvent);
 
             if (submitErrorEvent.defaultPrevented) {
               return;
@@ -10322,8 +10413,8 @@ export default class Image {
       if (this.useLazyLoading()) {
         // throttled scroll capture listener
         const listener = () => {
-          if (this.pictureRef.nativeElement) {
-            const rect = this.pictureRef.nativeElement.getBoundingClientRect();
+          if (this.pictureRef?.nativeElement) {
+            const rect = this.pictureRef?.nativeElement.getBoundingClientRect();
             const buffer = window.innerHeight / 2;
 
             if (rect.top < window.innerHeight + buffer) {
@@ -11828,7 +11919,7 @@ type MyStore = {
   ],
 })
 export default class UseValueAndFnFromStore {
-  @Output() onChange = new EventEmitter();
+  @Output() onChange = new EventEmitter<any>();
 
   _id: MyStore[\\"_id\\"] = \\"abc\\";
   _active: MyStore[\\"_active\\"] = false;
@@ -13194,8 +13285,7 @@ export default class Button {
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
   @Input() buttonText!: ButtonProps[\\"buttonText\\"];
-
-  @Output() onClick = new EventEmitter();
+  @Output() onClick = new EventEmitter<any>();
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
   @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
@@ -13329,8 +13419,7 @@ export default class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
-
-  @Output() onClick = new EventEmitter();
+  @Output() onClick = new EventEmitter<any>();
 
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
   @ViewChild(\\"elRef1\\") elRef1!: ElementRef;
@@ -13662,8 +13751,8 @@ import { EventProps, EventState } from \\"./event-props.type\\";
   ],
 })
 export default class EventPropsComponent {
-  @Output() onGetVoid = new EventEmitter();
-  @Output() onEnter = new EventEmitter();
+  @Output() onGetVoid = new EventEmitter<any>();
+  @Output() onEnter = new EventEmitter<any>();
 
   handleClick(): ReturnType<EventState[\\"handleClick\\"]> {
     if (this.onGetVoid) {
@@ -14475,7 +14564,9 @@ export default class Embed {
 
   ngOnInit() {
     if (typeof window !== \\"undefined\\") {
-      this.elem.nativeElement.dispatchEvent(new CustomEvent(\\"initEditingBldr\\"));
+      this.elem?.nativeElement.dispatchEvent(
+        new CustomEvent(\\"initEditingBldr\\")
+      );
     }
   }
 }
@@ -15996,6 +16087,86 @@ export class ShowRootTextModule {}
 "
 `;
 
+exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > signals 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import {
+  Output,
+  EventEmitter,
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  SimpleChanges,
+} from \\"@angular/core\\";
+
+type Props = {
+  label: string;
+  testInput: string;
+  onTestOutput?: () => void;
+};
+type Store = {
+  _counter: number;
+  _innerText: string;
+  handleOutput: () => void;
+};
+const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
+
+@Component({
+  selector: \\"signals-test-component\\",
+  template: \`
+    <button [attr.aria-label]=\\"label\\" #buttonRef (click)=\\"handleOutput()\\">
+      {{testInput}}
+    </button>
+  \`,
+  styles: [
+    \`
+      :host {
+        display: contents;
+      }
+    \`,
+  ],
+})
+export default class SignalsTestComponent {
+  @Input() testInput: Props[\\"testInput\\"] = defaultProps[\\"testInput\\"];
+  @Input() label: Props[\\"label\\"] = defaultProps[\\"label\\"];
+  @Output() onTestOutput = new EventEmitter<any>();
+
+  @ViewChild(\\"buttonRef\\") buttonRef!: ElementRef;
+
+  _counter: Store[\\"_counter\\"] = 0;
+  _innerText: Store[\\"_innerText\\"] = \\"a\\";
+  handleOutput(): ReturnType<Store[\\"handleOutput\\"]> {
+    this._counter++;
+    this._innerText = \\"b\\";
+    console.log(this.testInput, this._counter);
+
+    if (this.onTestOutput) {
+      this.onTestOutput.emit();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (typeof window !== \\"undefined\\") {
+      console.log(this._counter, this.buttonRef?.nativeElement);
+      this.buttonRef?.nativeElement?.setAttribute(
+        \\"data-counter\\",
+        this._counter.toString()
+      );
+    }
+  }
+}
+
+@NgModule({
+  declarations: [SignalsTestComponent],
+  imports: [CommonModule],
+  exports: [SignalsTestComponent],
+})
+export class SignalsTestComponentModule {}
+"
+`;
+
 exports[`Angular with manually creating and handling class properties as bindings (more stable) > jsx > Typescript Test > signalsOnUpdate 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -16450,14 +16621,11 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'string-literal-store',template: \`
 
-      <div>{{'foo-bar'}}</div>
+          <div>{{'foo-bar'}}</div>
 
-      \`,styles: [\`:host { display: contents; }\`]
+          \`,styles: [\`:host { display: contents; }\`]
 })
 export default class StringLiteralStore {
-
-
-
 
 
 

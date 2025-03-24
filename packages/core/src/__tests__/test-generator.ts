@@ -352,7 +352,7 @@ const SHOW_TESTS: Tests = {
 };
 
 const ADVANCED_REF: Tests = {
-  AdvancedRef: getRawFile('./data/advanced-ref.raw.tsx'),
+  AdvancedRef: getRawFile('./data/ref/advanced-ref.raw.tsx'),
 };
 
 const ON_UPDATE_RETURN: Tests = {
@@ -783,7 +783,11 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                       }
                       expect(output).toMatchSnapshot();
                     } catch (error) {
-                      expect(getOutput).toThrowErrorMatchingSnapshot();
+                      if (logOutput) {
+                        throw error;
+                      } else {
+                        expect(getOutput).toThrowErrorMatchingSnapshot();
+                      }
                     }
                   }
                 });

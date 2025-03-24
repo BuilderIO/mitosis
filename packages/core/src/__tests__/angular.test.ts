@@ -11,17 +11,3 @@ describe('Angular', () => {
     generator: componentToAngular,
   });
 });
-
-describe('Angular local', () => {
-  runTestsForTarget({
-    options: {
-      standalone: true,
-    },
-    target: 'angular',
-    generator: componentToAngular,
-    only: [
-      'signals'
-    ],
-    logOutput: true,
-  });
-});

@@ -2,13 +2,20 @@ import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '@/constants/html_tags';
 import { hasFirstChildKeyAttribute } from '@/generators/angular/helpers';
 import { parseSelector } from '@/generators/angular/helpers/parse-selector';
 import { AngularBlockOptions, ToAngularOptions } from '@/generators/angular/types';
-import { checkIsBindingNativeEvent, checkIsEvent } from '@/helpers/event-handlers';
+import { babelTransformExpression } from '@/helpers/babel-transform';
+import {
+  checkIsBindingNativeEvent,
+  checkIsEvent,
+  getEventNameWithoutOn,
+} from '@/helpers/event-handlers';
 import isChildren from '@/helpers/is-children';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { stripSlotPrefix } from '@/helpers/slots';
+import { throwError } from '@/helpers/throw-error';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { Binding, ForNode, MitosisNode } from '@/types/mitosis-node';
+import { isCallExpression } from '@babel/types';
 import { pipe } from 'fp-ts/function';
 import { isString, kebabCase } from 'lodash';
 
@@ -22,7 +29,7 @@ const getChildren = (
     ?.map((item) => blockToAngularSignals({ root, json: item, options, blockOptions }))
     .join('\n');
 
-const mappers: {
+const MAPPERS: {
   [key: string]: (
     root: MitosisComponent,
     json: MitosisNode,
@@ -46,18 +53,7 @@ const mappers: {
         }
       })
       .join('\n');
-
-    // TODO: Why do we need this?
-    const nonNameBinding = Object.entries(json.bindings)
-      .map(([binding, value]) => {
-        if (value && binding !== 'name') {
-          return value.code;
-        }
-      })
-      .join('\n');
-
     return `<ng-content ${namedSlotTransform}>
-${nonNameBinding}
 ${children}
 </ng-content>`;
   },
@@ -85,8 +81,8 @@ ${children}
     const children = getChildren(root, json, options, blockOptions);
     const item = forName ?? '_';
     const of = forNode.bindings.each?.code;
-    const track = trackByFnName ? `track ${trackByFnName};` : '';
-    const index = indexName ? `let ${indexName} = $index` : '';
+    const track = `track ${trackByFnName ? trackByFnName : indexName ? indexName : 'i'};`;
+    const index = indexName ? `let ${indexName} = $index` : 'let i = $index';
 
     return `
     @for (${item} of ${of};${track}${index}) {
@@ -106,6 +102,11 @@ ${children}
       }`;
     }
 
+    if (condition?.includes('children()')) {
+      throwError(`${json.name}: You can't use children() in a Show block for \`when\` targeting angular.
+      Try to invert it like this: "<Show when={props.label} else={props.children}>{props.label}</Show>"`);
+    }
+
     return `@if(${condition}){
     ${children}
     }${elseBlock}`;
@@ -117,7 +118,6 @@ const BINDINGS_MAPPER: { [key: string]: string | undefined } = {
   innerHTML: 'innerHTML',
   style: 'ngStyle',
 };
-
 
 const processEventBinding = (key: string, code: string, nodeName: string, customArg: string) => {
   let event = key.replace('on', '');
@@ -138,7 +138,7 @@ const processEventBinding = (key: string, code: string, nodeName: string, custom
 };
 
 const stringifyBinding =
-  (node: MitosisNode, options: ToAngularOptions, blockOptions: AngularBlockOptions) =>
+  (node: MitosisNode, blockOptions: AngularBlockOptions) =>
   ([key, binding]: [string, Binding | undefined]) => {
     if (key.startsWith('$') || key.startsWith('"') || key === 'key') {
       return;
@@ -148,11 +148,26 @@ const stringifyBinding =
     }
 
     const keyToUse = BINDINGS_MAPPER[key] || key;
-    const { code, arguments: cusArgs = ['event'] } = binding!;
-    // TODO: proper babel transform to replace. Util for this
+
+    if (!binding) return '';
+
+    const { code } = binding;
 
     if (checkIsEvent(keyToUse)) {
-      const { event, value } = processEventBinding(keyToUse, code, node.name, cusArgs[0]);
+      const args: string[] = binding.arguments || [];
+      const event = getEventNameWithoutOn(keyToUse);
+
+      const value = babelTransformExpression(code, {
+        Identifier(path) {
+          // Only change arguments inside a call expression or event
+          if (
+            (isCallExpression(path.parent) && args.includes(path.node.name)) ||
+            path.node.name === 'event'
+          ) {
+            path.node.name = '$event';
+          }
+        },
+      });
 
       // native events are all lowerCased
       const lowerCaseEvent = event.toLowerCase();
@@ -243,8 +258,8 @@ export const blockToAngularSignals = ({
   rootRef?: string;
   blockOptions?: AngularBlockOptions;
 }): string => {
-  if (mappers[json.name]) {
-    return mappers[json.name](root, json, options, blockOptions);
+  if (MAPPERS[json.name]) {
+    return MAPPERS[json.name](root, json, options, blockOptions);
   }
 
   if (isChildren({ node: json })) {
@@ -271,7 +286,7 @@ export const blockToAngularSignals = ({
   }
 
   const stringifiedBindings = Object.entries(json.bindings)
-    .map(stringifyBinding(json, options, blockOptions))
+    .map(stringifyBinding(json, blockOptions))
     .join('');
 
   str += stringifiedBindings;

@@ -119,9 +119,9 @@ export const componentToAngularClassic: TranspilerGenerator<ToAngularOptions> = 
     });
 
     // Handle refs
-    const domRefs = getDomRefs({ json, options });
     const withAttributePassing = shouldAddAttributePassing(json, options);
     const rootRef = getAddAttributePassingRef(json, options);
+    const domRefs = getDomRefs({ json, options, withAttributePassing, rootRef });
     const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
 
     if (options.plugins) {

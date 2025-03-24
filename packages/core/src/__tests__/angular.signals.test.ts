@@ -21,7 +21,11 @@ describe('Angular signals local', () => {
     },
     target: 'angular',
     generator: componentToAngular,
-    only: ['signals'],
+    only: [
+      // 'signals'
+      'BasicFor',
+      // 'eventInputAndChange',
+    ],
     logOutput: true,
   });
 });

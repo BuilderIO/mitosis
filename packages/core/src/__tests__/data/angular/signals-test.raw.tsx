@@ -1,4 +1,4 @@
-import { onUpdate,useDefaultProps,useRef,useStore } from '@builder.io/mitosis';
+import { onUpdate, useDefaultProps, useRef, useStore } from '@builder.io/mitosis';
 
 type Props = {
   label: string;

@@ -738,6 +738,10 @@ exports[`Parse JSX > Javascript > AdvancedRef 1`] = `
       {
         "code": "console.log('Received an update')",
         "deps": "[inputRef, inputNoArgRef]",
+        "depsArray": [
+          "inputRef",
+          "inputNoArgRef",
+        ],
       },
     ],
   },
@@ -1252,7 +1256,7 @@ exports[`Parse JSX > Javascript > Basic Outputs 1`] = `
     "onEvent": [],
     "onMount": [
       {
-        "code": "props.onMessage(state.name);
+        "code": "props.onMessageChange(state.name);
 props.onEvent(props.message)",
         "onSSR": false,
       },
@@ -1297,7 +1301,7 @@ exports[`Parse JSX > Javascript > Basic Outputs Meta 1`] = `
     "onEvent": [],
     "onMount": [
       {
-        "code": "props.onMessage(state.name);
+        "code": "props.onMessageChange(state.name);
 props.onEvent(props.message)",
         "onSSR": false,
       },
@@ -1549,6 +1553,31 @@ exports[`Parse JSX > Javascript > BasicChildComponent 1`] = `
               "properties": {},
               "scope": {},
             },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {
+                "onEvent": {
+                  "bindingType": "function",
+                  "code": "state.log(\\"Test\\")",
+                  "type": "single",
+                },
+                "onMessageChange": {
+                  "arguments": [
+                    "name",
+                  ],
+                  "bindingType": "function",
+                  "code": "state.name = name",
+                  "type": "single",
+                },
+              },
+              "children": [],
+              "meta": {},
+              "name": "MyBasicOutputsComponent",
+              "properties": {
+                "message": "Test",
+              },
+              "scope": {},
+            },
           ],
           "meta": {},
           "name": "div",
@@ -1582,6 +1611,13 @@ exports[`Parse JSX > Javascript > BasicChildComponent 1`] = `
     {
       "importKind": "value",
       "imports": {
+        "MyBasicOutputsComponent": "default",
+      },
+      "path": "./basic-outputs.raw",
+    },
+    {
+      "importKind": "value",
+      "imports": {
         "MyBasicComponent": "default",
       },
       "path": "./basic.raw",
@@ -1596,6 +1632,12 @@ exports[`Parse JSX > Javascript > BasicChildComponent 1`] = `
       "code": "'PatrickJS'",
       "propertyType": "normal",
       "type": "property",
+    },
+    "log": {
+      "code": "function log(message) {
+  console.log(message);
+}",
+      "type": "function",
     },
     "name": {
       "code": "'Steve'",
@@ -2220,6 +2262,7 @@ exports[`Parse JSX > Javascript > BasicRefPrevious 1`] = `
       {
         "code": "prevCount = state.count",
         "deps": "[state.count]",
+        "depsArray": [],
       },
     ],
   },
@@ -5672,6 +5715,7 @@ exports[`Parse JSX > Javascript > UseValueAndFnFromStore 1`] = `
   state._do(state._id);
 }",
         "deps": "",
+        "depsArray": [],
       },
     ],
   },
@@ -6464,6 +6508,7 @@ return () => {
   }
 }",
         "deps": "[state.name]",
+        "depsArray": [],
       },
     ],
   },
@@ -8545,10 +8590,12 @@ exports[`Parse JSX > Javascript > multipleOnUpdate 1`] = `
       {
         "code": "console.log('Runs on every update/rerender')",
         "deps": "",
+        "depsArray": [],
       },
       {
         "code": "console.log('Runs on every update/rerender as well')",
         "deps": "",
+        "depsArray": [],
       },
     ],
   },
@@ -8592,6 +8639,7 @@ if (state.a === 'a') {
   state.a = 'b';
 }",
         "deps": "[state.a, state.b]",
+        "depsArray": [],
       },
       {
         "code": "console.log('Runs when c or d changes', state.c, state.d);
@@ -8600,6 +8648,7 @@ if (state.a === 'a') {
   state.a = 'b';
 }",
         "deps": "[state.c, state.d]",
+        "depsArray": [],
       },
     ],
   },
@@ -9609,6 +9658,7 @@ exports[`Parse JSX > Javascript > onUpdate 1`] = `
       {
         "code": "console.log('Runs on every update/rerender')",
         "deps": "",
+        "depsArray": [],
       },
     ],
   },
@@ -9648,6 +9698,7 @@ exports[`Parse JSX > Javascript > onUpdateWithDeps 1`] = `
       {
         "code": "console.log('Runs when a, b or size changes', state.a, state.b, props.size)",
         "deps": "[state.a, state.b, props.size]",
+        "depsArray": [],
       },
     ],
   },
@@ -10022,6 +10073,7 @@ exports[`Parse JSX > Javascript > referencingFunInsideHook 1`] = `
   someOption: state.bar
 })",
         "deps": "",
+        "depsArray": [],
       },
     ],
   },
@@ -10725,6 +10777,7 @@ exports[`Parse JSX > Javascript > renderContentExample 1`] = `
       {
         "code": "dispatchNewContentToVisualEditor(props.content)",
         "deps": "[props.content]",
+        "depsArray": [],
       },
     ],
   },
@@ -12476,6 +12529,7 @@ exports[`Parse JSX > Javascript > signalsOnUpdate 1`] = `
         "code": "console.log('props.id changed', props.id);
 console.log('props.foo.value.bar.baz changed', props.foo.value.bar.baz)",
         "deps": "[props.id, props.foo.value.bar.baz]",
+        "depsArray": [],
       },
     ],
   },
@@ -14599,6 +14653,10 @@ exports[`Parse JSX > Typescript > AdvancedRef 1`] = `
       {
         "code": "console.log('Received an update')",
         "deps": "[inputRef, inputNoArgRef]",
+        "depsArray": [
+          "inputRef",
+          "inputNoArgRef",
+        ],
       },
     ],
   },
@@ -15136,7 +15194,7 @@ exports[`Parse JSX > Typescript > Basic Outputs 1`] = `
     "onEvent": [],
     "onMount": [
       {
-        "code": "props.onMessage(state.name);
+        "code": "props.onMessageChange(state.name);
 props.onEvent(props.message)",
         "onSSR": false,
       },
@@ -15182,7 +15240,7 @@ exports[`Parse JSX > Typescript > Basic Outputs Meta 1`] = `
     "onEvent": [],
     "onMount": [
       {
-        "code": "props.onMessage(state.name);
+        "code": "props.onMessageChange(state.name);
 props.onEvent(props.message)",
         "onSSR": false,
       },
@@ -15442,6 +15500,31 @@ exports[`Parse JSX > Typescript > BasicChildComponent 1`] = `
               "properties": {},
               "scope": {},
             },
+            {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {
+                "onEvent": {
+                  "bindingType": "function",
+                  "code": "state.log(\\"Test\\")",
+                  "type": "single",
+                },
+                "onMessageChange": {
+                  "arguments": [
+                    "name",
+                  ],
+                  "bindingType": "function",
+                  "code": "state.name = name",
+                  "type": "single",
+                },
+              },
+              "children": [],
+              "meta": {},
+              "name": "MyBasicOutputsComponent",
+              "properties": {
+                "message": "Test",
+              },
+              "scope": {},
+            },
           ],
           "meta": {},
           "name": "div",
@@ -15475,6 +15558,13 @@ exports[`Parse JSX > Typescript > BasicChildComponent 1`] = `
     {
       "importKind": "value",
       "imports": {
+        "MyBasicOutputsComponent": "default",
+      },
+      "path": "./basic-outputs.raw",
+    },
+    {
+      "importKind": "value",
+      "imports": {
         "MyBasicComponent": "default",
       },
       "path": "./basic.raw",
@@ -15489,6 +15579,12 @@ exports[`Parse JSX > Typescript > BasicChildComponent 1`] = `
       "code": "'PatrickJS'",
       "propertyType": "normal",
       "type": "property",
+    },
+    "log": {
+      "code": "function log(message: string) {
+  console.log(message);
+}",
+      "type": "function",
     },
     "name": {
       "code": "'Steve'",
@@ -16127,6 +16223,7 @@ exports[`Parse JSX > Typescript > BasicRefPrevious 1`] = `
       {
         "code": "prevCount = state.count",
         "deps": "[state.count]",
+        "depsArray": [],
       },
     ],
   },
@@ -19837,6 +19934,7 @@ exports[`Parse JSX > Typescript > UseValueAndFnFromStore 1`] = `
   state._do(state._id);
 }",
         "deps": "",
+        "depsArray": [],
       },
     ],
   },
@@ -20676,6 +20774,7 @@ return () => {
   }
 }",
         "deps": "[state.name]",
+        "depsArray": [],
       },
     ],
   },
@@ -22863,10 +22962,12 @@ exports[`Parse JSX > Typescript > multipleOnUpdate 1`] = `
       {
         "code": "console.log('Runs on every update/rerender')",
         "deps": "",
+        "depsArray": [],
       },
       {
         "code": "console.log('Runs on every update/rerender as well')",
         "deps": "",
+        "depsArray": [],
       },
     ],
   },
@@ -22910,6 +23011,7 @@ if (state.a === 'a') {
   state.a = 'b';
 }",
         "deps": "[state.a, state.b]",
+        "depsArray": [],
       },
       {
         "code": "console.log('Runs when c or d changes', state.c, state.d);
@@ -22918,6 +23020,7 @@ if (state.a === 'a') {
   state.a = 'b';
 }",
         "deps": "[state.c, state.d]",
+        "depsArray": [],
       },
     ],
   },
@@ -23948,6 +24051,7 @@ exports[`Parse JSX > Typescript > onUpdate 1`] = `
       {
         "code": "console.log('Runs on every update/rerender')",
         "deps": "",
+        "depsArray": [],
       },
     ],
   },
@@ -23987,6 +24091,7 @@ exports[`Parse JSX > Typescript > onUpdateWithDeps 1`] = `
       {
         "code": "console.log('Runs when a, b or size changes', state.a, state.b, props.size)",
         "deps": "[state.a, state.b, props.size]",
+        "depsArray": [],
       },
     ],
   },
@@ -24415,6 +24520,7 @@ exports[`Parse JSX > Typescript > referencingFunInsideHook 1`] = `
   someOption: state.bar
 })",
         "deps": "",
+        "depsArray": [],
       },
     ],
   },
@@ -25161,6 +25267,7 @@ exports[`Parse JSX > Typescript > renderContentExample 1`] = `
       {
         "code": "dispatchNewContentToVisualEditor(props.content)",
         "deps": "[props.content]",
+        "depsArray": [],
       },
     ],
   },
@@ -26965,6 +27072,7 @@ exports[`Parse JSX > Typescript > signalsOnUpdate 1`] = `
         "code": "console.log('props.id changed', props.id);
 console.log('props.foo.value.bar.baz changed', props.foo.value.bar.baz)",
         "deps": "[props.id, props.foo.value.bar.baz]",
+        "depsArray": [],
       },
     ],
   },

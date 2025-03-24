@@ -28,6 +28,18 @@ export const createCodeProcessorPlugin =
           result();
         }
       }
+      if (hook.depsArray?.length) {
+        hook.depsArray = hook.depsArray
+          .map((dep) => {
+            const innerResult = codeProcessor('hooks-deps-array', json)(dep, key);
+            if (typeof innerResult === 'string') {
+              return innerResult;
+            } else {
+              return '';
+            }
+          })
+          .filter((dep) => !!dep);
+      }
     }
 
     /**

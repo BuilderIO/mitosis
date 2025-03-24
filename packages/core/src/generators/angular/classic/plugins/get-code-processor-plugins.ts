@@ -63,6 +63,7 @@ export const getCodeProcessorPlugins = ({
             return newLocal.replace(/"/g, '&quot;');
           };
         case 'hooks-deps':
+        case 'hooks-deps-array':
         case 'state':
         case 'context-set':
         case 'properties':

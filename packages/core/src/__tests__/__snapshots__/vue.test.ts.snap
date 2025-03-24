@@ -293,14 +293,14 @@ import { defineComponent } from \\"vue\\";
 export default defineComponent({
   name: \\"my-basic-outputs-component\\",
 
-  props: [\\"onMessage\\", \\"onEvent\\", \\"message\\"],
+  props: [\\"onMessageChange\\", \\"onEvent\\", \\"message\\"],
 
   data() {
     return { name: \\"PatrickJS\\" };
   },
 
   mounted() {
-    this.onMessage(this.name);
+    this.onMessageChange(this.name);
     this.onEvent(this.message);
   },
 });
@@ -321,14 +321,14 @@ import { defineComponent } from \\"vue\\";
 export default defineComponent({
   name: \\"my-basic-outputs-component\\",
 
-  props: [\\"onMessage\\", \\"onEvent\\", \\"message\\"],
+  props: [\\"onMessageChange\\", \\"onEvent\\", \\"message\\"],
 
   data() {
     return { name: \\"PatrickJS\\" };
   },
 
   mounted() {
-    this.onMessage(this.name);
+    this.onMessageChange(this.name);
     this.onEvent(this.message);
   },
 });
@@ -384,7 +384,12 @@ exports[`Vue > jsx > Javascript Test > BasicChildComponent 1`] = `
       <MyBasicOnMountUpdateComponent
         :hi=\\"name\\"
         :bye=\\"dev\\"
-      ></MyBasicOnMountUpdateComponent>
+      ></MyBasicOnMountUpdateComponent
+      ><MyBasicOutputsComponent
+        message=\\"Test\\"
+        :onMessageChange=\\"(name) => (name = name)\\"
+        :onEvent=\\"(event) => log('Test')\\"
+      ></MyBasicOutputsComponent>
     </div>
   </div>
 </template>
@@ -393,6 +398,7 @@ exports[`Vue > jsx > Javascript Test > BasicChildComponent 1`] = `
 import { defineComponent } from \\"vue\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 export default defineComponent({
@@ -400,10 +406,17 @@ export default defineComponent({
   components: {
     MyBasicComponent: MyBasicComponent,
     MyBasicOnMountUpdateComponent: MyBasicOnMountUpdateComponent,
+    MyBasicOutputsComponent: MyBasicOutputsComponent,
   },
 
   data() {
     return { name: \\"Steve\\", dev: \\"PatrickJS\\" };
+  },
+
+  methods: {
+    log: function log(message) {
+      console.log(message);
+    },
   },
 });
 </script>"
@@ -4783,14 +4796,14 @@ import { defineComponent } from \\"vue\\";
 export default defineComponent({
   name: \\"my-basic-outputs-component\\",
 
-  props: [\\"onMessage\\", \\"onEvent\\", \\"message\\"],
+  props: [\\"onMessageChange\\", \\"onEvent\\", \\"message\\"],
 
   data() {
     return { name: \\"PatrickJS\\" };
   },
 
   mounted() {
-    this.onMessage(this.name);
+    this.onMessageChange(this.name);
     this.onEvent(this.message);
   },
 });
@@ -4811,14 +4824,14 @@ import { defineComponent } from \\"vue\\";
 export default defineComponent({
   name: \\"my-basic-outputs-component\\",
 
-  props: [\\"onMessage\\", \\"onEvent\\", \\"message\\"],
+  props: [\\"onMessageChange\\", \\"onEvent\\", \\"message\\"],
 
   data() {
     return { name: \\"PatrickJS\\" };
   },
 
   mounted() {
-    this.onMessage(this.name);
+    this.onMessageChange(this.name);
     this.onEvent(this.message);
   },
 });
@@ -4879,7 +4892,12 @@ exports[`Vue > jsx > Typescript Test > BasicChildComponent 1`] = `
       <MyBasicOnMountUpdateComponent
         :hi=\\"name\\"
         :bye=\\"dev\\"
-      ></MyBasicOnMountUpdateComponent>
+      ></MyBasicOnMountUpdateComponent
+      ><MyBasicOutputsComponent
+        message=\\"Test\\"
+        :onMessageChange=\\"(name) => (name = name)\\"
+        :onEvent=\\"(event) => log('Test')\\"
+      ></MyBasicOutputsComponent>
     </div>
   </div>
 </template>
@@ -4888,6 +4906,7 @@ exports[`Vue > jsx > Typescript Test > BasicChildComponent 1`] = `
 import { defineComponent } from \\"vue\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 export default defineComponent({
@@ -4895,10 +4914,17 @@ export default defineComponent({
   components: {
     MyBasicComponent: MyBasicComponent,
     MyBasicOnMountUpdateComponent: MyBasicOnMountUpdateComponent,
+    MyBasicOutputsComponent: MyBasicOutputsComponent,
   },
 
   data() {
     return { name: \\"Steve\\", dev: \\"PatrickJS\\" };
+  },
+
+  methods: {
+    log: function log(message: string) {
+      console.log(message);
+    },
   },
 });
 </script>"

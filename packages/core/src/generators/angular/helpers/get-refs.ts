@@ -3,22 +3,20 @@ import { ToAngularOptions } from '@/generators/angular/types';
 import { dashCase } from '@/helpers/dash-case';
 import { getRefs } from '@/helpers/get-refs';
 import { mapRefs } from '@/helpers/map-refs';
-import {
-  getAddAttributePassingRef,
-  shouldAddAttributePassing,
-} from '@/helpers/web-components/attribute-passing';
 import { MitosisComponent } from '@/types/mitosis-component';
 
 export const getDomRefs = ({
   json,
   options,
+  withAttributePassing,
+  rootRef,
 }: {
   json: MitosisComponent;
   options: ToAngularOptions;
+  withAttributePassing?: boolean;
+  rootRef: string;
 }): Set<string> => {
   const domRefs = getRefs(json);
-  const withAttributePassing = shouldAddAttributePassing(json, options);
-  const rootRef = getAddAttributePassingRef(json, options);
 
   const nativeElement = options.api === 'signals' ? `()?.nativeElement` : '?.nativeElement';
 
@@ -36,9 +34,11 @@ export const getDomRefs = ({
     );
   }
 
-  mapRefs(json, (refName) => {
+  mapRefs(json, (refName, type) => {
     const isDomRef = domRefs.has(refName);
-    return `this.${isDomRef ? '' : '_'}${refName}${isDomRef ? nativeElement : ''}`;
+    // we don't need nativeElement for deps-array in hooks
+    const extra = type === 'deps-array' ? '()' : nativeElement;
+    return `this.${isDomRef ? '' : '_'}${refName}${isDomRef ? extra : ''}`;
   });
 
   return domRefs;

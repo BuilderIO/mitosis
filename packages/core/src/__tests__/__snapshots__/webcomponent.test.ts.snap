@@ -1804,7 +1804,7 @@ class MyBasicOutputsComponent extends HTMLElement {
       this.props = {};
     }
 
-    this.componentProps = [\\"onMessage\\", \\"onEvent\\", \\"message\\"];
+    this.componentProps = [\\"onMessageChange\\", \\"onEvent\\", \\"message\\"];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
@@ -1848,7 +1848,7 @@ class MyBasicOutputsComponent extends HTMLElement {
 
   onMount() {
     // onMount
-    this.props.onMessage(this.state.name);
+    this.props.onMessageChange(this.state.name);
     this.props.onEvent(this.props.message);
   }
 
@@ -1916,7 +1916,7 @@ class MyBasicOutputsComponent extends HTMLElement {
       this.props = {};
     }
 
-    this.componentProps = [\\"onMessage\\", \\"onEvent\\", \\"message\\"];
+    this.componentProps = [\\"onMessageChange\\", \\"onEvent\\", \\"message\\"];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
@@ -1960,7 +1960,7 @@ class MyBasicOutputsComponent extends HTMLElement {
 
   onMount() {
     // onMount
-    this.props.onMessage(this.state.name);
+    this.props.onMessageChange(this.state.name);
     this.props.onEvent(this.props.message);
   }
 
@@ -2357,6 +2357,7 @@ customElements.define(\\"my-boolean-attribute\\", MyBooleanAttribute);
 
 exports[`webcomponent > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 /**
@@ -2374,7 +2375,13 @@ class MyBasicChildComponent extends HTMLElement {
     super();
     const self = this;
 
-    this.state = { name: \\"Steve\\", dev: \\"PatrickJS\\" };
+    this.state = {
+      name: \\"Steve\\",
+      dev: \\"PatrickJS\\",
+      log: function log(message) {
+        console.log(message);
+      },
+    };
     if (!this.props) {
       this.props = {};
     }
@@ -2383,6 +2390,19 @@ class MyBasicChildComponent extends HTMLElement {
     this.nodesToDestroy = [];
     // batch updates
     this.pendingUpdate = false;
+
+    // Event handler for 'messagechange' event on my-basic-outputs-component-my-basic-child-component
+    this.onMyBasicOutputsComponentMyBasicChildComponentMessagechange = (
+      name
+    ) => {
+      this.state.name = name;
+      this.update();
+    };
+
+    // Event handler for 'event' event on my-basic-outputs-component-my-basic-child-component
+    this.onMyBasicOutputsComponentMyBasicChildComponentEvent = (event) => {
+      this.state.log(\\"Test\\");
+    };
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2405,6 +2425,10 @@ class MyBasicChildComponent extends HTMLElement {
           <my-basic-on-mount-update-component
             data-el=\\"my-basic-on-mount-update-component-my-basic-child-component\\"
           ></my-basic-on-mount-update-component>
+          <my-basic-outputs-component
+            message=\\"Test\\"
+            data-el=\\"my-basic-outputs-component-my-basic-child-component\\"
+          ></my-basic-outputs-component>
         </div>
       </div>\`;
     this.pendingUpdate = true;
@@ -2476,6 +2500,29 @@ class MyBasicChildComponent extends HTMLElement {
           el.props = {};
           el.props.bye = this.state.dev;
         }
+      });
+
+    this._root
+      .querySelectorAll(
+        \\"[data-el='my-basic-outputs-component-my-basic-child-component']\\"
+      )
+      .forEach((el) => {
+        el.removeEventListener(
+          \\"messagechange\\",
+          this.onMyBasicOutputsComponentMyBasicChildComponentMessagechange
+        );
+        el.addEventListener(
+          \\"messagechange\\",
+          this.onMyBasicOutputsComponentMyBasicChildComponentMessagechange
+        );
+        el.removeEventListener(
+          \\"event\\",
+          this.onMyBasicOutputsComponentMyBasicChildComponentEvent
+        );
+        el.addEventListener(
+          \\"event\\",
+          this.onMyBasicOutputsComponentMyBasicChildComponentEvent
+        );
       });
   }
 
@@ -19498,7 +19545,7 @@ class MyBasicOutputsComponent extends HTMLElement {
       this.props = {};
     }
 
-    this.componentProps = [\\"onMessage\\", \\"onEvent\\", \\"message\\"];
+    this.componentProps = [\\"onMessageChange\\", \\"onEvent\\", \\"message\\"];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
@@ -19542,7 +19589,7 @@ class MyBasicOutputsComponent extends HTMLElement {
 
   onMount() {
     // onMount
-    this.props.onMessage(this.state.name);
+    this.props.onMessageChange(this.state.name);
     this.props.onEvent(this.props.message);
   }
 
@@ -19610,7 +19657,7 @@ class MyBasicOutputsComponent extends HTMLElement {
       this.props = {};
     }
 
-    this.componentProps = [\\"onMessage\\", \\"onEvent\\", \\"message\\"];
+    this.componentProps = [\\"onMessageChange\\", \\"onEvent\\", \\"message\\"];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
@@ -19654,7 +19701,7 @@ class MyBasicOutputsComponent extends HTMLElement {
 
   onMount() {
     // onMount
-    this.props.onMessage(this.state.name);
+    this.props.onMessageChange(this.state.name);
     this.props.onEvent(this.props.message);
   }
 
@@ -20056,6 +20103,7 @@ customElements.define(\\"my-boolean-attribute\\", MyBooleanAttribute);
 
 exports[`webcomponent > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 /**
@@ -20073,7 +20121,13 @@ class MyBasicChildComponent extends HTMLElement {
     super();
     const self = this;
 
-    this.state = { name: \\"Steve\\", dev: \\"PatrickJS\\" };
+    this.state = {
+      name: \\"Steve\\",
+      dev: \\"PatrickJS\\",
+      log: function log(message: string) {
+        console.log(message);
+      },
+    };
     if (!this.props) {
       this.props = {};
     }
@@ -20082,6 +20136,19 @@ class MyBasicChildComponent extends HTMLElement {
     this.nodesToDestroy = [];
     // batch updates
     this.pendingUpdate = false;
+
+    // Event handler for 'messagechange' event on my-basic-outputs-component-my-basic-child-component
+    this.onMyBasicOutputsComponentMyBasicChildComponentMessagechange = (
+      name
+    ) => {
+      this.state.name = name;
+      this.update();
+    };
+
+    // Event handler for 'event' event on my-basic-outputs-component-my-basic-child-component
+    this.onMyBasicOutputsComponentMyBasicChildComponentEvent = (event) => {
+      this.state.log(\\"Test\\");
+    };
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -20104,6 +20171,10 @@ class MyBasicChildComponent extends HTMLElement {
           <my-basic-on-mount-update-component
             data-el=\\"my-basic-on-mount-update-component-my-basic-child-component\\"
           ></my-basic-on-mount-update-component>
+          <my-basic-outputs-component
+            message=\\"Test\\"
+            data-el=\\"my-basic-outputs-component-my-basic-child-component\\"
+          ></my-basic-outputs-component>
         </div>
       </div>\`;
     this.pendingUpdate = true;
@@ -20175,6 +20246,29 @@ class MyBasicChildComponent extends HTMLElement {
           el.props = {};
           el.props.bye = this.state.dev;
         }
+      });
+
+    this._root
+      .querySelectorAll(
+        \\"[data-el='my-basic-outputs-component-my-basic-child-component']\\"
+      )
+      .forEach((el) => {
+        el.removeEventListener(
+          \\"messagechange\\",
+          this.onMyBasicOutputsComponentMyBasicChildComponentMessagechange
+        );
+        el.addEventListener(
+          \\"messagechange\\",
+          this.onMyBasicOutputsComponentMyBasicChildComponentMessagechange
+        );
+        el.removeEventListener(
+          \\"event\\",
+          this.onMyBasicOutputsComponentMyBasicChildComponentEvent
+        );
+        el.addEventListener(
+          \\"event\\",
+          this.onMyBasicOutputsComponentMyBasicChildComponentEvent
+        );
       });
   }
 

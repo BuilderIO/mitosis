@@ -48,7 +48,7 @@ export interface ContextSetInfo extends ContextOptions {
   ref?: string;
 }
 
-export type BaseHook = { code: string; deps?: string };
+export type BaseHook = { code: string; deps?: string; depsArray?: string[] };
 
 export type MitosisComponentInput = {
   name: string;

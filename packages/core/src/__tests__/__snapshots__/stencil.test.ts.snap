@@ -240,19 +240,19 @@ export class MyBasicComponent {
   @State() name = \\"PatrickJS\\";
 
   onChange = function onChange() {
-    const change = myService.method(\\"change\\");
+    const change = this.myService.method(\\"change\\");
     console.log(change);
   };
 
   componentDidLoad() {
-    const bye = myService.method(\\"hi\\");
+    const bye = this.myService.method(\\"hi\\");
     console.log(bye);
   }
 
   render() {
     return (
       <div>
-        {myService.method(\\"hello\\") + this.name}
+        {this.myService.method(\\"hello\\") + this.name}
         Hello! I can run in React, Vue, Solid, or Liquid!
         <input onChange={() => this.onChange} />
       </div>
@@ -305,13 +305,13 @@ exports[`Stencil > jsx > Javascript Test > Basic Outputs 1`] = `
   tag: \\"my-basic-outputs-component\\",
 })
 export class MyBasicOutputsComponent {
-  @Event() message: any;
+  @Event() messageChange: any;
   @Event() event: any;
   @Prop() message: any;
   @State() name = \\"PatrickJS\\";
 
   componentDidLoad() {
-    this.message.emit(this.name);
+    this.messageChange.emit(this.name);
     this.event.emit(this.message);
   }
 
@@ -342,13 +342,13 @@ import {
   tag: \\"my-basic-outputs-component\\",
 })
 export class MyBasicOutputsComponent {
-  @Event() message: any;
+  @Event() messageChange: any;
   @Event() event: any;
   @Prop() message: any;
   @State() name = \\"PatrickJS\\";
 
   componentDidLoad() {
-    this.message.emit(this.name);
+    this.messageChange.emit(this.name);
     this.event.emit(this.message);
   }
 
@@ -415,6 +415,7 @@ export class MyBooleanAttribute {
 
 exports[`Stencil > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import { MyBasicOnMountUpdateComponent } from \\"./basic-onMount-update.raw\\";
+import { MyBasicOutputsComponent } from \\"./basic-outputs.raw\\";
 import { MyBasicComponent } from \\"./basic.raw\\";
 
 import { Component, h, Fragment, State } from \\"@stencil/core\\";
@@ -425,6 +426,10 @@ import { Component, h, Fragment, State } from \\"@stencil/core\\";
 export class MyBasicChildComponent {
   @State() name = \\"Steve\\";
   @State() dev = \\"PatrickJS\\";
+
+  log = function log(message) {
+    console.log(message);
+  };
 
   componentDidLoad() {}
 
@@ -437,6 +442,11 @@ export class MyBasicChildComponent {
             hi={this.name}
             bye={this.dev}
           ></my-basic-on-mount-update-component>
+          <my-basic-outputs-component
+            message=\\"Test\\"
+            onMessageChange={(name) => (this.name = name)}
+            onEvent={() => this.log(\\"Test\\")}
+          ></my-basic-outputs-component>
         </div>
       </div>
     );
@@ -2701,7 +2711,7 @@ export class ComponentWithContext {
   render() {
     return (
       <Fragment>
-        <Fragment>{foo.value}</Fragment>
+        <Fragment>{this.foo.value}</Fragment>
       </Fragment>
     );
   }
@@ -2726,7 +2736,7 @@ export class ComponentWithContext {
   render() {
     return (
       <Fragment>
-        <Fragment>{foo.value}</Fragment>
+        <Fragment>{this.foo.value}</Fragment>
         <div>other</div>
       </Fragment>
     );
@@ -4835,19 +4845,19 @@ export class MyBasicComponent {
   @State() name = \\"PatrickJS\\";
 
   onChange = function onChange() {
-    const change = myService.method(\\"change\\");
+    const change = this.myService.method(\\"change\\");
     console.log(change);
   };
 
   componentDidLoad() {
-    const bye = myService.method(\\"hi\\");
+    const bye = this.myService.method(\\"hi\\");
     console.log(bye);
   }
 
   render() {
     return (
       <div>
-        {myService.method(\\"hello\\") + this.name}
+        {this.myService.method(\\"hello\\") + this.name}
         Hello! I can run in React, Vue, Solid, or Liquid!
         <input onChange={() => this.onChange} />
       </div>
@@ -4900,13 +4910,13 @@ exports[`Stencil > jsx > Typescript Test > Basic Outputs 1`] = `
   tag: \\"my-basic-outputs-component\\",
 })
 export class MyBasicOutputsComponent {
-  @Event() message: any;
+  @Event() messageChange: any;
   @Event() event: any;
   @Prop() message: any;
   @State() name = \\"PatrickJS\\";
 
   componentDidLoad() {
-    this.message.emit(this.name);
+    this.messageChange.emit(this.name);
     this.event.emit(this.message);
   }
 
@@ -4937,13 +4947,13 @@ import {
   tag: \\"my-basic-outputs-component\\",
 })
 export class MyBasicOutputsComponent {
-  @Event() message: any;
+  @Event() messageChange: any;
   @Event() event: any;
   @Prop() message: any;
   @State() name = \\"PatrickJS\\";
 
   componentDidLoad() {
-    this.message.emit(this.name);
+    this.messageChange.emit(this.name);
     this.event.emit(this.message);
   }
 
@@ -5010,6 +5020,7 @@ export class MyBooleanAttribute {
 
 exports[`Stencil > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import { MyBasicOnMountUpdateComponent } from \\"./basic-onMount-update.raw\\";
+import { MyBasicOutputsComponent } from \\"./basic-outputs.raw\\";
 import { MyBasicComponent } from \\"./basic.raw\\";
 
 import { Component, h, Fragment, State } from \\"@stencil/core\\";
@@ -5020,6 +5031,10 @@ import { Component, h, Fragment, State } from \\"@stencil/core\\";
 export class MyBasicChildComponent {
   @State() name = \\"Steve\\";
   @State() dev = \\"PatrickJS\\";
+
+  log = function log(message: string) {
+    console.log(message);
+  };
 
   componentDidLoad() {}
 
@@ -5032,6 +5047,11 @@ export class MyBasicChildComponent {
             hi={this.name}
             bye={this.dev}
           ></my-basic-on-mount-update-component>
+          <my-basic-outputs-component
+            message=\\"Test\\"
+            onMessageChange={(name) => (this.name = name)}
+            onEvent={() => this.log(\\"Test\\")}
+          ></my-basic-outputs-component>
         </div>
       </div>
     );
@@ -7309,7 +7329,7 @@ export class ComponentWithContext {
   render() {
     return (
       <Fragment>
-        <Fragment>{foo.value}</Fragment>
+        <Fragment>{this.foo.value}</Fragment>
       </Fragment>
     );
   }
@@ -7334,7 +7354,7 @@ export class ComponentWithContext {
   render() {
     return (
       <Fragment>
-        <Fragment>{foo.value}</Fragment>
+        <Fragment>{this.foo.value}</Fragment>
         <div>other</div>
       </Fragment>
     );

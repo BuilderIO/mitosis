@@ -1,5 +1,6 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
+import { isIdentifier } from '@babel/types';
 import { HOOKS } from '../../constants/hooks';
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { getBindingsCode } from '../../helpers/get-bindings';
@@ -159,11 +160,21 @@ export const componentFunctionToJson = (
               ) {
                 const depsCode = secondArg ? generate(secondArg).code : '';
 
+                const depsArray: string[] = [];
+                if (secondArg && secondArg.elements) {
+                  for (const element of secondArg.elements) {
+                    if (isIdentifier(element)) {
+                      depsArray.push(element.name);
+                    }
+                  }
+                }
+
                 hooks.onUpdate = [
                   ...(hooks.onUpdate || []),
                   {
                     code,
                     deps: depsCode,
+                    depsArray,
                   },
                 ];
               }

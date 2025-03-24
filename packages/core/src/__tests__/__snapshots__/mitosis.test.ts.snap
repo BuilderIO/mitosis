@@ -256,7 +256,7 @@ export default function MyBasicOutputsComponent(props) {
   const state = useStore({ name: \\"PatrickJS\\" });
 
   onMount(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   });
 
@@ -282,7 +282,7 @@ export default function MyBasicOutputsComponent(props) {
   const state = useStore({ name: \\"PatrickJS\\" });
 
   onMount(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   });
 
@@ -323,19 +323,35 @@ export default function MyBooleanAttribute(props) {
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import { useStore } from \\"@builder.io/mitosis\\";
-import { MyBasicComponent, MyBasicOnMountUpdateComponent } from \\"@components\\";
+import {
+  MyBasicComponent,
+  MyBasicOnMountUpdateComponent,
+  MyBasicOutputsComponent,
+} from \\"@components\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 export default function MyBasicChildComponent(props) {
-  const state = useStore({ name: \\"Steve\\", dev: \\"PatrickJS\\" });
+  const state = useStore({
+    name: \\"Steve\\",
+    dev: \\"PatrickJS\\",
+    log: function log(message) {
+      console.log(message);
+    },
+  });
 
   return [
     <div>
       <MyBasicComponent id={state.dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={state.name} bye={state.dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => (state.name = name)}
+          onEvent={(event) => state.log(\\"Test\\")}
+        />
       </div>
     </div>,
   ];
@@ -3611,7 +3627,7 @@ export default function MyBasicOutputsComponent(props) {
   const state = useStore({ name: \\"PatrickJS\\" });
 
   onMount(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   });
 
@@ -3637,7 +3653,7 @@ export default function MyBasicOutputsComponent(props) {
   const state = useStore({ name: \\"PatrickJS\\" });
 
   onMount(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   });
 
@@ -3682,19 +3698,35 @@ export default function MyBooleanAttribute(props) {
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import { useStore } from \\"@builder.io/mitosis\\";
-import { MyBasicComponent, MyBasicOnMountUpdateComponent } from \\"@components\\";
+import {
+  MyBasicComponent,
+  MyBasicOnMountUpdateComponent,
+  MyBasicOutputsComponent,
+} from \\"@components\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 export default function MyBasicChildComponent(props) {
-  const state = useStore({ name: \\"Steve\\", dev: \\"PatrickJS\\" });
+  const state = useStore({
+    name: \\"Steve\\",
+    dev: \\"PatrickJS\\",
+    log: function log(message: string) {
+      console.log(message);
+    },
+  });
 
   return [
     <div>
       <MyBasicComponent id={state.dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={state.name} bye={state.dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => (state.name = name)}
+          onEvent={(event) => state.log(\\"Test\\")}
+        />
       </div>
     </div>,
   ];
@@ -8035,7 +8067,7 @@ export default function MyBasicOutputsComponent(props) {
   const state = useStore({ name: \\"PatrickJS\\" });
 
   onMount(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   });
 
@@ -8061,7 +8093,7 @@ export default function MyBasicOutputsComponent(props) {
   const state = useStore({ name: \\"PatrickJS\\" });
 
   onMount(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   });
 
@@ -8101,19 +8133,35 @@ export default function MyBooleanAttribute(props) {
 
 exports[`Mitosis, format: legacy > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import { useStore } from \\"@builder.io/mitosis\\";
-import { MyBasicComponent, MyBasicOnMountUpdateComponent } from \\"@components\\";
+import {
+  MyBasicComponent,
+  MyBasicOnMountUpdateComponent,
+  MyBasicOutputsComponent,
+} from \\"@components\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 export default function MyBasicChildComponent(props) {
-  const state = useStore({ name: \\"Steve\\", dev: \\"PatrickJS\\" });
+  const state = useStore({
+    name: \\"Steve\\",
+    dev: \\"PatrickJS\\",
+    log: function log(message) {
+      console.log(message);
+    },
+  });
 
   return (
     <div>
       <MyBasicComponent id={state.dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={state.name} bye={state.dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => (state.name = name)}
+          onEvent={(event) => state.log(\\"Test\\")}
+        />
       </div>
     </div>
   );
@@ -11445,7 +11493,7 @@ export default function MyBasicOutputsComponent(props) {
   const state = useStore({ name: \\"PatrickJS\\" });
 
   onMount(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   });
 
@@ -11471,7 +11519,7 @@ export default function MyBasicOutputsComponent(props) {
   const state = useStore({ name: \\"PatrickJS\\" });
 
   onMount(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   });
 
@@ -11515,19 +11563,35 @@ export default function MyBooleanAttribute(props) {
 
 exports[`Mitosis, format: legacy > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import { useStore } from \\"@builder.io/mitosis\\";
-import { MyBasicComponent, MyBasicOnMountUpdateComponent } from \\"@components\\";
+import {
+  MyBasicComponent,
+  MyBasicOnMountUpdateComponent,
+  MyBasicOutputsComponent,
+} from \\"@components\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 export default function MyBasicChildComponent(props) {
-  const state = useStore({ name: \\"Steve\\", dev: \\"PatrickJS\\" });
+  const state = useStore({
+    name: \\"Steve\\",
+    dev: \\"PatrickJS\\",
+    log: function log(message: string) {
+      console.log(message);
+    },
+  });
 
   return (
     <div>
       <MyBasicComponent id={state.dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={state.name} bye={state.dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => (state.name = name)}
+          onEvent={(event) => state.log(\\"Test\\")}
+        />
       </div>
     </div>
   );
@@ -15948,7 +16012,7 @@ function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -15968,7 +16032,7 @@ function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -16019,6 +16083,7 @@ exports[`Mitosis, format: react > jsx > Javascript Test > BasicChildComponent 1`
 import * as React from \\"react\\";
 import { useState } from \\"react\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props) {
@@ -16026,11 +16091,20 @@ function MyBasicChildComponent(props) {
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
 
+  function log(message) {
+    console.log(message);
+  }
+
   return (
     <div>
       <MyBasicComponent id={dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => setName(name)}
+          onEvent={(event) => log(\\"Test\\")}
+        />
       </div>
     </div>
   );
@@ -19851,7 +19925,7 @@ function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -19871,7 +19945,7 @@ function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -19922,6 +19996,7 @@ exports[`Mitosis, format: react > jsx > Typescript Test > BasicChildComponent 1`
 import * as React from \\"react\\";
 import { useState } from \\"react\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props) {
@@ -19929,11 +20004,20 @@ function MyBasicChildComponent(props) {
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
 
+  function log(message: string) {
+    console.log(message);
+  }
+
   return (
     <div>
       <MyBasicComponent id={dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => setName(name)}
+          onEvent={(event) => log(\\"Test\\")}
+        />
       </div>
     </div>
   );

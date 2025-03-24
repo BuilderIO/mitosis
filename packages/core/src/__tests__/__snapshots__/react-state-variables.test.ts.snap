@@ -174,7 +174,7 @@ function MyBasicOutputsComponent(props) {
   const name = \\"PatrickJS\\";
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -199,7 +199,7 @@ function MyBasicOutputsComponent(props) {
   const name = \\"PatrickJS\\";
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -249,17 +249,26 @@ exports[`React - stateType: variables > jsx > Javascript Test > BasicChildCompon
 "\\"use client\\";
 import * as React from \\"react\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props) {
   const name = \\"Steve\\";
   const dev = \\"PatrickJS\\";
+  const log = function log(message) {
+    console.log(message);
+  };
 
   return (
     <div>
       <MyBasicComponent id={dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => (name = name)}
+          onEvent={(event) => log(\\"Test\\")}
+        />
       </div>
     </div>
   );
@@ -3439,7 +3448,7 @@ function MyBasicOutputsComponent(props: any) {
   const name = \\"PatrickJS\\";
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -3464,7 +3473,7 @@ function MyBasicOutputsComponent(props: any) {
   const name = \\"PatrickJS\\";
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -3519,17 +3528,26 @@ exports[`React - stateType: variables > jsx > Typescript Test > BasicChildCompon
 "\\"use client\\";
 import * as React from \\"react\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props: any) {
   const name = \\"Steve\\";
   const dev = \\"PatrickJS\\";
+  const log = function log(message: string) {
+    console.log(message);
+  };
 
   return (
     <div>
       <MyBasicComponent id={dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => (name = name)}
+          onEvent={(event) => log(\\"Test\\")}
+        />
       </div>
     </div>
   );
