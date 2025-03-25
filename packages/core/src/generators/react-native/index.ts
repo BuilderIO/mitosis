@@ -293,3 +293,5 @@ export const componentToReactNative: TranspilerGenerator<Partial<ToReactNativeOp
 
     return componentToReact({ ...options, type: 'native' })({ component: json, path });
   };
+
+export * from './types';
