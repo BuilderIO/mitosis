@@ -1,6 +1,6 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { isIdentifier } from '@babel/types';
+import { isIdentifier, isMemberExpression } from '@babel/types';
 import { HOOKS } from '../../constants/hooks';
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { getBindingsCode } from '../../helpers/get-bindings';
@@ -165,6 +165,12 @@ export const componentFunctionToJson = (
                   for (const element of secondArg.elements) {
                     if (isIdentifier(element)) {
                       depsArray.push(element.name);
+                    } else if (
+                      isMemberExpression(element) &&
+                      isIdentifier(element.object) &&
+                      isIdentifier(element.property)
+                    ) {
+                      depsArray.push(`${element.object.name}.${element.property.name}`);
                     }
                   }
                 }

@@ -2,14 +2,20 @@ import type { NodePath } from '@babel/core';
 import { types } from '@babel/core';
 import traverse from 'neotraverse/legacy';
 
-import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisComponent } from '@/types/mitosis-component';
 import { babelTransformExpression } from './babel-transform';
 import { getRefs } from './get-refs';
 import { isMitosisNode } from './is-mitosis-node';
 import { SETTER } from './patterns';
 
 export type RefMapperType = 'deps' | 'deps-array';
-export type RefMapper = (refName: string, type?: RefMapperType) => string;
+export type RefMapper = (
+  refName: string,
+  extra?: {
+    type?: RefMapperType;
+    path: NodePath<types.Identifier>;
+  },
+) => string;
 
 const replaceRefsInString = (
   code: string,
@@ -22,7 +28,14 @@ const replaceRefsInString = (
       const name = path.node.name;
       const isRef = refs.includes(name);
       if (isRef) {
-        path.replaceWith(types.identifier(mapper(name, type)));
+        path.replaceWith(
+          types.identifier(
+            mapper(name, {
+              type,
+              path,
+            }),
+          ),
+        );
       }
     },
   });

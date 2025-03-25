@@ -50,6 +50,20 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(component);
 
+    // Init compileContext
+    json.compileContext = {
+      angular: {
+        hooks: {
+          ngAfterViewInit: {
+            code: '',
+          },
+        },
+        extra: {
+          importCalls: [],
+        },
+      },
+    };
+
     const options = initializeOptions({
       target: 'angular',
       component,
@@ -76,14 +90,12 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
       // Stencil doesn't need children as a prop
       return prop !== 'children' && !checkIsEvent(prop);
     });
-    const processBindingOptions: ProcessBindingOptions = { events, props, target: 'angular' };
-
-    // Context
-    const injectables: string[] = Object.entries(json?.context?.get || {}).map(
-      ([variableName, { name }]) => {
-        return `public ${variableName} : ${name}`;
-      },
-    );
+    const processBindingOptions: ProcessBindingOptions = {
+      events,
+      props,
+      target: 'angular',
+      skipAppendEmit: true,
+    };
 
     options.plugins = getCodeProcessorPlugins(json, options, processBindingOptions);
 
@@ -96,9 +108,19 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
 
     // Mitosis Metadata
     const useMetadata = json.meta?.useMetadata;
+    const onPush = useMetadata?.angular?.changeDetection == 'OnPush';
+
+    // Context & Injectables
+    const injectables: string[] = Object.entries(json?.context?.get || {}).map(
+      ([variableName, { name }]) => {
+        return `public ${variableName} : ${name}`;
+      },
+    );
     const shouldUseSanitizer =
       !useMetadata?.angular?.sanitizeInnerHTML && traverseAndCheckIfInnerHTMLIsUsed(json);
-    const onPush = useMetadata?.angular?.changeDetection == 'OnPush';
+    if (shouldUseSanitizer) {
+      injectables.push('protected sanitizer: DomSanitizer');
+    }
 
     // HTML
     let template = json.children
@@ -151,6 +173,12 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
         _: 'data' | 'function' | 'getter',
         typeParameter: string | undefined,
       ) => {
+        if (typeParameter && !code.length) {
+          console.error(`
+Component ${json.name} has state property without an initial value'. 
+This will cause an error in Angular.
+Please add a initial value for every state property even if it's \`undefined\`.`);
+        }
         return `signal${typeParameter ? `<${typeParameter}>` : ''}(${code})`;
       },
     });
@@ -205,7 +233,13 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
             .map(([k, v]) => `${k}: ${v}`)
             .join(',')}
         })
-        export class ${json.name} implements AfterViewInit {    
+        export class ${json.name} implements AfterViewInit {   
+          ${json
+            .compileContext!.angular!.extra!.importCalls.map(
+              (importCall: string) => `${importCall} = ${importCall};`,
+            )
+            .join('\n')}
+         
           ${getInputs({
             json,
             options,
@@ -228,7 +262,7 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
                     ({ code, depsArray }) =>
                       `effect(() => {
                       ${
-                        depsArray
+                        depsArray?.length
                           ? `
                       // --- Mitosis: Workaround to make sure the effect() is triggered ---
                       ${depsArray.join('\n')}

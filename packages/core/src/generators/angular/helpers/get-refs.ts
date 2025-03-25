@@ -4,6 +4,7 @@ import { dashCase } from '@/helpers/dash-case';
 import { getRefs } from '@/helpers/get-refs';
 import { mapRefs } from '@/helpers/map-refs';
 import { MitosisComponent } from '@/types/mitosis-component';
+import { isAssignmentExpression } from '@babel/types';
 
 export const getDomRefs = ({
   json,
@@ -34,11 +35,17 @@ export const getDomRefs = ({
     );
   }
 
-  mapRefs(json, (refName, type) => {
+  mapRefs(json, (refName, extra) => {
     const isDomRef = domRefs.has(refName);
-    // we don't need nativeElement for deps-array in hooks
-    const extra = type === 'deps-array' ? '()' : nativeElement;
-    return `this.${isDomRef ? '' : '_'}${refName}${isDomRef ? extra : ''}`;
+    let additional = nativeElement;
+    if (extra?.type === 'deps-array' && options.api === 'signals') {
+      // we don't need nativeElement for deps-array in hooks
+      additional = '()';
+    } else if (extra?.path.parentPath && isAssignmentExpression(extra?.path.parentPath.container)) {
+      // we cannot use conditionals for assignments, it has to be checked before
+      additional = options.api === 'signals' ? `()!.nativeElement` : '!.nativeElement';
+    }
+    return `this.${isDomRef ? '' : '_'}${refName}${isDomRef ? additional : ''}`;
   });
 
   return domRefs;

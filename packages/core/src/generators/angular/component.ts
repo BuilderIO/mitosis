@@ -18,6 +18,11 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> = (userOp
        * Some features aren't available to reduce complexity:
        * - Spread props
        * - Dynamic components
+       *
+       * Some issues remaining:
+       * - ref inside template
+       * - constants imports inside templates
+       * - child component imports
        */
       return componentToAngularSignals(userOptions)(args);
     }

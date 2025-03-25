@@ -12,7 +12,6 @@ import isChildren from '@/helpers/is-children';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { stripSlotPrefix } from '@/helpers/slots';
-import { throwError } from '@/helpers/throw-error';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { Binding, ForNode, MitosisNode } from '@/types/mitosis-node';
 import { isCallExpression } from '@babel/types';
@@ -73,7 +72,7 @@ ${children}
       let code = forNode.children[0].bindings.key?.code;
 
       root.state[trackByFnName] = {
-        code: `${trackByFnName}(${indexName ?? '_'}, ${forName}) { return ${code}; }`,
+        code: `${trackByFnName}(${indexName ?? '_'}: number, ${forName}: any) { return ${code}; }`,
         type: 'method',
       };
     }
@@ -103,8 +102,11 @@ ${children}
     }
 
     if (condition?.includes('children()')) {
-      throwError(`${json.name}: You can't use children() in a Show block for \`when\` targeting angular.
-      Try to invert it like this: "<Show when={props.label} else={props.children}>{props.label}</Show>"`);
+      console.error(`
+${json.name}: You can't use children() in a Show block for \`when\` targeting angular.
+Try to invert it like this: 
+"<Show when={props.label} else={props.children}>{props.label}</Show>"
+`);
     }
 
     return `@if(${condition}){
@@ -156,6 +158,14 @@ const stringifyBinding =
     if (checkIsEvent(keyToUse)) {
       const args: string[] = binding.arguments || [];
       const event = getEventNameWithoutOn(keyToUse);
+
+      if (code.includes('event.target.')) {
+        console.error(`
+Component ${node.name} has an event ${event} that uses 'event.target.xxx'. 
+This will cause an error in Angular.
+Please create a new function with the EventTarget and use e.g:
+'(event.target as HTMLInputElement).value'`);
+      }
 
       const value = babelTransformExpression(code, {
         Identifier(path) {

@@ -1,9 +1,10 @@
 import { ToAngularOptions } from '@/generators/angular/types';
 import { babelTransformExpression } from '@/helpers/babel-transform';
 import { ProcessBindingOptions, processClassComponentBinding } from '@/helpers/class-components';
+import { checkIsEvent } from '@/helpers/event-handlers';
 import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
 import { MitosisComponent } from '@/types/mitosis-component';
-import { Node, NodePath, types } from '@babel/core';
+import { NodePath, types } from '@babel/core';
 import {
   AssignmentExpression,
   BinaryExpression,
@@ -12,19 +13,13 @@ import {
   isMemberExpression,
 } from '@babel/types';
 
-const isStateOrPropsExpression = (node: Node) => {
+const isStateOrPropsExpression = (path: NodePath) => {
   return (
-    isMemberExpression(node) &&
-    isIdentifier(node.object) &&
-    isIdentifier(node.property) &&
-    (node.object.name === 'props' || node.object.name === 'state')
+    isMemberExpression(path.node) &&
+    isIdentifier(path.node.object) &&
+    isIdentifier(path.node.property) &&
+    (path.node.object.name === 'props' || path.node.object.name === 'state')
   );
-};
-
-const addCallExpressionExtra = (node: Node) => {
-  if (isStateOrPropsExpression(node) && !node.extra?.makeCallExpressionDone) {
-    node.extra = { makeCallExpression: true };
-  }
 };
 
 const handleAssignmentExpression = (path: NodePath<AssignmentExpression | BinaryExpression>) => {
@@ -35,19 +30,14 @@ const handleAssignmentExpression = (path: NodePath<AssignmentExpression | Binary
     path.node.left.object.name === 'state'
   ) {
     const root = types.memberExpression(path.node.left, types.identifier('set'));
-    root.extra = { updateExpression: true };
+    root.extra = { ...root.extra, updateExpression: true };
     const call = types.callExpression(root, [path.node.right]);
-    call.extra = { updateExpression: true };
     path.replaceWith(call);
   }
 };
 
-const transformToSignals = (json: MitosisComponent, code: string) => {
+const transformHooksAndState = (code: string) => {
   return babelTransformExpression(code, {
-    BinaryExpression(path) {
-      addCallExpressionExtra(path.node.left);
-      addCallExpressionExtra(path.node.right);
-    },
     AssignmentExpression(path) {
       handleAssignmentExpression(path);
     },
@@ -75,42 +65,73 @@ const transformToSignals = (json: MitosisComponent, code: string) => {
 
         const arrowFunctionExpression = types.arrowFunctionExpression([argument], blockStatement);
         const call = types.callExpression(root, [arrowFunctionExpression]);
-        call.extra = { updateExpression: true };
         path.replaceWith(call);
       }
     },
-    CallExpression(path) {
-      if (path.node.extra?.updateExpression) {
+    MemberExpression(path) {
+      if (path.node.extra?.makeCallExpressionDone || path.parentPath.node.extra?.updateExpression) {
         return;
       }
-      /*
-       * If we have a function like this:
-       * `buttonRef?.setAttribute('data-counter', state._counter.toString());`
-       *
-       * We need to convert it to a callExpression for signals:
-       * `buttonRef?.setAttribute('data-counter', state._counter().toString());`
-       *
-       */
-      if (isMemberExpression(path.node.callee)) {
-        addCallExpressionExtra(path.node.callee.object);
+
+      // Event handling
+      if (isIdentifier(path.node.property) && checkIsEvent(path.node.property.name)) {
+        if (
+          isCallExpression(path.parent) &&
+          isIdentifier(path.node.object) &&
+          isMemberExpression(path.parent.callee)
+        ) {
+          // We add "emit" to events
+          const root = types.memberExpression(path.node, types.identifier('emit'));
+          root.extra = { ...root.extra, updateExpression: true };
+          path.replaceWith(root);
+        }
+        // We don't do anything if the event is in an e.g. IfStatement
+        return;
       }
-      /*
-       * If we have a function like this:
-       * `console.log(props.test)`
-       *
-       * We need to convert it to a callExpression for signals:
-       * `console.log(props.test())`
-       *
-       */
-      path.node.arguments.forEach((argument) => {
-        addCallExpressionExtra(argument);
-      });
+
+      if (isStateOrPropsExpression(path)) {
+        path.node.extra = { ...path.node.extra, makeCallExpressionDone: true };
+        path.replaceWith(types.callExpression(path.node, []));
+      }
+    },
+  });
+};
+
+const transformBindings = (json: MitosisComponent, code: string): string => {
+  return babelTransformExpression(code, {
+    BlockStatement() {
+      console.error(`
+Component ${json.name} has a BlockStatement inside JSX'. 
+This will cause an error in Angular.
+Please create and call a new function instead with this code:
+${code}`);
+    },
+    CallExpression(path) {
+      // If we call a function from an import we need to add it to the Component as well
+      if (isIdentifier(path.node.callee)) {
+        const importName = path.node.callee.name;
+        const isImportCall = json.imports.find((imp) => imp.imports[importName]);
+        if (isImportCall) {
+          json.compileContext!.angular!.extra!.importCalls.push(importName);
+        }
+      }
+    },
+    StringLiteral(path) {
+      // We cannot use " for string literal in template
+      if (path.node.extra?.raw) {
+        path.node.extra.raw = (path.node.extra.raw as string).replaceAll('"', "'");
+      }
+    },
+    AssignmentExpression(path) {
+      handleAssignmentExpression(path);
     },
     MemberExpression(path) {
       if (
-        path.node.extra &&
-        path.node.extra.makeCallExpression &&
-        !path.node.extra.makeCallExpressionDone
+        // Don't add a function if it is already one
+        !(isCallExpression(path.parent) && isMemberExpression(path.parent.callee)) &&
+        isStateOrPropsExpression(path) &&
+        !path.node.extra?.makeCallExpressionDone &&
+        !path.parent.extra?.updateExpression
       ) {
         path.node.extra = { ...path.node.extra, makeCallExpressionDone: true };
         path.replaceWith(types.callExpression(path.node, []));
@@ -130,49 +151,18 @@ export const getCodeProcessorPlugins = (
       switch (codeType) {
         case 'bindings':
           return (code) => {
-            code = babelTransformExpression(code, {
-              StringLiteral(path) {
-                if (path.node.extra?.raw) {
-                  path.node.extra.raw = (path.node.extra.raw as string).replaceAll('"', "'");
-                }
-              },
-              AssignmentExpression(path) {
-                // TODO: This may not be possible in angular e.g. `state.name = event.target.value`
-                // TODO: We should consider to add a warning to eslint or throw an error directly
-                handleAssignmentExpression(path);
-              },
-              MemberExpression(path) {
-                if (
-                  !isCallExpression(path.parent) && // Don't add a function if it is already one
-                  isStateOrPropsExpression(path.node) &&
-                  !path.node.extra?.makeCallExpressionDone &&
-                  !path.parent.extra?.updateExpression
-                ) {
-                  path.node.extra = { ...path.node.extra, makeCallExpressionDone: true };
-                  path.replaceWith(types.callExpression(path.node, []));
-                }
-              },
-            });
-
-            return processClassComponentBinding(json, code, {
+            return processClassComponentBinding(json, transformBindings(json, code), {
               ...processBindingOptions,
               replaceWith: '',
             });
           };
+        case 'hooks-deps-array':
         case 'hooks':
         case 'state':
           return (code) => {
             return processClassComponentBinding(
               json,
-              transformToSignals(json, code),
-              processBindingOptions,
-            );
-          };
-        case 'hooks-deps-array':
-          return (code) => {
-            return processClassComponentBinding(
-              json,
-              transformToSignals(json, code),
+              transformHooksAndState(code),
               processBindingOptions,
             );
           };

@@ -170,6 +170,7 @@ export type MitosisComponent = {
       hooks?: {
         [hookName: string]: BaseHook;
       };
+      extra?: Record<string, any>;
     };
   };
 };

@@ -23,7 +23,7 @@ describe('Angular signals local', () => {
     generator: componentToAngular,
     only: [
       // 'signals'
-      'BasicFor',
+      'eventProps',
       // 'eventInputAndChange',
     ],
     logOutput: true,

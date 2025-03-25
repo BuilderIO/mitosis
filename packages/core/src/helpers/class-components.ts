@@ -1,5 +1,4 @@
 import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
-import { throwError } from '@/helpers/throw-error';
 import { Target } from '@/types/config';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { getEventNameWithoutOn } from './event-handlers';
@@ -10,7 +9,7 @@ import { getEventNameWithoutOn } from './event-handlers';
 const appendEmits = (
   str: string,
   { name }: MitosisComponent,
-  { events, props, target }: ProcessBindingOptions,
+  { events, props, target, skipAppendEmit }: ProcessBindingOptions,
 ): string => {
   let code = str;
   if (events.length) {
@@ -18,13 +17,17 @@ const appendEmits = (
       const eventWithoutOn = getEventNameWithoutOn(event);
 
       if (props.includes(eventWithoutOn)) {
-        throwError(`Component ${name} has an event ${event} that conflicts with prop ${eventWithoutOn} for target ${target}.
-        Please rename the prop or the event.`);
+        console.error(`
+Component ${name} has an event ${event} that conflicts with prop ${eventWithoutOn} for target ${target}.
+Please rename the prop or the event.
+`);
       }
 
-      code = code
-        .replaceAll(`props.${event}(`, `props.${eventWithoutOn}.emit(`)
-        .replaceAll(`props.${event}`, `props.${eventWithoutOn}`);
+      if (!skipAppendEmit) {
+        code = code.replaceAll(`props.${event}(`, `props.${eventWithoutOn}.emit(`);
+      }
+
+      code = code.replaceAll(`props.${event}`, `props.${eventWithoutOn}`);
     }
   }
   return code;
@@ -35,6 +38,7 @@ export type ProcessBindingOptions = {
   props: string[];
   target: Target;
   replaceWith?: string;
+  skipAppendEmit?: boolean;
 };
 
 /**
@@ -50,7 +54,7 @@ export const processClassComponentBinding = (
     replaceWith,
   });
   if (json.exports) {
-    // We need to use local exports with `this.` in stencil
+    // We need to use local exports with `this.` in stencil and angular
     Object.entries(json.exports)
       .filter(([, value]) => value.usedInLocal)
       .forEach(([key]) => {
