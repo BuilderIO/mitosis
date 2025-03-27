@@ -1,3 +1,4 @@
+import { getBuilderTagName } from '@/helpers/get-tag-name';
 import { type MitosisPlugin } from '@builder.io/mitosis';
 import { Builder, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
@@ -40,7 +41,7 @@ const wrapOutput = (
       ...omit(node.bindings, ...inputNames),
     },
     // TODO: forward tagName as a $tagName="..."
-    name: node.properties._tagName || node.properties.$tagName || 'div',
+    name: node.properties._tagName || getBuilderTagName(node) || 'div',
     children: Array.isArray(child) ? child : [child],
   });
 };

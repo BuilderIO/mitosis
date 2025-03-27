@@ -1,6 +1,7 @@
 import { createSingleBinding } from '@/helpers/bindings';
 import { checkIsEvent } from '@/helpers/event-handlers';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
+import { getBuilderTagName } from '@/helpers/get-tag-name';
 import isChildren from '@/helpers/is-children';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { checkIsDefined } from '@/helpers/nullable';
@@ -244,7 +245,8 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     return `{{${textCode}}}`;
   }
 
-  let str = `<${node.name} `;
+  const tagName = getBuilderTagName(node) || node.name;
+  let str = `<${tagName} `;
 
   str += getBlockBindings(node, options);
 
@@ -257,5 +259,5 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     str += node.children.map((item) => blockToVue(item, options)).join('');
   }
 
-  return str + `</${node.name}>`;
+  return str + `</${tagName}>`;
 };
