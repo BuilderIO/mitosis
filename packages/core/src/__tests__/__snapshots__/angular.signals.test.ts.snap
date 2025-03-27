@@ -258,6 +258,8 @@ export const DEFAULT_VALUES = {
 \`,
 })
 export class MyBasicComponent implements AfterViewInit {
+  protected readonly DEFAULT_VALUES = DEFAULT_VALUES;
+
   _root = viewChild<ElementRef>(\\"_root\\");
 
   name = signal(\\"Steve\\");
@@ -6449,6 +6451,8 @@ const DEFAULT_VALUES = {
   styles: \`:host { display: contents; }\`,
 })
 export class ComponentWithTypes implements AfterViewInit {
+  protected readonly DEFAULT_VALUES = DEFAULT_VALUES;
+
   name = input<any>();
 
   _root = viewChild<ElementRef>(\\"_root\\");
@@ -13037,6 +13041,8 @@ export const DEFAULT_VALUES = {
 \`,
 })
 export class MyBasicComponent implements AfterViewInit {
+  protected readonly DEFAULT_VALUES = DEFAULT_VALUES;
+
   _root = viewChild<ElementRef>(\\"_root\\");
 
   name = signal(\\"Steve\\");
@@ -19527,6 +19533,8 @@ const DEFAULT_VALUES: Props = {
   styles: \`:host { display: contents; }\`,
 })
 export class ComponentWithTypes implements AfterViewInit {
+  protected readonly DEFAULT_VALUES = DEFAULT_VALUES;
+
   name = input<Props[\\"name\\"]>();
 
   _root = viewChild<ElementRef>(\\"_root\\");
@@ -28623,193 +28631,6 @@ export class MyComponent implements AfterViewInit {
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"my-component\\");
-  }
-}
-"
-`;
-
-exports[`Angular signals local > jsx > Only Test > Basic 1`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  effect,
-  signal,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
-
-export interface MyBasicComponentProps {
-  id: string;
-}
-
-export const DEFAULT_VALUES = {
-  name: \\"Steve\\",
-};
-
-@Component({
-  selector: \\"my-basic-component\\",
-  standalone: true,
-  imports: [CommonModule],
-  template: \`
-    <div class=\\"test div\\" #_root>
-      <input
-        [attr.value]=\\"DEFAULT_VALUES.name || name()\\"
-        (change)=\\"name.set(myEvent.target.value)\\"
-      />
-
-      Hello! I can run in React, Vue, Solid, or Liquid! &gt;
-    </div>
-  \`,
-  styles: \`:host { display: contents; }
-        .div {
-          padding: 10px;
-        }
-\`,
-})
-export class MyBasicComponent implements AfterViewInit {
-  _root = viewChild<ElementRef>(\\"_root\\");
-
-  name = signal(\\"Steve\\");
-  age = signal<number>(1);
-  sports = signal<Array<string>>([\\"\\"]);
-
-  underscore_fn_name() {
-    return \\"bar\\";
-  }
-
-  constructor() {}
-
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
-          }
-        }
-      }
-    }
-  }
-
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"my-basic-component\\");
-  }
-}
-"
-`;
-
-exports[`Angular signals local > jsx > Only Test > Basic 2`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  effect,
-  signal,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
-
-@Component({
-  selector: \\"my-basic-for-show-component\\",
-  standalone: true,
-  imports: [CommonModule],
-  template: \`
-    <div #_root>
-      @for (person of names();track i;let i = $index) { @if(person === name()){
-      <input
-        [attr.value]=\\"name()\\"
-        (change)=\\"{
-          name.set($event.target.value + ' and ' + person);
-        }\\"
-      />
-
-      Hello {{person}} ! I can run in Qwik, Web Component, React, Vue, Solid, or
-      Liquid! } }
-    </div>
-  \`,
-  styles: \`:host { display: contents; }\`,
-})
-export class MyBasicForShowComponent implements AfterViewInit {
-  _root = viewChild<ElementRef>(\\"_root\\");
-
-  name = signal(\\"PatrickJS\\");
-  names = signal([\\"Steve\\", \\"PatrickJS\\"]);
-
-  constructor() {}
-
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
-          }
-        }
-      }
-    }
-  }
-
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"my-basic-for-show-component\\");
   }
 }
 "
