@@ -145,7 +145,8 @@ const transformHooksAndState = (code: string, isHookDepArray?: boolean) => {
 
 const addToImportCall = (json: MitosisComponent, importName: string) => {
   const isImportCall = json.imports.find((imp) => imp.imports[importName]);
-  if (isImportCall) {
+  const isExportCall = json.exports ? !!json.exports[importName] : false;
+  if (isImportCall || isExportCall) {
     json.compileContext!.angular!.extra!.importCalls.push(importName);
   }
 };

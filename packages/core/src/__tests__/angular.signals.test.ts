@@ -12,7 +12,7 @@ describe('Angular signals', () => {
   });
 });
 
-/*describe('Angular signals local', () => {
+describe('Angular signals local', () => {
   runTestsForTarget({
     options: {
       standalone: true,
@@ -26,9 +26,10 @@ describe('Angular signals', () => {
       // 'eventProps',
       // 'basicRefAttributePassing',
       // 'eventInputAndChange',
-      "spreadAttrs", // TODO: spreads
-      "dynamicComponentWithEventArg" // TODO: add dynamic components
+      // "spreadAttrs", // TODO: spreads
+      // "dynamicComponentWithEventArg" // TODO: add dynamic components
+      'Basic',
     ],
     logOutput: true,
   });
-});*/
+});
