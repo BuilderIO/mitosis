@@ -1,8 +1,8 @@
-import { parse } from '../generators/angular/parse-selector';
+import { parseSelector } from '@/generators/angular/helpers/parse-selector';
 
 describe('Angular selectors', () => {
   test('should parse gnarly selectors', () => {
-    expect(parse('ccc.c1#wat[co].c2[counter="cool"]#wat[x=\'y\'].c3')).toEqual({
+    expect(parseSelector('ccc.c1#wat[co].c2[counter="cool"]#wat[x=\'y\'].c3')).toEqual({
       element: 'ccc',
       classNames: ['c1', 'c2', 'c3'],
       attributes: {
@@ -15,7 +15,7 @@ describe('Angular selectors', () => {
   });
 
   test('parsing multiple returns only the first', () => {
-    expect(parse('dropzone, [dropzone]')).toEqual({
+    expect(parseSelector('dropzone, [dropzone]')).toEqual({
       element: 'dropzone',
       classNames: [],
       attributes: {},
@@ -23,7 +23,7 @@ describe('Angular selectors', () => {
   });
 
   test(':not parses but is unused', () => {
-    expect(parse('list-item:not(.foo)')).toEqual({
+    expect(parseSelector('list-item:not(.foo)')).toEqual({
       element: 'list-item',
       classNames: [],
       attributes: {},

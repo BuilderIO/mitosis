@@ -159,6 +159,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             return convertTypeScriptToJS;
           case 'hooks':
           case 'hooks-deps':
+          case 'hooks-deps-array':
           case 'state':
           case 'context-set':
           case 'dynamic-jsx-elements':
@@ -178,6 +179,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           case 'context-set':
             return flow(stripStateAndProps({ json, options }));
           case 'dynamic-jsx-elements':
+          case 'hooks-deps-array':
           case 'types':
             return (x) => x;
         }

@@ -6,7 +6,7 @@ export default function MyBasicOutputsComponent(props: any) {
   });
 
   onMount(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   });
 

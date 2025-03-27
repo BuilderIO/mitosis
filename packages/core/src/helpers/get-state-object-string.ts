@@ -13,6 +13,10 @@ interface GetStateObjectStringOptions {
   functions?: boolean;
   getters?: boolean;
   valueMapper?: ValueMapper;
+  /**
+   * If you want the plain value mapper as output
+   */
+  onlyValueMapper?: boolean;
   format?: 'object' | 'class' | 'variables';
   keyPrefix?: string;
   withType?: boolean;
@@ -24,6 +28,7 @@ const DEFAULT_OPTIONS: RequiredOptions = {
   format: 'object',
   keyPrefix: '',
   valueMapper: (val) => val,
+  onlyValueMapper: false,
   data: true,
   functions: true,
   getters: true,
@@ -31,7 +36,16 @@ const DEFAULT_OPTIONS: RequiredOptions = {
 };
 
 const convertStateMemberToString =
-  ({ data, format, functions, getters, keyPrefix, valueMapper, withType }: RequiredOptions) =>
+  ({
+    data,
+    format,
+    functions,
+    getters,
+    keyPrefix,
+    valueMapper,
+    withType,
+    onlyValueMapper,
+  }: RequiredOptions) =>
   ([key, state]: [string, StateValue | undefined]): string | undefined => {
     const keyValueDelimiter = format === 'object' ? ':' : '=';
 
@@ -48,36 +62,50 @@ const convertStateMemberToString =
         if (!functions) {
           return undefined;
         }
-        return `${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(
-          code,
-          'function',
-          typeParameter,
-          key,
-        )}`;
+        const mapper = valueMapper(code, 'function', typeParameter, key);
+
+        if (onlyValueMapper) {
+          return mapper;
+        }
+
+        return `${keyPrefix} ${key} ${keyValueDelimiter} ${mapper}`;
       }
       case 'method': {
         if (!functions) {
           return undefined;
         }
-        return `${keyPrefix} ${valueMapper(code, 'function', typeParameter, key)}`;
+        const mapper = valueMapper(code, 'function', typeParameter, key);
+
+        if (onlyValueMapper) {
+          return mapper;
+        }
+
+        return `${keyPrefix} ${mapper}`;
       }
       case 'getter': {
         if (!getters) {
           return undefined;
         }
 
-        return `${keyPrefix} ${valueMapper(code, 'getter', typeParameter, key)}`;
+        const mapper = valueMapper(code, 'getter', typeParameter, key);
+
+        if (onlyValueMapper) {
+          return mapper;
+        }
+
+        return `${keyPrefix} ${mapper}`;
       }
       case 'property': {
         if (!data) {
           return undefined;
         }
-        return `${keyPrefix} ${key}${type}${keyValueDelimiter} ${valueMapper(
-          code,
-          'data',
-          typeParameter,
-          key,
-        )}`;
+        const mapper = valueMapper(code, 'data', typeParameter, key);
+
+        if (onlyValueMapper) {
+          return mapper;
+        }
+
+        return `${keyPrefix} ${key}${type}${keyValueDelimiter} ${mapper}`;
       }
       default:
         break;

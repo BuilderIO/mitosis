@@ -1,9 +1,11 @@
+import type { TraverseContext } from 'neotraverse/legacy';
 import { MitosisComponent } from '../../../types/mitosis-component';
 import { MitosisNode } from '../../../types/mitosis-node';
 
 export type CodeType =
   | 'hooks'
   | 'hooks-deps'
+  | 'hooks-deps-array'
   | 'bindings'
   | 'properties'
   | 'state'
@@ -20,6 +22,6 @@ declare function codeProcessor(
   codeType: CodeType,
   json: MitosisComponent,
   node?: MitosisNode,
-): (code: string, hookType: string) => string | (() => void);
+): (code: string, hookType: string, context?: TraverseContext) => string | (() => void);
 
 export type CodeProcessor = typeof codeProcessor;

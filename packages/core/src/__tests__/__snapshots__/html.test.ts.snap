@@ -817,7 +817,7 @@ exports[`Html > jsx > Javascript Test > Basic Outputs 1`] = `
     }
 
     // onMount
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   })();
 </script>
@@ -844,7 +844,7 @@ component\\"} */
     }
 
     // onMount
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   })();
 </script>
@@ -1017,11 +1017,21 @@ exports[`Html > jsx > Javascript Test > BasicChildComponent 1`] = `
     <MyBasicOnMountUpdateComponent
       data-el=\\"my-basic-on-mount-update-component\\"
     ></MyBasicOnMountUpdateComponent>
+    <MyBasicOutputsComponent
+      message=\\"Test\\"
+      data-el=\\"my-basic-outputs-component\\"
+    ></MyBasicOutputsComponent>
   </div>
 </div>
 <script>
   (() => {
-    const state = { name: \\"Steve\\", dev: \\"PatrickJS\\" };
+    const state = {
+      name: \\"Steve\\",
+      dev: \\"PatrickJS\\",
+      log: function log(message) {
+        console.log(message);
+      },
+    };
 
     let context = null;
     let nodesToDestroy = [];
@@ -1056,9 +1066,36 @@ exports[`Html > jsx > Javascript Test > BasicChildComponent 1`] = `
           el.setAttribute(\\"bye\\", state.dev);
         });
 
+      document
+        .querySelectorAll(\\"[data-el='my-basic-outputs-component']\\")
+        .forEach((el) => {
+          el.removeEventListener(
+            \\"messagechange\\",
+            onMyBasicOutputsComponentMessagechange
+          );
+          el.addEventListener(
+            \\"messagechange\\",
+            onMyBasicOutputsComponentMessagechange
+          );
+
+          el.removeEventListener(\\"event\\", onMyBasicOutputsComponentEvent);
+          el.addEventListener(\\"event\\", onMyBasicOutputsComponentEvent);
+        });
+
       destroyAnyNodes();
 
       pendingUpdate = false;
+    }
+
+    // Event handler for 'messagechange' event on my-basic-outputs-component
+    function onMyBasicOutputsComponentMessagechange(name) {
+      state.name = name;
+      update();
+    }
+
+    // Event handler for 'event' event on my-basic-outputs-component
+    function onMyBasicOutputsComponentEvent(event) {
+      state.log(\\"Test\\");
     }
 
     // Update with initial state on first load
@@ -5000,6 +5037,10 @@ exports[`Html > jsx > Javascript Test > eventProps 1`] = `
 
         if (props.onEnter) {
           console.log(props.onEnter());
+        }
+
+        if (props.onPass) {
+          props.onPass(\\"test\\");
         }
       },
     };
@@ -8980,7 +9021,7 @@ exports[`Html > jsx > Typescript Test > Basic Outputs 1`] = `
     }
 
     // onMount
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   })();
 </script>
@@ -9007,7 +9048,7 @@ component\\"} */
     }
 
     // onMount
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   })();
 </script>
@@ -9180,11 +9221,21 @@ exports[`Html > jsx > Typescript Test > BasicChildComponent 1`] = `
     <MyBasicOnMountUpdateComponent
       data-el=\\"my-basic-on-mount-update-component\\"
     ></MyBasicOnMountUpdateComponent>
+    <MyBasicOutputsComponent
+      message=\\"Test\\"
+      data-el=\\"my-basic-outputs-component\\"
+    ></MyBasicOutputsComponent>
   </div>
 </div>
 <script>
   (() => {
-    const state = { name: \\"Steve\\", dev: \\"PatrickJS\\" };
+    const state = {
+      name: \\"Steve\\",
+      dev: \\"PatrickJS\\",
+      log: function log(message: string) {
+        console.log(message);
+      },
+    };
 
     let context = null;
     let nodesToDestroy = [];
@@ -9219,9 +9270,36 @@ exports[`Html > jsx > Typescript Test > BasicChildComponent 1`] = `
           el.setAttribute(\\"bye\\", state.dev);
         });
 
+      document
+        .querySelectorAll(\\"[data-el='my-basic-outputs-component']\\")
+        .forEach((el) => {
+          el.removeEventListener(
+            \\"messagechange\\",
+            onMyBasicOutputsComponentMessagechange
+          );
+          el.addEventListener(
+            \\"messagechange\\",
+            onMyBasicOutputsComponentMessagechange
+          );
+
+          el.removeEventListener(\\"event\\", onMyBasicOutputsComponentEvent);
+          el.addEventListener(\\"event\\", onMyBasicOutputsComponentEvent);
+        });
+
       destroyAnyNodes();
 
       pendingUpdate = false;
+    }
+
+    // Event handler for 'messagechange' event on my-basic-outputs-component
+    function onMyBasicOutputsComponentMessagechange(name) {
+      state.name = name;
+      update();
+    }
+
+    // Event handler for 'event' event on my-basic-outputs-component
+    function onMyBasicOutputsComponentEvent(event) {
+      state.log(\\"Test\\");
     }
 
     // Update with initial state on first load
@@ -13163,6 +13241,10 @@ exports[`Html > jsx > Typescript Test > eventProps 1`] = `
 
         if (props.onEnter) {
           console.log(props.onEnter());
+        }
+
+        if (props.onPass) {
+          props.onPass(\\"test\\");
         }
       },
     };

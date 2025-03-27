@@ -10,6 +10,9 @@ export default function EventPropsComponent(props: EventProps) {
       if (props.onEnter) {
         console.log(props.onEnter());
       }
+      if (props.onPass) {
+        props.onPass('test');
+      }
     },
   });
 

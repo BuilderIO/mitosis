@@ -117,7 +117,7 @@ test.describe('e2e', () => {
   });
 
   test('on update', async ({ page, packageName }) => {
-    if (['e2e-angular', 'e2e-solid'].includes(packageName)) {
+    if (['e2e-solid'].includes(packageName)) {
       // Angular: We need to split onUpdate to ngOnChanges and for useRef into ngAfterContentChecked
       test.skip();
     }

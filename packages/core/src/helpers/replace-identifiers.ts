@@ -126,9 +126,7 @@ const _replaceIdentifiers = (
         }
       }
     } else {
-      if (types.isIdentifier(path.node)) {
-        console.debug(`Could not replace Identifier with nothing.`);
-      } else {
+      if (!types.isIdentifier(path.node)) {
         // if we're looking at a member expression, e.g. `props.foo` and no `to` was provided, then we want to strip out
         // the identifier and end up with `foo`. So we replace the member expression with just its `property` value.
         path.replaceWith(path.node.property);

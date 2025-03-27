@@ -2,46 +2,8 @@ import { StencilPropOption, ToStencilOptions } from '@/generators/stencil/types'
 import { dashCase } from '@/helpers/dash-case';
 import { checkIsEvent, getEventNameWithoutOn } from '@/helpers/event-handlers';
 import { renderPreComponent } from '@/helpers/render-imports';
-import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
 import { MitosisComponent, MitosisState } from '@/types/mitosis-component';
 import { MitosisNode } from '@/types/mitosis-node';
-
-export const isEvent = (key: string): boolean => checkIsEvent(key);
-
-/**
- * We need to "emit" events those can be on multiple places, so we do it as post step
- */
-const appendEmits = (str: string, events: string[]): string => {
-  let code = str;
-  if (events.length) {
-    for (const event of events) {
-      const eventWithoutOn = getEventNameWithoutOn(event);
-      code = code
-        .replaceAll(`props.${event}(`, `props.${eventWithoutOn}.emit(`)
-        .replaceAll(`props.${event}`, `props.${eventWithoutOn}`);
-    }
-  }
-  return code;
-};
-
-export type ProcessBindingOptions = { events: string[] };
-
-export const processBinding = (
-  json: MitosisComponent,
-  code: string,
-  { events }: ProcessBindingOptions,
-) => {
-  let resolvedCode = stripStateAndPropsRefs(appendEmits(code, events), { replaceWith: 'this.' });
-  if (json.exports) {
-    // We need to use local exports with `this.` in stencil
-    Object.entries(json.exports)
-      .filter(([, value]) => value.usedInLocal)
-      .forEach(([key]) => {
-        resolvedCode = resolvedCode.replaceAll(key, `this.${key}`);
-      });
-  }
-  return resolvedCode;
-};
 
 export const getTagName = (name: string, { prefix }: ToStencilOptions): string => {
   const dashName = dashCase(name);
@@ -85,7 +47,7 @@ export const getPropsAsCode = ({
         propsTypeRef !== 'never' &&
         !isInternalType;
 
-      if (isEvent(item)) {
+      if (checkIsEvent(item)) {
         // Stencil adds "on" to every `@Event` so we need to remove "on" from event props
         // https://stenciljs.com/docs/events#using-events-in-jsx
         const eventType = hasTyping

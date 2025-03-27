@@ -7,14 +7,14 @@ import {
   getPropsAsCode,
   getStencilCoreImportsAsString,
   getTagName,
-  isEvent,
   needsWrap,
-  ProcessBindingOptions,
 } from '@/generators/stencil/helpers';
 import { getCodeProcessorPlugins } from '@/generators/stencil/plugins/get-code-processor-plugins';
 import { StencilPropOption, ToStencilOptions } from '@/generators/stencil/types';
+import { ProcessBindingOptions } from '@/helpers/class-components';
 import { dashCase } from '@/helpers/dash-case';
 import { dedent } from '@/helpers/dedent';
+import { checkIsEvent } from '@/helpers/event-handlers';
 import { fastClone } from '@/helpers/fast-clone';
 import { getChildComponents } from '@/helpers/get-child-components';
 import { getProps } from '@/helpers/get-props';
@@ -25,9 +25,9 @@ import { initializeOptions } from '@/helpers/merge-options';
 import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import { collectCss } from '@/helpers/styles/collect-css';
 import {
+  ROOT_REF,
   getAddAttributePassingRef,
   getAttributePassingString,
-  ROOT_REF,
   shouldAddAttributePassing,
 } from '@/helpers/web-components/attribute-passing';
 import {
@@ -60,15 +60,15 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> = (
     mapRefs(json, (refName) => `this.${refName}`);
     let css = collectCss(json);
     let props: string[] = Array.from(getProps(json));
-    const events: string[] = props.filter((prop) => isEvent(prop));
+    const events: string[] = props.filter((prop) => checkIsEvent(prop));
     const defaultProps: MitosisState | undefined = json.defaultProps;
     const childComponents: string[] = getChildComponents(json);
-    const processBindingOptions: ProcessBindingOptions = { events };
 
     props = props.filter((prop) => {
       // Stencil doesn't need children as a prop
       return prop !== 'children';
     });
+    const processBindingOptions: ProcessBindingOptions = { events, props, target: 'stencil' };
 
     options.plugins = getCodeProcessorPlugins(json, options, processBindingOptions);
 

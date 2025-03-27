@@ -121,6 +121,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
           case 'bindings':
           case 'hooks':
           case 'hooks-deps':
+          case 'hooks-deps-array':
           case 'properties':
             return updateStateCode({
               component: json,
