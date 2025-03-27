@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.4
+
+### Patch Changes
+
+- 559cf86: Don't output JSX attributes for Mitosis generator that are invalid (e.g. start with @ or :)
+
 ## 0.7.3
 
 ### Patch Changes

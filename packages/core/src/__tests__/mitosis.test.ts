@@ -1,4 +1,5 @@
 import { componentToMitosis } from '@/generators/mitosis';
+import { createSingleBinding } from '@/helpers/bindings';
 import { createMitosisComponent } from '@/helpers/create-mitosis-component';
 import { createMitosisNode } from '@/helpers/create-mitosis-node';
 import { runTestsForTarget } from './test-generator';
@@ -55,6 +56,24 @@ describe('Can encode <> in text', () => {
         children: [
           createMitosisNode({
             properties: { _text: 'hello <b>world</b>' },
+          }),
+        ],
+        hooks: {},
+      }),
+    });
+
+    expect(result).toMatchSnapshot();
+  });
+
+  it('should not output invalid jsx attributes', () => {
+    const result = componentToMitosis()({
+      component: createMitosisComponent({
+        children: [
+          createMitosisNode({
+            properties: { ':click': 'onClick()', '@click': 'onClick()' },
+            bindings: {
+              ':key': createSingleBinding({ code: '1' }),
+            },
           }),
         ],
         hooks: {},
