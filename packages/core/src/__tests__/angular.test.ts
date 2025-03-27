@@ -11,3 +11,18 @@ describe('Angular', () => {
     generator: componentToAngular,
   });
 });
+
+/*describe('Angular local', () => {
+  runTestsForTarget({
+    options: {
+      standalone: true,
+    },
+    target: 'angular',
+    generator: componentToAngular,
+    only: [
+      // 'basicRefAttributePassing',
+      'basicRefAttributePassingCustomRef'
+    ],
+    logOutput: true,
+  });
+});*/
