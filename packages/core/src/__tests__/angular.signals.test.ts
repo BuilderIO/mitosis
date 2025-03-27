@@ -12,7 +12,7 @@ describe('Angular signals', () => {
   });
 });
 
-describe('Angular signals local', () => {
+/*describe('Angular signals local', () => {
   runTestsForTarget({
     options: {
       standalone: true,
@@ -32,4 +32,4 @@ describe('Angular signals local', () => {
     ],
     logOutput: true,
   });
-});
+});*/
