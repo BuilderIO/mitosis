@@ -15,14 +15,9 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> = (userOp
 
     if (options.api === 'signals') {
       /*
-       * Some features aren't available to reduce complexity:
+       * Some features aren't available to reduce complexity for now:
        * - Spread props
        * - Dynamic components
-       *
-       * Some issues remaining:
-       * - ref inside template
-       * - constants imports inside templates
-       * - child component imports
        */
       return componentToAngularSignals(userOptions)(args);
     }

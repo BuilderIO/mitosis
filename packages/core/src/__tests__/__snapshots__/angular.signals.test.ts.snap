@@ -99,10 +99,127 @@ export class MyBasicForShowComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > AdvancedRef 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-basic-ref-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      @if(showInput()){
+      <ng-container>
+        <input
+          class=\\"input\\"
+          #inputRef
+          [attr.value]=\\"name()\\"
+          (blur)=\\"onBlur()\\"
+          (change)=\\"name.set($event.target.value)\\"
+        />
+        <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+        <select name=\\"cars\\" id=\\"cars\\">
+          <option value=\\"supra\\">GR Supra</option>
+          <option value=\\"86\\">GR 86</option>
+        </select>
+      </ng-container>
+      } Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
+      Component!
+    </div>
+  \`,
+  styles: \`:host { display: contents; }
+        .input {
+          color: red;
+        }
+\`,
+})
+export class MyBasicRefComponent implements AfterViewInit {
+  showInput = input<any>();
+
+  inputRef = viewChild<ElementRef>(\\"inputRef\\");
+  inputNoArgRef = viewChild<ElementRef>(\\"inputNoArgRef\\");
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  name = signal(\\"PatrickJS\\");
+
+  onBlur() {
+    // Maintain focus
+    this.inputRef()?.nativeElement.focus();
+  }
+  lowerCaseName() {
+    return this.name().toLowerCase();
+  }
+
+  constructor() {
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.inputRef();
+        this.inputNoArgRef();
+        // ---
+
+        console.log(\\"Received an update\\");
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-basic-ref-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Basic 1`] = `
@@ -202,12 +319,90 @@ export class MyBasicComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Basic 2`] = `
-"unknown: Unexpected token, expected \\",\\" (2:7)
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
 
-[0m [90m 1 |[39m [36mlet[39m _ [33m=[39m {[0m
-[0m[31m[1m>[22m[39m[90m 2 |[39m   state[33m.[39mname [33m=[39m event[33m.[39mtarget[33m.[39mvalue [33m+[39m [32m' and '[39m [33m+[39m person[33m;[39m[0m
-[0m [90m   |[39m        [31m[1m^[22m[39m[0m
-[0m [90m 3 |[39m }[0m"
+@Component({
+  selector: \\"my-basic-for-show-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      @for (person of names();track i;let i = $index) { @if(person === name()){
+      <input
+        [attr.value]=\\"name()\\"
+        (change)=\\"{
+          name.set($event.target.value + ' and ' + person);
+        }\\"
+      />
+
+      Hello {{person}} ! I can run in Qwik, Web Component, React, Vue, Solid, or
+      Liquid! } }
+    </div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyBasicForShowComponent implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  name = signal(\\"PatrickJS\\");
+  names = signal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-basic-for-show-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Basic Context 1`] = `
@@ -644,9 +839,93 @@ export class MyComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
-"--- MITOSIS ERROR ---
-    Show: You can't use children() in a Show block for \`when\` targeting angular.
-      Try to invert it like this: \\"<Show when={props.label} else={props.children}>{props.label}</Show>\\""
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  input,
+  effect,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { MyBooleanAttributeComponent } from \\"./basic-boolean-attribute-component.raw\\";
+
+@Component({
+  selector: \\"my-boolean-attribute\\",
+  standalone: true,
+  imports: [CommonModule, MyBooleanAttributeComponent],
+  template: \`
+    <div #_root>
+      @if(children()){
+      <ng-content></ng-content>
+      {{type()}} }
+      <my-boolean-attribute-component
+        [toggle]=\\"true\\"
+      ></my-boolean-attribute-component>
+      <my-boolean-attribute-component
+        [toggle]=\\"true\\"
+      ></my-boolean-attribute-component>
+      <my-boolean-attribute-component
+        [list]=\\"null\\"
+      ></my-boolean-attribute-component>
+    </div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyBooleanAttribute implements AfterViewInit {
+  type = input<any>();
+
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-boolean-attribute\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > BasicChildComponent 1`] = `
@@ -660,9 +939,9 @@ exports[`Angular signals > jsx > Javascript Test > BasicChildComponent 1`] = `
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
-import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
-import MyBasicComponent from \\"./basic.raw\\";
+import { MyBasicOnMountUpdateComponent } from \\"./basic-onMount-update.raw\\";
+import { MyBasicOutputsComponent } from \\"./basic-outputs.raw\\";
+import { MyBasicComponent } from \\"./basic.raw\\";
 
 @Component({
   selector: \\"my-basic-child-component\\",
@@ -752,19 +1031,207 @@ export class MyBasicChildComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > BasicFor 1`] = `
-"unknown: Unexpected token, expected \\",\\" (2:7)
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
 
-[0m [90m 1 |[39m [36mlet[39m _ [33m=[39m {[0m
-[0m[31m[1m>[22m[39m[90m 2 |[39m   state[33m.[39mname [33m=[39m event[33m.[39mtarget[33m.[39mvalue [33m+[39m [32m' and '[39m [33m+[39m person[33m;[39m[0m
-[0m [90m   |[39m        [31m[1m^[22m[39m[0m
-[0m [90m 3 |[39m }[0m"
+@Component({
+  selector: \\"my-basic-for-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      @for (person of names();track i;let i = $index) {
+      <ng-container>
+        <input
+          [attr.value]=\\"name()\\"
+          (change)=\\"{
+          name.set($event.target.value + ' and ' + person);
+        }\\"
+        />
+
+        Hello {{person}} ! I can run in Qwik, Web Component, React, Vue, Solid,
+        or Liquid!
+      </ng-container>
+      }
+    </div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyBasicForComponent implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  name = signal(\\"PatrickJS\\");
+  names = signal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngOnInit() {
+    console.log(\\"onMount code\\");
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-basic-for-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > BasicRef 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-basic-ref-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      @if(showInput()){
+      <ng-container>
+        <input
+          class=\\"input\\"
+          #inputRef
+          [attr.value]=\\"name()\\"
+          (blur)=\\"onBlur()\\"
+          (change)=\\"name.set($event.target.value)\\"
+        />
+        <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+        <select name=\\"cars\\" id=\\"cars\\">
+          <option value=\\"supra\\">GR Supra</option>
+          <option value=\\"86\\">GR 86</option>
+        </select>
+      </ng-container>
+      } Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
+      Component!
+    </div>
+  \`,
+  styles: \`:host { display: contents; }
+        .input {
+          color: red;
+        }
+\`,
+})
+export class MyBasicRefComponent implements AfterViewInit {
+  showInput = input<any>();
+
+  inputRef = viewChild<ElementRef>(\\"inputRef\\");
+  inputNoArgRef = viewChild<ElementRef>(\\"inputNoArgRef\\");
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  name = signal(\\"PatrickJS\\");
+
+  onBlur() {
+    // Maintain focus
+    this.inputRef()?.nativeElement?.focus();
+  }
+  lowerCaseName() {
+    return this.name().toLowerCase();
+  }
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-basic-ref-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > BasicRefAssignment 1`] = `
@@ -877,7 +1344,7 @@ export function usePrevious(value) {
   imports: [CommonModule],
   template: \`
     <div #_root>
-      <h1>Now: {{count()}} , before: {{this._prevCount}}</h1>
+      <h1>Now: {{count()}} , before: {{prevCount}}</h1>
       <button (click)=\\"count.set(1)\\">Increment</button>
     </div>
   \`,
@@ -889,13 +1356,18 @@ export class MyPreviousComponent implements AfterViewInit {
   count = signal(0);
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.count();
+        // ---
 
-      // ---
-
-      this._prevCount = this.count;
-    });
+        this._prevCount = this.count();
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -1086,10 +1558,10 @@ export class Column implements AfterViewInit {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   getColumns() {
-    return this.columns || [];
+    return this.columns() || [];
   }
   getGutterSize() {
-    return typeof this.space === \\"number\\" ? this.space || 0 : 20;
+    return typeof this.space() === \\"number\\" ? this.space() || 0 : 20;
   }
   getWidth(index) {
     const columns = this.getColumns();
@@ -1283,10 +1755,12 @@ export class ContentSlotJsxCode implements AfterViewInit {
   showContent = signal(false);
 
   get cls() {
-    return this.slotContent && this.children ? \`\${this.name}-content\` : \\"\\";
+    return this.slotContent() && this.children()
+      ? \`\${this.name()}-content\`
+      : \\"\\";
   }
   show() {
-    this.slotContent ? 1 : \\"\\";
+    this.slotContent() ? 1 : \\"\\";
   }
 
   constructor() {}
@@ -1657,7 +2131,7 @@ import {
       ></builder-blocks>
       } @if(submissionState() === 'error' && responseData()){
       <pre class=\\"builder-form-error-text pre\\">
-        {{JSON.stringify(responseData, null, 2)}}</pre
+        {{JSON.stringify(responseData(), null, 2)}}</pre
       >
       } @if(submissionState() === 'success'){
       <builder-blocks
@@ -1703,22 +2177,23 @@ export class FormComponent implements AfterViewInit {
   formErrorMessage = signal(\\"\\");
 
   get submissionState() {
-    return (Builder.isEditing && this.previewState) || this.formState;
+    return (Builder.isEditing && this.previewState()) || this.formState();
   }
   onSubmit(event) {
-    const sendWithJs = this.sendWithJs || this.sendSubmissionsTo() === \\"email\\";
+    const sendWithJs =
+      this.sendWithJs() || this.sendSubmissionsTo() === \\"email\\";
 
     if (this.sendSubmissionsTo() === \\"zapier\\") {
       event.preventDefault();
     } else if (sendWithJs) {
-      if (!(this.action || this.sendSubmissionsTo() === \\"email\\")) {
+      if (!(this.action() || this.sendSubmissionsTo() === \\"email\\")) {
         event.preventDefault();
         return;
       }
 
       event.preventDefault();
       const el = event.currentTarget;
-      const headers = this.customHeaders || {};
+      const headers = this.customHeaders() || {};
       let body;
       const formData = new FormData(el); // TODO: maybe support null
 
@@ -1762,7 +2237,7 @@ export class FormComponent implements AfterViewInit {
             value,
           };
         });
-      let contentType = this.contentType;
+      let contentType = this.contentType();
 
       if (this.sendSubmissionsTo() === \\"email\\") {
         contentType = \\"multipart/form-data\\";
@@ -1794,7 +2269,7 @@ export class FormComponent implements AfterViewInit {
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
           /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && this.action?.includes(\\"zapier.com\\"))
+          !(sendWithJs && this.action()?.includes(\\"zapier.com\\"))
         ) {
           headers[\\"content-type\\"] = contentType;
         }
@@ -1818,15 +2293,15 @@ export class FormComponent implements AfterViewInit {
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-        this.sendSubmissionsToEmail || \\"\\"
-      )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
+        this.sendSubmissionsToEmail() || \\"\\"
+      )}&name=\${encodeURIComponent(this.name() || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo() === \\"email\\" ? formUrl : this.action,
+        this.sendSubmissionsTo() === \\"email\\" ? formUrl : this.action(),
         /* TODO: throw error if no action URL */
         {
           body,
           headers,
-          method: this.method || \\"post\\",
+          method: this.method() || \\"post\\",
         }
       ).then(
         async (res) => {
@@ -1839,7 +2314,7 @@ export class FormComponent implements AfterViewInit {
             body = await res.text();
           }
 
-          if (!res.ok && this.errorMessagePath) {
+          if (!res.ok && this.errorMessagePath()) {
             /* TODO: allow supplying an error formatter function */
             let message = get(body, this.errorMessagePath());
 
@@ -1879,20 +2354,20 @@ export class FormComponent implements AfterViewInit {
             }
             /* TODO: client side route event first that can be preventDefaulted */
 
-            if (this.successUrl) {
+            if (this.successUrl()) {
               if (this.formRef()?.nativeElement) {
                 const event = new CustomEvent(\\"route\\", {
                   detail: {
-                    url: this.successUrl,
+                    url: this.successUrl(),
                   },
                 });
                 this.formRef()?.nativeElement.dispatchEvent(event);
 
                 if (!event.defaultPrevented) {
-                  location.href = this.successUrl;
+                  location.href = this.successUrl();
                 }
               } else {
-                location.href = this.successUrl;
+                location.href = this.successUrl();
               }
             }
           }
@@ -2036,7 +2511,7 @@ export class Image implements AfterViewInit {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && this.isBrowser();
+    return !!this.lazy() && this.isBrowser();
   }
   isBrowser() {
     return (
@@ -2117,7 +2592,7 @@ export class Image implements AfterViewInit {
   }
 
   ngOnDestroy() {
-    if (this.scrollListener) {
+    if (this.scrollListener()) {
       window.removeEventListener(\\"scroll\\", this.scrollListener());
     }
   }
@@ -2238,6 +2713,8 @@ import { Builder } from \\"@builder.io/sdk\\";
   styles: \`:host { display: contents; }\`,
 })
 export class ImgComponent implements AfterViewInit {
+  protected readonly Builder = Builder;
+
   backgroundSize = input<any>();
   backgroundPosition = input<any>();
   attributes = input<any>();
@@ -2297,10 +2774,99 @@ export class ImgComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Input 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  output,
+  input,
+  effect,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+@Component({
+  selector: \\"form-input-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <input
+      [attr.placeholder]=\\"placeholder()\\"
+      [attr.type]=\\"type()\\"
+      [attr.name]=\\"name()\\"
+      [attr.value]=\\"value()\\"
+      [attr.defaultValue]=\\"defaultValue()\\"
+      [attr.required]=\\"required()\\"
+      (change)=\\"change()?.($event.target.value)\\"
+      #_root
+    />
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class FormInputComponent implements AfterViewInit {
+  protected readonly Builder = Builder;
+
+  attributes = input<any>();
+  defaultValue = input<any>();
+  placeholder = input<any>();
+  type = input<any>();
+  name = input<any>();
+  value = input<any>();
+  required = input<any>();
+  change = output();
+
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"form-input-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > InputParent 1`] = `
@@ -2313,7 +2879,7 @@ exports[`Angular signals > jsx > Javascript Test > InputParent 1`] = `
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import FormInputComponent from \\"./input.raw\\";
+import { FormInputComponent } from \\"./input.raw\\";
 
 @Component({
   selector: \\"stepper\\",
@@ -2751,6 +3317,8 @@ import { Builder } from \\"@builder.io/sdk\\";
   styles: \`:host { display: contents; }\`,
 })
 export class SelectComponent implements AfterViewInit {
+  protected readonly Builder = Builder;
+
   attributes = input<any>();
   value = input<any>();
   defaultValue = input<any>();
@@ -2895,7 +3463,7 @@ exports[`Angular signals > jsx > Javascript Test > SlotHtml 1`] = `
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+import { ContentSlotCode } from \\"./content-slot-jsx.raw\\";
 
 @Component({
   selector: \\"slot-code\\",
@@ -2971,7 +3539,7 @@ exports[`Angular signals > jsx > Javascript Test > SlotJsx 1`] = `
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+import { ContentSlotCode } from \\"./content-slot-jsx.raw\\";
 
 @Component({
   selector: \\"slot-code\\",
@@ -3115,13 +3683,160 @@ export class SlotCode implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Stamped.io 1`] = `
-"unknown: Unexpected token, expected \\",\\" (2:4)
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
 
-[0m [90m 1 |[39m [36mlet[39m _ [33m=[39m {[0m
-[0m[31m[1m>[22m[39m[90m 2 |[39m   ev[33m.[39mpreventDefault()[33m;[39m[0m
-[0m [90m   |[39m     [31m[1m^[22m[39m[0m
-[0m [90m 3 |[39m   state[33m.[39mshowReviewPrompt [33m=[39m [36mfalse[39m[33m;[39m[0m
-[0m [90m 4 |[39m }[0m"
+import { kebabCase, snakeCase } from \\"lodash\\";
+
+@Component({
+  selector: \\"smile-reviews\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div [attr.data-user]=\\"name()\\" #_root>
+      <button (click)=\\"showReviewPrompt.set(true)\\">Write a review</button>
+      @if(showReviewPrompt() || 'asdf'){
+      <input placeholder=\\"Email\\" />
+      <input placeholder=\\"Title\\" class=\\"input\\" />
+      <textarea
+        placeholder=\\"How was your experience?\\"
+        class=\\"textarea\\"
+      ></textarea>
+      <button
+        class=\\"button\\"
+        (click)=\\"{
+          ev.preventDefault();
+          showReviewPrompt.set(false);
+        }\\"
+      >
+        Submit
+      </button>
+      } @for (review of reviews();track trackByReview0;let index = $index) {
+      <div $name=\\"Review\\" class=\\"review\\">
+        <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
+        <div [class]=\\"showReviewPrompt() ? 'bg-primary' : 'bg-secondary'\\">
+          <div>N: {{index}}</div>
+          <div>{{review.author}}</div>
+          <div>{{review.reviewMessage}}</div>
+        </div>
+      </div>
+      }
+    </div>
+  \`,
+  styles: \`:host { display: contents; }
+        .input {
+          display: block;
+        }
+        .textarea {
+          display: block;
+        }
+        .button {
+          display: block;
+        }
+        .review {
+          margin: 10px;
+          padding: 10px;
+          background: white;
+          display: flex;
+          border-radius: 5px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          -webkit-font-smoothing: antialiased;
+        }
+        .img {
+          height: 30px;
+          width: 30px;
+          margin-right: 10px;
+        }
+\`,
+})
+export class SmileReviews implements AfterViewInit {
+  apiKey = input<any>();
+  productId = input<any>();
+
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  reviews = signal([]);
+  name = signal(\\"test\\");
+  showReviewPrompt = signal(false);
+
+  kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+  snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+  trackByReview0(index: number, review: any) {
+    return review.id;
+  }
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngOnInit() {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        this.apiKey() || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.productId() || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        this.reviews.set(data.data);
+      });
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"smile-reviews\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > StoreComment 1`] = `
@@ -3306,7 +4021,7 @@ export class MyComponent implements AfterViewInit {
   foo = signal(false);
 
   bar() {
-    return this.foo;
+    return this.foo();
   }
 
   constructor() {}
@@ -3565,15 +4280,16 @@ export class UseValueAndFnFromStore implements AfterViewInit {
   }
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
-
-      // ---
-
-      if (this._do) {
-        this._do(this._id());
+    effect(
+      () => {
+        if (this._do()) {
+          this._do(this._id);
+        }
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
       }
-    });
+    );
   }
 
   /**
@@ -3943,10 +4659,10 @@ export class BasicForFragment implements AfterViewInit {
     return \`key-\${option}\`;
   }
   trackByOption1(_: number, option: any) {
-    return \`\${id()}-\${option}\`;
+    return \`\${this.id()}-\${option}\`;
   }
   trackByOption2(_: number, option: any) {
-    return \`\${id()}-\${option}\`;
+    return \`\${this.id()}-\${option}\`;
   }
 
   constructor() {}
@@ -4094,17 +4810,193 @@ export class MyBasicForNoTagRefComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > basicForwardRef 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import { Component, AfterViewInit, viewChild, ElementRef, input, effect, signal } from '@angular/core';
+       import { CommonModule } from '@angular/common';
+
+
+
+
+
+
+
+
+
+
+
+
+       @Component({
+         selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div #_root>
+          <input
+            class=\\"input\\"
+            #inputRef()
+            [attr.value]=\\"name()\\"
+            (change)=\\"name.set($event.target.value)\\"
+          />
+        </div>
+\`,styles: \`:host { display: contents; }
+        .input {
+          color: red;
+        }
+\`
+       })
+       export class MyBasicForwardRefComponent implements AfterViewInit {
+
+
+         inputRef = input<any>()
+
+
+         props.inputRef = viewChild<ElementRef>(\\"props.inputRef\\")
+_root = viewChild<ElementRef>(\\"_root\\")
+
+          name= signal('PatrickJS')
+
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"my-basic-forward-ref-component\\");
+
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"
+          /**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+          import { Component, AfterViewInit, viewChild, ElementRef, input, effect, signal } from '@angular/core';
+       import { CommonModule } from '@angular/common';
+
+
+
+
+
+
+
+
+
+
+
+
+       @Component({
+         selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div #_root>
+          <input
+            class=\\"input\\"
+            #inputRef()
+            [attr.value]=\\"name()\\"
+            (change)=\\"name.set($event.target.value)\\"
+          />
+        </div>
+\`,styles: \`:host { display: contents; }
+        .input {
+          color: red;
+        }
+\`
+       })
+       export class MyBasicForwardRefComponent implements AfterViewInit {
+
+
+         inputRef = input<any>()
+
+
+         props.inputRef = viewChild<ElementRef>(\\"props.inputRef\\")
+_root = viewChild<ElementRef>(\\"_root\\")
+
+          name= signal('PatrickJS')
+
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"my-basic-forward-ref-component\\");
+
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
@@ -4133,26 +5025,31 @@ export class MyBasicOnUpdateReturnComponent implements AfterViewInit {
   name = signal(\\"PatrickJS\\");
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.name();
+        // ---
 
-      // ---
-
-      const controller = new AbortController();
-      const signal = controller.signal;
-      fetch(\\"https://patrickjs.com/api/resource.json\\", {
-        signal,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          this.name.set(data.name);
-        });
-      return () => {
-        if (!signal.aborted) {
-          controller.abort();
-        }
-      };
-    });
+        const controller = new AbortController();
+        const signal = controller.signal;
+        fetch(\\"https://patrickjs.com/api/resource.json\\", {
+          signal,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            this.name.set(data.name);
+          });
+        return () => {
+          if (!signal.aborted) {
+            controller.abort();
+          }
+        };
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -4458,7 +5355,7 @@ exports[`Angular signals > jsx > Javascript Test > class + ClassName + css 1`] =
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import MyComp from \\"./my-component.js\\";
+import { MyComp } from \\"./my-component.lite\\";
 
 @Component({
   selector: \\"my-basic-component\\",
@@ -5363,7 +6260,7 @@ const defaultProps = {
         {{text()}}
       </a>
       } @if(!link()){
-      <button type=\\"button\\" (click)=\\"click.emit()\\">{{buttonText()}}</button>
+      <button type=\\"button\\" (click)=\\"click()\\">{{buttonText()}}</button>
       }
     </div>
   \`,
@@ -5462,7 +6359,7 @@ const defaultProps = {
         {{text()}}
       </a>
       } @if(!link()){
-      <button type=\\"button\\" (click)=\\"click.emit($event)\\">{{text()}}</button>
+      <button type=\\"button\\" (click)=\\"click($event)\\">{{text()}}</button>
       }
     </div>
   \`,
@@ -5782,10 +6679,91 @@ export class MyComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > eventInputAndChange 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event input that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"event-input-and-change\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      <input
+        class=\\"input\\"
+        [attr.value]=\\"name()\\"
+        (input)=\\"name.set($event.target.value)\\"
+        (change)=\\"name.set($event.target.value)\\"
+      />
+
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: \`:host { display: contents; }
+        .input {
+          color: red;
+        }
+\`,
+})
+export class EventInputAndChange implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  name = signal(\\"Steve\\");
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"event-input-and-change\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > eventProps 1`] = `
@@ -5811,6 +6789,7 @@ import { CommonModule } from \\"@angular/common\\";
 export class EventPropsComponent implements AfterViewInit {
   getVoid = output();
   enter = output();
+  pass = output();
 
   _root = viewChild<ElementRef>(\\"_root\\");
 
@@ -5821,6 +6800,10 @@ export class EventPropsComponent implements AfterViewInit {
 
     if (this.enter) {
       console.log(this.enter.emit());
+    }
+
+    if (this.pass) {
+      this.pass.emit(\\"test\\");
     }
   }
 
@@ -5901,7 +6884,7 @@ export class MyComponent implements AfterViewInit {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   refToUse = signal(
-    !(this.componentRef() instanceof Function) ? this.componentRef : null
+    !(this.componentRef() instanceof Function) ? this.componentRef() : null
   );
 
   constructor() {}
@@ -6047,11 +7030,93 @@ export class FigmaButton implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > functionProps 1`] = `
-"unknown: --- MITOSIS ERROR ---
-    Component MyBasicComponent has a BlockStatement inside JSX'. 
-        This will cause an error in Angular.
-        Please create and call a new function instead with this code:
-        x => {}"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-basic-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <p
+      [attr.f]=\\"() => x\\"
+      [attr.f1]=\\"x => x\\"
+      [attr.f2]=\\"x => {}\\"
+      [attr.f3]=\\"function () {
+          return x;
+        }\\"
+      [attr.f4]=\\"function (x) {
+          return x;
+        }\\"
+      [attr.f5]=\\"function (x) {
+          return;
+        }\\"
+      [attr.f6]=\\"function () {
+          return;
+        }\\"
+      [attr.f7]=\\"(a, b, c) => a + b + c\\"
+      #_root
+    ></p>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyBasicComponent implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-basic-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > getterState 1`] = `
@@ -6090,7 +7155,7 @@ export class Button implements AfterViewInit {
     return \\"bar\\";
   }
   baz(i) {
-    return i + this.foo2.length;
+    return i + this.foo2().length;
   }
 
   constructor() {}
@@ -6154,7 +7219,7 @@ exports[`Angular signals > jsx > Javascript Test > import types 1`] = `
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import RenderBlock from \\"./builder-render-block.raw\\";
+import { RenderBlock } from \\"./builder-render-block.raw\\";
 
 @Component({
   selector: \\"render-content\\",
@@ -6402,20 +7467,22 @@ export class MultipleOnUpdate implements AfterViewInit {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
-
-      // ---
-
-      console.log(\\"Runs on every update/rerender\\");
-    });
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
-
-      // ---
-
-      console.log(\\"Runs on every update/rerender as well\\");
-    });
+    effect(
+      () => {
+        console.log(\\"Runs on every update/rerender\\");
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        console.log(\\"Runs on every update/rerender as well\\");
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -6495,28 +7562,40 @@ export class MultipleOnUpdateWithDeps implements AfterViewInit {
   d = signal(\\"d\\");
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.a();
+        this.b();
+        // ---
 
-      // ---
+        console.log(\\"Runs when a or b changes\\", this.a(), this.b());
 
-      console.log(\\"Runs when a or b changes\\", this.a(), this.b());
-
-      if (this.a() === \\"a\\") {
-        this.a.set(\\"b\\");
+        if (this.a() === \\"a\\") {
+          this.a.set(\\"b\\");
+        }
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
       }
-    });
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+    );
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.c();
+        this.d();
+        // ---
 
-      // ---
+        console.log(\\"Runs when c or d changes\\", this.c(), this.d());
 
-      console.log(\\"Runs when c or d changes\\", this.c(), this.d());
-
-      if (this.a() === \\"a\\") {
-        this.a.set(\\"b\\");
+        if (this.a() === \\"a\\") {
+          this.a.set(\\"b\\");
+        }
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
       }
-    });
+    );
   }
 
   /**
@@ -7248,7 +8327,7 @@ export class OnInit implements AfterViewInit {
   }
 
   ngOnInit() {
-    this.name.set(defaultValues.name || this.name);
+    this.name.set(defaultValues.name || this.name());
     console.log(\\"set defaults with props\\");
   }
 
@@ -7526,13 +8605,14 @@ export class OnUpdate implements AfterViewInit {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
-
-      // ---
-
-      console.log(\\"Runs on every update/rerender\\");
-    });
+    effect(
+      () => {
+        console.log(\\"Runs on every update/rerender\\");
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -7613,18 +8693,25 @@ export class OnUpdateWithDeps implements AfterViewInit {
   b = signal(\\"b\\");
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.a();
+        this.b();
+        this.size();
+        // ---
 
-      // ---
-
-      console.log(
-        \\"Runs when a, b or size changes\\",
-        this.a(),
-        this.b(),
-        this.size()
-      );
-    });
+        console.log(
+          \\"Runs when a, b or size changes\\",
+          this.a(),
+          this.b(),
+          this.size()
+        );
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -7676,10 +8763,93 @@ export class OnUpdateWithDeps implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > outputEventBinding 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"nativeEvents\\":[\\"onFakeNative\\"]}}
+          */
+
+import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      <input
+        [attr.value]=\\"name()\\"
+        (change)=\\"name.set($event.target.value)\\"
+        (changeOrSomething)=\\"name.set($event.target.value)\\"
+        (fakenative)=\\"name.set($event.target.value)\\"
+        (animationend)=\\"name.set($event.target.value)\\"
+      />
+
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyComponent implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  name = signal(\\"Steve\\");
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
@@ -8098,20 +9268,21 @@ export class OnUpdate implements AfterViewInit {
   bar() {}
   zoo() {
     const params = {
-      cb: this.bar,
+      cb: this.bar(),
     };
   }
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
-
-      // ---
-
-      this.foo({
-        someOption: this.bar,
-      });
-    });
+    effect(
+      () => {
+        this.foo({
+          someOption: this.bar(),
+        });
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -8182,26 +9353,26 @@ import { getBlockProperties } from \\"../../functions/get-block-properties.js\\"
 import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
 import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
-import BlockStyles from \\"./block-styles.js\\";
+import { BlockStyles } from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.js\\";
 import RenderComponent from \\"./render-component.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.js\\";
+import { RenderRepeatedBlock } from \\"./render-repeated-block.lite\\";
 
 @Component({
   selector: \\"render-block\\",
   standalone: true,
   imports: [CommonModule, RenderRepeatedBlock, RenderBlock, BlockStyles],
   template: \`
-    @if(shouldWrap()){ @if(isEmptyHtmlElement(tag)){
+    @if(shouldWrap()){ @if(isEmptyHtmlElement(tag())){
     <this.tag></this.tag>
-    } @if(!isEmptyHtmlElement(tag) && repeatItemData()){ @for (data of
+    } @if(!isEmptyHtmlElement(tag()) && repeatItemData()){ @for (data of
     repeatItemData();track trackByData0;let index = $index) {
     <render-repeated-block
       [repeatContext]=\\"data.context\\"
       [block]=\\"data.block\\"
     ></render-repeated-block>
-    } } @if(!isEmptyHtmlElement(tag) && !repeatItemData()){
+    } } @if(!isEmptyHtmlElement(tag()) && !repeatItemData()){
     <this.tag>
       <this.renderComponentTag></this.renderComponentTag>
 
@@ -8226,6 +9397,8 @@ import RenderRepeatedBlock from \\"./render-repeated-block.js\\";
   styles: \`:host { display: contents; }\`,
 })
 export class RenderBlock implements AfterViewInit {
+  protected readonly isEmptyHtmlElement = isEmptyHtmlElement;
+
   block = input<any>();
   context = input<any>();
 
@@ -8233,9 +9406,9 @@ export class RenderBlock implements AfterViewInit {
 
   get component() {
     const componentName = getProcessedBlock({
-      block: this.block,
-      state: this.context.state,
-      context: this.context.context,
+      block: this.block(),
+      state: this.context().state,
+      context: this.context().context,
       shouldEvaluateBindings: false,
     }).component?.name;
 
@@ -8243,7 +9416,7 @@ export class RenderBlock implements AfterViewInit {
       return null;
     }
 
-    const ref = this.context.registeredComponents[componentName];
+    const ref = this.context().registeredComponents[componentName];
 
     if (!ref) {
       // TODO: Public doc page with more info about this message
@@ -8259,20 +9432,20 @@ export class RenderBlock implements AfterViewInit {
     return getBlockTag(this.useBlock());
   }
   get useBlock() {
-    return this.repeatItemData
-      ? this.block
+    return this.repeatItemData()
+      ? this.block()
       : getProcessedBlock({
-          block: this.block,
-          state: this.context.state,
-          context: this.context.context,
+          block: this.block(),
+          state: this.context().state,
+          context: this.context().context,
           shouldEvaluateBindings: true,
         });
   }
   get actions() {
     return getBlockActions({
-      block: this.useBlock,
-      state: this.context.state,
-      context: this.context.context,
+      block: this.useBlock(),
+      state: this.context().state,
+      context: this.context().context,
     });
   }
   get attributes() {
@@ -8282,8 +9455,8 @@ export class RenderBlock implements AfterViewInit {
       ...(TARGET === \\"reactNative\\"
         ? {
             style: getReactNativeBlockStyles({
-              block: this.useBlock,
-              context: this.context,
+              block: this.useBlock(),
+              context: this.context(),
               blockStyles: blockProperties.style,
             }),
           }
@@ -8291,12 +9464,12 @@ export class RenderBlock implements AfterViewInit {
     };
   }
   get shouldWrap() {
-    return !this.component?.noWrap;
+    return !this.component()?.noWrap;
   }
   get renderComponentProps() {
     return {
-      blockChildren: this.useChildren,
-      componentRef: this.component?.component,
+      blockChildren: this.useChildren(),
+      componentRef: this.component()?.component,
       componentOptions: {
         ...getBlockComponentOptions(this.useBlock()),
 
@@ -8304,14 +9477,14 @@ export class RenderBlock implements AfterViewInit {
          * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
          * they are provided to the component itself directly.
          */
-        ...(this.shouldWrap
+        ...(this.shouldWrap()
           ? {}
           : {
-              attributes: { ...this.attributes, ...this.actions },
+              attributes: { ...this.attributes(), ...this.actions() },
             }),
-        customBreakpoints: this.childrenContext?.content?.meta?.breakpoints,
+        customBreakpoints: this.childrenContext()?.content?.meta?.breakpoints,
       },
-      context: this.childrenContext,
+      context: this.childrenContext(),
     };
   }
   get useChildren() {
@@ -8319,7 +9492,7 @@ export class RenderBlock implements AfterViewInit {
     // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
     // but still receive and need to render children.
     // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
-    return this.useBlock.children ?? [];
+    return this.useBlock().children ?? [];
   }
   get childrenWithoutParentComponent() {
     /**
@@ -8329,15 +9502,15 @@ export class RenderBlock implements AfterViewInit {
      * blocks, and the children will be repeated within those blocks.
      */
     const shouldRenderChildrenOutsideRef =
-      !this.component?.component && !this.repeatItemData;
-    return shouldRenderChildrenOutsideRef ? this.useChildren : [];
+      !this.component()?.component && !this.repeatItemData();
+    return shouldRenderChildrenOutsideRef ? this.useChildren() : [];
   }
   get repeatItemData() {
     /**
      * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
      * which will not work if there is a repeat.
      */
-    const { repeat, ...blockWithoutRepeat } = this.block;
+    const { repeat, ...blockWithoutRepeat } = this.block();
 
     if (!repeat?.collection) {
       return undefined;
@@ -8345,8 +9518,8 @@ export class RenderBlock implements AfterViewInit {
 
     const itemsArray = evaluate({
       code: repeat.collection,
-      state: this.context.state,
-      context: this.context.context,
+      state: this.context().state,
+      context: this.context().context,
     });
 
     if (!Array.isArray(itemsArray)) {
@@ -8358,9 +9531,9 @@ export class RenderBlock implements AfterViewInit {
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
     const repeatArray = itemsArray.map((item, index) => ({
       context: {
-        ...this.context,
+        ...this.context(),
         state: {
-          ...this.context.state,
+          ...this.context().state,
           $index: index,
           $item: item,
           [itemNameToUse]: item,
@@ -8377,20 +9550,20 @@ export class RenderBlock implements AfterViewInit {
     }
 
     const styles = getReactNativeBlockStyles({
-      block: this.useBlock,
-      context: this.context,
-      blockStyles: this.attributes.style,
+      block: this.useBlock(),
+      context: this.context(),
+      blockStyles: this.attributes().style,
     });
     return extractTextStyles(styles);
   }
   get childrenContext() {
     return {
-      apiKey: this.context.apiKey,
-      state: this.context.state,
-      content: this.context.content,
-      context: this.context.context,
-      registeredComponents: this.context.registeredComponents,
-      inheritedStyles: this.inheritedTextStyles,
+      apiKey: this.context().apiKey,
+      state: this.context().state,
+      content: this.context().content,
+      context: this.context().context,
+      registeredComponents: this.context().registeredComponents,
+      inheritedStyles: this.inheritedTextStyles(),
     };
   }
   get renderComponentTag() {
@@ -8480,7 +9653,7 @@ import {
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.js\\";
+import { RenderBlocks } from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 @Component({
   selector: \\"render-content\\",
@@ -8499,19 +9672,26 @@ import RenderBlocks from \\"@dummy/RenderBlocks.js\\";
 \`,
 })
 export class RenderContent implements AfterViewInit {
+  protected readonly trackClick = trackClick;
+
   customComponents = input<any>();
   content = input<any>();
 
   _root = viewChild<ElementRef>(\\"_root\\");
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.content();
+        // ---
 
-      // ---
-
-      dispatchNewContentToVisualEditor(this.content());
-    });
+        dispatchNewContentToVisualEditor(this.content());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -9000,7 +10180,7 @@ export class SetState implements AfterViewInit {
   n = signal([\\"123\\"]);
 
   someFn() {
-    this.n[0] = \\"123\\";
+    this.n()[0] = \\"123\\";
   }
 
   constructor() {}
@@ -9433,7 +10613,7 @@ export class SignalsTestComponent implements AfterViewInit {
   _innerText = signal(\\"a\\");
 
   handleOutput() {
-    this._counter.update((_counter) => {
+    this._counter().update((_counter) => {
       _counter++;
       return _counter;
     });
@@ -9448,17 +10628,23 @@ export class SignalsTestComponent implements AfterViewInit {
   }
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
-      this.buttonRef();
-      // ---
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this._counter();
+        this.buttonRef();
+        // ---
 
-      console.log(this._counter(), this.buttonRef()?.nativeElement);
-      this.buttonRef()?.nativeElement?.setAttribute(
-        \\"data-counter\\",
-        this._counter().toString()
-      );
-    });
+        console.log(this._counter(), this.buttonRef()?.nativeElement);
+        this.buttonRef()?.nativeElement?.setAttribute(
+          \\"data-counter\\",
+          this._counter().toString()
+        );
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -9540,14 +10726,22 @@ export class MyBasicComponent implements AfterViewInit {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.id();
+        // ---
 
-      // ---
-
-      console.log(\\"props.id changed\\", this.id());
-      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.value.bar.baz);
-    });
+        console.log(\\"props.id changed\\", this.id());
+        console.log(
+          \\"props.foo.value.bar.baz changed\\",
+          this.foo().value.bar.baz
+        );
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -9850,8 +11044,8 @@ export class MyComponent implements AfterViewInit {
 
   asfas = signal(\\"asga\\");
   someCompute = signal(this.add(1, 2));
-  someOtherVal = signal(this.val);
-  sf = signal(this.add(this.val(), 34));
+  someOtherVal = signal(this.val());
+  sf = signal(this.add(this.val, 34));
 
   add(a, b) {
     return a + b;
@@ -9942,7 +11136,7 @@ export class MyComponent implements AfterViewInit {
 
   _root = viewChild<ElementRef>(\\"_root\\");
 
-  val = signal(this.value);
+  val = signal(this.value());
 
   constructor() {}
 
@@ -10014,6 +11208,8 @@ exports[`Angular signals > jsx > Javascript Test > store-async-function 1`] = `
 \`,styles: \`:host { display: contents; }\`
        })
        export class StringLiteralStore implements AfterViewInit {
+
+
 
 
 
@@ -10175,6 +11371,8 @@ exports[`Angular signals > jsx > Javascript Test > string-literal-store-kebab 1`
 \`,styles: \`:host { display: contents; }\`
        })
        export class StringLiteralStore implements AfterViewInit {
+
+
 
 
 
@@ -10412,7 +11610,7 @@ exports[`Angular signals > jsx > Javascript Test > subComponent 1`] = `
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import Foo from \\"./foo-sub-component.js\\";
+import { Foo } from \\"./foo-sub-component.lite\\";
 
 @Component({
   selector: \\"sub-component\\",
@@ -10913,7 +12111,7 @@ export class TypeGetterStore implements AfterViewInit {
       return \\"b\\";
     }
 
-    return this.name;
+    return this.name();
   }
   get test() {
     return \\"test\\";
@@ -11672,10 +12870,131 @@ export class MyBasicForShowComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > AdvancedRef 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+@Component({
+  selector: \\"my-basic-ref-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      @if(showInput()){
+      <ng-container>
+        <input
+          class=\\"input\\"
+          #inputRef
+          [attr.value]=\\"name()\\"
+          (blur)=\\"onBlur()\\"
+          (change)=\\"name.set($event.target.value)\\"
+        />
+        <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+        <select name=\\"cars\\" id=\\"cars\\">
+          <option value=\\"supra\\">GR Supra</option>
+          <option value=\\"86\\">GR 86</option>
+        </select>
+      </ng-container>
+      } Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
+      Component!
+    </div>
+  \`,
+  styles: \`:host { display: contents; }
+        .input {
+          color: red;
+        }
+\`,
+})
+export class MyBasicRefComponent implements AfterViewInit {
+  showInput = input<Props[\\"showInput\\"]>();
+
+  inputRef = viewChild<ElementRef>(\\"inputRef\\");
+  inputNoArgRef = viewChild<ElementRef>(\\"inputNoArgRef\\");
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  name = signal(\\"PatrickJS\\");
+
+  onBlur() {
+    // Maintain focus
+    this.inputRef()?.nativeElement.focus();
+  }
+  lowerCaseName() {
+    return this.name().toLowerCase();
+  }
+
+  constructor() {
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.inputRef();
+        this.inputNoArgRef();
+        // ---
+
+        console.log(\\"Received an update\\");
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-basic-ref-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Basic 1`] = `
@@ -11779,12 +13098,90 @@ export class MyBasicComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Basic 2`] = `
-"unknown: Unexpected token, expected \\",\\" (2:7)
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
 
-[0m [90m 1 |[39m [36mlet[39m _ [33m=[39m {[0m
-[0m[31m[1m>[22m[39m[90m 2 |[39m   state[33m.[39mname [33m=[39m event[33m.[39mtarget[33m.[39mvalue [33m+[39m [32m' and '[39m [33m+[39m person[33m;[39m[0m
-[0m [90m   |[39m        [31m[1m^[22m[39m[0m
-[0m [90m 3 |[39m }[0m"
+@Component({
+  selector: \\"my-basic-for-show-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      @for (person of names();track i;let i = $index) { @if(person === name()){
+      <input
+        [attr.value]=\\"name()\\"
+        (change)=\\"{
+          name.set($event.target.value + ' and ' + person);
+        }\\"
+      />
+
+      Hello {{person}} ! I can run in Qwik, Web Component, React, Vue, Solid, or
+      Liquid! } }
+    </div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyBasicForShowComponent implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  name = signal(\\"PatrickJS\\");
+  names = signal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-basic-for-show-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Basic Context 1`] = `
@@ -12226,9 +13623,98 @@ export class MyComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
-"--- MITOSIS ERROR ---
-    Show: You can't use children() in a Show block for \`when\` targeting angular.
-      Try to invert it like this: \\"<Show when={props.label} else={props.children}>{props.label}</Show>\\""
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  input,
+  effect,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  children: any;
+  type: string;
+};
+
+import { MyBooleanAttributeComponent } from \\"./basic-boolean-attribute-component.raw\\";
+
+@Component({
+  selector: \\"my-boolean-attribute\\",
+  standalone: true,
+  imports: [CommonModule, MyBooleanAttributeComponent],
+  template: \`
+    <div #_root>
+      @if(children()){
+      <ng-content></ng-content>
+      {{type()}} }
+      <my-boolean-attribute-component
+        [toggle]=\\"true\\"
+      ></my-boolean-attribute-component>
+      <my-boolean-attribute-component
+        [toggle]=\\"true\\"
+      ></my-boolean-attribute-component>
+      <my-boolean-attribute-component
+        [list]=\\"null\\"
+      ></my-boolean-attribute-component>
+    </div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyBooleanAttribute implements AfterViewInit {
+  type = input<Props[\\"type\\"]>();
+
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-boolean-attribute\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > BasicChildComponent 1`] = `
@@ -12242,9 +13728,9 @@ exports[`Angular signals > jsx > Typescript Test > BasicChildComponent 1`] = `
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
-import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
-import MyBasicComponent from \\"./basic.raw\\";
+import { MyBasicOnMountUpdateComponent } from \\"./basic-onMount-update.raw\\";
+import { MyBasicOutputsComponent } from \\"./basic-outputs.raw\\";
+import { MyBasicComponent } from \\"./basic.raw\\";
 
 @Component({
   selector: \\"my-basic-child-component\\",
@@ -12334,19 +13820,211 @@ export class MyBasicChildComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > BasicFor 1`] = `
-"unknown: Unexpected token, expected \\",\\" (2:7)
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
 
-[0m [90m 1 |[39m [36mlet[39m _ [33m=[39m {[0m
-[0m[31m[1m>[22m[39m[90m 2 |[39m   state[33m.[39mname [33m=[39m event[33m.[39mtarget[33m.[39mvalue [33m+[39m [32m' and '[39m [33m+[39m person[33m;[39m[0m
-[0m [90m   |[39m        [31m[1m^[22m[39m[0m
-[0m [90m 3 |[39m }[0m"
+@Component({
+  selector: \\"my-basic-for-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      @for (person of names();track i;let i = $index) {
+      <ng-container>
+        <input
+          [attr.value]=\\"name()\\"
+          (change)=\\"{
+          name.set($event.target.value + ' and ' + person);
+        }\\"
+        />
+
+        Hello {{person}} ! I can run in Qwik, Web Component, React, Vue, Solid,
+        or Liquid!
+      </ng-container>
+      }
+    </div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyBasicForComponent implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  name = signal(\\"PatrickJS\\");
+  names = signal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngOnInit() {
+    console.log(\\"onMount code\\");
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-basic-for-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > BasicRef 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+@Component({
+  selector: \\"my-basic-ref-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      @if(showInput()){
+      <ng-container>
+        <input
+          class=\\"input\\"
+          #inputRef
+          [attr.value]=\\"name()\\"
+          (blur)=\\"onBlur()\\"
+          (change)=\\"name.set($event.target.value)\\"
+        />
+        <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+        <select name=\\"cars\\" id=\\"cars\\">
+          <option value=\\"supra\\">GR Supra</option>
+          <option value=\\"86\\">GR 86</option>
+        </select>
+      </ng-container>
+      } Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
+      Component!
+    </div>
+  \`,
+  styles: \`:host { display: contents; }
+        .input {
+          color: red;
+        }
+\`,
+})
+export class MyBasicRefComponent implements AfterViewInit {
+  showInput = input<Props[\\"showInput\\"]>();
+
+  inputRef = viewChild<ElementRef>(\\"inputRef\\");
+  inputNoArgRef = viewChild<ElementRef>(\\"inputNoArgRef\\");
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  name = signal(\\"PatrickJS\\");
+
+  onBlur() {
+    // Maintain focus
+    this.inputRef()?.nativeElement?.focus();
+  }
+  lowerCaseName() {
+    return this.name().toLowerCase();
+  }
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-basic-ref-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > BasicRefAssignment 1`] = `
@@ -12467,7 +14145,7 @@ export function usePrevious<T>(value: T) {
   imports: [CommonModule],
   template: \`
     <div #_root>
-      <h1>Now: {{count()}} , before: {{this._prevCount}}</h1>
+      <h1>Now: {{count()}} , before: {{prevCount}}</h1>
       <button (click)=\\"count.set(1)\\">Increment</button>
     </div>
   \`,
@@ -12479,13 +14157,18 @@ export class MyPreviousComponent implements AfterViewInit {
   count = signal(0);
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.count();
+        // ---
 
-      // ---
-
-      this._prevCount = this.count;
-    });
+        this._prevCount = this.count();
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -12698,10 +14381,10 @@ export class Column implements AfterViewInit {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   getColumns() {
-    return this.columns || [];
+    return this.columns() || [];
   }
   getGutterSize() {
-    return typeof this.space === \\"number\\" ? this.space || 0 : 20;
+    return typeof this.space() === \\"number\\" ? this.space() || 0 : 20;
   }
   getWidth(index: number) {
     const columns = this.getColumns();
@@ -12907,10 +14590,12 @@ export class ContentSlotJsxCode implements AfterViewInit {
   showContent = signal(false);
 
   get cls() {
-    return this.slotContent && this.children ? \`\${this.name}-content\` : \\"\\";
+    return this.slotContent() && this.children()
+      ? \`\${this.name()}-content\`
+      : \\"\\";
   }
   show() {
-    this.slotContent ? 1 : \\"\\";
+    this.slotContent() ? 1 : \\"\\";
   }
 
   constructor() {}
@@ -13315,7 +15000,7 @@ import {
       ></builder-blocks>
       } @if(submissionState() === 'error' && responseData()){
       <pre class=\\"builder-form-error-text pre\\">
-        {{JSON.stringify(responseData, null, 2)}}</pre
+        {{JSON.stringify(responseData(), null, 2)}}</pre
       >
       } @if(submissionState() === 'success'){
       <builder-blocks
@@ -13361,26 +15046,27 @@ export class FormComponent implements AfterViewInit {
   formErrorMessage = signal(\\"\\");
 
   get submissionState() {
-    return (Builder.isEditing && this.previewState) || this.formState;
+    return (Builder.isEditing && this.previewState()) || this.formState();
   }
   onSubmit(
     event: Event & {
       currentTarget: HTMLFormElement;
     }
   ) {
-    const sendWithJs = this.sendWithJs || this.sendSubmissionsTo() === \\"email\\";
+    const sendWithJs =
+      this.sendWithJs() || this.sendSubmissionsTo() === \\"email\\";
 
     if (this.sendSubmissionsTo() === \\"zapier\\") {
       event.preventDefault();
     } else if (sendWithJs) {
-      if (!(this.action || this.sendSubmissionsTo() === \\"email\\")) {
+      if (!(this.action() || this.sendSubmissionsTo() === \\"email\\")) {
         event.preventDefault();
         return;
       }
 
       event.preventDefault();
       const el = event.currentTarget;
-      const headers = this.customHeaders || {};
+      const headers = this.customHeaders() || {};
       let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
@@ -13427,7 +15113,7 @@ export class FormComponent implements AfterViewInit {
             value,
           };
         });
-      let contentType = this.contentType;
+      let contentType = this.contentType();
 
       if (this.sendSubmissionsTo() === \\"email\\") {
         contentType = \\"multipart/form-data\\";
@@ -13459,7 +15145,7 @@ export class FormComponent implements AfterViewInit {
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
           /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && this.action?.includes(\\"zapier.com\\"))
+          !(sendWithJs && this.action()?.includes(\\"zapier.com\\"))
         ) {
           headers[\\"content-type\\"] = contentType;
         }
@@ -13483,15 +15169,15 @@ export class FormComponent implements AfterViewInit {
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-        this.sendSubmissionsToEmail || \\"\\"
-      )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
+        this.sendSubmissionsToEmail() || \\"\\"
+      )}&name=\${encodeURIComponent(this.name() || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo() === \\"email\\" ? formUrl : this.action!,
+        this.sendSubmissionsTo() === \\"email\\" ? formUrl : this.action()!,
         /* TODO: throw error if no action URL */
         {
           body,
           headers,
-          method: this.method || \\"post\\",
+          method: this.method() || \\"post\\",
         }
       ).then(
         async (res) => {
@@ -13504,7 +15190,7 @@ export class FormComponent implements AfterViewInit {
             body = await res.text();
           }
 
-          if (!res.ok && this.errorMessagePath) {
+          if (!res.ok && this.errorMessagePath()) {
             /* TODO: allow supplying an error formatter function */
             let message = get(body, this.errorMessagePath());
 
@@ -13544,20 +15230,20 @@ export class FormComponent implements AfterViewInit {
             }
             /* TODO: client side route event first that can be preventDefaulted */
 
-            if (this.successUrl) {
+            if (this.successUrl()) {
               if (this.formRef()?.nativeElement) {
                 const event = new CustomEvent(\\"route\\", {
                   detail: {
-                    url: this.successUrl,
+                    url: this.successUrl(),
                   },
                 });
                 this.formRef()?.nativeElement.dispatchEvent(event);
 
                 if (!event.defaultPrevented) {
-                  location.href = this.successUrl;
+                  location.href = this.successUrl();
                 }
               } else {
-                location.href = this.successUrl;
+                location.href = this.successUrl();
               }
             }
           }
@@ -13720,7 +15406,7 @@ export class Image implements AfterViewInit {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && this.isBrowser();
+    return !!this.lazy() && this.isBrowser();
   }
   isBrowser() {
     return (
@@ -13801,7 +15487,7 @@ export class Image implements AfterViewInit {
   }
 
   ngOnDestroy() {
-    if (this.scrollListener) {
+    if (this.scrollListener()) {
       window.removeEventListener(\\"scroll\\", this.scrollListener());
     }
   }
@@ -13939,6 +15625,8 @@ import { Builder } from \\"@builder.io/sdk\\";
   styles: \`:host { display: contents; }\`,
 })
 export class ImgComponent implements AfterViewInit {
+  protected readonly Builder = Builder;
+
   backgroundSize = input<ImgProps[\\"backgroundSize\\"]>();
   backgroundPosition = input<ImgProps[\\"backgroundPosition\\"]>();
   attributes = input<ImgProps[\\"attributes\\"]>();
@@ -13998,10 +15686,112 @@ export class ImgComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Input 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  output,
+  input,
+  effect,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface FormInputProps {
+  type?: string;
+  attributes?: any;
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  required?: boolean;
+  onChange?: (value: string) => void;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+@Component({
+  selector: \\"form-input-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <input
+      [attr.placeholder]=\\"placeholder()\\"
+      [attr.type]=\\"type()\\"
+      [attr.name]=\\"name()\\"
+      [attr.value]=\\"value()\\"
+      [attr.defaultValue]=\\"defaultValue()\\"
+      [attr.required]=\\"required()\\"
+      (change)=\\"change()?.($event.target.value)\\"
+      #_root
+    />
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class FormInputComponent implements AfterViewInit {
+  protected readonly Builder = Builder;
+
+  attributes = input<FormInputProps[\\"attributes\\"]>();
+  defaultValue = input<FormInputProps[\\"defaultValue\\"]>();
+  placeholder = input<FormInputProps[\\"placeholder\\"]>();
+  type = input<FormInputProps[\\"type\\"]>();
+  name = input<FormInputProps[\\"name\\"]>();
+  value = input<FormInputProps[\\"value\\"]>();
+  required = input<FormInputProps[\\"required\\"]>();
+  change = output<
+    Parameters<Required<FormInputProps>[\\"onChange\\"]>[number] | void
+  >();
+
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"form-input-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > InputParent 1`] = `
@@ -14014,7 +15804,7 @@ exports[`Angular signals > jsx > Typescript Test > InputParent 1`] = `
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import FormInputComponent from \\"./input.raw\\";
+import { FormInputComponent } from \\"./input.raw\\";
 
 @Component({
   selector: \\"stepper\\",
@@ -14485,6 +16275,8 @@ import { Builder } from \\"@builder.io/sdk\\";
   styles: \`:host { display: contents; }\`,
 })
 export class SelectComponent implements AfterViewInit {
+  protected readonly Builder = Builder;
+
   attributes = input<FormSelectProps[\\"attributes\\"]>();
   value = input<FormSelectProps[\\"value\\"]>();
   defaultValue = input<FormSelectProps[\\"defaultValue\\"]>();
@@ -14637,7 +16429,7 @@ type Props = {
   [key: string]: string;
 };
 
-import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+import { ContentSlotCode } from \\"./content-slot-jsx.raw\\";
 
 @Component({
   selector: \\"slot-code\\",
@@ -14717,7 +16509,7 @@ type Props = {
   [key: string]: string;
 };
 
-import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+import { ContentSlotCode } from \\"./content-slot-jsx.raw\\";
 
 @Component({
   selector: \\"slot-code\\",
@@ -14865,13 +16657,165 @@ export class SlotCode implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Stamped.io 1`] = `
-"unknown: Unexpected token, expected \\",\\" (2:4)
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
 
-[0m [90m 1 |[39m [36mlet[39m _ [33m=[39m {[0m
-[0m[31m[1m>[22m[39m[90m 2 |[39m   ev[33m.[39mpreventDefault()[33m;[39m[0m
-[0m [90m   |[39m     [31m[1m^[22m[39m[0m
-[0m [90m 3 |[39m   state[33m.[39mshowReviewPrompt [33m=[39m [36mfalse[39m[33m;[39m[0m
-[0m [90m 4 |[39m }[0m"
+type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
+};
+
+import { kebabCase, snakeCase } from \\"lodash\\";
+
+@Component({
+  selector: \\"smile-reviews\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div [attr.data-user]=\\"name()\\" #_root>
+      <button (click)=\\"showReviewPrompt.set(true)\\">Write a review</button>
+      @if(showReviewPrompt() || 'asdf'){
+      <input placeholder=\\"Email\\" />
+      <input placeholder=\\"Title\\" class=\\"input\\" />
+      <textarea
+        placeholder=\\"How was your experience?\\"
+        class=\\"textarea\\"
+      ></textarea>
+      <button
+        class=\\"button\\"
+        (click)=\\"{
+          ev.preventDefault();
+          showReviewPrompt.set(false);
+        }\\"
+      >
+        Submit
+      </button>
+      } @for (review of reviews();track trackByReview0;let index = $index) {
+      <div $name=\\"Review\\" class=\\"review\\">
+        <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
+        <div [class]=\\"showReviewPrompt() ? 'bg-primary' : 'bg-secondary'\\">
+          <div>N: {{index}}</div>
+          <div>{{review.author}}</div>
+          <div>{{review.reviewMessage}}</div>
+        </div>
+      </div>
+      }
+    </div>
+  \`,
+  styles: \`:host { display: contents; }
+        .input {
+          display: block;
+        }
+        .textarea {
+          display: block;
+        }
+        .button {
+          display: block;
+        }
+        .review {
+          margin: 10px;
+          padding: 10px;
+          background: white;
+          display: flex;
+          border-radius: 5px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          -webkit-font-smoothing: antialiased;
+        }
+        .img {
+          height: 30px;
+          width: 30px;
+          margin-right: 10px;
+        }
+\`,
+})
+export class SmileReviews implements AfterViewInit {
+  apiKey = input<SmileReviewsProps[\\"apiKey\\"]>();
+  productId = input<SmileReviewsProps[\\"productId\\"]>();
+
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  reviews = signal([]);
+  name = signal(\\"test\\");
+  showReviewPrompt = signal(false);
+
+  kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+  snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+  trackByReview0(index: number, review: any) {
+    return review.id;
+  }
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngOnInit() {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        this.apiKey() || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.productId() || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        this.reviews.set(data.data);
+      });
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"smile-reviews\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > StoreComment 1`] = `
@@ -15056,7 +17000,7 @@ export class MyComponent implements AfterViewInit {
   foo = signal(false);
 
   bar() {
-    return this.foo;
+    return this.foo();
   }
 
   constructor() {}
@@ -15337,15 +17281,16 @@ export class UseValueAndFnFromStore implements AfterViewInit {
   }
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
-
-      // ---
-
-      if (this._do) {
-        this._do(this._id());
+    effect(
+      () => {
+        if (this._do()) {
+          this._do(this._id);
+        }
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
       }
-    });
+    );
   }
 
   /**
@@ -15741,10 +17686,10 @@ export class BasicForFragment implements AfterViewInit {
     return \`key-\${option}\`;
   }
   trackByOption1(_: number, option: any) {
-    return \`\${id()}-\${option}\`;
+    return \`\${this.id()}-\${option}\`;
   }
   trackByOption2(_: number, option: any) {
-    return \`\${id()}-\${option}\`;
+    return \`\${this.id()}-\${option}\`;
   }
 
   constructor() {}
@@ -15892,17 +17837,199 @@ export class MyBasicForNoTagRefComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > basicForwardRef 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import { Component, AfterViewInit, viewChild, ElementRef, input, effect, signal } from '@angular/core';
+       import { CommonModule } from '@angular/common';
+
+
+
+       export interface Props {
+ showInput: boolean;
+ inputRef: HTMLInputElement;
+}
+
+
+
+
+
+
+
+
+       @Component({
+         selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div #_root>
+          <input
+            class=\\"input\\"
+            #inputRef()
+            [attr.value]=\\"name()\\"
+            (change)=\\"name.set($event.target.value)\\"
+          />
+        </div>
+\`,styles: \`:host { display: contents; }
+        .input {
+          color: red;
+        }
+\`
+       })
+       export class MyBasicForwardRefComponent implements AfterViewInit {
+
+
+         inputRef = input<Props[\\"inputRef\\"]>()
+
+
+         props.inputRef = viewChild<ElementRef>(\\"props.inputRef\\")
+_root = viewChild<ElementRef>(\\"_root\\")
+
+          name= signal('PatrickJS')
+
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"my-basic-forward-ref-component\\");
+
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"
+          /**
+          useMetadata:
+          {\\"forwardRef\\":\\"inputRef\\"}
+          */
+
+          import { Component, AfterViewInit, viewChild, ElementRef, input, effect, signal } from '@angular/core';
+       import { CommonModule } from '@angular/common';
+
+
+
+       export interface Props {
+ showInput: boolean;
+ inputRef: HTMLInputElement;
+}
+
+
+
+
+
+
+
+
+       @Component({
+         selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div #_root>
+          <input
+            class=\\"input\\"
+            #inputRef()
+            [attr.value]=\\"name()\\"
+            (change)=\\"name.set($event.target.value)\\"
+          />
+        </div>
+\`,styles: \`:host { display: contents; }
+        .input {
+          color: red;
+        }
+\`
+       })
+       export class MyBasicForwardRefComponent implements AfterViewInit {
+
+
+         inputRef = input<Props[\\"inputRef\\"]>()
+
+
+         props.inputRef = viewChild<ElementRef>(\\"props.inputRef\\")
+_root = viewChild<ElementRef>(\\"_root\\")
+
+          name= signal('PatrickJS')
+
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"my-basic-forward-ref-component\\");
+
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
@@ -15931,26 +18058,31 @@ export class MyBasicOnUpdateReturnComponent implements AfterViewInit {
   name = signal(\\"PatrickJS\\");
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.name();
+        // ---
 
-      // ---
-
-      const controller = new AbortController();
-      const signal = controller.signal;
-      fetch(\\"https://patrickjs.com/api/resource.json\\", {
-        signal,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          this.name.set(data.name);
-        });
-      return () => {
-        if (!signal.aborted) {
-          controller.abort();
-        }
-      };
-    });
+        const controller = new AbortController();
+        const signal = controller.signal;
+        fetch(\\"https://patrickjs.com/api/resource.json\\", {
+          signal,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            this.name.set(data.name);
+          });
+        return () => {
+          if (!signal.aborted) {
+            controller.abort();
+          }
+        };
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -16256,7 +18388,7 @@ exports[`Angular signals > jsx > Typescript Test > class + ClassName + css 1`] =
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import MyComp from \\"./my-component.js\\";
+import { MyComp } from \\"./my-component.lite\\";
 
 @Component({
   selector: \\"my-basic-component\\",
@@ -17191,7 +19323,7 @@ const defaultProps = {
         {{text()}}
       </a>
       } @if(!link()){
-      <button type=\\"button\\" (click)=\\"click.emit()\\">{{buttonText()}}</button>
+      <button type=\\"button\\" (click)=\\"click()\\">{{buttonText()}}</button>
       }
     </div>
   \`,
@@ -17299,7 +19431,7 @@ const defaultProps = {
         {{text()}}
       </a>
       } @if(!link()){
-      <button type=\\"button\\" (click)=\\"click.emit($event)\\">{{text()}}</button>
+      <button type=\\"button\\" (click)=\\"click($event)\\">{{text()}}</button>
       }
     </div>
   \`,
@@ -17625,10 +19757,91 @@ export class MyComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > eventInputAndChange 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event input that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"event-input-and-change\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      <input
+        class=\\"input\\"
+        [attr.value]=\\"name()\\"
+        (input)=\\"name.set($event.target.value)\\"
+        (change)=\\"name.set($event.target.value)\\"
+      />
+
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: \`:host { display: contents; }
+        .input {
+          color: red;
+        }
+\`,
+})
+export class EventInputAndChange implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  name = signal(\\"Steve\\");
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"event-input-and-change\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > eventProps 1`] = `
@@ -17658,6 +19871,7 @@ export class EventPropsComponent implements AfterViewInit {
     Parameters<Required<EventProps>[\\"onGetVoid\\"]>[number] | void
   >();
   enter = output<Parameters<Required<EventProps>[\\"onEnter\\"]>[number] | void>();
+  pass = output<Parameters<Required<EventProps>[\\"onPass\\"]>[number] | void>();
 
   _root = viewChild<ElementRef>(\\"_root\\");
 
@@ -17668,6 +19882,10 @@ export class EventPropsComponent implements AfterViewInit {
 
     if (this.enter) {
       console.log(this.enter.emit());
+    }
+
+    if (this.pass) {
+      this.pass.emit(\\"test\\");
     }
   }
 
@@ -17748,7 +19966,7 @@ export class MyComponent implements AfterViewInit {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   refToUse = signal(
-    !(this.componentRef() instanceof Function) ? this.componentRef : null
+    !(this.componentRef() instanceof Function) ? this.componentRef() : null
   );
 
   constructor() {}
@@ -17894,11 +20112,97 @@ export class FigmaButton implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > functionProps 1`] = `
-"unknown: --- MITOSIS ERROR ---
-    Component MyBasicComponent has a BlockStatement inside JSX'. 
-        This will cause an error in Angular.
-        Please create and call a new function instead with this code:
-        x => {}"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface MyBasicComponentProps {
+  id: string;
+}
+
+@Component({
+  selector: \\"my-basic-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <p
+      [attr.f]=\\"() => x\\"
+      [attr.f1]=\\"x => x\\"
+      [attr.f2]=\\"x => {}\\"
+      [attr.f3]=\\"function () {
+          return x;
+        }\\"
+      [attr.f4]=\\"function (x) {
+          return x;
+        }\\"
+      [attr.f5]=\\"function (x) {
+          return;
+        }\\"
+      [attr.f6]=\\"function () {
+          return;
+        }\\"
+      [attr.f7]=\\"(a, b, c) => a + b + c\\"
+      #_root
+    ></p>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyBasicComponent implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-basic-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > getterState 1`] = `
@@ -17941,7 +20245,7 @@ export class Button implements AfterViewInit {
     return \\"bar\\";
   }
   baz(i: number) {
-    return i + this.foo2.length;
+    return i + this.foo2().length;
   }
 
   constructor() {}
@@ -18012,7 +20316,7 @@ type RenderContentProps = {
 };
 
 import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
-import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+import { RenderBlock } from \\"./builder-render-block.raw\\";
 
 @Component({
   selector: \\"render-content\\",
@@ -18260,20 +20564,22 @@ export class MultipleOnUpdate implements AfterViewInit {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
-
-      // ---
-
-      console.log(\\"Runs on every update/rerender\\");
-    });
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
-
-      // ---
-
-      console.log(\\"Runs on every update/rerender as well\\");
-    });
+    effect(
+      () => {
+        console.log(\\"Runs on every update/rerender\\");
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        console.log(\\"Runs on every update/rerender as well\\");
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -18353,28 +20659,40 @@ export class MultipleOnUpdateWithDeps implements AfterViewInit {
   d = signal(\\"d\\");
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.a();
+        this.b();
+        // ---
 
-      // ---
+        console.log(\\"Runs when a or b changes\\", this.a(), this.b());
 
-      console.log(\\"Runs when a or b changes\\", this.a(), this.b());
-
-      if (this.a() === \\"a\\") {
-        this.a.set(\\"b\\");
+        if (this.a() === \\"a\\") {
+          this.a.set(\\"b\\");
+        }
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
       }
-    });
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+    );
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.c();
+        this.d();
+        // ---
 
-      // ---
+        console.log(\\"Runs when c or d changes\\", this.c(), this.d());
 
-      console.log(\\"Runs when c or d changes\\", this.c(), this.d());
-
-      if (this.a() === \\"a\\") {
-        this.a.set(\\"b\\");
+        if (this.a() === \\"a\\") {
+          this.a.set(\\"b\\");
+        }
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
       }
-    });
+    );
   }
 
   /**
@@ -19119,7 +21437,7 @@ export class OnInit implements AfterViewInit {
   }
 
   ngOnInit() {
-    this.name.set(defaultValues.name || this.name);
+    this.name.set(defaultValues.name || this.name());
     console.log(\\"set defaults with props\\");
   }
 
@@ -19397,13 +21715,14 @@ export class OnUpdate implements AfterViewInit {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
-
-      // ---
-
-      console.log(\\"Runs on every update/rerender\\");
-    });
+    effect(
+      () => {
+        console.log(\\"Runs on every update/rerender\\");
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -19488,18 +21807,25 @@ export class OnUpdateWithDeps implements AfterViewInit {
   b = signal(\\"b\\");
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.a();
+        this.b();
+        this.size();
+        // ---
 
-      // ---
-
-      console.log(
-        \\"Runs when a, b or size changes\\",
-        this.a(),
-        this.b(),
-        this.size()
-      );
-    });
+        console.log(
+          \\"Runs when a, b or size changes\\",
+          this.a(),
+          this.b(),
+          this.size()
+        );
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -19551,10 +21877,93 @@ export class OnUpdateWithDeps implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > outputEventBinding 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"nativeEvents\\":[\\"onFakeNative\\"]}}
+          */
+
+import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      <input
+        [attr.value]=\\"name()\\"
+        (change)=\\"name.set($event.target.value)\\"
+        (changeOrSomething)=\\"name.set($event.target.value)\\"
+        (fakenative)=\\"name.set($event.target.value)\\"
+        (animationend)=\\"name.set($event.target.value)\\"
+      />
+
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyComponent implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  name = signal(\\"Steve\\");
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
@@ -20011,20 +22420,21 @@ export class OnUpdate implements AfterViewInit {
   bar() {}
   zoo() {
     const params = {
-      cb: this.bar,
+      cb: this.bar(),
     };
   }
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
-
-      // ---
-
-      this.foo({
-        someOption: this.bar,
-      });
-    });
+    effect(
+      () => {
+        this.foo({
+          someOption: this.bar(),
+        });
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -20106,12 +22516,12 @@ import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
 import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
 import type { BuilderBlock } from \\"../../types/builder-block.js\\";
 import type { Nullable } from \\"../../types/typescript.js\\";
-import BlockStyles from \\"./block-styles.js\\";
+import { BlockStyles } from \\"./block-styles.lite\\";
 import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
 import RenderComponentWithContext from \\"./render-component-with-context.js\\";
 import type { RenderComponentProps } from \\"./render-component.js\\";
 import RenderComponent from \\"./render-component.js\\";
-import RenderRepeatedBlock from \\"./render-repeated-block.js\\";
+import { RenderRepeatedBlock } from \\"./render-repeated-block.lite\\";
 import type { RepeatData } from \\"./types.js\\";
 
 @Component({
@@ -20119,15 +22529,15 @@ import type { RepeatData } from \\"./types.js\\";
   standalone: true,
   imports: [CommonModule, RenderRepeatedBlock, RenderBlock, BlockStyles],
   template: \`
-    @if(shouldWrap()){ @if(isEmptyHtmlElement(tag)){
+    @if(shouldWrap()){ @if(isEmptyHtmlElement(tag())){
     <this.tag></this.tag>
-    } @if(!isEmptyHtmlElement(tag) && repeatItemData()){ @for (data of
+    } @if(!isEmptyHtmlElement(tag()) && repeatItemData()){ @for (data of
     repeatItemData();track trackByData0;let index = $index) {
     <render-repeated-block
       [repeatContext]=\\"data.context\\"
       [block]=\\"data.block\\"
     ></render-repeated-block>
-    } } @if(!isEmptyHtmlElement(tag) && !repeatItemData()){
+    } } @if(!isEmptyHtmlElement(tag()) && !repeatItemData()){
     <this.tag>
       <this.renderComponentTag></this.renderComponentTag>
 
@@ -20152,6 +22562,8 @@ import type { RepeatData } from \\"./types.js\\";
   styles: \`:host { display: contents; }\`,
 })
 export class RenderBlock implements AfterViewInit {
+  protected readonly isEmptyHtmlElement = isEmptyHtmlElement;
+
   block = input<RenderBlockProps[\\"block\\"]>();
   context = input<RenderBlockProps[\\"context\\"]>();
 
@@ -20159,9 +22571,9 @@ export class RenderBlock implements AfterViewInit {
 
   get component() {
     const componentName = getProcessedBlock({
-      block: this.block,
-      state: this.context.state,
-      context: this.context.context,
+      block: this.block(),
+      state: this.context().state,
+      context: this.context().context,
       shouldEvaluateBindings: false,
     }).component?.name;
 
@@ -20169,7 +22581,7 @@ export class RenderBlock implements AfterViewInit {
       return null;
     }
 
-    const ref = this.context.registeredComponents[componentName];
+    const ref = this.context().registeredComponents[componentName];
 
     if (!ref) {
       // TODO: Public doc page with more info about this message
@@ -20185,20 +22597,20 @@ export class RenderBlock implements AfterViewInit {
     return getBlockTag(this.useBlock());
   }
   get useBlock() {
-    return this.repeatItemData
-      ? this.block
+    return this.repeatItemData()
+      ? this.block()
       : getProcessedBlock({
-          block: this.block,
-          state: this.context.state,
-          context: this.context.context,
+          block: this.block(),
+          state: this.context().state,
+          context: this.context().context,
           shouldEvaluateBindings: true,
         });
   }
   get actions() {
     return getBlockActions({
-      block: this.useBlock,
-      state: this.context.state,
-      context: this.context.context,
+      block: this.useBlock(),
+      state: this.context().state,
+      context: this.context().context,
     });
   }
   get attributes() {
@@ -20208,8 +22620,8 @@ export class RenderBlock implements AfterViewInit {
       ...(TARGET === \\"reactNative\\"
         ? {
             style: getReactNativeBlockStyles({
-              block: this.useBlock,
-              context: this.context,
+              block: this.useBlock(),
+              context: this.context(),
               blockStyles: blockProperties.style,
             }),
           }
@@ -20217,12 +22629,12 @@ export class RenderBlock implements AfterViewInit {
     };
   }
   get shouldWrap() {
-    return !this.component?.noWrap;
+    return !this.component()?.noWrap;
   }
   get renderComponentProps() {
     return {
-      blockChildren: this.useChildren,
-      componentRef: this.component?.component,
+      blockChildren: this.useChildren(),
+      componentRef: this.component()?.component,
       componentOptions: {
         ...getBlockComponentOptions(this.useBlock()),
 
@@ -20230,14 +22642,14 @@ export class RenderBlock implements AfterViewInit {
          * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
          * they are provided to the component itself directly.
          */
-        ...(this.shouldWrap
+        ...(this.shouldWrap()
           ? {}
           : {
-              attributes: { ...this.attributes, ...this.actions },
+              attributes: { ...this.attributes(), ...this.actions() },
             }),
-        customBreakpoints: this.childrenContext?.content?.meta?.breakpoints,
+        customBreakpoints: this.childrenContext()?.content?.meta?.breakpoints,
       },
-      context: this.childrenContext,
+      context: this.childrenContext(),
     };
   }
   get useChildren() {
@@ -20245,7 +22657,7 @@ export class RenderBlock implements AfterViewInit {
     // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
     // but still receive and need to render children.
     // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
-    return this.useBlock.children ?? [];
+    return this.useBlock().children ?? [];
   }
   get childrenWithoutParentComponent() {
     /**
@@ -20255,15 +22667,15 @@ export class RenderBlock implements AfterViewInit {
      * blocks, and the children will be repeated within those blocks.
      */
     const shouldRenderChildrenOutsideRef =
-      !this.component?.component && !this.repeatItemData;
-    return shouldRenderChildrenOutsideRef ? this.useChildren : [];
+      !this.component()?.component && !this.repeatItemData();
+    return shouldRenderChildrenOutsideRef ? this.useChildren() : [];
   }
   get repeatItemData() {
     /**
      * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
      * which will not work if there is a repeat.
      */
-    const { repeat, ...blockWithoutRepeat } = this.block;
+    const { repeat, ...blockWithoutRepeat } = this.block();
 
     if (!repeat?.collection) {
       return undefined;
@@ -20271,8 +22683,8 @@ export class RenderBlock implements AfterViewInit {
 
     const itemsArray = evaluate({
       code: repeat.collection,
-      state: this.context.state,
-      context: this.context.context,
+      state: this.context().state,
+      context: this.context().context,
     });
 
     if (!Array.isArray(itemsArray)) {
@@ -20284,9 +22696,9 @@ export class RenderBlock implements AfterViewInit {
       repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
     const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
       context: {
-        ...this.context,
+        ...this.context(),
         state: {
-          ...this.context.state,
+          ...this.context().state,
           $index: index,
           $item: item,
           [itemNameToUse]: item,
@@ -20303,20 +22715,20 @@ export class RenderBlock implements AfterViewInit {
     }
 
     const styles = getReactNativeBlockStyles({
-      block: this.useBlock,
-      context: this.context,
-      blockStyles: this.attributes.style,
+      block: this.useBlock(),
+      context: this.context(),
+      blockStyles: this.attributes().style,
     });
     return extractTextStyles(styles);
   }
   get childrenContext() {
     return {
-      apiKey: this.context.apiKey,
-      state: this.context.state,
-      content: this.context.content,
-      context: this.context.context,
-      registeredComponents: this.context.registeredComponents,
-      inheritedStyles: this.inheritedTextStyles,
+      apiKey: this.context().apiKey,
+      state: this.context().state,
+      content: this.context().content,
+      context: this.context().context,
+      registeredComponents: this.context().registeredComponents,
+      inheritedStyles: this.inheritedTextStyles(),
     };
   }
   get renderComponentTag() {
@@ -20414,7 +22826,7 @@ import {
   sendComponentsToVisualEditor,
   trackClick,
 } from \\"@dummy/injection-js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.js\\";
+import { RenderBlocks } from \\"@dummy/RenderBlocks.lite.tsx\\";
 
 @Component({
   selector: \\"render-content\\",
@@ -20433,19 +22845,26 @@ import RenderBlocks from \\"@dummy/RenderBlocks.js\\";
 \`,
 })
 export class RenderContent implements AfterViewInit {
+  protected readonly trackClick = trackClick;
+
   customComponents = input<Props[\\"customComponents\\"]>();
   content = input<Props[\\"content\\"]>();
 
   _root = viewChild<ElementRef>(\\"_root\\");
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.content();
+        // ---
 
-      // ---
-
-      dispatchNewContentToVisualEditor(this.content());
-    });
+        dispatchNewContentToVisualEditor(this.content());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -20945,7 +23364,7 @@ export class SetState implements AfterViewInit {
   n = signal([\\"123\\"]);
 
   someFn() {
-    this.n[0] = \\"123\\";
+    this.n()[0] = \\"123\\";
   }
 
   constructor() {}
@@ -21408,7 +23827,7 @@ export class SignalsTestComponent implements AfterViewInit {
   _innerText = signal<Store[\\"_innerText\\"]>(\\"a\\");
 
   handleOutput() {
-    this._counter.update((_counter) => {
+    this._counter().update((_counter) => {
       _counter++;
       return _counter;
     });
@@ -21423,17 +23842,23 @@ export class SignalsTestComponent implements AfterViewInit {
   }
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
-      this.buttonRef();
-      // ---
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this._counter();
+        this.buttonRef();
+        // ---
 
-      console.log(this._counter(), this.buttonRef()?.nativeElement);
-      this.buttonRef()?.nativeElement?.setAttribute(
-        \\"data-counter\\",
-        this._counter().toString()
-      );
-    });
+        console.log(this._counter(), this.buttonRef()?.nativeElement);
+        this.buttonRef()?.nativeElement?.setAttribute(
+          \\"data-counter\\",
+          this._counter().toString()
+        );
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -21524,14 +23949,19 @@ export class MyBasicComponent implements AfterViewInit {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
+    effect(
+      () => {
+        // --- Mitosis: Workaround to make sure the effect() is triggered ---
+        this.id();
+        // ---
 
-      // ---
-
-      console.log(\\"props.id changed\\", this.id());
-      console.log(\\"props.foo.value.bar.baz changed\\", this.foo.bar.baz);
-    });
+        console.log(\\"props.id changed\\", this.id());
+        console.log(\\"props.foo.value.bar.baz changed\\", this.foo().bar.baz);
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -21834,8 +24264,8 @@ export class MyComponent implements AfterViewInit {
 
   asfas = signal(\\"asga\\");
   someCompute = signal(this.add(1, 2));
-  someOtherVal = signal(this.val);
-  sf = signal(this.add(this.val(), 34));
+  someOtherVal = signal(this.val());
+  sf = signal(this.add(this.val, 34));
 
   add(a, b) {
     return a + b;
@@ -21926,7 +24356,7 @@ export class MyComponent implements AfterViewInit {
 
   _root = viewChild<ElementRef>(\\"_root\\");
 
-  val = signal(this.value);
+  val = signal(this.value());
 
   constructor() {}
 
@@ -21998,6 +24428,8 @@ exports[`Angular signals > jsx > Typescript Test > store-async-function 1`] = `
 \`,styles: \`:host { display: contents; }\`
        })
        export class StringLiteralStore implements AfterViewInit {
+
+
 
 
 
@@ -22159,6 +24591,8 @@ exports[`Angular signals > jsx > Typescript Test > string-literal-store-kebab 1`
 \`,styles: \`:host { display: contents; }\`
        })
        export class StringLiteralStore implements AfterViewInit {
+
+
 
 
 
@@ -22396,7 +24830,7 @@ exports[`Angular signals > jsx > Typescript Test > subComponent 1`] = `
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import Foo from \\"./foo-sub-component.js\\";
+import { Foo } from \\"./foo-sub-component.lite\\";
 
 @Component({
   selector: \\"sub-component\\",
@@ -22915,7 +25349,7 @@ export class TypeGetterStore implements AfterViewInit {
       return \\"b\\";
     }
 
-    return this.name;
+    return this.name();
   }
   get test() {
     return \\"test\\";
@@ -23499,17 +25933,205 @@ export class MyBasicWebComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > basic 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      <input (change)=\\"name.set($event.target.value)\\" [attr.value]=\\"name()\\" />
+
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyComponent implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  name = signal(\\"Steve\\");
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > svelte > Javascript Test > bindGroup 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      <input
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        [attr.checked]=\\"tortilla() === 'Plain'\\"
+        (change)=\\"tortilla.set($event.target.value)\\"
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        [attr.checked]=\\"tortilla() === 'Whole wheat'\\"
+        (change)=\\"tortilla.set($event.target.value)\\"
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        [attr.checked]=\\"tortilla() === 'Spinach'\\"
+        (change)=\\"tortilla.set($event.target.value)\\"
+      />
+      <br />
+      <br />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        [attr.checked]=\\"fillings() === 'Rice'\\"
+        (change)=\\"fillings.set($event.target.value)\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        [attr.checked]=\\"fillings() === 'Beans'\\"
+        (change)=\\"fillings.set($event.target.value)\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        [attr.checked]=\\"fillings() === 'Cheese'\\"
+        (change)=\\"fillings.set($event.target.value)\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        [attr.checked]=\\"fillings() === 'Guac (extra)'\\"
+        (change)=\\"fillings.set($event.target.value)\\"
+      />
+      <p>Tortilla: {{tortilla()}}</p>
+      <p>Fillings: {{fillings()}}</p>
+    </div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyComponent implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  tortilla = signal(\\"Plain\\");
+  fillings = signal([]);
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > svelte > Javascript Test > bindProperty 1`] = `
@@ -24010,7 +26632,7 @@ export class MyComponent implements AfterViewInit {
   show = signal(true);
 
   toggle() {
-    this.show.set(!this.show);
+    this.show.set(!this.show());
   }
 
   constructor() {}
@@ -24074,7 +26696,7 @@ exports[`Angular signals > svelte > Javascript Test > imports 1`] = `
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import Button from \\"./Button.js\\";
+import { Button } from \\"./Button.lite\\";
 
 @Component({
   selector: \\"my-component\\",
@@ -24167,9 +26789,14 @@ export class MyComponent implements AfterViewInit {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   constructor() {
-    effect(() => {
-      console.log(\\"onAfterUpdate\\");
-    });
+    effect(
+      () => {
+        console.log(\\"onAfterUpdate\\");
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -24312,10 +26939,106 @@ export class MyComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > reactiveWithFn 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      <input
+        type=\\"number\\"
+        (change)=\\"a.set($event.target.value)\\"
+        [attr.value]=\\"a()\\"
+      />
+      <input
+        type=\\"number\\"
+        (change)=\\"b.set($event.target.value)\\"
+        [attr.value]=\\"b()\\"
+      />
+
+      Result: {{result()}}
+    </div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyComponent implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  a = signal(2);
+  b = signal(5);
+  result = signal(null);
+
+  calculateResult(a_, b_) {
+    this.result.set(a_ * b_);
+  }
+
+  constructor() {
+    effect(
+      () => {
+        this.calculateResult(this.a, this.b);
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > svelte > Javascript Test > slots 1`] = `
@@ -24558,17 +27281,205 @@ export class MyComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > basic 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      <input (change)=\\"name.set($event.target.value)\\" [attr.value]=\\"name()\\" />
+
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyComponent implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  name = signal(\\"Steve\\");
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > svelte > Typescript Test > bindGroup 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      <input
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        [attr.checked]=\\"tortilla() === 'Plain'\\"
+        (change)=\\"tortilla.set($event.target.value)\\"
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        [attr.checked]=\\"tortilla() === 'Whole wheat'\\"
+        (change)=\\"tortilla.set($event.target.value)\\"
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        [attr.checked]=\\"tortilla() === 'Spinach'\\"
+        (change)=\\"tortilla.set($event.target.value)\\"
+      />
+      <br />
+      <br />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        [attr.checked]=\\"fillings() === 'Rice'\\"
+        (change)=\\"fillings.set($event.target.value)\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        [attr.checked]=\\"fillings() === 'Beans'\\"
+        (change)=\\"fillings.set($event.target.value)\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        [attr.checked]=\\"fillings() === 'Cheese'\\"
+        (change)=\\"fillings.set($event.target.value)\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        [attr.checked]=\\"fillings() === 'Guac (extra)'\\"
+        (change)=\\"fillings.set($event.target.value)\\"
+      />
+      <p>Tortilla: {{tortilla()}}</p>
+      <p>Fillings: {{fillings()}}</p>
+    </div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyComponent implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  tortilla = signal(\\"Plain\\");
+  fillings = signal([]);
+
+  constructor() {}
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > svelte > Typescript Test > bindProperty 1`] = `
@@ -25069,7 +27980,7 @@ export class MyComponent implements AfterViewInit {
   show = signal(true);
 
   toggle() {
-    this.show.set(!this.show);
+    this.show.set(!this.show());
   }
 
   constructor() {}
@@ -25133,7 +28044,7 @@ exports[`Angular signals > svelte > Typescript Test > imports 1`] = `
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import Button from \\"./Button.js\\";
+import { Button } from \\"./Button.lite\\";
 
 @Component({
   selector: \\"my-component\\",
@@ -25226,9 +28137,14 @@ export class MyComponent implements AfterViewInit {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   constructor() {
-    effect(() => {
-      console.log(\\"onAfterUpdate\\");
-    });
+    effect(
+      () => {
+        console.log(\\"onAfterUpdate\\");
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
   }
 
   /**
@@ -25371,10 +28287,106 @@ export class MyComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > reactiveWithFn 1`] = `
-"--- MITOSIS ERROR ---
-    Component input has an event change that uses 'event.target.xxx'. 
-        This will cause an error in Angular.
-        Please create a new function with the EventTarget and use e.g '(event.target as HTMLInputElement).value'"
+"import {
+  Component,
+  AfterViewInit,
+  viewChild,
+  ElementRef,
+  effect,
+  signal,
+} from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div #_root>
+      <input
+        type=\\"number\\"
+        (change)=\\"a.set($event.target.value)\\"
+        [attr.value]=\\"a()\\"
+      />
+      <input
+        type=\\"number\\"
+        (change)=\\"b.set($event.target.value)\\"
+        [attr.value]=\\"b()\\"
+      />
+
+      Result: {{result()}}
+    </div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class MyComponent implements AfterViewInit {
+  _root = viewChild<ElementRef>(\\"_root\\");
+
+  a = signal(2);
+  b = signal(5);
+  result = signal(null);
+
+  calculateResult(a_, b_) {
+    this.result.set(a_ * b_);
+  }
+
+  constructor() {
+    effect(
+      () => {
+        this.calculateResult(this.a, this.b);
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  /**
+   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * @param element  the ref for the component
+   * @param customElementSelector  the custom element like \`my-component\`
+   */
+  private enableAttributePassing(
+    element: HTMLElement | null,
+    customElementSelector: string
+  ) {
+    const parent = element?.closest(customElementSelector);
+    if (element && parent) {
+      const attributes = parent.attributes;
+      for (let i = 0; i < attributes.length; i++) {
+        const attr = attributes.item(i);
+        if (
+          attr &&
+          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
+        }
+        if (attr && attr.name === \\"class\\") {
+          const isWebComponent = attr.value.includes(\\"hydrated\\");
+          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
+          const currentClass = element.getAttribute(\\"class\\");
+          element.setAttribute(
+            attr.name,
+            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
+          );
+          if (isWebComponent) {
+            // Stencil is using this class for lazy loading component
+            parent.setAttribute(\\"class\\", \\"hydrated\\");
+          } else {
+            parent.removeAttribute(attr.name);
+          }
+        }
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"my-component\\");
+  }
+}
+"
 `;
 
 exports[`Angular signals > svelte > Typescript Test > slots 1`] = `
@@ -25611,189 +28623,6 @@ export class MyComponent implements AfterViewInit {
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"my-component\\");
-  }
-}
-"
-`;
-
-exports[`Angular signals local > jsx > Only Test > basicRefAttributePassing 1`] = `
-"/**
-          useMetadata:
-          {\\"attributePassing\\":{\\"enabled\\":true}}
-          */
-
-import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  effect,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
-
-@Component({
-  selector: \\"basic-ref-attribute-passing-component\\",
-  standalone: true,
-  imports: [CommonModule],
-  template: \`
-    <button #buttonRef #_root>Attribute Passing</button>
-  \`,
-  styles: \`:host { display: contents; }\`,
-})
-export class BasicRefAttributePassingComponent implements AfterViewInit {
-  buttonRef = viewChild<ElementRef>(\\"buttonRef\\");
-  _root = viewChild<ElementRef>(\\"_root\\");
-
-  constructor() {
-    effect(() => {
-      // --- Mitosis: Workaround to make sure the effect() is triggered ---
-      this.buttonRef();
-      // ---
-
-      if (this.buttonRef()?.nativeElement) {
-        if (this.buttonRef()?.nativeElement.disabled) {
-          console.log(this.buttonRef()?.nativeElement);
-        }
-      }
-    });
-  }
-
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
-          }
-        }
-      }
-    }
-  }
-
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(
-      element,
-      \\"basic-ref-attribute-passing-component\\"
-    );
-  }
-}
-"
-`;
-
-exports[`Angular signals local > jsx > Only Test > eventProps 1`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  output,
-  effect,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
-
-import { EventProps, EventState } from \\"./event-props.type\\";
-
-@Component({
-  selector: \\"event-props-component\\",
-  standalone: true,
-  imports: [CommonModule],
-  template: \`
-    <button (click)=\\"handleClick()\\" #_root>Test</button>
-  \`,
-  styles: \`:host { display: contents; }\`,
-})
-export class EventPropsComponent implements AfterViewInit {
-  getVoid = output<
-    Parameters<Required<EventProps>[\\"onGetVoid\\"]>[number] | void
-  >();
-  enter = output<Parameters<Required<EventProps>[\\"onEnter\\"]>[number] | void>();
-
-  _root = viewChild<ElementRef>(\\"_root\\");
-
-  handleClick() {
-    if (this.getVoid.emit()) {
-      this.getVoid.emit()();
-    }
-
-    if (this.enter.emit()) {
-      console.log(this.enter.emit()());
-    }
-  }
-
-  constructor() {}
-
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
-          }
-        }
-      }
-    }
-  }
-
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"event-props-component\\");
   }
 }
 "

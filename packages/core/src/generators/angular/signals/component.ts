@@ -27,7 +27,7 @@ import { getProps } from '@/helpers/get-props';
 import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
 import { isUpperCase } from '@/helpers/is-upper-case';
 import { initializeOptions } from '@/helpers/merge-options';
-import { renderPreComponent } from '@/helpers/render-imports';
+import { ImportValues, renderPreComponent } from '@/helpers/render-imports';
 import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import {
   ROOT_REF,
@@ -40,8 +40,9 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '@/modules/plugins';
+import { MitosisComponent, MitosisImport } from '@/types/mitosis-component';
 import { TranspilerGenerator } from '@/types/transpiler';
-import { kebabCase } from 'lodash';
+import { kebabCase, uniq } from 'lodash';
 
 export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = (
   userOptions = {},
@@ -222,10 +223,21 @@ Please add a initial value for every state property even if it's \`undefined\`.`
           explicitImportFileExtension: options.explicitImportFileExtension,
           component: json,
           target: 'angular',
-          excludeMitosisComponents: !options.standalone && !options.preserveImports,
           preserveFileExtensions: options.preserveFileExtensions,
-          componentsUsed,
-          importMapper: options?.importMapper,
+          importMapper: (
+            _: MitosisComponent,
+            theImport: MitosisImport,
+            importedValues: ImportValues,
+          ) => {
+            const { defaultImport } = importedValues;
+            const { path } = theImport;
+
+            if (defaultImport && componentsUsed.includes(defaultImport)) {
+              return `import { ${defaultImport} } from '${path}';`;
+            }
+
+            return undefined;
+          },
         })}
     
         @Component({
@@ -234,10 +246,8 @@ Please add a initial value for every state property even if it's \`undefined\`.`
             .join(',')}
         })
         export class ${json.name} implements AfterViewInit {   
-          ${json
-            .compileContext!.angular!.extra!.importCalls.map(
-              (importCall: string) => `${importCall} = ${importCall};`,
-            )
+          ${uniq<string>(json.compileContext!.angular!.extra!.importCalls)
+            .map((importCall: string) => `protected readonly ${importCall} = ${importCall};`)
             .join('\n')}
          
           ${getInputs({
@@ -260,6 +270,10 @@ Please add a initial value for every state property even if it's \`undefined\`.`
               ? json.hooks.onUpdate
                   ?.map(
                     ({ code, depsArray }) =>
+                      /**
+                       * We need allowSignalWrites only for Angular 17 https://angular.dev/api/core/CreateEffectOptions#allowSignalWrites
+                       * TODO: remove on 2025-05-15 https://angular.dev/reference/releases#actively-supported-versions
+                       */
                       `effect(() => {
                       ${
                         depsArray?.length
@@ -271,7 +285,11 @@ Please add a initial value for every state property even if it's \`undefined\`.`
                           : ''
                       }
                       ${code}
-                      });`,
+                      },
+                      {
+                      allowSignalWrites: true, // Enable writing to signals inside effects
+                      }
+                      );`,
                   )
                   .join('\n')
               : ''

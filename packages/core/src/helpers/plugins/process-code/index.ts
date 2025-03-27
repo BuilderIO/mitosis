@@ -110,7 +110,7 @@ export const createCodeProcessorPlugin =
       }
     }
 
-    traverseNodes(json, (node) => {
+    traverseNodes(json, (node, context) => {
       if (processProperties) {
         for (const key in node.properties) {
           const value = node.properties[key];
@@ -129,7 +129,7 @@ export const createCodeProcessorPlugin =
       for (const key in node.bindings) {
         const value = node.bindings[key];
         if (value?.code) {
-          const result = codeProcessor('bindings', json, node)(value.code, key);
+          const result = codeProcessor('bindings', json, node)(value.code, key, context);
 
           if (typeof result === 'string') {
             value.code = result;

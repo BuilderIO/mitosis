@@ -4,13 +4,24 @@ import { ProcessBindingOptions, processClassComponentBinding } from '@/helpers/c
 import { checkIsEvent } from '@/helpers/event-handlers';
 import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
 import { MitosisComponent } from '@/types/mitosis-component';
-import { NodePath, types } from '@babel/core';
+import { ForNodeName } from '@/types/mitosis-node';
+import { NodePath } from '@babel/core';
 import {
   AssignmentExpression,
   BinaryExpression,
+  MemberExpression,
+  arrowFunctionExpression,
+  blockStatement,
+  callExpression,
+  expressionStatement,
+  identifier,
   isCallExpression,
   isIdentifier,
+  isIfStatement,
   isMemberExpression,
+  memberExpression,
+  returnStatement,
+  updateExpression,
 } from '@babel/types';
 
 const isStateOrPropsExpression = (path: NodePath) => {
@@ -29,14 +40,67 @@ const handleAssignmentExpression = (path: NodePath<AssignmentExpression | Binary
     isIdentifier(path.node.left.property) &&
     path.node.left.object.name === 'state'
   ) {
-    const root = types.memberExpression(path.node.left, types.identifier('set'));
+    const root = memberExpression(path.node.left, identifier('set'));
     root.extra = { ...root.extra, updateExpression: true };
-    const call = types.callExpression(root, [path.node.right]);
+    const call = callExpression(root, [path.node.right]);
     path.replaceWith(call);
   }
 };
 
-const transformHooksAndState = (code: string) => {
+const handleMemberExpression = (path: NodePath<MemberExpression>) => {
+  if (path.node.extra?.makeCallExpressionDone || path.parentPath?.node.extra?.updateExpression) {
+    // Don't add a function if we've done it already
+    return;
+  }
+
+  if (
+    isCallExpression(path.parent) &&
+    isMemberExpression(path.parent.callee) &&
+    isIdentifier(path.parent.callee.object) &&
+    (path.parent.callee.object.name === 'props' || path.parent.callee.object.name === 'state') &&
+    !path.parent.callee.extra?.updateExpression
+  ) {
+    // Don't add a function if it is already
+    return;
+  }
+
+  if (isStateOrPropsExpression(path)) {
+    path.node.extra = { ...path.node.extra, makeCallExpressionDone: true };
+    path.replaceWith(callExpression(path.node, []));
+  }
+};
+
+const handleHookAndStateOnEvents = (
+  path: NodePath<MemberExpression>,
+  isHookDepArray?: boolean,
+): boolean => {
+  if (isIdentifier(path.node.property) && checkIsEvent(path.node.property.name)) {
+    if (isIfStatement(path.parent)) {
+      // We don't do anything if the event is in an IfStatement
+      path.node.extra = { ...path.node.extra, updateExpression: true };
+      return true;
+    } else if (
+      isCallExpression(path.parent) &&
+      isIdentifier(path.node.object) &&
+      isMemberExpression(path.parent.callee)
+    ) {
+      // We add "emit" to events
+      const root = memberExpression(path.node, identifier('emit'));
+      root.extra = { ...root.extra, updateExpression: true };
+      path.replaceWith(root);
+    } else if (isHookDepArray && isIdentifier(path.node.object)) {
+      const iden = identifier(
+        `// "${path.node.object.name}.${path.node.property.name}" is an event skip it.`,
+      );
+
+      path.replaceWith(iden);
+      return true;
+    }
+  }
+  return false;
+};
+
+const transformHooksAndState = (code: string, isHookDepArray?: boolean) => {
   return babelTransformExpression(code, {
     AssignmentExpression(path) {
       handleAssignmentExpression(path);
@@ -56,45 +120,34 @@ const transformHooksAndState = (code: string) => {
         path.node.argument.object.name === 'state' &&
         isIdentifier(path.node.argument.property)
       ) {
-        const root = types.memberExpression(path.node.argument, types.identifier('update'));
+        const root = memberExpression(path.node.argument, identifier('update'));
         const argument = path.node.argument.property;
-        const blockStatement = types.blockStatement([
-          types.expressionStatement(types.updateExpression(path.node.operator, argument)),
-          types.returnStatement(argument),
+        const block = blockStatement([
+          expressionStatement(updateExpression(path.node.operator, argument)),
+          returnStatement(argument),
         ]);
 
-        const arrowFunctionExpression = types.arrowFunctionExpression([argument], blockStatement);
-        const call = types.callExpression(root, [arrowFunctionExpression]);
+        const arrowFunction = arrowFunctionExpression([argument], block);
+        const call = callExpression(root, [arrowFunction]);
         path.replaceWith(call);
       }
     },
     MemberExpression(path) {
-      if (path.node.extra?.makeCallExpressionDone || path.parentPath.node.extra?.updateExpression) {
+      const skip = handleHookAndStateOnEvents(path, isHookDepArray);
+      if (skip) {
         return;
       }
 
-      // Event handling
-      if (isIdentifier(path.node.property) && checkIsEvent(path.node.property.name)) {
-        if (
-          isCallExpression(path.parent) &&
-          isIdentifier(path.node.object) &&
-          isMemberExpression(path.parent.callee)
-        ) {
-          // We add "emit" to events
-          const root = types.memberExpression(path.node, types.identifier('emit'));
-          root.extra = { ...root.extra, updateExpression: true };
-          path.replaceWith(root);
-        }
-        // We don't do anything if the event is in an e.g. IfStatement
-        return;
-      }
-
-      if (isStateOrPropsExpression(path)) {
-        path.node.extra = { ...path.node.extra, makeCallExpressionDone: true };
-        path.replaceWith(types.callExpression(path.node, []));
-      }
+      handleMemberExpression(path);
     },
   });
+};
+
+const addToImportCall = (json: MitosisComponent, importName: string) => {
+  const isImportCall = json.imports.find((imp) => imp.imports[importName]);
+  if (isImportCall) {
+    json.compileContext!.angular!.extra!.importCalls.push(importName);
+  }
 };
 
 const transformBindings = (json: MitosisComponent, code: string): string => {
@@ -109,11 +162,13 @@ ${code}`);
     CallExpression(path) {
       // If we call a function from an import we need to add it to the Component as well
       if (isIdentifier(path.node.callee)) {
-        const importName = path.node.callee.name;
-        const isImportCall = json.imports.find((imp) => imp.imports[importName]);
-        if (isImportCall) {
-          json.compileContext!.angular!.extra!.importCalls.push(importName);
-        }
+        addToImportCall(json, path.node.callee.name);
+      }
+    },
+    Identifier(path) {
+      // If we use a constant from an import we need to add it to the Component as well
+      if (isIdentifier(path.node)) {
+        addToImportCall(json, path.node.name);
       }
     },
     StringLiteral(path) {
@@ -126,16 +181,7 @@ ${code}`);
       handleAssignmentExpression(path);
     },
     MemberExpression(path) {
-      if (
-        // Don't add a function if it is already one
-        !(isCallExpression(path.parent) && isMemberExpression(path.parent.callee)) &&
-        isStateOrPropsExpression(path) &&
-        !path.node.extra?.makeCallExpressionDone &&
-        !path.parent.extra?.updateExpression
-      ) {
-        path.node.extra = { ...path.node.extra, makeCallExpressionDone: true };
-        path.replaceWith(types.callExpression(path.node, []));
-      }
+      handleMemberExpression(path);
     },
   });
 };
@@ -150,10 +196,23 @@ export const getCodeProcessorPlugins = (
     CODE_PROCESSOR_PLUGIN((codeType) => {
       switch (codeType) {
         case 'bindings':
-          return (code) => {
+          return (code, key, context) => {
+            let replaceWith = '';
+            if (key === 'key') {
+              /**
+               * If we have a key attribute we need to check if it is inside a @for loop.
+               * We will create a new function for the key attribute.
+               * Therefore, we need to add "this" to state and props.
+               */
+              const isForParent = context?.parent?.parent?.node?.name === ForNodeName;
+              if (isForParent) {
+                replaceWith = 'this.';
+              }
+            }
+
             return processClassComponentBinding(json, transformBindings(json, code), {
               ...processBindingOptions,
-              replaceWith: '',
+              replaceWith,
             });
           };
         case 'hooks-deps-array':
@@ -162,7 +221,7 @@ export const getCodeProcessorPlugins = (
           return (code) => {
             return processClassComponentBinding(
               json,
-              transformHooksAndState(code),
+              transformHooksAndState(code, codeType === 'hooks-deps-array'),
               processBindingOptions,
             );
           };

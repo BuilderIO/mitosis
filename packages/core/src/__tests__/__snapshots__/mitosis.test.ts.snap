@@ -443,9 +443,61 @@ export default function MyBasicRefComponent(props) {
 "
 `;
 
-exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > BasicRefAssignment 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > BasicRefAssignment 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
 
-exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > BasicRefPrevious 1`] = `"unknown: Maximum call stack size exceeded"`;
+export default function MyBasicRefAssignmentComponent(props) {
+  const state = useStore({
+    handlerClick: function handlerClick(event) {
+      event.preventDefault();
+      console.log(\\"current value\\", holdValueRef);
+      holdValueRef = holdValueRef + \\"JS\\";
+    },
+  });
+
+  return [
+    <div>
+      <button onClick={async (evt) => await state.handlerClick(evt)}>
+        Click
+      </button>
+    </div>,
+  ];
+}
+"
+`;
+
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > BasicRefPrevious 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export function usePrevious(value) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+export default function MyPreviousComponent(props) {
+  const state = useStore({ count: 0 });
+
+  return [
+    <div>
+      <h1>
+        Now:
+        {state.count}, before:
+        {prevCount}
+      </h1>
+      <button onClick={(event) => (state.count += 1)}>Increment</button>
+    </div>,
+  ];
+}
+"
+`;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Javascript Test > Button 1`] = `
 "import { Show } from \\"@components\\";
@@ -2077,6 +2129,10 @@ export default function EventPropsComponent(props) {
 
       if (props.onEnter) {
         console.log(props.onEnter());
+      }
+
+      if (props.onPass) {
+        props.onPass(\\"test\\");
       }
     },
   });
@@ -3821,9 +3877,69 @@ export default function MyBasicRefComponent(props) {
 "
 `;
 
-exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > BasicRefAssignment 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > BasicRefAssignment 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
 
-exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > BasicRefPrevious 1`] = `"unknown: Maximum call stack size exceeded"`;
+export interface Props {
+  showInput: boolean;
+}
+
+export default function MyBasicRefAssignmentComponent(props) {
+  const state = useStore({
+    handlerClick: function handlerClick(event: Event) {
+      event.preventDefault();
+      console.log(\\"current value\\", holdValueRef);
+      holdValueRef = holdValueRef + \\"JS\\";
+    },
+  });
+
+  return [
+    <div>
+      <button onClick={async (evt) => await state.handlerClick(evt)}>
+        Click
+      </button>
+    </div>,
+  ];
+}
+"
+`;
+
+exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > BasicRefPrevious 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+export default function MyPreviousComponent(props) {
+  const state = useStore({ count: 0 });
+
+  return [
+    <div>
+      <h1>
+        Now:
+        {state.count}, before:
+        {prevCount}
+      </h1>
+      <button onClick={(event) => (state.count += 1)}>Increment</button>
+    </div>,
+  ];
+}
+"
+`;
 
 exports[`Mitosis, format: legacy (native loops and conditionals) > jsx > Typescript Test > Button 1`] = `
 "import { Show } from \\"@components\\";
@@ -5716,6 +5832,10 @@ export default function EventPropsComponent(props) {
 
       if (props.onEnter) {
         console.log(props.onEnter());
+      }
+
+      if (props.onPass) {
+        props.onPass(\\"test\\");
       }
     },
   });
@@ -8255,9 +8375,61 @@ export default function MyBasicRefComponent(props) {
 "
 `;
 
-exports[`Mitosis, format: legacy > jsx > Javascript Test > BasicRefAssignment 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Mitosis, format: legacy > jsx > Javascript Test > BasicRefAssignment 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
 
-exports[`Mitosis, format: legacy > jsx > Javascript Test > BasicRefPrevious 1`] = `"unknown: Maximum call stack size exceeded"`;
+export default function MyBasicRefAssignmentComponent(props) {
+  const state = useStore({
+    handlerClick: function handlerClick(event) {
+      event.preventDefault();
+      console.log(\\"current value\\", holdValueRef);
+      holdValueRef = holdValueRef + \\"JS\\";
+    },
+  });
+
+  return (
+    <div>
+      <button onClick={async (evt) => await state.handlerClick(evt)}>
+        Click
+      </button>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Mitosis, format: legacy > jsx > Javascript Test > BasicRefPrevious 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export function usePrevious(value) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+export default function MyPreviousComponent(props) {
+  const state = useStore({ count: 0 });
+
+  return (
+    <div>
+      <h1>
+        Now:
+        {state.count}, before:
+        {prevCount}
+      </h1>
+      <button onClick={(event) => (state.count += 1)}>Increment</button>
+    </div>
+  );
+}
+"
+`;
 
 exports[`Mitosis, format: legacy > jsx > Javascript Test > Button 1`] = `
 "import { Show } from \\"@builder.io/mitosis\\";
@@ -9902,6 +10074,10 @@ export default function EventPropsComponent(props) {
 
       if (props.onEnter) {
         console.log(props.onEnter());
+      }
+
+      if (props.onPass) {
+        props.onPass(\\"test\\");
       }
     },
   });
@@ -11688,9 +11864,69 @@ export default function MyBasicRefComponent(props) {
 "
 `;
 
-exports[`Mitosis, format: legacy > jsx > Typescript Test > BasicRefAssignment 1`] = `"unknown: Maximum call stack size exceeded"`;
+exports[`Mitosis, format: legacy > jsx > Typescript Test > BasicRefAssignment 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
 
-exports[`Mitosis, format: legacy > jsx > Typescript Test > BasicRefPrevious 1`] = `"unknown: Maximum call stack size exceeded"`;
+export interface Props {
+  showInput: boolean;
+}
+
+export default function MyBasicRefAssignmentComponent(props) {
+  const state = useStore({
+    handlerClick: function handlerClick(event: Event) {
+      event.preventDefault();
+      console.log(\\"current value\\", holdValueRef);
+      holdValueRef = holdValueRef + \\"JS\\";
+    },
+  });
+
+  return (
+    <div>
+      <button onClick={async (evt) => await state.handlerClick(evt)}>
+        Click
+      </button>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Mitosis, format: legacy > jsx > Typescript Test > BasicRefPrevious 1`] = `
+"import { useStore } from \\"@builder.io/mitosis\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+export default function MyPreviousComponent(props) {
+  const state = useStore({ count: 0 });
+
+  return (
+    <div>
+      <h1>
+        Now:
+        {state.count}, before:
+        {prevCount}
+      </h1>
+      <button onClick={(event) => (state.count += 1)}>Increment</button>
+    </div>
+  );
+}
+"
+`;
 
 exports[`Mitosis, format: legacy > jsx > Typescript Test > Button 1`] = `
 "import { Show } from \\"@builder.io/mitosis\\";
@@ -13604,6 +13840,10 @@ export default function EventPropsComponent(props) {
 
       if (props.onEnter) {
         console.log(props.onEnter());
+      }
+
+      if (props.onPass) {
+        props.onPass(\\"test\\");
       }
     },
   });
@@ -18085,6 +18325,10 @@ function EventPropsComponent(props) {
     if (props.onEnter) {
       console.log(props.onEnter());
     }
+
+    if (props.onPass) {
+      props.onPass(\\"test\\");
+    }
   }
 
   return <button onClick={(event) => handleClick()}>Test</button>;
@@ -22008,6 +22252,10 @@ function EventPropsComponent(props) {
 
     if (props.onEnter) {
       console.log(props.onEnter());
+    }
+
+    if (props.onPass) {
+      props.onPass(\\"test\\");
     }
   }
 

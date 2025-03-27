@@ -2947,6 +2947,7 @@ exports[`Stencil > jsx > Javascript Test > eventProps 1`] = `
 export class EventPropsComponent {
   @Event() getVoid: any;
   @Event() enter: any;
+  @Event() pass: any;
 
   handleClick() {
     if (this.getVoid) {
@@ -2955,6 +2956,10 @@ export class EventPropsComponent {
 
     if (this.enter) {
       console.log(this.enter.emit());
+    }
+
+    if (this.pass) {
+      this.pass.emit(\\"test\\");
     }
   }
 
@@ -7567,6 +7572,7 @@ import {
 export class EventPropsComponent {
   @Event() getVoid: EventEmitter<ReturnType<Required<EventProps>[\\"onGetVoid\\"]>>;
   @Event() enter: EventEmitter<ReturnType<Required<EventProps>[\\"onEnter\\"]>>;
+  @Event() pass: EventEmitter<ReturnType<Required<EventProps>[\\"onPass\\"]>>;
 
   handleClick() {
     if (this.getVoid) {
@@ -7575,6 +7581,10 @@ export class EventPropsComponent {
 
     if (this.enter) {
       console.log(this.enter.emit());
+    }
+
+    if (this.pass) {
+      this.pass.emit(\\"test\\");
     }
   }
 

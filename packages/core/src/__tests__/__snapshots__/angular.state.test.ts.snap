@@ -4964,6 +4964,7 @@ import { Output, EventEmitter, Component } from \\"@angular/core\\";
 export default class EventPropsComponent {
   @Output() onGetVoid = new EventEmitter<any>();
   @Output() onEnter = new EventEmitter<any>();
+  @Output() onPass = new EventEmitter<any>();
 
   handleClick() {
     if (this.onGetVoid) {
@@ -4972,6 +4973,10 @@ export default class EventPropsComponent {
 
     if (this.onEnter) {
       console.log(this.onEnter.emit());
+    }
+
+    if (this.onPass) {
+      this.onPass.emit(\\"test\\");
     }
   }
 }
@@ -13753,6 +13758,7 @@ import { EventProps, EventState } from \\"./event-props.type\\";
 export default class EventPropsComponent {
   @Output() onGetVoid = new EventEmitter<any>();
   @Output() onEnter = new EventEmitter<any>();
+  @Output() onPass = new EventEmitter<any>();
 
   handleClick(): ReturnType<EventState[\\"handleClick\\"]> {
     if (this.onGetVoid) {
@@ -13761,6 +13767,10 @@ export default class EventPropsComponent {
 
     if (this.onEnter) {
       console.log(this.onEnter.emit());
+    }
+
+    if (this.onPass) {
+      this.onPass.emit(\\"test\\");
     }
   }
 }

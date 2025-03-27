@@ -38,7 +38,10 @@ export const getDomRefs = ({
   mapRefs(json, (refName, extra) => {
     const isDomRef = domRefs.has(refName);
     let additional = nativeElement;
-    if (extra?.type === 'deps-array' && options.api === 'signals') {
+    if (extra?.type === 'bindings' && options.api === 'signals') {
+      // we don't need nativeElement and this. for bindings in signals
+      return refName;
+    } else if (extra?.type === 'hooks-deps-array' && options.api === 'signals') {
       // we don't need nativeElement for deps-array in hooks
       additional = '()';
     } else if (extra?.path.parentPath && isAssignmentExpression(extra?.path.parentPath.container)) {
