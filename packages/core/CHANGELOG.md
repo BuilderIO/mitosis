@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.7.5
+
+### Patch Changes
+
+- 5dd61e2: [Vue] Fix: use $tagName from Builder JSON when available
+- 0a49334: [stencil] Fix issue for `EventEmitter` using Parameters as type instead of ReturnType
+
 ## 0.7.4
 
 ### Patch Changes
