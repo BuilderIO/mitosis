@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.6
+
+### Patch Changes
+
+- cb7be32: [all] export `types.ts` to enable `@type` comment for JS like this: `/** @type {import('@builder.io/mitosis').ToReactOptions} */`
+
 ## 0.7.5
 
 ### Patch Changes
