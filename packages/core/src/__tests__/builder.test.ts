@@ -595,7 +595,7 @@ describe('Builder', () => {
 
     expect(vue).toMatchInlineSnapshot(`
       "<template>
-        <ProgressBar :num=\\"10\\"><CounterComponent></CounterComponent></ProgressBar>
+        <progress-bar :num=\\"10\\"><counter></counter></progress-bar>
       </template>
 
       <script>
@@ -603,7 +603,6 @@ describe('Builder', () => {
 
       export default defineComponent({
         name: \\"my-component\\",
-        components: { ProgressBar: ProgressBar, CounterComponent: CounterComponent },
       });
       </script>"
     `);
