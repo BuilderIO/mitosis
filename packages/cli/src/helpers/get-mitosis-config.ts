@@ -1,32 +1,51 @@
 import { MitosisConfig } from '@builder.io/mitosis';
-import fs from 'fs';
-import { resolve } from 'path';
+
+import { cosmiconfig, CosmiconfigResult } from 'cosmiconfig';
+import { basename, extname, resolve } from 'path';
+
+function getFilenameWithoutExtension(filePath: string): string {
+  const fileName = basename(filePath);
+  const fileExtension = extname(fileName);
+  return fileName.replace(fileExtension, '');
+}
 
 /**
  * @param relPath { string } the relative path from pwd to config-file
  */
-export function getMitosisConfig(relPath?: string): MitosisConfig | null {
-  if (!relPath) {
-    const path = resolve(process.cwd(), 'mitosis.config');
+export async function getMitosisConfig(relPath?: string): Promise<MitosisConfig | null> {
+  const moduleName = relPath ? getFilenameWithoutExtension(relPath) : 'mitosis.config';
 
-    if (fs.existsSync(path + '.js')) {
-      const module = require(path + '.js');
-      return module?.default || module || null;
-    }
+  const explorerSync = cosmiconfig(moduleName, {
+    searchPlaces: [
+      'package.json',
+      `${moduleName}.json`,
+      `${moduleName}.yaml`,
+      `${moduleName}.yml`,
+      `${moduleName}.js`,
+      `${moduleName}.ts`,
+      `${moduleName}.mjs`,
+      `${moduleName}.cjs`,
+      `.config/${moduleName}.json`,
+      `.config/${moduleName}.yaml`,
+      `.config/${moduleName}.yml`,
+      `.config/${moduleName}.js`,
+      `.config/${moduleName}.ts`,
+      `.config/${moduleName}.mjs`,
+      `.config/${moduleName}.cjs`,
+    ],
+  });
 
-    if (fs.existsSync(path + '.cjs')) {
-      const module = require(path + '.cjs');
-      return module?.default || module || null;
-    }
+  let configResult: CosmiconfigResult;
 
-    return null;
+  if (relPath) {
+    const path = resolve(process.cwd(), relPath);
+    configResult = await explorerSync.load(path);
+  } else {
+    configResult = await explorerSync.search();
   }
 
-  const path = resolve(process.cwd(), relPath);
-
-  if (fs.existsSync(path)) {
-    const module = require(path);
-    return module?.default || module || null;
+  if (configResult && !configResult.isEmpty) {
+    return configResult.config;
   }
 
   return null;

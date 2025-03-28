@@ -90,7 +90,7 @@ export type MitosisConfig = {
    * Configure a custom function that provides the output path for each target.
    * If you provide this function, you must provide a value for every target yourself.
    */
-  getTargetPath: ({ target }: { target: Target }) => string;
+  getTargetPath?: ({ target }: { target: Target }) => string;
 
   /**
    * Provide options to the parser.
