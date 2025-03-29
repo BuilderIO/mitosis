@@ -32,11 +32,22 @@ const cwd = process.cwd();
 /**
  * This provides the default path for a target's contents, both in the input and output directories.
  */
-const getTargetPath = ({ target }: { target: Target }): string => {
+const getDefaultTargetPath = ({ target }: { target: Target }): string => {
   switch (target) {
     default:
       return kebabCase(target);
   }
+};
+
+const getTargetPath = (options: MitosisConfig, target: Target): string => {
+  if (options.getTargetPath) {
+    const targetPath = options.getTargetPath({ target });
+    if (targetPath) {
+      return targetPath;
+    }
+  }
+
+  return getDefaultTargetPath({ target });
 };
 
 export const sortPlugins = (plugins?: MitosisPlugin[]): MitosisPlugin[] => {
@@ -50,7 +61,7 @@ const DEFAULT_CONFIG = {
   dest: 'output',
   files: 'src/*',
   overridesDir: 'overrides',
-  getTargetPath,
+  getTargetPath: getDefaultTargetPath,
   options: {},
 } satisfies Partial<MitosisConfig>;
 
@@ -88,10 +99,7 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => {
 };
 
 async function clean(options: MitosisConfig, target: Target) {
-  const targetPath = options.getTargetPath
-    ? options.getTargetPath({ target })
-    : getTargetPath({ target });
-
+  const targetPath = getTargetPath(options, target);
   const outputPattern = `${options.dest}/${targetPath}/${options.files}`;
   const oldFiles = getFiles({ files: outputPattern, exclude: options.exclude });
 
@@ -263,9 +271,7 @@ const getTargetContexts = (options: MitosisConfig) =>
     (target): TargetContext => ({
       target,
       generator: options.generators?.[target] as any,
-      outputPath: options.getTargetPath
-        ? options.getTargetPath({ target })
-        : getTargetPath({ target }),
+      outputPath: getTargetPath(options, target),
     }),
   );
 
@@ -353,7 +359,7 @@ async function buildAndOutputComponentFiles({
      * user-provided alternative is only for the output path, not the override input path.
      */
 
-    const overrideFilePath = `${options.overridesDir}/${getTargetPath({ target })}`;
+    const overrideFilePath = `${options.overridesDir}/${getDefaultTargetPath({ target })}`;
     const overrideFile = await getOverrideFile({
       filename: outputFilePath,
       path: overrideFilePath,
@@ -471,7 +477,9 @@ async function buildNonComponentFiles(args: TargetContextWithConfig) {
        * NOTE: we use the default `getTargetPath` even if a user-provided alternative is given. That's because the
        * user-provided alternative is only for the output path, not the override input path.
        */
-      const overrideFilePath = `${options.overridesDir}/${getTargetPath({ target })}/${path}`;
+      const overrideFilePath = `${options.overridesDir}/${getDefaultTargetPath({
+        target,
+      })}/${path}`;
 
       const overrideFile = (await pathExists(overrideFilePath))
         ? await readFile(overrideFilePath, 'utf8')
