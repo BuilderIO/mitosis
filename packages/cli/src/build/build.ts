@@ -21,8 +21,7 @@ import {
 import debug from 'debug';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { outputFile, pathExists, pathExistsSync, readFile, remove } from 'fs-extra';
-import { kebabCase } from 'lodash';
-import { fastClone } from '../helpers/fast-clone';
+import { clone, kebabCase } from 'lodash';
 import { generateContextFile } from './helpers/context';
 import { getFiles } from './helpers/files';
 import { getOverrideFile } from './helpers/overrides';
@@ -89,7 +88,11 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => {
 };
 
 async function clean(options: MitosisConfig, target: Target) {
-  const outputPattern = `${options.dest}/${options.getTargetPath({ target })}/${options.files}`;
+  const targetPath = options.getTargetPath
+    ? options.getTargetPath({ target })
+    : getTargetPath({ target });
+
+  const outputPattern = `${options.dest}/${targetPath}/${options.files}`;
   const oldFiles = getFiles({ files: outputPattern, exclude: options.exclude });
 
   const newFilenames = getFiles({ files: options.files, exclude: options.exclude })
@@ -260,7 +263,9 @@ const getTargetContexts = (options: MitosisConfig) =>
     (target): TargetContext => ({
       target,
       generator: options.generators?.[target] as any,
-      outputPath: options.getTargetPath({ target }),
+      outputPath: options.getTargetPath
+        ? options.getTargetPath({ target })
+        : getTargetPath({ target }),
     }),
   );
 
@@ -306,7 +311,7 @@ export async function build(config?: MitosisConfig) {
       await clean(options, targetContext.target);
       // clone mitosis JSONs for each target, so we can modify them in each generator without affecting future runs.
       // each generator also clones the JSON before manipulating it, but this is an extra safety measure.
-      const files = fastClone(mitosisComponents);
+      const files = clone(mitosisComponents);
 
       const x = await Promise.all([
         buildAndOutputNonComponentFiles({ ...targetContext, options }),
