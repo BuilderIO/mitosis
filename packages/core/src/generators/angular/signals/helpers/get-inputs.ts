@@ -1,28 +1,25 @@
-import { ToAngularOptions } from '@/generators/angular/types';
 import type { MitosisComponent } from '@/types/mitosis-component';
 
-export const getInputs = ({
+export const getSignalInputs = ({
   props,
   json,
-  options,
+  writeableSignals,
+  requiredSignals,
 }: {
   props: string[];
   json: MitosisComponent;
-  options: ToAngularOptions;
+  writeableSignals: string[];
+  requiredSignals: string[];
 }) => {
   const propsTypeRef = json.propsTypeRef !== 'any' ? json.propsTypeRef : undefined;
-
   return props
     .map((prop) => {
       const hasDefaultProp = json.defaultProps && json.defaultProps.hasOwnProperty(prop);
       const propType = propsTypeRef ? `${propsTypeRef}["${prop}"]` : 'any';
-      let propDeclaration = `@Input() ${prop}${
-        options.typescript ? `${hasDefaultProp ? '' : '!'}: ${propType}` : ''
-      }`;
-      if (hasDefaultProp) {
-        propDeclaration += ` = defaultProps["${prop}"]`;
-      }
-      return propDeclaration;
+      const defaultProp = hasDefaultProp ? `defaultProps["${prop}"]` : '';
+      return `${prop} = ${writeableSignals.includes(prop) ? 'model' : 'input'}${
+        requiredSignals.includes(prop) ? 'required' : ''
+      }<${propType}>(${defaultProp})`;
     })
     .join('\n');
 };

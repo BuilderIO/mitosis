@@ -4,12 +4,12 @@ import {
   traverseAndCheckIfInnerHTMLIsUsed,
 } from '@/generators/angular/helpers';
 import { tryFormat } from '@/generators/angular/helpers/format';
-import { getInputs } from '@/generators/angular/helpers/get-inputs';
 import { getOutputs } from '@/generators/angular/helpers/get-outputs';
 import { getDomRefs } from '@/generators/angular/helpers/get-refs';
 import { getAngularStyles } from '@/generators/angular/helpers/get-styles';
 import { blockToAngularSignals } from '@/generators/angular/signals/blocks';
 import { getAngularCoreImportsAsString } from '@/generators/angular/signals/helpers';
+import { getSignalInputs } from '@/generators/angular/signals/helpers/get-inputs';
 import { getCodeProcessorPlugins } from '@/generators/angular/signals/plugins/get-code-processor-plugins';
 import {
   BUILT_IN_COMPONENTS,
@@ -110,6 +110,8 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
     // Mitosis Metadata
     const useMetadata = json.meta?.useMetadata;
     const onPush = useMetadata?.angular?.changeDetection == 'OnPush';
+    const writeableSignals = useMetadata?.angular?.signals?.writeable || [];
+    const requiredSignals = useMetadata?.angular?.signals?.required || [];
 
     // Context & Injectables
     const injectables: string[] = Object.entries(json?.context?.get || {}).map(
@@ -205,6 +207,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       refs: domRefs.size !== 0,
       input: props.length !== 0,
       output: events.length !== 0,
+      model: writeableSignals.length !== 0,
       effect: json.hooks.onUpdate?.length !== 0,
       signal: dataString.length !== 0,
       onPush,
@@ -250,9 +253,10 @@ Please add a initial value for every state property even if it's \`undefined\`.`
             .map((importCall: string) => `protected readonly ${importCall} = ${importCall};`)
             .join('\n')}
          
-          ${getInputs({
+          ${getSignalInputs({
             json,
-            options,
+            writeableSignals,
+            requiredSignals,
             props: Array.from(props),
           })}    
           ${getOutputs({ json, outputVars: events, api: options.api })}

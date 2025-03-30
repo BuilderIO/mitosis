@@ -13120,7 +13120,12 @@ export default class ShowRootText {
 `;
 
 exports[`Angular > jsx > Javascript Test > signals 1`] = `
-"import { NgModule } from \\"@angular/core\\";
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"signals\\":{\\"writeableSignals\\":[\\"disabled\\"]}}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import {
@@ -13137,7 +13142,12 @@ const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
 @Component({
   selector: \\"signals-test-component\\",
   template: \`
-    <button [attr.aria-label]=\\"label\\" #buttonRef (click)=\\"handleOutput()\\">
+    <button
+      [attr.aria-label]=\\"label\\"
+      #buttonRef
+      [attr.disabled]=\\"disabled\\"
+      (click)=\\"handleOutput()\\"
+    >
       {{testInput}}
     </button>
   \`,
@@ -13152,6 +13162,7 @@ const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
 export default class SignalsTestComponent {
   @Input() testInput = defaultProps[\\"testInput\\"];
   @Input() label = defaultProps[\\"label\\"];
+  @Input() disabled;
   @Output() onTestOutput = new EventEmitter<any>();
 
   @ViewChild(\\"buttonRef\\") buttonRef;
@@ -13189,7 +13200,12 @@ export class SignalsTestComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > signals 2`] = `
-"import {
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"signals\\":{\\"writeableSignals\\":[\\"disabled\\"]}}}
+          */
+
+import {
   Output,
   EventEmitter,
   Component,
@@ -13205,7 +13221,12 @@ const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
 @Component({
   selector: \\"signals-test-component\\",
   template: \`
-    <button [attr.aria-label]=\\"label\\" #buttonRef (click)=\\"handleOutput()\\">
+    <button
+      [attr.aria-label]=\\"label\\"
+      #buttonRef
+      [attr.disabled]=\\"disabled\\"
+      (click)=\\"handleOutput()\\"
+    >
       {{testInput}}
     </button>
   \`,
@@ -13222,6 +13243,7 @@ const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
 export default class SignalsTestComponent {
   @Input() testInput = defaultProps[\\"testInput\\"];
   @Input() label = defaultProps[\\"label\\"];
+  @Input() disabled;
   @Output() onTestOutput = new EventEmitter<any>();
 
   @ViewChild(\\"buttonRef\\") buttonRef;
@@ -29437,7 +29459,12 @@ export default class ShowRootText {
 `;
 
 exports[`Angular > jsx > Typescript Test > signals 1`] = `
-"import { NgModule } from \\"@angular/core\\";
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"signals\\":{\\"writeableSignals\\":[\\"disabled\\"]}}}
+          */
+
+import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import {
@@ -29454,6 +29481,7 @@ type Props = {
   label: string;
   testInput: string;
   onTestOutput?: () => void;
+  disabled?: boolean;
 };
 type Store = {
   _counter: number;
@@ -29465,7 +29493,12 @@ const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
 @Component({
   selector: \\"signals-test-component\\",
   template: \`
-    <button [attr.aria-label]=\\"label\\" #buttonRef (click)=\\"handleOutput()\\">
+    <button
+      [attr.aria-label]=\\"label\\"
+      #buttonRef
+      [attr.disabled]=\\"disabled\\"
+      (click)=\\"handleOutput()\\"
+    >
       {{testInput}}
     </button>
   \`,
@@ -29480,6 +29513,7 @@ const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
 export default class SignalsTestComponent {
   @Input() testInput: Props[\\"testInput\\"] = defaultProps[\\"testInput\\"];
   @Input() label: Props[\\"label\\"] = defaultProps[\\"label\\"];
+  @Input() disabled!: Props[\\"disabled\\"];
   @Output() onTestOutput = new EventEmitter<any>();
 
   @ViewChild(\\"buttonRef\\") buttonRef!: ElementRef;
@@ -29517,7 +29551,12 @@ export class SignalsTestComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > signals 2`] = `
-"import {
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"signals\\":{\\"writeableSignals\\":[\\"disabled\\"]}}}
+          */
+
+import {
   Output,
   EventEmitter,
   Component,
@@ -29533,6 +29572,7 @@ type Props = {
   label: string;
   testInput: string;
   onTestOutput?: () => void;
+  disabled?: boolean;
 };
 type Store = {
   _counter: number;
@@ -29544,7 +29584,12 @@ const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
 @Component({
   selector: \\"signals-test-component\\",
   template: \`
-    <button [attr.aria-label]=\\"label\\" #buttonRef (click)=\\"handleOutput()\\">
+    <button
+      [attr.aria-label]=\\"label\\"
+      #buttonRef
+      [attr.disabled]=\\"disabled\\"
+      (click)=\\"handleOutput()\\"
+    >
       {{testInput}}
     </button>
   \`,
@@ -29561,6 +29606,7 @@ const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
 export default class SignalsTestComponent {
   @Input() testInput: Props[\\"testInput\\"] = defaultProps[\\"testInput\\"];
   @Input() label: Props[\\"label\\"] = defaultProps[\\"label\\"];
+  @Input() disabled!: Props[\\"disabled\\"];
   @Output() onTestOutput = new EventEmitter<any>();
 
   @ViewChild(\\"buttonRef\\") buttonRef!: ElementRef;

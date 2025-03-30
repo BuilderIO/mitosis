@@ -2,6 +2,7 @@ export const getAngularCoreImportsAsString = ({
   refs,
   output,
   input,
+  model,
   onPush,
   effect,
   signal,
@@ -9,6 +10,7 @@ export const getAngularCoreImportsAsString = ({
   refs: boolean;
   output: boolean;
   input: boolean;
+  model: boolean;
   onPush: boolean;
   effect: boolean;
   signal: boolean;
@@ -18,6 +20,7 @@ export const getAngularCoreImportsAsString = ({
     AfterViewInit: true,
     viewChild: refs,
     ElementRef: refs,
+    model,
     output,
     input,
     effect,

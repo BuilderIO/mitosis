@@ -10575,11 +10575,17 @@ export class ShowRootText implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > signals 1`] = `
-"import {
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"signals\\":{\\"writeableSignals\\":[\\"disabled\\"]}}}
+          */
+
+import {
   Component,
   AfterViewInit,
   viewChild,
   ElementRef,
+  model,
   output,
   input,
   effect,
@@ -10597,6 +10603,7 @@ const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
     <button
       [attr.aria-label]=\\"label()\\"
       #buttonRef
+      [attr.disabled]=\\"disabled()\\"
       (click)=\\"handleOutput()\\"
       #_root
     >
@@ -10608,6 +10615,7 @@ const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
 export class SignalsTestComponent implements AfterViewInit {
   testInput = input<any>(defaultProps[\\"testInput\\"]);
   label = input<any>(defaultProps[\\"label\\"]);
+  disabled = model<any>();
   testOutput = output();
 
   buttonRef = viewChild<ElementRef>(\\"buttonRef\\");
@@ -23781,11 +23789,17 @@ export class ShowRootText implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > signals 1`] = `
-"import {
+"/**
+          useMetadata:
+          {\\"angular\\":{\\"signals\\":{\\"writeableSignals\\":[\\"disabled\\"]}}}
+          */
+
+import {
   Component,
   AfterViewInit,
   viewChild,
   ElementRef,
+  model,
   output,
   input,
   effect,
@@ -23797,6 +23811,7 @@ type Props = {
   label: string;
   testInput: string;
   onTestOutput?: () => void;
+  disabled?: boolean;
 };
 type Store = {
   _counter: number;
@@ -23813,6 +23828,7 @@ const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
     <button
       [attr.aria-label]=\\"label()\\"
       #buttonRef
+      [attr.disabled]=\\"disabled()\\"
       (click)=\\"handleOutput()\\"
       #_root
     >
@@ -23824,6 +23840,7 @@ const defaultProps = { testInput: \\"Test\\", label: \\"Bla\\" };
 export class SignalsTestComponent implements AfterViewInit {
   testInput = input<Props[\\"testInput\\"]>(defaultProps[\\"testInput\\"]);
   label = input<Props[\\"label\\"]>(defaultProps[\\"label\\"]);
+  disabled = model<Props[\\"disabled\\"]>();
   testOutput = output<
     Parameters<Required<Props>[\\"onTestOutput\\"]>[number] | void
   >();

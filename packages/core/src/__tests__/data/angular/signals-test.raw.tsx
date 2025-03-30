@@ -1,9 +1,10 @@
-import { onUpdate, useDefaultProps, useRef, useStore } from '@builder.io/mitosis';
+import { onUpdate, useDefaultProps, useMetadata, useRef, useStore } from '@builder.io/mitosis';
 
 type Props = {
   label: string;
   testInput: string;
   onTestOutput?: () => void;
+  disabled?: boolean;
 };
 
 type Store = {
@@ -15,6 +16,15 @@ type Store = {
 useDefaultProps<Props>({
   testInput: 'Test',
   label: 'Bla',
+});
+
+useMetadata({
+  angular: {
+    signals: {
+      writeable: ['disabled'],
+      required: ['label'],
+    },
+  },
 });
 
 export default function SignalsTestComponent(props: Props) {
@@ -38,7 +48,12 @@ export default function SignalsTestComponent(props: Props) {
   }, [state._counter, buttonRef]);
 
   return (
-    <button aria-label={props.label} ref={buttonRef} onClick={() => state.handleOutput()}>
+    <button
+      aria-label={props.label}
+      ref={buttonRef}
+      disabled={props.disabled}
+      onClick={() => state.handleOutput()}
+    >
       {props.testInput}
     </button>
   );

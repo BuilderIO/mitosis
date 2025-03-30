@@ -59,6 +59,21 @@ export type AngularMetadata = {
    * Can be used with `useTarget({angular: ()=> ...})` if needed.
    */
   outputs?: string[];
+
+  /**
+   * Only for api=signals
+   */
+  signals?: {
+    /**
+     * Turns every property in this array to [`model`](https://angular.dev/api/core/model).
+     * This is useful if you want to use ngModel(`[(prop)]`) syntax in Angular.
+     */
+    writeable?: string[];
+    /**
+     * Adds [`.required`](https://angular.dev/api/core/input#required()) to the `input()` properties.
+     */
+    required?: string[];
+  };
 };
 
 export type AngularBlockOptions = {
