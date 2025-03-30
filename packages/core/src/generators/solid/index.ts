@@ -271,3 +271,5 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     }
     return str;
   };
+
+export * from './types';

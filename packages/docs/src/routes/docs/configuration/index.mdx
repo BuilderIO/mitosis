@@ -6,7 +6,45 @@ title: Configuration - Mitosis
 
 ## Mitosis Configuration
 
-In the root of the project, from which you run mitosis, you can add a `mitosis.config.js` file that will be read by Mitosis. You can also specify a config file by option: `--config=<file>`.
+In the root of the project, from which you run mitosis,
+you can add a `mitosis.config.js` file that will be read by Mitosis.
+You can also specify a config file by option: `--config=<file>`.
+An example might look like this:
+
+````js react-options.cjs
+// react-options.cjs
+
+/** @type {import('@builder.io/mitosis').ToReactOptions} */
+module.exports = {
+	typescript: true
+};
+````
+
+````js vue-options.cjs
+// vue-options.cjs
+
+/** @type {import('@builder.io/mitosis').ToVueOptions} */
+module.exports = {
+	typescript: true
+};
+````
+
+````js mitosis-config.cjs
+// mitosis-config.cjs
+const react = require('./react-options.cjs');
+const vue = require('./vue-options.cjs');
+
+/** @type {import('@builder.io/mitosis').MitosisConfig} */
+module.exports = {
+	files: 'src/**',
+	targets: ['vue', 'react'],
+	options: {
+		react,
+		vue
+	}
+};
+````
+
 
 The `mitosis.config.js` file uses the [MitosisConfig](https://github.com/BuilderIO/mitosis/blob/main/packages/core/src/types/config.ts#L22) type:
 
