@@ -18,7 +18,7 @@ export const getSignalInputs = ({
       const propType = propsTypeRef ? `${propsTypeRef}["${prop}"]` : 'any';
       const defaultProp = hasDefaultProp ? `defaultProps["${prop}"]` : '';
       return `${prop} = ${writeableSignals.includes(prop) ? 'model' : 'input'}${
-        requiredSignals.includes(prop) ? 'required' : ''
+        requiredSignals.includes(prop) ? '.required' : ''
       }<${propType}>(${defaultProp})`;
     })
     .join('\n');

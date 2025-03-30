@@ -121,6 +121,7 @@ const transformHooksAndState = (code: string, isHookDepArray?: boolean) => {
         isIdentifier(path.node.argument.property)
       ) {
         const root = memberExpression(path.node.argument, identifier('update'));
+        root.extra = { ...root.extra, updateExpression: true };
         const argument = path.node.argument.property;
         const block = blockStatement([
           expressionStatement(updateExpression(path.node.operator, argument)),

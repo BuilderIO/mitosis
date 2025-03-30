@@ -14,15 +14,15 @@ You can access the new Angular generator by using the `api="signals"` inside you
  * @type {import('@builder.io/mitosis'.MitosisConfig)}
  */
 module.exports = {
-  files: 'src/**',
-  targets: ['angular', 'react', 'vue'],
-  options: {
-    angular: {
-      api: 'signals',
+    files: 'src/**',
+    targets: ['angular', 'react', 'vue'],
+    options: {
+        angular: {
+            api: 'signals',
+        },
+        react: {},
+        vue: {},
     },
-    react: {},
-    vue: {},
-  },
 };
 ```
 
@@ -36,10 +36,25 @@ Some features are not yet implemented for signals api:
 
   ```tsx
 export default function MyComponent(props) {
-const [obj, setObj] = useState(FooComponent);
+    const [obj, setObj] = useState(FooComponent);
 
-return (
-<obj>{props.children}</obj>);
+    return (
+        <obj>{props.children}</obj>);
 }
   ```
 
+There are some new metadata properties for Angular if you use the signals api:
+
+```tsx
+useMetadata({
+    angular: {
+        signals: {
+            writeable: ['disabled'],
+            required: ['label'],
+        },
+    },
+});
+```
+
+- ``writeable`` will use `model()` to enable two-way binding for the property.
+- ``required`` will convert the `input` to a `required` input.

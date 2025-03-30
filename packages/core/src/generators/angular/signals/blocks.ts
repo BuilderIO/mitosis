@@ -10,7 +10,6 @@ import {
 } from '@/helpers/event-handlers';
 import isChildren from '@/helpers/is-children';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
-import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
 import { stripSlotPrefix } from '@/helpers/slots';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { Binding, ForNode, MitosisNode } from '@/types/mitosis-node';
@@ -119,24 +118,6 @@ Try to invert it like this:
 const BINDINGS_MAPPER: { [key: string]: string | undefined } = {
   innerHTML: 'innerHTML',
   style: 'ngStyle',
-};
-
-const processEventBinding = (key: string, code: string, nodeName: string, customArg: string) => {
-  let event = key.replace('on', '');
-  event = event.charAt(0).toLowerCase() + event.slice(1);
-
-  // TODO: proper babel transform to replace. Util for this
-  const eventName = customArg;
-  const regexp = new RegExp(
-    '(^|\\n|\\r| |;|\\(|\\[|!)' + eventName + '(\\?\\.|\\.|\\(| |;|\\)|$)',
-    'g',
-  );
-  const replacer = '$1$event$2';
-  const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
-  return {
-    event,
-    value: finalValue,
-  };
 };
 
 const stringifyBinding =

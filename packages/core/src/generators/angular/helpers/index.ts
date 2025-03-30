@@ -70,7 +70,7 @@ export const getDefaultProps = ({ defaultProps }: MitosisComponent) => {
       return `${prop}: ${value}`;
     })
     .join(',');
-  return `const defaultProps = {${defalutPropsString}};\n`;
+  return `const defaultProps: any = {${defalutPropsString}};\n`;
 };
 
 /**
