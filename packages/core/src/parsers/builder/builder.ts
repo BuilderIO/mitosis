@@ -118,10 +118,13 @@ const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosi
       }
 
       let code = block.code?.bindings?.[key] || block.bindings[key];
-      if (options.escapeInvalidCode) {
-        const verifyCode = verifyIsValid(code);
-        if (!verifyCode.valid) {
+      const verifyCode = verifyIsValid(code);
+      if (!verifyCode.valid) {
+        if (options.escapeInvalidCode) {
           code = '`' + code + ' [INVALID CODE]`';
+        } else {
+          console.warn(`Dropping binding "${key}" due to invalid code: ${code}`);
+          continue;
         }
       }
 
@@ -753,10 +756,13 @@ export const builderElementToMitosisNode = (
       if (!useKey.includes('.')) {
         let code = (blockBindings[key] as any).code || blockBindings[key];
 
-        if (options.escapeInvalidCode) {
-          const verifyCode = verifyIsValid(code);
-          if (!verifyCode.valid) {
+        const verifyCode = verifyIsValid(code);
+        if (!verifyCode.valid) {
+          if (options.escapeInvalidCode) {
             code = '`' + code + ' [INVALID CODE]`';
+          } else {
+            console.warn(`Dropping binding "${key}" due to invalid code: ${code}`);
+            continue;
           }
         }
 
