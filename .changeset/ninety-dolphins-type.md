@@ -2,4 +2,4 @@
 '@builder.io/mitosis': minor
 ---
 
-Builder: add escapeInvalidCode flag
+Builder: add escapeInvalidCode flag, drop invalid bindings
