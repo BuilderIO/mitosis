@@ -116,11 +116,21 @@ const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosi
       if (!key.includes('.')) {
         continue;
       }
+
+      let code = block.code?.bindings?.[key] || block.bindings[key];
+      const verifyCode = verifyIsValid(code);
+      if (!verifyCode.valid) {
+        if (options.escapeInvalidCode) {
+          code = '`' + code + ' [INVALID CODE]`';
+        } else {
+          console.warn(`Dropping binding "${key}" due to invalid code: ${code}`);
+          continue;
+        }
+      }
+
       if (key.includes('style')) {
         const styleProperty = key.split('.')[1];
-        styleBindings[styleProperty] = convertExportDefaultToReturn(
-          block.code?.bindings?.[key] || block.bindings[key],
-        );
+        styleBindings[styleProperty] = convertExportDefaultToReturn(code);
         /**
          * responsiveStyles that are bound need to be merged into media queries.
          * Example:
@@ -143,7 +153,7 @@ const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosi
         const objKey = `"${mediaKey}"`;
         responsiveStyles[objKey] = {
           ...responsiveStyles[objKey],
-          [prop]: block.bindings[key],
+          [prop]: code,
         };
       }
     }
@@ -625,6 +635,12 @@ type BuilderToMitosisOptions = {
   preserveTextBlocks?: boolean;
   includeSpecialBindings?: boolean;
   includeMeta?: boolean;
+  /**
+   * When `true`, invalid bindings will be escaped as strings with special comments.
+   * This can then be used to have LLMs such as Claude attempt to repair the broken code.
+   * Defaults to `false`.
+   */
+  escapeInvalidCode?: boolean;
 };
 
 export const builderElementToMitosisNode = (
@@ -738,8 +754,20 @@ export const builderElementToMitosisNode = (
       }
       const useKey = key.replace(/^(component\.)?options\./, '');
       if (!useKey.includes('.')) {
+        let code = (blockBindings[key] as any).code || blockBindings[key];
+
+        const verifyCode = verifyIsValid(code);
+        if (!verifyCode.valid) {
+          if (options.escapeInvalidCode) {
+            code = '`' + code + ' [INVALID CODE]`';
+          } else {
+            console.warn(`Dropping binding "${key}" due to invalid code: ${code}`);
+            continue;
+          }
+        }
+
         bindings[useKey] = createSingleBinding({
-          code: (blockBindings[key] as any).code || blockBindings[key],
+          code,
         });
       } else if (useKey.includes('style') && useKey.includes('.')) {
         const styleProperty = useKey.split('.')[1];

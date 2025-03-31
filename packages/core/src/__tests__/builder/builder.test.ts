@@ -15,24 +15,24 @@ import { compileAwayBuilderComponents } from '@/plugins/compile-away-builder-com
 import { BuilderContent } from '@builder.io/sdk';
 
 import { componentToAngular } from '@/generators/angular';
-import columns from './data/blocks/columns.raw.tsx?raw';
-import customCode from './data/blocks/custom-code.raw.tsx?raw';
-import embed from './data/blocks/embed.raw.tsx?raw';
-import image from './data/blocks/image.raw.tsx?raw';
-import indexInFor from './data/blocks/index-in-for.raw.tsx?raw';
-import stamped from './data/blocks/stamped-io.raw.tsx?raw';
-import booleanContent from './data/builder/boolean.json?raw';
-import customComponentSlotPropertyContent from './data/builder/custom-component-slot-property.json?raw';
-import customComponentTags from './data/builder/custom-component-tags.json?raw';
-import lazyLoadSection from './data/builder/lazy-load-section.json?raw';
-import localization from './data/builder/localization.json?raw';
-import slotsContent from './data/builder/slots.json?raw';
-import slots2Content from './data/builder/slots2.json?raw';
-import tagNameContent from './data/builder/tag-name.json?raw';
-import textBindings from './data/builder/text-bindings.json?raw';
-import advancedFor from './data/for/advanced-for.raw.tsx?raw';
-import asyncBindings from './data/ref/basic-ref-assignment.raw.tsx?raw';
-import show from './data/show/show-expressions.raw.tsx?raw';
+import columns from '../data/blocks/columns.raw.tsx?raw';
+import customCode from '../data/blocks/custom-code.raw.tsx?raw';
+import embed from '../data/blocks/embed.raw.tsx?raw';
+import image from '../data/blocks/image.raw.tsx?raw';
+import indexInFor from '../data/blocks/index-in-for.raw.tsx?raw';
+import stamped from '../data/blocks/stamped-io.raw.tsx?raw';
+import booleanContent from '../data/builder/boolean.json?raw';
+import customComponentSlotPropertyContent from '../data/builder/custom-component-slot-property.json?raw';
+import customComponentTags from '../data/builder/custom-component-tags.json?raw';
+import lazyLoadSection from '../data/builder/lazy-load-section.json?raw';
+import localization from '../data/builder/localization.json?raw';
+import slotsContent from '../data/builder/slots.json?raw';
+import slots2Content from '../data/builder/slots2.json?raw';
+import tagNameContent from '../data/builder/tag-name.json?raw';
+import textBindings from '../data/builder/text-bindings.json?raw';
+import advancedFor from '../data/for/advanced-for.raw.tsx?raw';
+import asyncBindings from '../data/ref/basic-ref-assignment.raw.tsx?raw';
+import show from '../data/show/show-expressions.raw.tsx?raw';
 
 const mitosisOptions: ToMitosisOptions = {
   format: 'legacy',
