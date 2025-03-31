@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.8.0
+
+### Minor Changes
+
+- 0fe1fdb: Builder: add escapeInvalidCode flag, drop invalid bindings
+
 ## 0.7.6
 
 ### Patch Changes
