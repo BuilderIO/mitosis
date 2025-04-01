@@ -58,13 +58,17 @@ const getCssFromBlock = (block: BuilderElement) => {
 
 const verifyIsValid = (code: string): { valid: boolean; error: null | Error } => {
   try {
-    if (babel.parse(code)) {
+    if (parseCode(code)) {
       return { valid: true, error: null };
     }
   } catch (err) {
     return { valid: false, error: null };
   }
   return { valid: false, error: null };
+};
+
+const validateBinding = (bindingCode: string) => {
+  return verifyIsValid(`<Foo prop={${bindingCode}} />`);
 };
 
 const getActionBindingsFromBlock = (
@@ -118,7 +122,7 @@ const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosi
       }
 
       let code = block.code?.bindings?.[key] || block.bindings[key];
-      const verifyCode = verifyIsValid(code);
+      const verifyCode = validateBinding(code);
       if (!verifyCode.valid) {
         if (options.escapeInvalidCode) {
           code = '`' + code + ' [INVALID CODE]`';
@@ -756,7 +760,7 @@ export const builderElementToMitosisNode = (
       if (!useKey.includes('.')) {
         let code = (blockBindings[key] as any).code || blockBindings[key];
 
-        const verifyCode = verifyIsValid(code);
+        const verifyCode = validateBinding(code);
         if (!verifyCode.valid) {
           if (options.escapeInvalidCode) {
             code = '`' + code + ' [INVALID CODE]`';

@@ -4,6 +4,57 @@ import { describe, test } from 'vitest';
 
 describe('Builder Invalid JSX Flag', () => {
   describe('escapeInvalidCode: true', () => {
+    test('escaping code that is valid JS but invalid binding code', () => {
+      const builderJson = {
+        data: {
+          blocks: [
+            {
+              '@type': '@builder.io/sdk:Element' as const,
+              bindings: {
+                'style.marginTop': 'export default foo',
+                foo: 'export default bar',
+              },
+            },
+          ],
+        },
+      };
+      const builderToMitosis = builderContentToMitosisComponent(builderJson, {
+        escapeInvalidCode: true,
+      });
+
+      expect(builderToMitosis.children[0].bindings).toMatchInlineSnapshot(`
+        {
+          "foo": {
+            "bindingType": "expression",
+            "code": "\`export default bar [INVALID CODE]\`",
+            "type": "single",
+          },
+          "style": {
+            "bindingType": "expression",
+            "code": "{ marginTop: \`export default foo [INVALID CODE]\`, }",
+            "type": "single",
+          },
+        }
+      `);
+
+      const mitosis = componentToMitosis({})({
+        component: builderToMitosis,
+      });
+      expect(mitosis).toMatchInlineSnapshot(`
+        "export default function MyComponent(props) {
+          return (
+            <div
+              foo={\`export default bar [INVALID CODE]\`}
+              style={{
+                marginTop: \`export default foo [INVALID CODE]\`,
+              }}
+            />
+          );
+        }
+        "
+      `);
+    });
+
     test('escaping invalid CSS binding does not crash jsx generator', () => {
       const builderJson = {
         data: {
