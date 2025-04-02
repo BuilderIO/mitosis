@@ -352,7 +352,7 @@ const SHOW_TESTS: Tests = {
 };
 
 const ADVANCED_REF: Tests = {
-  AdvancedRef: getRawFile('./data/advanced-ref.raw.tsx'),
+  AdvancedRef: getRawFile('./data/ref/advanced-ref.raw.tsx'),
 };
 
 const ON_UPDATE_RETURN: Tests = {
@@ -378,6 +378,7 @@ const ANGULAR_TESTS: Tests = {
   allSpread: getRawFile('./data/angular/all-spread.raw.tsx'),
   changeDetection: getRawFile('./data/angular/change-detection.raw.tsx'),
   sanitizeInnerHTML: getRawFile('./data/angular/sanitize-inner-html.raw.tsx'),
+  signals: getRawFile('./data/angular/signals-test.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {
@@ -692,16 +693,23 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   logOutput?: boolean;
   only?: string[]; // Test only some tests based on key
 }) => {
-  const configurations: { options: X; testName: string }[] = [
-    {
-      options: { ...options, typescript: false, plugins: [metaDataPlugin] },
-      testName: 'Javascript Test',
-    },
-    {
-      options: { ...options, typescript: true, plugins: [metaDataPlugin] },
-      testName: 'Typescript Test',
-    },
-  ];
+  const configurations: { options: X; testName: string }[] = only
+    ? [
+        {
+          options: { ...options, plugins: [metaDataPlugin] },
+          testName: 'Only Test',
+        },
+      ]
+    : [
+        {
+          options: { ...options, typescript: false, plugins: [metaDataPlugin] },
+          testName: 'Javascript Test',
+        },
+        {
+          options: { ...options, typescript: true, plugins: [metaDataPlugin] },
+          testName: 'Typescript Test',
+        },
+      ];
 
   type ParserConfig = {
     name: 'jsx' | 'svelte';
@@ -775,7 +783,11 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
                       }
                       expect(output).toMatchSnapshot();
                     } catch (error) {
-                      expect(getOutput).toThrowErrorMatchingSnapshot();
+                      if (logOutput) {
+                        throw error;
+                      } else {
+                        expect(getOutput).toThrowErrorMatchingSnapshot();
+                      }
                     }
                   }
                 });

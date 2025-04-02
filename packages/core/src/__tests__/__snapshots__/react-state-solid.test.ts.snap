@@ -187,7 +187,7 @@ function MyBasicOutputsComponent(props) {
   const state = useMutable({ name: \\"PatrickJS\\" });
 
   useEffect(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   }, []);
 
@@ -213,7 +213,7 @@ function MyBasicOutputsComponent(props) {
   const state = useMutable({ name: \\"PatrickJS\\" });
 
   useEffect(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   }, []);
 
@@ -264,16 +264,28 @@ exports[`React - stateType: solid > jsx > Javascript Test > BasicChildComponent 
 import * as React from \\"react\\";
 import { useMutable } from \\"react-solid-state\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props) {
-  const state = useMutable({ name: \\"Steve\\", dev: \\"PatrickJS\\" });
+  const state = useMutable({
+    name: \\"Steve\\",
+    dev: \\"PatrickJS\\",
+    log: function log(message) {
+      console.log(message);
+    },
+  });
 
   return (
     <div>
       <MyBasicComponent id={state.dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={state.name} bye={state.dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => (state.name = name)}
+          onEvent={(event) => state.log(\\"Test\\")}
+        />
       </div>
     </div>
   );
@@ -2313,6 +2325,10 @@ function EventPropsComponent(props) {
       if (props.onEnter) {
         console.log(props.onEnter());
       }
+
+      if (props.onPass) {
+        props.onPass(\\"test\\");
+      }
     },
   });
 
@@ -4076,7 +4092,7 @@ function MyBasicOutputsComponent(props: any) {
   const state = useMutable({ name: \\"PatrickJS\\" });
 
   useEffect(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   }, []);
 
@@ -4102,7 +4118,7 @@ function MyBasicOutputsComponent(props: any) {
   const state = useMutable({ name: \\"PatrickJS\\" });
 
   useEffect(() => {
-    props.onMessage(state.name);
+    props.onMessageChange(state.name);
     props.onEvent(props.message);
   }, []);
 
@@ -4158,16 +4174,28 @@ exports[`React - stateType: solid > jsx > Typescript Test > BasicChildComponent 
 import * as React from \\"react\\";
 import { useMutable } from \\"react-solid-state\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props: any) {
-  const state = useMutable({ name: \\"Steve\\", dev: \\"PatrickJS\\" });
+  const state = useMutable({
+    name: \\"Steve\\",
+    dev: \\"PatrickJS\\",
+    log: function log(message: string) {
+      console.log(message);
+    },
+  });
 
   return (
     <div>
       <MyBasicComponent id={state.dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={state.name} bye={state.dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => (state.name = name)}
+          onEvent={(event) => state.log(\\"Test\\")}
+        />
       </div>
     </div>
   );
@@ -6486,6 +6514,10 @@ function EventPropsComponent(props: EventProps) {
 
       if (props.onEnter) {
         console.log(props.onEnter());
+      }
+
+      if (props.onPass) {
+        props.onPass(\\"test\\");
       }
     },
   });

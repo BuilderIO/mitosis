@@ -84,7 +84,12 @@ export type BaseNode = {
   localizedValues?: { [index: string]: BuilderLocalizedValue };
 };
 
-export type SpecialNodesNames = 'For' | 'Fragment' | 'Show' | 'Slot';
+export const ForNodeName = 'For';
+export const FragmentNodeName = 'Fragment';
+export const ShowNodeName = 'Show';
+export const SlotNodeName = 'Slot';
+export const SpecialNodeNameList = [ForNodeName, FragmentNodeName, ShowNodeName, SlotNodeName];
+export type SpecialNodesNames = (typeof SpecialNodeNameList)[number];
 
 export type ForNode = BaseNode & {
   name: 'For';
@@ -99,8 +104,8 @@ export type ShowNode = BaseNode & {
   name: 'Show';
 };
 
-export type MitosisNode = BaseNode | ForNode;
+export type MitosisNode = BaseNode | ForNode | ShowNode;
 
-export const checkIsForNode = (node: MitosisNode): node is ForNode => node.name === 'For';
+export const checkIsForNode = (node: MitosisNode): node is ForNode => node.name === ForNodeName;
 
-export const checkIsShowNode = (node: MitosisNode): node is ShowNode => node.name === 'Show';
+export const checkIsShowNode = (node: MitosisNode): node is ShowNode => node.name === ShowNodeName;

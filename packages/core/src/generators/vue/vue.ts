@@ -144,6 +144,7 @@ export const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
               return replaceStateIdentifier(null);
             case 'properties':
             case 'dynamic-jsx-elements':
+            case 'hooks-deps-array':
             case 'types':
               return (c) => c;
           }
@@ -160,6 +161,7 @@ export const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
             case 'properties':
             case 'dynamic-jsx-elements':
             case 'hooks-deps':
+            case 'hooks-deps-array':
             case 'types':
               return (c) => c;
             case 'state':
