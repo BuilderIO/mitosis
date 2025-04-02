@@ -411,7 +411,14 @@ export const blockToAngular = ({
         continue;
       }
       const value = json.properties[key];
-      str += ` ${key}="${value}" `;
+      // Better parsing for innerHTML
+      if (key === 'innerHTML') {
+        // Replace double quotes with escaped quotes for proper Angular template handling
+        const escapedValue = String(value).replace(/"/g, '&quot;');
+        str += `[innerHTML]="sanitizer.bypassSecurityTrustHtml('${escapedValue}')" `;
+      } else {
+        str += ` ${key}="${value}" `;
+      }
     }
 
     for (const key in json.bindings) {
