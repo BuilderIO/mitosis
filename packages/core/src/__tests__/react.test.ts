@@ -43,7 +43,7 @@ describe('React - stateType: useState', () => {
     const component = parseJsx(columns);
     const output = componentToReact({
       stylesType: 'style-tag',
-      stylesTagPlacement: 'top',
+      styleTagsPlacement: 'top',
     })({ component });
     expect(output).toMatchSnapshot();
   });
