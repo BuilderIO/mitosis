@@ -2,6 +2,7 @@ import { componentToReact } from '@/generators/react';
 import { parseJsx } from '..';
 import { runTestsForTarget } from './test-generator';
 
+import columns from './data/blocks/columns.raw.tsx?raw';
 import stamped from './data/blocks/stamped-io.raw.tsx?raw';
 
 describe('React - stateType: useState', () => {
@@ -34,6 +35,15 @@ describe('React - stateType: useState', () => {
     const output = componentToReact({
       stylesType: 'style-tag',
       stateType: 'mobx',
+    })({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('(style-tag, top)', () => {
+    const component = parseJsx(columns);
+    const output = componentToReact({
+      stylesType: 'style-tag',
+      stylesTagPlacement: 'top',
     })({ component });
     expect(output).toMatchSnapshot();
   });
