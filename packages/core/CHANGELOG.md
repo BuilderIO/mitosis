@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.9.1
+
+### Patch Changes
+
+- 329e754: Correctly handle Fragments in Builder ("Core:Fragment" component name not "Fragment")
+
 ## 0.9.0
 
 ### Minor Changes
