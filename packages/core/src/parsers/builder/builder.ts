@@ -2,6 +2,8 @@ import { hashCodeAsString } from '@/symbols/symbol-processor';
 import { MitosisComponent, MitosisState } from '@/types/mitosis-component';
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
+import babelTraverse from '@babel/traverse';
+import * as t from '@babel/types';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { mapKeys, merge, omit, omitBy, sortBy, upperFirst } from 'lodash';
@@ -58,17 +60,13 @@ const getCssFromBlock = (block: BuilderElement) => {
 
 const verifyIsValid = (code: string): { valid: boolean; error: null | Error } => {
   try {
-    if (parseCode(code)) {
+    if (babel.parse(code)) {
       return { valid: true, error: null };
     }
   } catch (err) {
     return { valid: false, error: null };
   }
   return { valid: false, error: null };
-};
-
-const validateBinding = (bindingCode: string) => {
-  return verifyIsValid(`<Foo prop={${bindingCode}} />`);
 };
 
 const getActionBindingsFromBlock = (
@@ -122,8 +120,13 @@ const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosi
       }
 
       let code = block.code?.bindings?.[key] || block.bindings[key];
-      const verifyCode = validateBinding(code);
-      if (!verifyCode.valid) {
+
+      console.log('ooking at', code, key);
+      const verifyCode = verifyIsValid(code);
+      console.log(verifyCode);
+      if (verifyCode.valid) {
+        code = processBoundLogic(code);
+      } else {
         if (options.escapeInvalidCode) {
           code = '`' + code + ' [INVALID CODE]`';
         } else {
@@ -646,6 +649,33 @@ type BuilderToMitosisOptions = {
    */
   escapeInvalidCode?: boolean;
 };
+const processBoundLogic = (code: string) => {
+  const ast = babel.parse(code);
+  if (!ast) return code;
+
+  let hasReturn = false;
+  babelTraverse(ast, {
+    ExportDefaultDeclaration(path) {
+      const exportedNode = path.node.declaration;
+      if (t.isExpression(exportedNode)) {
+        const returnStatement = t.returnStatement(exportedNode);
+        path.replaceWith(returnStatement);
+        hasReturn = true;
+      }
+    },
+    ReturnStatement() {
+      hasReturn = true;
+    },
+  });
+
+  if (hasReturn) {
+    const processedCode = generate(ast);
+
+    return `new Function(\`${processedCode.code}\`)()`;
+  }
+
+  return code;
+};
 
 export const builderElementToMitosisNode = (
   block: BuilderElement,
@@ -709,6 +739,7 @@ export const builderElementToMitosisNode = (
   } else if (blockBindings.hide) {
     code = `!(${wrapBindingIfNeeded(blockBindings.hide, options)})`;
   }
+  console.log('A', blockBindings);
   if (code) {
     const isFragment = block.component?.name === 'Fragment';
     // TODO: handle having other things, like a repeat too
@@ -747,21 +778,27 @@ export const builderElementToMitosisNode = (
     return mapper(block, options);
   }
 
+  console.log('B"', blockBindings);
   const bindings: MitosisNode['bindings'] = {};
   const children: MitosisNode[] = [];
   const slots: MitosisNode['slots'] = {};
 
+  console.log('check here', blockBindings);
   if (blockBindings) {
     for (const key in blockBindings) {
       if (key === 'css') {
         continue;
       }
+
       const useKey = key.replace(/^(component\.)?options\./, '');
       if (!useKey.includes('.')) {
         let code = (blockBindings[key] as any).code || blockBindings[key];
+        const verifyCode = verifyIsValid(code);
 
-        const verifyCode = validateBinding(code);
-        if (!verifyCode.valid) {
+        console.log('ooking at', code, key);
+        if (verifyCode.valid) {
+          code = processBoundLogic(code);
+        } else {
           if (options.escapeInvalidCode) {
             code = '`' + code + ' [INVALID CODE]`';
           } else {
@@ -1264,6 +1301,8 @@ function mapBuilderBindingsToMitosisBindingWithCode(
   const result: MitosisNode['bindings'] = {};
   bindings &&
     Object.keys(bindings).forEach((key) => {
+      console.log('HI!', key);
+      // TODO processing here
       const value: string | { code: string } = bindings[key] as any;
       if (typeof value === 'string') {
         result[key] = createSingleBinding({ code: value });

@@ -4,57 +4,6 @@ import { describe, test } from 'vitest';
 
 describe('Builder Invalid JSX Flag', () => {
   describe('escapeInvalidCode: true', () => {
-    test('escaping code that is valid JS but invalid binding code', () => {
-      const builderJson = {
-        data: {
-          blocks: [
-            {
-              '@type': '@builder.io/sdk:Element' as const,
-              bindings: {
-                'style.marginTop': 'export default foo',
-                foo: 'export default bar',
-              },
-            },
-          ],
-        },
-      };
-      const builderToMitosis = builderContentToMitosisComponent(builderJson, {
-        escapeInvalidCode: true,
-      });
-
-      expect(builderToMitosis.children[0].bindings).toMatchInlineSnapshot(`
-        {
-          "foo": {
-            "bindingType": "expression",
-            "code": "\`export default bar [INVALID CODE]\`",
-            "type": "single",
-          },
-          "style": {
-            "bindingType": "expression",
-            "code": "{ marginTop: \`export default foo [INVALID CODE]\`, }",
-            "type": "single",
-          },
-        }
-      `);
-
-      const mitosis = componentToMitosis({})({
-        component: builderToMitosis,
-      });
-      expect(mitosis).toMatchInlineSnapshot(`
-        "export default function MyComponent(props) {
-          return (
-            <div
-              foo={\`export default bar [INVALID CODE]\`}
-              style={{
-                marginTop: \`export default foo [INVALID CODE]\`,
-              }}
-            />
-          );
-        }
-        "
-      `);
-    });
-
     test('escaping invalid CSS binding does not crash jsx generator', () => {
       const builderJson = {
         data: {
@@ -239,4 +188,59 @@ describe('Builder Invalid JSX Flag', () => {
       `);
     });
   });
+});
+
+// https://github.com/BuilderIO/builder-internal/blob/39d18b50928f8c843255637a7c07c41d4277127c/packages/app/functions/transpile.worker.ts#L26-L42
+test.only('export default binding is converted to function call', () => {
+  const builderJson = {
+    data: {
+      blocks: [
+        {
+          '@type': '@builder.io/sdk:Element',
+          bindings: {
+            foo: 'export default bar',
+            'component.options.text':
+              'var returnValue=!0===state.color1?"Excellence":!0===state.color2?"Smitten":!0===state.color3?"Bliss":!0===state.color4?"5/17":!0===state.color5?"Reflection":"Excellence";return returnValue',
+          },
+          code: {
+            bindings: {
+              foo: 'export default bar',
+              'component.options.text':
+                "/**\n * Global objects available in state bindings:\n *\n * state - builder state object - learn about state https://www.builder.io/c/docs/guides/state-and-actions\n * context - builder context object - learn about context https://github.com/BuilderIO/builder/tree/main/packages/react#passing-data-and-functions-down\n *\n *\n * Learn more: https://www.builder.io/c/docs/guides/custom-code\n *\n */\n\nfunction color(\n    if (state.color1 === true) {\n        return 'Excellence'\n    }\n    else if (state.color2 === true){\n        return 'Smitten'\n    }\n    else if (state.color3 === true){\n        return 'Bliss'\n    }\n    else if (state.color4 === true){\n        return '5/17'\n    }\n    else if (state.color5 === true){\n        return 'Reflection'\n    }\n    else {\n        return 'Excellence'\n    });",
+            },
+          },
+          id: 'builder-e404d67bf8704d369248034b4eadee4e',
+          component: {
+            name: 'Text',
+            options: {
+              text: '<p>Excellence</p>\n',
+            },
+          },
+        },
+      ],
+    },
+  };
+  const builderToMitosis = builderContentToMitosisComponent(builderJson, {
+    escapeInvalidCode: true,
+  });
+
+  expect(builderToMitosis.children[0].bindings).toMatchInlineSnapshot(`
+    {
+      "foo": {
+        "bindingType": "expression",
+        "code": "export default bar",
+        "type": "single",
+      },
+    }
+  `);
+
+  const mitosis = componentToMitosis({})({
+    component: builderToMitosis,
+  });
+  expect(mitosis).toMatchInlineSnapshot(`
+    "export default function MyComponent(props) {
+      return <div foo={new Function(\`return bar\`)()} />;
+    }
+    "
+  `);
 });
