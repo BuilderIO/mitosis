@@ -240,6 +240,26 @@ describe('Builder', () => {
     expect(mitosis.trim()).toEqual(code.trim());
   });
 
+  test('Fragment', () => {
+    const code = dedent`
+      import { useStore } from "@builder.io/mitosis";
+
+      export default function MyComponent(props) {
+        const state = useStore({ people: ["Steve", "Sewell"] });
+
+        return (
+          <Fragment>
+            Hello!
+          </Fragment>
+        );
+      }
+    `;
+
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
+    expect(builderJson).toMatchSnapshot();
+  });
+
   test('Regenerate loop', () => {
     const code = dedent`
       import { useStore, For } from "@builder.io/mitosis";
@@ -1452,8 +1472,7 @@ describe('Builder', () => {
                         "bindings": {},
                       },
                       "component": {
-                        "name": "Fragment",
-                        "options": {},
+                        "name": "Core:Fragment",
                       },
                     },
                   ],

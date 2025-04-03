@@ -96,6 +96,12 @@ const componentMappers: {
 
     return block;
   },
+  Fragment(node, options) {
+    const block = blockToBuilder(node, options, { skipMapper: true });
+    block.component = { name: 'Core:Fragment' };
+    block.tagName = undefined;
+    return block;
+  },
   PersonalizationContainer(node, options) {
     const block = blockToBuilder(node, options, { skipMapper: true });
     const variants: any[] = [];
