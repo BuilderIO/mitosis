@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.9.2
+
+### Patch Changes
+
+- d3502a7: [React] Feat: add `styleTagsPlacement` option to react options that dictates where the style tags should get injected
+
 ## 0.9.1
 
 ### Patch Changes
