@@ -264,7 +264,7 @@ function MyBasicRefComponent(props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-5f05cdb2\\"
+              class=\\"input-7ce4aba6\\"
               ref={inputRef}
               value={name()}
               onBlur={(event) => onBlur()}
@@ -283,7 +283,7 @@ function MyBasicRefComponent(props) {
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
-      <style>{\`.input-5f05cdb2 {
+      <style>{\`.input-7ce4aba6 {
   color: red;
 }\`}</style>
     </>
@@ -330,7 +330,7 @@ function MyBasicRefComponent(props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-5f05cdb2\\"
+              class=\\"input-7ce4aba6\\"
               ref={inputRef}
               value={name()}
               onBlur={(event) => onBlur()}
@@ -349,7 +349,7 @@ function MyBasicRefComponent(props) {
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
-      <style>{\`.input-5f05cdb2 {
+      <style>{\`.input-7ce4aba6 {
   color: red;
 }\`}</style>
     </>
@@ -655,7 +655,7 @@ function MyBasicOutputsComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
-    props.onMessage(name());
+    props.onMessageChange(name());
     props.onEvent(props.message);
   });
 
@@ -677,7 +677,7 @@ function MyBasicOutputsComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
-    props.onMessage(name());
+    props.onMessageChange(name());
     props.onEvent(props.message);
   });
 
@@ -704,7 +704,7 @@ function MyBasicOutputsComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
-    props.onMessage(name());
+    props.onMessageChange(name());
     props.onEvent(props.message);
   });
 
@@ -731,7 +731,7 @@ function MyBasicOutputsComponent(props) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
-    props.onMessage(name());
+    props.onMessageChange(name());
     props.onEvent(props.message);
   });
 
@@ -834,12 +834,17 @@ exports[`Solid > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import { createSignal, createMemo } from \\"solid-js\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props) {
   const [name, setName] = createSignal(\\"Steve\\");
 
   const [dev, setDev] = createSignal(\\"PatrickJS\\");
+
+  function log(message) {
+    console.log(message);
+  }
 
   return (
     <>
@@ -850,6 +855,11 @@ function MyBasicChildComponent(props) {
             hi={name()}
             bye={dev()}
           ></MyBasicOnMountUpdateComponent>
+          <MyBasicOutputsComponent
+            message=\\"Test\\"
+            onMessageChange={(name) => setName(name)}
+            onEvent={(event) => log(\\"Test\\")}
+          ></MyBasicOutputsComponent>
         </div>
       </div>
     </>
@@ -864,12 +874,17 @@ exports[`Solid > jsx > Javascript Test > BasicChildComponent 2`] = `
 "import { createSignal, createMemo } from \\"solid-js\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props) {
   const [name, setName] = createSignal(\\"Steve\\");
 
   const [dev, setDev] = createSignal(\\"PatrickJS\\");
+
+  function log(message) {
+    console.log(message);
+  }
 
   return (
     <>
@@ -880,6 +895,11 @@ function MyBasicChildComponent(props) {
             hi={name()}
             bye={dev()}
           ></MyBasicOnMountUpdateComponent>
+          <MyBasicOutputsComponent
+            message=\\"Test\\"
+            onMessageChange={(name) => setName(name)}
+            onEvent={(event) => log(\\"Test\\")}
+          ></MyBasicOutputsComponent>
         </div>
       </div>
     </>
@@ -5034,6 +5054,10 @@ function EventPropsComponent(props) {
     if (props.onEnter) {
       console.log(props.onEnter());
     }
+
+    if (props.onPass) {
+      props.onPass(\\"test\\");
+    }
   }
 
   return (
@@ -5058,6 +5082,10 @@ function EventPropsComponent(props) {
 
     if (props.onEnter) {
       console.log(props.onEnter());
+    }
+
+    if (props.onPass) {
+      props.onPass(\\"test\\");
     }
   }
 
@@ -6906,13 +6934,13 @@ function RenderContent(props) {
         }}
       >
         <div
-          class=\\"div-37f74696\\"
+          class=\\"div-197af3ee\\"
           onClick={(event) => trackClick(props.content.id)}
         >
           <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
         </div>
       </BuilderContext.Provider>
-      <style>{\`.div-37f74696 {
+      <style>{\`.div-197af3ee {
   display: flex;
   flex-direction: columns;
 }\`}</style>
@@ -6960,13 +6988,13 @@ function RenderContent(props) {
         }}
       >
         <div
-          class=\\"div-37f74696\\"
+          class=\\"div-197af3ee\\"
           onClick={(event) => trackClick(props.content.id)}
         >
           <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
         </div>
       </BuilderContext.Provider>
-      <style>{\`.div-37f74696 {
+      <style>{\`.div-197af3ee {
   display: flex;
   flex-direction: columns;
 }\`}</style>
@@ -7505,11 +7533,11 @@ function MyBasicComponent(props) {
 
   return (
     <>
-      <div class=\\"test div-ba05009e\\">
+      <div class=\\"test div-d239523c\\">
         {props.id}
         {props.foo.value.bar.baz}
       </div>
-      <style>{\`.div-ba05009e {
+      <style>{\`.div-d239523c {
   padding: 10px;
 }\`}</style>
     </>
@@ -7541,11 +7569,11 @@ function MyBasicComponent(props) {
 
   return (
     <>
-      <div class=\\"test div-ba05009e\\">
+      <div class=\\"test div-d239523c\\">
         {props.id}
         {props.foo.value.bar.baz}
       </div>
-      <style>{\`.div-ba05009e {
+      <style>{\`.div-d239523c {
   padding: 10px;
 }\`}</style>
     </>
@@ -8616,7 +8644,7 @@ function MyBasicRefComponent(props: Props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-441d0a7a\\"
+              class=\\"input-013bf54d\\"
               ref={inputRef!}
               value={name()}
               onBlur={(event) => onBlur()}
@@ -8635,7 +8663,7 @@ function MyBasicRefComponent(props: Props) {
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
-      <style>{\`.input-441d0a7a {
+      <style>{\`.input-013bf54d {
   color: red;
 }\`}</style>
     </>
@@ -8686,7 +8714,7 @@ function MyBasicRefComponent(props: Props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-441d0a7a\\"
+              class=\\"input-013bf54d\\"
               ref={inputRef!}
               value={name()}
               onBlur={(event) => onBlur()}
@@ -8705,7 +8733,7 @@ function MyBasicRefComponent(props: Props) {
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
-      <style>{\`.input-441d0a7a {
+      <style>{\`.input-013bf54d {
   color: red;
 }\`}</style>
     </>
@@ -9029,7 +9057,7 @@ function MyBasicOutputsComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
-    props.onMessage(name());
+    props.onMessageChange(name());
     props.onEvent(props.message);
   });
 
@@ -9051,7 +9079,7 @@ function MyBasicOutputsComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
-    props.onMessage(name());
+    props.onMessageChange(name());
     props.onEvent(props.message);
   });
 
@@ -9078,7 +9106,7 @@ function MyBasicOutputsComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
-    props.onMessage(name());
+    props.onMessageChange(name());
     props.onEvent(props.message);
   });
 
@@ -9105,7 +9133,7 @@ function MyBasicOutputsComponent(props: any) {
   const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
-    props.onMessage(name());
+    props.onMessageChange(name());
     props.onEvent(props.message);
   });
 
@@ -9218,12 +9246,17 @@ exports[`Solid > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import { createSignal, createMemo } from \\"solid-js\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props: any) {
   const [name, setName] = createSignal(\\"Steve\\");
 
   const [dev, setDev] = createSignal(\\"PatrickJS\\");
+
+  function log(message: string) {
+    console.log(message);
+  }
 
   return (
     <>
@@ -9234,6 +9267,11 @@ function MyBasicChildComponent(props: any) {
             hi={name()}
             bye={dev()}
           ></MyBasicOnMountUpdateComponent>
+          <MyBasicOutputsComponent
+            message=\\"Test\\"
+            onMessageChange={(name) => setName(name)}
+            onEvent={(event) => log(\\"Test\\")}
+          ></MyBasicOutputsComponent>
         </div>
       </div>
     </>
@@ -9248,12 +9286,17 @@ exports[`Solid > jsx > Typescript Test > BasicChildComponent 2`] = `
 "import { createSignal, createMemo } from \\"solid-js\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props: any) {
   const [name, setName] = createSignal(\\"Steve\\");
 
   const [dev, setDev] = createSignal(\\"PatrickJS\\");
+
+  function log(message: string) {
+    console.log(message);
+  }
 
   return (
     <>
@@ -9264,6 +9307,11 @@ function MyBasicChildComponent(props: any) {
             hi={name()}
             bye={dev()}
           ></MyBasicOnMountUpdateComponent>
+          <MyBasicOutputsComponent
+            message=\\"Test\\"
+            onMessageChange={(name) => setName(name)}
+            onEvent={(event) => log(\\"Test\\")}
+          ></MyBasicOutputsComponent>
         </div>
       </div>
     </>
@@ -14016,6 +14064,10 @@ function EventPropsComponent(props: EventProps) {
     if (props.onEnter) {
       console.log(props.onEnter());
     }
+
+    if (props.onPass) {
+      props.onPass(\\"test\\");
+    }
   }
 
   return (
@@ -14042,6 +14094,10 @@ function EventPropsComponent(props: EventProps) {
 
     if (props.onEnter) {
       console.log(props.onEnter());
+    }
+
+    if (props.onPass) {
+      props.onPass(\\"test\\");
     }
   }
 
@@ -16068,13 +16124,13 @@ function RenderContent(props: Props) {
         }}
       >
         <div
-          class=\\"div-53cc6e64\\"
+          class=\\"div-7a3852fa\\"
           onClick={(event) => trackClick(props.content.id)}
         >
           <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
         </div>
       </BuilderContext.Provider>
-      <style>{\`.div-53cc6e64 {
+      <style>{\`.div-7a3852fa {
   display: flex;
   flex-direction: columns;
 }\`}</style>
@@ -16130,13 +16186,13 @@ function RenderContent(props: Props) {
         }}
       >
         <div
-          class=\\"div-53cc6e64\\"
+          class=\\"div-7a3852fa\\"
           onClick={(event) => trackClick(props.content.id)}
         >
           <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
         </div>
       </BuilderContext.Provider>
-      <style>{\`.div-53cc6e64 {
+      <style>{\`.div-7a3852fa {
   display: flex;
   flex-direction: columns;
 }\`}</style>
@@ -16740,11 +16796,11 @@ function MyBasicComponent(props: Props) {
 
   return (
     <>
-      <div class=\\"test div-8c5e5900\\">
+      <div class=\\"test div-6c56607a\\">
         {props.id}
         {props.foo.bar.baz}
       </div>
-      <style>{\`.div-8c5e5900 {
+      <style>{\`.div-6c56607a {
   padding: 10px;
 }\`}</style>
     </>
@@ -16783,11 +16839,11 @@ function MyBasicComponent(props: Props) {
 
   return (
     <>
-      <div class=\\"test div-8c5e5900\\">
+      <div class=\\"test div-6c56607a\\">
         {props.id}
         {props.foo.bar.baz}
       </div>
-      <style>{\`.div-8c5e5900 {
+      <style>{\`.div-6c56607a {
   padding: 10px;
 }\`}</style>
     </>

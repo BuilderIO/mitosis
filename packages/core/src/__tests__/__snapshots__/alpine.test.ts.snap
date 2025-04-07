@@ -231,7 +231,7 @@ exports[`Alpine.js > jsx > Javascript Test > Basic Outputs 1`] = `
       name: \\"PatrickJS\\",
 
       init() {
-        props.onMessage(this.name);
+        props.onMessageChange(this.name);
         props.onEvent(props.message);
       },
     }));
@@ -251,7 +251,7 @@ component\\"} */
       name: \\"PatrickJS\\",
 
       init() {
-        props.onMessage(this.name);
+        props.onMessageChange(this.name);
         props.onEvent(props.message);
       },
     }));
@@ -305,6 +305,11 @@ exports[`Alpine.js > jsx > Javascript Test > BasicChildComponent 1`] = `
       x-bind:hi=\\"name\\"
       x-bind:bye=\\"dev\\"
     ></MyBasicOnMountUpdateComponent>
+    <MyBasicOutputsComponent
+      message=\\"Test\\"
+      x-on:message-change=\\"name = name\\"
+      x-on:event=\\"log('Test')\\"
+    ></MyBasicOutputsComponent>
   </div>
 </div>
 <script>
@@ -312,6 +317,9 @@ exports[`Alpine.js > jsx > Javascript Test > BasicChildComponent 1`] = `
     Alpine.data(\\"myBasicChildComponent\\", () => ({
       name: \\"Steve\\",
       dev: \\"PatrickJS\\",
+      log: function log(message) {
+        console.log(message);
+      },
     }));
   });
 </script>
@@ -1988,6 +1996,10 @@ exports[`Alpine.js > jsx > Javascript Test > eventProps 1`] = `
         if (props.onEnter) {
           console.log(props.onEnter());
         }
+
+        if (props.onPass) {
+          props.onPass(\\"test\\");
+        }
       },
     }));
   });
@@ -3529,7 +3541,7 @@ exports[`Alpine.js > jsx > Typescript Test > Basic Outputs 1`] = `
       name: \\"PatrickJS\\",
 
       init() {
-        props.onMessage(this.name);
+        props.onMessageChange(this.name);
         props.onEvent(props.message);
       },
     }));
@@ -3549,7 +3561,7 @@ component\\"} */
       name: \\"PatrickJS\\",
 
       init() {
-        props.onMessage(this.name);
+        props.onMessageChange(this.name);
         props.onEvent(props.message);
       },
     }));
@@ -3603,6 +3615,11 @@ exports[`Alpine.js > jsx > Typescript Test > BasicChildComponent 1`] = `
       x-bind:hi=\\"name\\"
       x-bind:bye=\\"dev\\"
     ></MyBasicOnMountUpdateComponent>
+    <MyBasicOutputsComponent
+      message=\\"Test\\"
+      x-on:message-change=\\"name = name\\"
+      x-on:event=\\"log('Test')\\"
+    ></MyBasicOutputsComponent>
   </div>
 </div>
 <script>
@@ -3610,6 +3627,9 @@ exports[`Alpine.js > jsx > Typescript Test > BasicChildComponent 1`] = `
     Alpine.data(\\"myBasicChildComponent\\", () => ({
       name: \\"Steve\\",
       dev: \\"PatrickJS\\",
+      log: function log(message: string) {
+        console.log(message);
+      },
     }));
   });
 </script>
@@ -5274,6 +5294,10 @@ exports[`Alpine.js > jsx > Typescript Test > eventProps 1`] = `
 
         if (props.onEnter) {
           console.log(props.onEnter());
+        }
+
+        if (props.onPass) {
+          props.onPass(\\"test\\");
         }
       },
     }));

@@ -1,6 +1,18 @@
-import { stripStateAndPropsRefs } from '@/helpers/strip-state-and-props-refs';
+import { blockToAngular } from '@/generators/angular/classic/blocks';
+import { AngularBlockOptions, ToAngularOptions } from '@/generators/angular/types';
+import { indent } from '@/helpers/indent';
+import { isMitosisNode } from '@/helpers/is-mitosis-node';
+import { replaceNodes } from '@/helpers/replace-identifiers';
+import {
+  DO_NOT_USE_VARS_TRANSFORMS,
+  stripStateAndPropsRefs,
+} from '@/helpers/strip-state-and-props-refs';
+import { nodeHasCss } from '@/helpers/styles/helpers';
 import { type MitosisComponent } from '@/types/mitosis-component';
 import { MitosisNode } from '@/types/mitosis-node';
+import * as babel from '@babel/core';
+import { pipe } from 'fp-ts/function';
+import traverse from 'neotraverse/legacy';
 
 export const HELPER_FUNCTIONS = (
   isTs?: boolean,
@@ -58,7 +70,7 @@ export const getDefaultProps = ({ defaultProps }: MitosisComponent) => {
       return `${prop}: ${value}`;
     })
     .join(',');
-  return `const defaultProps = {${defalutPropsString}};\n`;
+  return `const defaultProps: any = {${defalutPropsString}};\n`;
 };
 
 /**
@@ -95,3 +107,125 @@ export const hasFirstChildKeyAttribute = (node: MitosisNode): boolean => {
   const firstChildBinding = node.children[0].bindings;
   return Boolean(firstChildBinding && firstChildBinding.key?.code);
 };
+
+export const preprocessCssAsJson = (json: MitosisComponent) => {
+  traverse(json).forEach((item) => {
+    if (isMitosisNode(item)) {
+      if (nodeHasCss(item)) {
+        if (item.bindings.css?.code?.includes('&quot;')) {
+          item.bindings.css.code = item.bindings.css.code.replace(/&quot;/g, '"');
+        }
+      }
+    }
+  });
+};
+
+export const generateNgModule = (
+  content: string,
+  name: string,
+  componentsUsed: string[],
+  component: MitosisComponent,
+  bootstrapMapper: Function | null | undefined,
+): string => {
+  return `import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+
+${content}
+
+@NgModule({
+  declarations: [${name}],
+  imports: [CommonModule${
+    componentsUsed.length ? ', ' + componentsUsed.map((comp) => `${comp}Module`).join(', ') : ''
+  }],
+  exports: [${name}],
+  ${bootstrapMapper ? bootstrapMapper(name, componentsUsed, component) : ''}
+})
+export class ${name}Module {}`;
+};
+
+export const traverseToGetAllDynamicComponents = (
+  json: MitosisComponent,
+  options: ToAngularOptions,
+  blockOptions: AngularBlockOptions,
+) => {
+  const components: Set<string> = new Set();
+  let dynamicTemplate = '';
+  traverse(json).forEach((item) => {
+    if (isMitosisNode(item) && item.name.includes('.') && item.name.split('.').length === 2) {
+      const children = item.children
+        .map((child) => blockToAngular({ root: json, json: child, options, blockOptions }))
+        .join('\n');
+      dynamicTemplate = `<ng-template #${
+        item.name.split('.')[1].toLowerCase() + 'Template'
+      }>${children}</ng-template>`;
+      components.add(item.name);
+    }
+  });
+  return {
+    components,
+    dynamicTemplate,
+  };
+};
+
+export const getTemplateFormat = (template: string): string =>
+  indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
+
+export const traverseAndCheckIfInnerHTMLIsUsed = (json: MitosisComponent) => {
+  let innerHTMLIsUsed = false;
+  traverse(json).forEach((item) => {
+    if (isMitosisNode(item)) {
+      Object.keys(item.bindings).forEach((key) => {
+        if (key === 'innerHTML') {
+          innerHTMLIsUsed = true;
+          return;
+        }
+      });
+    }
+  });
+  return innerHTMLIsUsed;
+};
+
+const { types } = babel;
+
+/**
+ * Prefixes state identifiers with this.
+ * e.g. state.foo --> this.foo
+ */
+const prefixState = (code: string): string => {
+  return replaceNodes({
+    code,
+    nodeMaps: [
+      {
+        from: types.identifier('state'),
+        to: types.thisExpression(),
+      },
+    ],
+  }).trim();
+};
+
+export const processAngularCode =
+  ({
+    contextVars,
+    outputVars,
+    domRefs,
+    replaceWith,
+  }: {
+    contextVars: string[];
+    outputVars: string[];
+    domRefs: string[];
+    replaceWith?: string;
+  }) =>
+  (code: string) =>
+    pipe(
+      DO_NOT_USE_VARS_TRANSFORMS(code, {
+        contextVars,
+        domRefs,
+        outputVars,
+      }),
+      /**
+       * Only prefix state that is in the Angular class component.
+       * Do not prefix state referenced in the template
+       */
+      replaceWith === 'this' ? prefixState : (x) => x,
+      (newCode) => stripStateAndPropsRefs(newCode, { replaceWith }),
+    );

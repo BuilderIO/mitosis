@@ -328,8 +328,7 @@ const componentMappers: {
     const bindings: Dictionary<Binding> = {
       symbol: createSingleBinding({
         code: JSON.stringify({
-          data: block.component?.options.symbol.data,
-          content: block.component?.options.symbol.content,
+          ...block.component?.options.symbol,
         }),
       }),
       ...actionBindings,

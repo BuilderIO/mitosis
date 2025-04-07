@@ -182,7 +182,7 @@ function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -207,7 +207,7 @@ function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -260,6 +260,7 @@ exports[`Preact > jsx > Javascript Test > BasicChildComponent 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props) {
@@ -267,11 +268,20 @@ function MyBasicChildComponent(props) {
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
 
+  function log(message) {
+    console.log(message);
+  }
+
   return (
     <div>
       <MyBasicComponent id={dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => setName(name)}
+          onEvent={(event) => log(\\"Test\\")}
+        />
       </div>
     </div>
   );
@@ -2309,6 +2319,10 @@ function EventPropsComponent(props) {
     if (props.onEnter) {
       console.log(props.onEnter());
     }
+
+    if (props.onPass) {
+      props.onPass(\\"test\\");
+    }
   }
 
   return <button onClick={(event) => handleClick()}>Test</button>;
@@ -4163,7 +4177,7 @@ function MyBasicOutputsComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -4188,7 +4202,7 @@ function MyBasicOutputsComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -4246,6 +4260,7 @@ exports[`Preact > jsx > Typescript Test > BasicChildComponent 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props: any) {
@@ -4253,11 +4268,20 @@ function MyBasicChildComponent(props: any) {
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
 
+  function log(message: string) {
+    console.log(message);
+  }
+
   return (
     <div>
       <MyBasicComponent id={dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => setName(name)}
+          onEvent={(event) => log(\\"Test\\")}
+        />
       </div>
     </div>
   );
@@ -6593,6 +6617,10 @@ function EventPropsComponent(props: EventProps) {
     if (props.onEnter) {
       console.log(props.onEnter());
     }
+
+    if (props.onPass) {
+      props.onPass(\\"test\\");
+    }
   }
 
   return <button onClick={(event) => handleClick()}>Test</button>;
@@ -8504,14 +8532,14 @@ export default MyComponent;
 `;
 
 exports[`Preact > svelte > Javascript Test > context 1`] = `
-"'>' expected. (33:13)
-  31 | return (
+"'>' expected. (34:13)
   32 |
-> 33 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+  33 |
+> 34 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  34 |
   35 |
-  36 |"
+  36 |
+  37 | );"
 `;
 
 exports[`Preact > svelte > Javascript Test > each 1`] = `
@@ -8904,14 +8932,14 @@ export default MyComponent;
 `;
 
 exports[`Preact > svelte > Typescript Test > context 1`] = `
-"'>' expected. (33:13)
-  31 | return (
+"'>' expected. (34:13)
   32 |
-> 33 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+  33 |
+> 34 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  34 |
   35 |
-  36 |"
+  36 |
+  37 | );"
 `;
 
 exports[`Preact > svelte > Typescript Test > each 1`] = `

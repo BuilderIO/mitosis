@@ -13,5 +13,5 @@ export default function isChildren({
   extraMatches?: string[];
 }): boolean {
   const textValue = getTextValue(node);
-  return ['props.children', 'children'].concat(extraMatches).includes(textValue);
+  return ['props.children', 'children', 'children()'].concat(extraMatches).includes(textValue);
 }

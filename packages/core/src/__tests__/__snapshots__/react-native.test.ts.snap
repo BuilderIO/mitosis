@@ -312,7 +312,7 @@ function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -349,7 +349,7 @@ function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -438,6 +438,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props) {
@@ -445,11 +446,20 @@ function MyBasicChildComponent(props) {
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
 
+  function log(message) {
+    console.log(message);
+  }
+
   return (
     <View>
       <MyBasicComponent id={dev} />
       <View>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => setName(name)}
+          onEvent={(event) => log(\\"Test\\")}
+        />
       </View>
     </View>
   );
@@ -3135,6 +3145,10 @@ function EventPropsComponent(props) {
 
     if (props.onEnter) {
       console.log(props.onEnter());
+    }
+
+    if (props.onPass) {
+      props.onPass(\\"test\\");
     }
   }
 
@@ -5942,7 +5956,7 @@ function MyBasicOutputsComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -5979,7 +5993,7 @@ function MyBasicOutputsComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -6073,6 +6087,7 @@ import {
 } from \\"react-native\\";
 import { useState } from \\"react\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props: any) {
@@ -6080,11 +6095,20 @@ function MyBasicChildComponent(props: any) {
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
 
+  function log(message: string) {
+    console.log(message);
+  }
+
   return (
     <View>
       <MyBasicComponent id={dev} />
       <View>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => setName(name)}
+          onEvent={(event) => log(\\"Test\\")}
+        />
       </View>
     </View>
   );
@@ -9069,6 +9093,10 @@ function EventPropsComponent(props: EventProps) {
     if (props.onEnter) {
       console.log(props.onEnter());
     }
+
+    if (props.onPass) {
+      props.onPass(\\"test\\");
+    }
   }
 
   return (
@@ -11938,14 +11966,14 @@ export default MyComponent;
 `;
 
 exports[`React Native > svelte > Javascript Test > context 1`] = `
-"'>' expected. (33:13)
-  31 | return (
+"'>' expected. (34:13)
   32 |
-> 33 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
+  33 |
+> 34 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
      |             ^
-  34 |
   35 |
-  36 |"
+  36 |
+  37 | );"
 `;
 
 exports[`React Native > svelte > Javascript Test > each 1`] = `
@@ -12529,14 +12557,14 @@ export default MyComponent;
 `;
 
 exports[`React Native > svelte > Typescript Test > context 1`] = `
-"'>' expected. (33:13)
-  31 | return (
+"'>' expected. (34:13)
   32 |
-> 33 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
+  33 |
+> 34 | <'activeTab'.Provider  value={activeTab}><View><Text>{activeTab}</Text></View></'activeTab'.Provider>
      |             ^
-  34 |
   35 |
-  36 |"
+  36 |
+  37 | );"
 `;
 
 exports[`React Native > svelte > Typescript Test > each 1`] = `

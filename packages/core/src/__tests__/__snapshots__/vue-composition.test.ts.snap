@@ -234,11 +234,11 @@ exports[`Vue > jsx > Javascript Test > Basic Outputs 1`] = `
 <script setup>
 import { onMounted, ref } from \\"vue\\";
 
-const props = defineProps([\\"onMessage\\", \\"onEvent\\", \\"message\\"]);
+const props = defineProps([\\"onMessageChange\\", \\"onEvent\\", \\"message\\"]);
 const name = ref(\\"PatrickJS\\");
 
 onMounted(() => {
-  props.onMessage(name.value);
+  props.onMessageChange(name.value);
   props.onEvent(props.message);
 });
 </script>"
@@ -255,11 +255,11 @@ component\\"} */
 <script setup>
 import { onMounted, ref } from \\"vue\\";
 
-const props = defineProps([\\"onMessage\\", \\"onEvent\\", \\"message\\"]);
+const props = defineProps([\\"onMessageChange\\", \\"onEvent\\", \\"message\\"]);
 const name = ref(\\"PatrickJS\\");
 
 onMounted(() => {
-  props.onMessage(name.value);
+  props.onMessageChange(name.value);
   props.onEvent(props.message);
 });
 </script>"
@@ -300,7 +300,12 @@ exports[`Vue > jsx > Javascript Test > BasicChildComponent 1`] = `
       <MyBasicOnMountUpdateComponent
         :hi=\\"name\\"
         :bye=\\"dev\\"
-      ></MyBasicOnMountUpdateComponent>
+      ></MyBasicOnMountUpdateComponent
+      ><MyBasicOutputsComponent
+        message=\\"Test\\"
+        :onMessageChange=\\"(name) => (name = name)\\"
+        :onEvent=\\"(event) => log('Test')\\"
+      ></MyBasicOutputsComponent>
     </div>
   </div>
 </template>
@@ -309,10 +314,15 @@ exports[`Vue > jsx > Javascript Test > BasicChildComponent 1`] = `
 import { ref } from \\"vue\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 const name = ref(\\"Steve\\");
 const dev = ref(\\"PatrickJS\\");
+
+function log(message) {
+  console.log(message);
+}
 </script>"
 `;
 
@@ -2148,7 +2158,7 @@ exports[`Vue > jsx > Javascript Test > eventProps 1`] = `
 </template>
 
 <script setup>
-const props = defineProps([\\"onGetVoid\\", \\"onEnter\\"]);
+const props = defineProps([\\"onGetVoid\\", \\"onEnter\\", \\"onPass\\"]);
 
 function handleClick() {
   if (props.onGetVoid) {
@@ -2157,6 +2167,10 @@ function handleClick() {
 
   if (props.onEnter) {
     console.log(props.onEnter());
+  }
+
+  if (props.onPass) {
+    props.onPass(\\"test\\");
   }
 }
 </script>"
@@ -3823,11 +3837,11 @@ exports[`Vue > jsx > Typescript Test > Basic Outputs 1`] = `
 <script setup lang=\\"ts\\">
 import { onMounted, ref } from \\"vue\\";
 
-const props = defineProps([\\"onMessage\\", \\"onEvent\\", \\"message\\"]);
+const props = defineProps([\\"onMessageChange\\", \\"onEvent\\", \\"message\\"]);
 const name = ref(\\"PatrickJS\\");
 
 onMounted(() => {
-  props.onMessage(name.value);
+  props.onMessageChange(name.value);
   props.onEvent(props.message);
 });
 </script>"
@@ -3844,11 +3858,11 @@ component\\"} */
 <script setup lang=\\"ts\\">
 import { onMounted, ref } from \\"vue\\";
 
-const props = defineProps([\\"onMessage\\", \\"onEvent\\", \\"message\\"]);
+const props = defineProps([\\"onMessageChange\\", \\"onEvent\\", \\"message\\"]);
 const name = ref(\\"PatrickJS\\");
 
 onMounted(() => {
-  props.onMessage(name.value);
+  props.onMessageChange(name.value);
   props.onEvent(props.message);
 });
 </script>"
@@ -3894,7 +3908,12 @@ exports[`Vue > jsx > Typescript Test > BasicChildComponent 1`] = `
       <MyBasicOnMountUpdateComponent
         :hi=\\"name\\"
         :bye=\\"dev\\"
-      ></MyBasicOnMountUpdateComponent>
+      ></MyBasicOnMountUpdateComponent
+      ><MyBasicOutputsComponent
+        message=\\"Test\\"
+        :onMessageChange=\\"(name) => (name = name)\\"
+        :onEvent=\\"(event) => log('Test')\\"
+      ></MyBasicOutputsComponent>
     </div>
   </div>
 </template>
@@ -3903,10 +3922,15 @@ exports[`Vue > jsx > Typescript Test > BasicChildComponent 1`] = `
 import { ref } from \\"vue\\";
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 const name = ref(\\"Steve\\");
 const dev = ref(\\"PatrickJS\\");
+
+function log(message: string) {
+  console.log(message);
+}
 </script>"
 `;
 
@@ -5991,6 +6015,10 @@ function handleClick(): ReturnType<EventState[\\"handleClick\\"]> {
 
   if (props.onEnter) {
     console.log(props.onEnter());
+  }
+
+  if (props.onPass) {
+    props.onPass(\\"test\\");
   }
 }
 </script>"

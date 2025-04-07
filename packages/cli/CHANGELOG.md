@@ -1,5 +1,28 @@
 # @builder.io/mitosis-cli
 
+## 0.9.2
+
+### Patch Changes
+
+- Updated dependencies [d3502a7]
+  - @builder.io/mitosis@0.9.2
+
+## 0.9.1
+
+### Patch Changes
+
+- Updated dependencies [329e754]
+  - @builder.io/mitosis@0.9.1
+
+## 0.9.0
+
+### Patch Changes
+
+- a65e72b: JSX generator properly escapes single character > and <
+- Updated dependencies [8ad66fd]
+- Updated dependencies [a65e72b]
+  - @builder.io/mitosis@0.9.0
+
 ## 0.8.0
 
 ### Patch Changes

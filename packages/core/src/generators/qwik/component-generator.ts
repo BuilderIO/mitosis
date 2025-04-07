@@ -48,6 +48,7 @@ const PLUGINS: MitosisPlugin[] = [
       case 'context-set':
       case 'hooks':
       case 'hooks-deps':
+      case 'hooks-deps-array':
       case 'properties':
       case 'dynamic-jsx-elements':
         // update signal getters to have `.value`
