@@ -1,9 +1,11 @@
+import { componentToBuilder } from '@/generators/builder';
 import { componentToMitosis } from '@/generators/mitosis';
 import { builderContentToMitosisComponent } from '@/parsers/builder';
+import { parseJsx } from '@/parsers/jsx';
 import { describe, test } from 'vitest';
 
 describe('Builder Symbols', () => {
-  test('invalid CSS binding is dropped', () => {
+  test('no data loss occurs when parsing and generating symbols', () => {
     const builderJson = {
       data: {
         blocks: [
@@ -34,7 +36,7 @@ describe('Builder Symbols', () => {
         "bindings": {
           "symbol": {
             "bindingType": "expression",
-            "code": "{\\"data\\":{}}",
+            "code": "{\\"data\\":{},\\"model\\":\\"symbol\\",\\"entry\\":\\"ce58d5d74c21469496725f27b8781498\\",\\"ownerId\\":\\"YJIGb4i01jvw0SRdL5Bt\\",\\"global\\":false}",
             "type": "single",
           },
         },
@@ -57,11 +59,44 @@ describe('Builder Symbols', () => {
           <Symbol
             symbol={{
               data: {},
+              model: \\"symbol\\",
+              entry: \\"ce58d5d74c21469496725f27b8781498\\",
+              ownerId: \\"YJIGb4i01jvw0SRdL5Bt\\",
+              global: false,
             }}
           />
         );
       }
       "
     `);
+
+    const backToMitosis = parseJsx(mitosis);
+    expect(backToMitosis.children[0]).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/node",
+        "bindings": {
+          "symbol": {
+            "bindingType": "expression",
+            "code": "{
+        data: {},
+        model: \\"symbol\\",
+        entry: \\"ce58d5d74c21469496725f27b8781498\\",
+        ownerId: \\"YJIGb4i01jvw0SRdL5Bt\\",
+        global: false
+      }",
+            "type": "single",
+          },
+        },
+        "children": [],
+        "meta": {},
+        "name": "Symbol",
+        "properties": {},
+        "scope": {},
+      }
+    `);
+
+    const backToBuilder = componentToBuilder()({ component: backToMitosis });
+    // no data loss means the component payloads are exactly the same
+    expect(backToBuilder.data!.blocks![0].component).toEqual(builderJson.data.blocks[0].component);
   });
 });
