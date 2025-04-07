@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.9.3
+
+### Patch Changes
+
+- 1eb4d28: Builder: Symbol information is preserved
+
 ## 0.9.2
 
 ### Patch Changes
