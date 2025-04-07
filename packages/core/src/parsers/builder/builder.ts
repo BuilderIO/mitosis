@@ -121,9 +121,7 @@ const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosi
 
       let code = block.code?.bindings?.[key] || block.bindings[key];
 
-      console.log('ooking at', code, key);
       const verifyCode = verifyIsValid(code);
-      console.log(verifyCode);
       if (verifyCode.valid) {
         code = processBoundLogic(code);
       } else {
@@ -493,8 +491,8 @@ const componentMappers: {
     const localizedValues: MitosisNode['localizedValues'] = {};
 
     const blockBindings: MitosisNode['bindings'] = {
-      ...mapBuilderBindingsToMitosisBindingWithCode(block.bindings),
-      ...mapBuilderBindingsToMitosisBindingWithCode(block.code?.bindings),
+      ...mapBuilderBindingsToMitosisBindingWithCode(block.bindings, options),
+      ...mapBuilderBindingsToMitosisBindingWithCode(block.code?.bindings, options),
     };
 
     const bindings: any = {
@@ -738,7 +736,6 @@ export const builderElementToMitosisNode = (
   } else if (blockBindings.hide) {
     code = `!(${wrapBindingIfNeeded(blockBindings.hide, options)})`;
   }
-  console.log('A', blockBindings);
   if (code) {
     const isFragment = block.component?.name === 'Fragment';
     // TODO: handle having other things, like a repeat too
@@ -777,12 +774,10 @@ export const builderElementToMitosisNode = (
     return mapper(block, options);
   }
 
-  console.log('B"', blockBindings);
   const bindings: MitosisNode['bindings'] = {};
   const children: MitosisNode[] = [];
   const slots: MitosisNode['slots'] = {};
 
-  console.log('check here', blockBindings);
   if (blockBindings) {
     for (const key in blockBindings) {
       if (key === 'css') {
@@ -794,7 +789,6 @@ export const builderElementToMitosisNode = (
         let code = (blockBindings[key] as any).code || blockBindings[key];
         const verifyCode = verifyIsValid(code);
 
-        console.log('ooking at', code, key);
         if (verifyCode.valid) {
           code = processBoundLogic(code);
         } else {
@@ -1296,20 +1290,34 @@ export const builderContentToMitosisComponent = (
 
 function mapBuilderBindingsToMitosisBindingWithCode(
   bindings: { [key: string]: string } | undefined,
+  options?: BuilderToMitosisOptions,
 ): MitosisNode['bindings'] {
   const result: MitosisNode['bindings'] = {};
   bindings &&
     Object.keys(bindings).forEach((key) => {
-      console.log('HI!', key);
-      // TODO processing here
       const value: string | { code: string } = bindings[key] as any;
+      let code = '';
       if (typeof value === 'string') {
-        result[key] = createSingleBinding({ code: value });
+        code = value;
       } else if (value && typeof value === 'object' && value.code) {
-        result[key] = createSingleBinding({ code: value.code });
+        code = value.code;
       } else {
         throw new Error('Unexpected binding value: ' + JSON.stringify(value));
       }
+
+      const verifyCode = verifyIsValid(code);
+      if (verifyCode.valid) {
+        code = processBoundLogic(code);
+      } else {
+        if (options?.escapeInvalidCode) {
+          code = '`' + code + ' [INVALID CODE]`';
+        } else {
+          console.warn(`Dropping binding "${key}" due to invalid code: ${code}`);
+          return;
+        }
+      }
+
+      result[key] = createSingleBinding({ code });
     });
   return result;
 }
