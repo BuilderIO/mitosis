@@ -6,6 +6,7 @@ export const getAngularCoreImportsAsString = ({
   onPush,
   effect,
   signal,
+  computed,
 }: {
   refs: boolean;
   output: boolean;
@@ -14,6 +15,7 @@ export const getAngularCoreImportsAsString = ({
   onPush: boolean;
   effect: boolean;
   signal: boolean;
+  computed: boolean;
 }): string => {
   const angularCoreImports: Record<string, boolean> = {
     Component: true,
@@ -25,6 +27,7 @@ export const getAngularCoreImportsAsString = ({
     input,
     effect,
     signal,
+    computed,
     ChangeDetectionStrategy: onPush,
   };
   return Object.entries(angularCoreImports)

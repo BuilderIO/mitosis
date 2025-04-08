@@ -9,6 +9,7 @@ import { getDomRefs } from '@/generators/angular/helpers/get-refs';
 import { getAngularStyles } from '@/generators/angular/helpers/get-styles';
 import { blockToAngularSignals } from '@/generators/angular/signals/blocks';
 import { getAngularCoreImportsAsString } from '@/generators/angular/signals/helpers';
+import { getComputedGetters } from '@/generators/angular/signals/helpers/get-computed';
 import { getSignalInputs } from '@/generators/angular/signals/helpers/get-inputs';
 import { getCodeProcessorPlugins } from '@/generators/angular/signals/plugins/get-code-processor-plugins';
 import {
@@ -192,7 +193,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       format: 'class',
       data: false,
       functions: true,
-      getters: true,
+      getters: false,
       onlyValueMapper: true,
       valueMapper: (
         code: string,
@@ -204,6 +205,10 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       },
     });
 
+    // Handle getters as computed signals
+    const gettersString = getComputedGetters({ json });
+    const hasGetters = !!gettersString.length;
+
     // Imports
     const coreImports = getAngularCoreImportsAsString({
       refs: domRefs.size !== 0,
@@ -212,6 +217,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       model: writeableSignals.length !== 0,
       effect: json.hooks.onUpdate?.length !== 0,
       signal: dataString.length !== 0,
+      computed: hasGetters,
       onPush,
     });
 
@@ -270,6 +276,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
             .join('\n')}
     
           ${dataString}
+          ${gettersString}
           ${methodsString}
     
           constructor(${injectables.join(',\n')}) {          
