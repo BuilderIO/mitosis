@@ -13,6 +13,7 @@ export interface ToAngularOptions extends BaseTranspilerOptions {
   importMapper?: Function;
   bootstrapMapper?: Function;
   visuallyIgnoreHostElement?: boolean;
+  defaultExportComponents?: boolean;
   experimental?: {
     injectables?: (variableName: string, variableType: string) => string;
     inject?: boolean;
@@ -25,6 +26,7 @@ export const DEFAULT_ANGULAR_OPTIONS: ToAngularOptions = {
   preserveImports: false,
   preserveFileExtensions: false,
   visuallyIgnoreHostElement: true,
+  defaultExportComponents: false,
 };
 
 export type AngularMetadata = {
