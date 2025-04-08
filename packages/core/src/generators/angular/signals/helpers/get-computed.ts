@@ -1,4 +1,6 @@
+import { hashCodeAsString } from '@/symbols/symbol-processor';
 import type { MitosisComponent } from '@/types/mitosis-component';
+import type { Binding } from '@/types/mitosis-node';
 import { pickBy } from 'lodash';
 
 export const getComputedGetters = ({ json }: { json: MitosisComponent }) => {
@@ -26,4 +28,21 @@ export const getComputedGetters = ({ json }: { json: MitosisComponent }) => {
     })
     .filter(Boolean)
     .join('\n');
+};
+
+export const createObjectSpreadComputed = (
+  json: MitosisComponent,
+  binding: Binding,
+  key: string,
+): string => {
+  const computedName = `objSpread_${key}_${hashCodeAsString(binding.code)}`;
+
+  console.log('i am here', binding.code, computedName);
+  // creates a getter that gets converted to Angular's computed
+  json.state[computedName] = {
+    code: `get ${computedName}() { return ${binding.code} }`,
+    type: 'getter',
+  };
+
+  return computedName;
 };

@@ -199,6 +199,7 @@ export const getCodeProcessorPlugins = (
       switch (codeType) {
         case 'bindings':
           return (code, key, context) => {
+            const isASpreadExpr = code.includes('...');
             let replaceWith = '';
             if (key === 'key') {
               /**
@@ -210,6 +211,9 @@ export const getCodeProcessorPlugins = (
               if (isForParent) {
                 replaceWith = 'this.';
               }
+            }
+            if (isASpreadExpr) {
+              replaceWith = 'this.';
             }
 
             return processClassComponentBinding(json, transformBindings(json, code), {
