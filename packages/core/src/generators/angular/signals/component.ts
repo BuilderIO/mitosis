@@ -209,10 +209,6 @@ Please add a initial value for every state property even if it's \`undefined\`.`
     const gettersString = getComputedGetters({ json });
     const hasGetters = !!gettersString.length;
 
-    const hasObjectSpreads =
-      json.compileContext?.angular?.extra?.objectSpreadProps &&
-      Object.keys(json.compileContext.angular.extra.objectSpreadProps).length > 0;
-
     // Imports
     const coreImports = getAngularCoreImportsAsString({
       refs: domRefs.size !== 0,
@@ -221,7 +217,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       model: writeableSignals.length !== 0,
       effect: json.hooks.onUpdate?.length !== 0,
       signal: dataString.length !== 0,
-      computed: hasGetters || hasObjectSpreads,
+      computed: hasGetters,
       onPush,
     });
 
