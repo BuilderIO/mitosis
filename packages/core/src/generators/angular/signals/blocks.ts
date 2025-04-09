@@ -285,8 +285,6 @@ export const blockToAngularSignals = ({
     .map(stringifyBinding(json, blockOptions, root))
     .join('');
 
-  console.log('stringifiedBindings', stringifiedBindings);
-
   str += stringifiedBindings;
 
   if (rootRef && !str.includes(`#${rootRef}`)) {

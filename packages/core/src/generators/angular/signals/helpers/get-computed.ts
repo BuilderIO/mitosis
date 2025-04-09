@@ -37,7 +37,6 @@ export const createObjectSpreadComputed = (
 ): string => {
   const computedName = `objSpread_${key}_${hashCodeAsString(binding.code)}`;
 
-  console.log('i am here', binding.code, computedName);
   // creates a getter that gets converted to Angular's computed
   json.state[computedName] = {
     code: `get ${computedName}() { return ${binding.code} }`,
