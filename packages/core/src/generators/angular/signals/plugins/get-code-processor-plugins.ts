@@ -49,7 +49,7 @@ const handleAssignmentExpression = (path: NodePath<AssignmentExpression | Binary
   }
 };
 
-const handleMemberExpression = (path: NodePath<MemberExpression>) => {
+const handleMemberExpression = (path: NodePath<MemberExpression>, json?: MitosisComponent) => {
   if (path.node.extra?.makeCallExpressionDone || path.parentPath?.node.extra?.updateExpression) {
     // Don't add a function if we've done it already
     return;
@@ -67,6 +67,22 @@ const handleMemberExpression = (path: NodePath<MemberExpression>) => {
   }
 
   if (isStateOrPropsExpression(path)) {
+    // Check if the property is a method or function type, and if so, don't convert it to a callable
+    if (
+      isIdentifier(path.node.object) &&
+      isIdentifier(path.node.property) &&
+      path.node.object.name === 'state' &&
+      json?.state &&
+      typeof path.node.property.name === 'string' &&
+      json.state[path.node.property.name] &&
+      json.state[path.node.property.name]?.type &&
+      (json.state[path.node.property.name]?.type === 'method' ||
+        json.state[path.node.property.name]?.type === 'function')
+    ) {
+      // It's a function/method reference, don't convert it to a callable
+      return;
+    }
+
     path.node.extra = { ...path.node.extra, makeCallExpressionDone: true };
     path.replaceWith(callExpression(path.node, []));
   }
@@ -226,7 +242,11 @@ const handleTemplateLiteral = (
   return `${fnName}(${extraParams.join(', ')})`;
 };
 
-const transformHooksAndState = (code: string, isHookDepArray?: boolean) => {
+const transformHooksAndState = (
+  code: string,
+  isHookDepArray?: boolean,
+  json?: MitosisComponent,
+) => {
   return babelTransformExpression(code, {
     AssignmentExpression(path) {
       handleAssignmentExpression(path);
@@ -265,7 +285,7 @@ const transformHooksAndState = (code: string, isHookDepArray?: boolean) => {
         return;
       }
 
-      handleMemberExpression(path);
+      handleMemberExpression(path, json);
     },
   });
 };
@@ -338,7 +358,7 @@ ${code}`);
       handleAssignmentExpression(path);
     },
     MemberExpression(path) {
-      handleMemberExpression(path);
+      handleMemberExpression(path, json);
     },
     TemplateLiteral(path) {
       // they are already created as trackBy functions
@@ -363,7 +383,8 @@ export const getCodeProcessorPlugins = (
       switch (codeType) {
         case 'bindings':
           return (code, key, context) => {
-            const isASpreadExpr = code.includes('...');
+            const theyConvertToGetters =
+              (code.startsWith('{') && code.includes('...')) || code.includes(' as ');
             let replaceWith = '';
             if (key === 'key') {
               /**
@@ -376,7 +397,7 @@ export const getCodeProcessorPlugins = (
                 replaceWith = 'this.';
               }
             }
-            if (isASpreadExpr) {
+            if (theyConvertToGetters) {
               replaceWith = 'this.';
             }
 
@@ -391,7 +412,7 @@ export const getCodeProcessorPlugins = (
           return (code) => {
             return processClassComponentBinding(
               json,
-              transformHooksAndState(code, codeType === 'hooks-deps-array'),
+              transformHooksAndState(code, codeType === 'hooks-deps-array', json),
               processBindingOptions,
             );
           };

@@ -188,7 +188,7 @@ Please create a new function with the EventTarget and use e.g:
         ? ` [innerHTML]="${code}" `
         : ` [innerHTML]="sanitizer.bypassSecurityTrustHtml(${code})" `;
     } else {
-      if (code.startsWith('{') && code.includes('...')) {
+      if ((code.startsWith('{') && code.includes('...')) || code.includes(' as ')) {
         const computedName = createObjectSpreadComputed(root, binding, key);
         return `[${keyToUse}]="${computedName}()"`;
       }
