@@ -341,6 +341,10 @@ ${code}`);
       handleMemberExpression(path);
     },
     TemplateLiteral(path) {
+      // they are already created as trackBy functions
+      if (key === 'key') {
+        return;
+      }
       // When we encounter a template literal, convert it to a function
       const fnCall = handleTemplateLiteral(path, json, key, context);
       path.replaceWith(identifier(fnCall));
