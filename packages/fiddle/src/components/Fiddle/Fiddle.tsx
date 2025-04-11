@@ -275,6 +275,7 @@ export default function Fiddle() {
             case 'angular':
               return {
                 standalone: this.options.angularStandalone === 'true',
+                api: 'signals',
               };
             case 'react':
               return {

@@ -9,6 +9,7 @@ import { getDomRefs } from '@/generators/angular/helpers/get-refs';
 import { getAngularStyles } from '@/generators/angular/helpers/get-styles';
 import { blockToAngularSignals } from '@/generators/angular/signals/blocks';
 import { getAngularCoreImportsAsString } from '@/generators/angular/signals/helpers';
+import { getComputedGetters } from '@/generators/angular/signals/helpers/get-computed';
 import { getSignalInputs } from '@/generators/angular/signals/helpers/get-inputs';
 import { getCodeProcessorPlugins } from '@/generators/angular/signals/plugins/get-code-processor-plugins';
 import {
@@ -25,6 +26,7 @@ import { getChildComponents } from '@/helpers/get-child-components';
 import { getComponentsUsed } from '@/helpers/get-components-used';
 import { getProps } from '@/helpers/get-props';
 import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-string';
+import { isHookEmpty } from '@/helpers/is-hook-empty';
 import { isUpperCase } from '@/helpers/is-upper-case';
 import { initializeOptions } from '@/helpers/merge-options';
 import { ImportValues, renderPreComponent } from '@/helpers/render-imports';
@@ -33,6 +35,7 @@ import {
   ROOT_REF,
   getAddAttributePassingRef,
   getAttributePassingString,
+  shouldAddAttributePassing,
 } from '@/helpers/web-components/attribute-passing';
 import {
   runPostCodePlugins,
@@ -78,7 +81,7 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
       json = runPreJsonPlugins({ json, plugins: options.plugins });
     }
 
-    const withAttributePassing = true; // We always want to pass attributes
+    const withAttributePassing = shouldAddAttributePassing(json, options);
     const rootRef = getAddAttributePassingRef(json, options);
     const domRefs = getDomRefs({ json, options, rootRef, withAttributePassing });
 
@@ -158,7 +161,7 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
       template: `\`${getTemplateFormat(template)}\``,
     };
     if (onPush) {
-      componentSettings.changeDetection = `'ChangeDetectionStrategy.OnPush'`;
+      componentSettings.changeDetection = 'ChangeDetectionStrategy.OnPush';
     }
     if (styles) {
       componentSettings.styles = `\`${styles}\``;
@@ -190,7 +193,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       format: 'class',
       data: false,
       functions: true,
-      getters: true,
+      getters: false,
       onlyValueMapper: true,
       valueMapper: (
         code: string,
@@ -202,6 +205,10 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       },
     });
 
+    // Handle getters as computed signals
+    const gettersString = getComputedGetters({ json });
+    const hasGetters = !!gettersString.length;
+
     // Imports
     const coreImports = getAngularCoreImportsAsString({
       refs: domRefs.size !== 0,
@@ -210,6 +217,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       model: writeableSignals.length !== 0,
       effect: json.hooks.onUpdate?.length !== 0,
       signal: dataString.length !== 0,
+      computed: hasGetters,
       onPush,
     });
 
@@ -232,6 +240,8 @@ Please add a initial value for every state property even if it's \`undefined\`.`
             theImport: MitosisImport,
             importedValues: ImportValues,
           ) => {
+            if (options.defaultExportComponents) return undefined;
+
             const { defaultImport } = importedValues;
             const { path } = theImport;
 
@@ -248,7 +258,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
             .map(([k, v]) => `${k}: ${v}`)
             .join(',')}
         })
-        export class ${json.name} implements AfterViewInit {   
+        export ${options.defaultExportComponents ? 'default ' : ''}class ${json.name} {   
           ${uniq<string>(json.compileContext!.angular!.extra!.importCalls)
             .map((importCall: string) => `protected readonly ${importCall} = ${importCall};`)
             .join('\n')}
@@ -266,6 +276,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
             .join('\n')}
     
           ${dataString}
+          ${gettersString}
           ${methodsString}
     
           constructor(${injectables.join(',\n')}) {          
@@ -303,7 +314,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
           ${withAttributePassing ? getAttributePassingString(options.typescript) : ''}
           
           ${
-            !json.hooks.onMount.length && !json.hooks.onInit?.code
+            isHookEmpty(json.hooks.onMount) && isHookEmpty(json.hooks.onInit)
               ? ''
               : `ngOnInit() {
                   ${!json.hooks?.onInit ? '' : json.hooks.onInit?.code}
@@ -315,6 +326,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
             // hooks specific to Angular
             json.compileContext?.angular?.hooks
               ? Object.entries(json.compileContext?.angular?.hooks)
+                  .filter(([_, value]) => !isHookEmpty(value))
                   .map(([key, value]) => {
                     return `${key}() {
                 ${value.code}
