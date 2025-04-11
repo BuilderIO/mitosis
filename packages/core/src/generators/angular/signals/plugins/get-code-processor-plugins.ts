@@ -291,7 +291,13 @@ const transformHooksAndState = (
 };
 
 const addToImportCall = (json: MitosisComponent, importName: string) => {
-  const isImportCall = json.imports.find((imp) => imp.imports[importName]);
+  const importInstance = json.imports.find((imp) => imp.imports[importName]);
+  // Check if this is a type import - if it is, don't add it to importCalls
+  if (importInstance?.importKind === 'type') {
+    return;
+  }
+
+  const isImportCall = !!importInstance;
   const isExportCall = json.exports ? !!json.exports[importName] : false;
   if (isImportCall || isExportCall) {
     json.compileContext!.angular!.extra!.importCalls.push(importName);
