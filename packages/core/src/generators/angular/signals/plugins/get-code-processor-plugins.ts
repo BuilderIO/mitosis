@@ -287,6 +287,47 @@ const transformHooksAndState = (
 
       handleMemberExpression(path, json);
     },
+    CallExpression(path) {
+      // if args has a state.x or props.x, we need to add this.x() to the args
+      if (path.node.arguments.length > 0) {
+        // Create new array for the transformed arguments
+        const newArgs = path.node.arguments.map((arg) => {
+          if (
+            isMemberExpression(arg) &&
+            isIdentifier(arg.object) &&
+            isIdentifier(arg.property) &&
+            (arg.object.name === 'state' || arg.object.name === 'props') &&
+            !arg.extra?.makeCallExpressionDone
+          ) {
+            // Check if the property is a method or function type
+            const isFunctionOrMethod =
+              arg.object.name === 'state' &&
+              json?.state &&
+              typeof arg.property.name === 'string' &&
+              json.state[arg.property.name] &&
+              json.state[arg.property.name]?.type &&
+              (json.state[arg.property.name]?.type === 'method' ||
+                json.state[arg.property.name]?.type === 'function');
+
+            // If it's a function/method reference, don't add parentheses
+            if (isFunctionOrMethod) {
+              return arg;
+            }
+
+            // Otherwise create a call expression for normal state values
+            const newArg = callExpression(arg, []);
+            newArg.extra = { makeCallExpressionDone: true };
+            return newArg;
+          }
+          return arg;
+        });
+
+        // Only replace arguments if we made any changes
+        if (newArgs.some((arg, i) => arg !== path.node.arguments[i])) {
+          path.node.arguments = newArgs;
+        }
+      }
+    },
   });
 };
 
