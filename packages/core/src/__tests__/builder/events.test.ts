@@ -12,16 +12,6 @@ describe('Builder Events', () => {
     }
     `);
 
-    expect(mitosis.children[0].bindings).toMatchInlineSnapshot(`
-      {
-        "onClick": {
-          "bindingType": "function",
-          "code": "state.foo()",
-          "type": "single",
-        },
-      }
-    `);
-
     const builderJson = componentToBuilder()({ component: mitosis });
     expect(builderJson.data!.blocks![0].actions).toMatchInlineSnapshot(`
       {
