@@ -2,21 +2,36 @@ import type { NodePath } from '@babel/core';
 import { types } from '@babel/core';
 import traverse from 'neotraverse/legacy';
 
-import { MitosisComponent } from '../types/mitosis-component';
+import { CodeType } from '@/helpers/plugins/process-code/types';
+import { MitosisComponent } from '@/types/mitosis-component';
 import { babelTransformExpression } from './babel-transform';
 import { getRefs } from './get-refs';
 import { isMitosisNode } from './is-mitosis-node';
 import { SETTER } from './patterns';
 
-export type RefMapper = (refName: string) => string;
+export type RefMapper = (
+  refName: string,
+  extra?: {
+    type?: CodeType;
+    path: NodePath<types.Identifier>;
+  },
+) => string;
 
-const replaceRefsInString = (code: string, refs: string[], mapper: RefMapper) => {
+const replaceRefsInString = (code: string, refs: string[], mapper: RefMapper, type?: CodeType) => {
   return babelTransformExpression(code, {
     Identifier(path: NodePath<types.Identifier>) {
       const name = path.node.name;
       const isRef = refs.includes(name);
-      if (isRef) {
-        path.replaceWith(types.identifier(mapper(name)));
+      if (isRef && !path.node.extra?.replaced) {
+        path.replaceWith(
+          types.identifier(
+            mapper(name, {
+              type,
+              path,
+            }),
+          ),
+        );
+        path.node.extra = { replaced: true };
       }
     },
   });
@@ -68,7 +83,7 @@ export const mapRefs = (component: MitosisComponent, mapper: RefMapper): void =>
         if (typeof value === 'object' && key !== 'ref') {
           item.bindings[key] = {
             ...value,
-            code: replaceRefsInString(value.code as string, refs, mapper),
+            code: replaceRefsInString(value.code as string, refs, mapper, 'bindings'),
           };
         }
       }
@@ -76,25 +91,22 @@ export const mapRefs = (component: MitosisComponent, mapper: RefMapper): void =>
   });
 
   for (const key of Object.keys(component.hooks) as (keyof typeof component.hooks)[]) {
-    const hooks = component.hooks[key];
-    if (Array.isArray(hooks)) {
-      hooks.forEach((hook) => {
-        if (hook.code) {
-          hook.code = replaceRefsInString(hook.code, refs, mapper);
-        }
+    const _hook = component.hooks[key];
 
-        if (hook.deps) {
-          hook.deps = replaceRefsInString(hook.deps, refs, mapper);
-        }
-      });
-    } else {
-      const hookCode = hooks?.code;
-      if (hookCode) {
-        hooks.code = replaceRefsInString(hookCode, refs, mapper);
+    const hooks = Array.isArray(_hook) ? _hook : [_hook];
+    for (const hook of hooks) {
+      if (!hook) continue;
+      if (hook.code) {
+        hook.code = replaceRefsInString(hook.code, refs, mapper);
       }
 
-      if (hooks?.deps) {
-        hooks.deps = replaceRefsInString(hooks?.deps, refs, mapper);
+      if (hook.deps) {
+        hook.deps = replaceRefsInString(hook.deps, refs, mapper, 'hooks-deps');
+      }
+      if (hook?.depsArray) {
+        hook.depsArray = hook.depsArray.map((dep) =>
+          replaceRefsInString(dep, refs, mapper, 'hooks-deps-array'),
+        );
       }
     }
   }

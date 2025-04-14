@@ -1,3 +1,4 @@
+import { applyMetaTagName } from '@/helpers/apply-meta-tagname';
 import { convertTypeScriptToJS } from '@/helpers/babel-transform';
 import { createSingleBinding } from '@/helpers/bindings';
 import { dedent } from '@/helpers/dedent';
@@ -143,6 +144,7 @@ export const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
               return replaceStateIdentifier(null);
             case 'properties':
             case 'dynamic-jsx-elements':
+            case 'hooks-deps-array':
             case 'types':
               return (c) => c;
           }
@@ -159,6 +161,7 @@ export const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
             case 'properties':
             case 'dynamic-jsx-elements':
             case 'hooks-deps':
+            case 'hooks-deps-array':
             case 'types':
               return (c) => c;
             case 'state':
@@ -197,6 +200,9 @@ export const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     const css = collectCss(component, {
       prefix: options.cssNamespace?.() ?? undefined,
     });
+
+    // Apply the meta tagName to the component BEFORE we strip the meta properties
+    applyMetaTagName(component);
 
     stripMetaProperties(component);
 

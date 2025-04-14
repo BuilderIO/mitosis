@@ -194,6 +194,7 @@ export const componentToReact: TranspilerGenerator<Partial<ToReactOptions>> =
       addUseClientDirectiveIfNeeded: true,
       stateType,
       stylesType: 'styled-jsx',
+      styleTagsPlacement: 'bottom',
       type: 'dom',
       plugins: [
         processOnEventHooksPlugin({ setBindings: false }),
@@ -287,6 +288,26 @@ const checkShouldAddUseClientDirective = (json: MitosisComponent, options: ToRea
   if (options.preact) return false;
 
   return !isRSC(json, options);
+};
+
+const generateStyleTags = (
+  placement: 'top' | 'bottom',
+  json: MitosisComponent,
+  options: ToReactOptions,
+  componentHasStyles: boolean,
+  css: string | null,
+  shouldInjectCustomStyles: boolean,
+) => {
+  if (placement !== options.styleTagsPlacement) return '';
+  return dedent`
+  ${
+    componentHasStyles && options.stylesType === 'styled-jsx'
+      ? `<style jsx>{\`${css}\`}</style>`
+      : ''
+  }
+  ${componentHasStyles && options.stylesType === 'style-tag' ? `<style>{\`${css}\`}</style>` : ''}
+  ${shouldInjectCustomStyles ? `<style>{\`${json.style}\`}</style>` : ''}
+  `;
 };
 
 const _componentToReact = (
@@ -421,18 +442,16 @@ const _componentToReact = (
 
     return (
       ${wrap ? openFrag(options) : ''}
+      ${generateStyleTags('top', json, options, componentHasStyles, css, shouldInjectCustomStyles)}
       ${json.children.map((item) => blockToReact(item, options, json, wrap, [])).join('\n')}
-      ${
-        componentHasStyles && options.stylesType === 'styled-jsx'
-          ? `<style jsx>{\`${css}\`}</style>`
-          : ''
-      }
-      ${
-        componentHasStyles && options.stylesType === 'style-tag'
-          ? `<style>{\`${css}\`}</style>`
-          : ''
-      }
-      ${shouldInjectCustomStyles ? `<style>{\`${json.style}\`}</style>` : ''}
+      ${generateStyleTags(
+        'bottom',
+        json,
+        options,
+        componentHasStyles,
+        css,
+        shouldInjectCustomStyles,
+      )}
       ${wrap ? closeFrag(options) : ''}
     );
   `;

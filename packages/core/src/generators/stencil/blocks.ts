@@ -1,7 +1,8 @@
 import { SELF_CLOSING_HTML_TAGS } from '@/constants/html_tags';
-import { getTagName, isEvent } from '@/generators/stencil/helpers';
+import { getTagName } from '@/generators/stencil/helpers';
 import { collectClassString } from '@/generators/stencil/helpers/collect-class-string';
 import { ToStencilOptions } from '@/generators/stencil/types';
+import { checkIsEvent } from '@/helpers/event-handlers';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import { getForArguments } from '@/helpers/nodes/for';
 import { transformAttributeToJSX } from '@/helpers/transform-to-jsx';
@@ -109,7 +110,7 @@ export const blockToStencil = ({
         ${rootRef ? `this.${rootRef} = el` : ''}
         ${code.startsWith('this.') ? code : `this.${code}`} = el}
       } `;
-    } else if (isEvent(key)) {
+    } else if (checkIsEvent(key)) {
       const asyncKeyword = json.bindings[key]?.async ? 'async ' : '';
       str += ` ${key}={${asyncKeyword}(${cusArgs.join(',')}) => ${code}} `;
     } else {

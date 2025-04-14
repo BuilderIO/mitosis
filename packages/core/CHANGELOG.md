@@ -1,5 +1,99 @@
 # Change Log
 
+## 0.9.2
+
+### Patch Changes
+
+- d3502a7: [React] Feat: add `styleTagsPlacement` option to react options that dictates where the style tags should get injected
+
+## 0.9.1
+
+### Patch Changes
+
+- 329e754: Correctly handle Fragments in Builder ("Core:Fragment" component name not "Fragment")
+
+## 0.9.0
+
+### Minor Changes
+
+- 8ad66fd: [angular]: Angular v17.2+ uses [signals](https://angular.dev/guide/signals) as a new feature.
+  This allows the generator to match better with other targets (`onUpdate` becomes [`effect`](https://angular.dev/guide/signals#effects)).
+
+  This PR will rewrite the complete Angular generator to match all new features for Angular.
+
+  You can access the new Angular generator by using the `api="signals"` inside your mitosis config e.g.:
+
+  ```js
+  /**
+   * @type {import('@builder.io/mitosis'.MitosisConfig)}
+   */
+  module.exports = {
+    files: 'src/**',
+    targets: ['angular', 'react', 'vue'],
+    options: {
+      angular: {
+        api: 'signals',
+      },
+      react: {},
+      vue: {},
+    },
+  };
+  ```
+
+  Furthermore, this PR will fix some issues with the angular output by using Babel instead of search and replace. Additionally, we use [`@if`](https://angular.dev/api/core/@if) etc. to provide a better output.
+
+  Some features are not yet implemented for signals api:
+
+  - Spread props - `<div {...rest}>{children}</div>`
+  - Dynamic components:
+
+    ```tsx
+    export default function MyComponent(props) {
+      const [obj, setObj] = useState(FooComponent);
+
+      return <obj>{props.children}</obj>;
+    }
+    ```
+
+  There are some new metadata properties for Angular if you use the signals api:
+
+  ```tsx
+  useMetadata({
+    angular: {
+      signals: {
+        writeable: ['disabled'],
+        required: ['label'],
+      },
+    },
+  });
+  ```
+
+  - `writeable` will use `model()` to enable two-way binding for the property.
+  - `required` will convert the `input` to a `required` input.
+
+### Patch Changes
+
+- a65e72b: JSX generator properly escapes single character > and <
+
+## 0.8.0
+
+### Minor Changes
+
+- 0fe1fdb: Builder: add escapeInvalidCode flag, drop invalid bindings
+
+## 0.7.6
+
+### Patch Changes
+
+- cb7be32: [all] export `types.ts` to enable `@type` comment for JS like this: `/** @type {import('@builder.io/mitosis').ToReactOptions} */`
+
+## 0.7.5
+
+### Patch Changes
+
+- 5dd61e2: [Vue] Fix: use $tagName from Builder JSON when available
+- 0a49334: [stencil] Fix issue for `EventEmitter` using Parameters as type instead of ReturnType
+
 ## 0.7.4
 
 ### Patch Changes

@@ -131,14 +131,14 @@ exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `
 }
 
 style {
-  .input-218fa7c6 {
+  .input-a4850acc {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-218fa7c6\\"
+      class=\\"input-a4850acc\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur((event) => component.onBlur())
@@ -257,7 +257,7 @@ exports[`Marko > jsx > Javascript Test > Basic Outputs 1`] = `
   }
 
   onMount() {
-    this.input.onMessage(this.state.name);
+    this.input.onMessageChange(this.state.name);
     this.input.onEvent(this.input.message);
   }
 }
@@ -278,7 +278,7 @@ exports[`Marko > jsx > Javascript Test > Basic Outputs Meta 1`] = `
   }
 
   onMount() {
-    this.input.onMessage(this.state.name);
+    this.input.onMessageChange(this.state.name);
     this.input.onEvent(this.input.message);
   }
 }
@@ -308,9 +308,14 @@ class {}
 
 exports[`Marko > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 class {
+  log = function log(message) {
+    console.log(message);
+  };
+
   onCreate() {
     this.state = { name: \\"Steve\\", dev: \\"PatrickJS\\" };
   }
@@ -323,6 +328,11 @@ class {
       hi=(state.name)
       bye=(state.dev)
     ></MyBasicOnMountUpdateComponent>
+    <MyBasicOutputsComponent
+      message=\\"Test\\"
+      on-message-change=((name) => state.name = name)
+      on-event((event) => component.log('Test'))
+    ></MyBasicOutputsComponent>
   </div>
 </div>"
 `;
@@ -1846,6 +1856,10 @@ exports[`Marko > jsx > Javascript Test > eventProps 1`] = `
     if (this.input.onEnter) {
       console.log(this.input.onEnter());
     }
+
+    if (this.input.onPass) {
+      this.input.onPass(\\"test\\");
+    }
   }
 }
 
@@ -2522,12 +2536,12 @@ class {
 }
 
 style {
-  .div-cf88ea4c {
+  .div-550150cc {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-cf88ea4c\\" on-click((event) => trackClick(input.content.id))>
+<div class=\\"div-550150cc\\" on-click((event) => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -2680,11 +2694,11 @@ exports[`Marko > jsx > Javascript Test > signalsOnUpdate 1`] = `
 }
 
 style {
-  .div-ba05009e {
+  .div-d239523c {
     padding: 10px;
   }
 }
-<div class=\\"test div-ba05009e\\">\${input.id} \${input.foo.value.bar.baz}</div>"
+<div class=\\"test div-d239523c\\">\${input.id} \${input.foo.value.bar.baz}</div>"
 `;
 
 exports[`Marko > jsx > Javascript Test > spreadAttrs 1`] = `
@@ -3017,14 +3031,14 @@ exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
 }
 
 style {
-  .input-c72441a0 {
+  .input-616ee5d4 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-c72441a0\\"
+      class=\\"input-616ee5d4\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur((event) => component.onBlur())
@@ -3143,7 +3157,7 @@ exports[`Marko > jsx > Typescript Test > Basic Outputs 1`] = `
   }
 
   onMount() {
-    this.input.onMessage(this.state.name);
+    this.input.onMessageChange(this.state.name);
     this.input.onEvent(this.input.message);
   }
 }
@@ -3164,7 +3178,7 @@ exports[`Marko > jsx > Typescript Test > Basic Outputs Meta 1`] = `
   }
 
   onMount() {
-    this.input.onMessage(this.state.name);
+    this.input.onMessageChange(this.state.name);
     this.input.onEvent(this.input.message);
   }
 }
@@ -3194,9 +3208,14 @@ class {}
 
 exports[`Marko > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 class {
+  log = function log(message: string) {
+    console.log(message);
+  };
+
   onCreate() {
     this.state = { name: \\"Steve\\", dev: \\"PatrickJS\\" };
   }
@@ -3209,6 +3228,11 @@ class {
       hi=(state.name)
       bye=(state.dev)
     ></MyBasicOnMountUpdateComponent>
+    <MyBasicOutputsComponent
+      message=\\"Test\\"
+      on-message-change=((name) => state.name = name)
+      on-event((event) => component.log('Test'))
+    ></MyBasicOutputsComponent>
   </div>
 </div>"
 `;
@@ -4747,6 +4771,10 @@ class {
     if (this.input.onEnter) {
       console.log(this.input.onEnter());
     }
+
+    if (this.input.onPass) {
+      this.input.onPass(\\"test\\");
+    }
   }
 }
 
@@ -5432,12 +5460,12 @@ class {
 }
 
 style {
-  .div-9a79dfbc {
+  .div-5e7e866c {
     display: flex;
     flex-direction: columns;
   }
 }
-<div class=\\"div-9a79dfbc\\" on-click((event) => trackClick(input.content.id))>
+<div class=\\"div-5e7e866c\\" on-click((event) => trackClick(input.content.id))>
   <RenderBlocks blocks=(input.content.blocks)></RenderBlocks>
 </div>"
 `;
@@ -5587,11 +5615,11 @@ exports[`Marko > jsx > Typescript Test > signalsOnUpdate 1`] = `
 }
 
 style {
-  .div-8c5e5900 {
+  .div-6c56607a {
     padding: 10px;
   }
 }
-<div class=\\"test div-8c5e5900\\">\${input.id} \${input.foo.bar.baz}</div>"
+<div class=\\"test div-6c56607a\\">\${input.id} \${input.foo.bar.baz}</div>"
 `;
 
 exports[`Marko > jsx > Typescript Test > spreadAttrs 1`] = `

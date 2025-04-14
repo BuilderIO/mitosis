@@ -6,10 +6,11 @@ import {
   addCodeToOnUpdate,
   makeReactiveState,
 } from '@/generators/angular/helpers/hooks';
-import { parse } from '@/generators/angular/parse-selector';
+import { parseSelector } from '@/generators/angular/helpers/parse-selector';
 import { AngularBlockOptions, ToAngularOptions } from '@/generators/angular/types';
 import { createSingleBinding } from '@/helpers/bindings';
 import { checkIsBindingNativeEvent, checkIsEvent } from '@/helpers/event-handlers';
+import { getBuilderTagName } from '@/helpers/get-tag-name';
 import isChildren from '@/helpers/is-children';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { removeSurroundingBlock } from '@/helpers/remove-surrounding-block';
@@ -370,11 +371,11 @@ export const blockToAngular = ({
       attributes;
 
     const isComponent = childComponents.find((impName) => impName === json.name);
-    const tagName = json.properties.$tagName;
+    const tagName = getBuilderTagName(json);
     const selector = json.meta.selector || blockOptions?.selector;
     if (selector) {
       try {
-        ({ element, classNames, attributes } = parse(`${selector}`));
+        ({ element, classNames, attributes } = parseSelector(`${selector}`));
       } catch {
         element = tagName ?? kebabCase(json.name);
       }

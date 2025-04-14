@@ -1,9 +1,11 @@
-import { MitosisComponent } from '@/types/mitosis-component';
 import { BaseTranspilerOptions } from '@/types/transpiler';
 
 export const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment', 'Slot']);
 
+export type AngularApi = 'classic' | 'signals';
+
 export interface ToAngularOptions extends BaseTranspilerOptions {
+  api?: AngularApi;
   state?: 'class-properties' | 'inline-with-wrappers';
   standalone?: boolean;
   preserveImports?: boolean;
@@ -14,11 +16,11 @@ export interface ToAngularOptions extends BaseTranspilerOptions {
   experimental?: {
     injectables?: (variableName: string, variableType: string) => string;
     inject?: boolean;
-    outputs?: (json: MitosisComponent, variableName: string) => string;
   };
 }
 
 export const DEFAULT_ANGULAR_OPTIONS: ToAngularOptions = {
+  api: 'classic',
   state: 'inline-with-wrappers',
   preserveImports: false,
   preserveFileExtensions: false,
@@ -37,6 +39,7 @@ export type AngularMetadata = {
    */
   nativeEvents?: string[];
   /**
+   * @deprecated Rename component in *.lite.tsx
    * Overwrite default selector for component. Default will be kebab case (MyComponent -> my-component)
    */
   selector?: string;
@@ -49,6 +52,28 @@ export type AngularMetadata = {
    * Overwrite default sanitizeInnerHTML. Default is `false`
    */
   sanitizeInnerHTML?: boolean;
+
+  /**
+   * @deprecated Only for api=classic
+   * Add additional @Output() properties to the component.
+   * Can be used with `useTarget({angular: ()=> ...})` if needed.
+   */
+  outputs?: string[];
+
+  /**
+   * Only for api=signals
+   */
+  signals?: {
+    /**
+     * Turns every property in this array to [`model`](https://angular.dev/api/core/model).
+     * This is useful if you want to use ngModel(`[(prop)]`) syntax in Angular.
+     */
+    writeable?: string[];
+    /**
+     * Adds [`.required`](https://angular.dev/api/core/input#required()) to the `input()` properties.
+     */
+    required?: string[];
+  };
 };
 
 export type AngularBlockOptions = {

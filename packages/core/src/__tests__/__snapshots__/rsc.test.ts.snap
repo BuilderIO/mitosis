@@ -182,7 +182,7 @@ function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -207,7 +207,7 @@ function MyBasicOutputsComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -268,6 +268,7 @@ exports[`RSC > jsx > Javascript Test > BasicChildComponent 1`] = `
 import * as React from \\"react\\";
 import { useState } from \\"react\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props) {
@@ -275,11 +276,20 @@ function MyBasicChildComponent(props) {
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
 
+  function log(message) {
+    console.log(message);
+  }
+
   return (
     <div>
       <MyBasicComponent id={dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => setName(name)}
+          onEvent={(event) => log(\\"Test\\")}
+        />
       </div>
     </div>
   );
@@ -2392,6 +2402,10 @@ function EventPropsComponent(props) {
     if (props.onEnter) {
       console.log(props.onEnter());
     }
+
+    if (props.onPass) {
+      props.onPass(\\"test\\");
+    }
   }
 
   return <button onClick={(event) => handleClick()}>Test</button>;
@@ -3090,14 +3104,14 @@ export default OnUpdate;
 `;
 
 exports[`RSC > jsx > Javascript Test > renderBlock 1`] = `
-"Identifier expected. (216:8)
-  214 |    {shouldWrap() ? (
-  215 |    <>{isEmptyHtmlElement(tag()) ? (
-> 216 |    <tag()  {...(attributes())}  {...(actions())}  />
+"Identifier expected. (217:8)
+  215 |    {shouldWrap() ? (
+  216 |    <>{isEmptyHtmlElement(tag()) ? (
+> 217 |    <tag()  {...(attributes())}  {...(actions())}  />
       |        ^
-  217 |  ) : null}
-  218 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
-  219 |    <>{repeatItemData()?.map((data, index) => ("
+  218 |  ) : null}
+  219 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+  220 |    <>{repeatItemData()?.map((data, index) => ("
 `;
 
 exports[`RSC > jsx > Javascript Test > renderContentExample 1`] = `
@@ -4057,7 +4071,7 @@ function MyBasicOutputsComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -4082,7 +4096,7 @@ function MyBasicOutputsComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
-    props.onMessage(name);
+    props.onMessageChange(name);
     props.onEvent(props.message);
   }, []);
 
@@ -4148,6 +4162,7 @@ exports[`RSC > jsx > Typescript Test > BasicChildComponent 1`] = `
 import * as React from \\"react\\";
 import { useState } from \\"react\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+import MyBasicOutputsComponent from \\"./basic-outputs.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 
 function MyBasicChildComponent(props: any) {
@@ -4155,11 +4170,20 @@ function MyBasicChildComponent(props: any) {
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
 
+  function log(message: string) {
+    console.log(message);
+  }
+
   return (
     <div>
       <MyBasicComponent id={dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
+        <MyBasicOutputsComponent
+          message=\\"Test\\"
+          onMessageChange={(name) => setName(name)}
+          onEvent={(event) => log(\\"Test\\")}
+        />
       </div>
     </div>
   );
@@ -6570,6 +6594,10 @@ function EventPropsComponent(props: EventProps) {
     if (props.onEnter) {
       console.log(props.onEnter());
     }
+
+    if (props.onPass) {
+      props.onPass(\\"test\\");
+    }
   }
 
   return <button onClick={(event) => handleClick()}>Test</button>;
@@ -7340,14 +7368,14 @@ export default OnUpdate;
 `;
 
 exports[`RSC > jsx > Typescript Test > renderBlock 1`] = `
-"Identifier expected. (224:8)
-  222 |    {shouldWrap() ? (
-  223 |    <>{isEmptyHtmlElement(tag()) ? (
-> 224 |    <tag()  {...(attributes())}  {...(actions())}  />
+"Identifier expected. (225:8)
+  223 |    {shouldWrap() ? (
+  224 |    <>{isEmptyHtmlElement(tag()) ? (
+> 225 |    <tag()  {...(attributes())}  {...(actions())}  />
       |        ^
-  225 |  ) : null}
-  226 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
-  227 |    <>{repeatItemData()?.map((data, index) => ("
+  226 |  ) : null}
+  227 | {!isEmptyHtmlElement(tag()) && repeatItemData() ? (
+  228 |    <>{repeatItemData()?.map((data, index) => ("
 `;
 
 exports[`RSC > jsx > Typescript Test > renderContentExample 1`] = `
@@ -8279,14 +8307,14 @@ export default MyComponent;
 `;
 
 exports[`RSC > svelte > Javascript Test > context 1`] = `
-"'>' expected. (32:13)
-  30 | return (
+"'>' expected. (33:13)
   31 |
-> 32 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+  32 |
+> 33 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  33 |
   34 |
-  35 |"
+  35 |
+  36 | );"
 `;
 
 exports[`RSC > svelte > Javascript Test > each 1`] = `
@@ -8687,14 +8715,14 @@ export default MyComponent;
 `;
 
 exports[`RSC > svelte > Typescript Test > context 1`] = `
-"'>' expected. (32:13)
-  30 | return (
+"'>' expected. (33:13)
   31 |
-> 32 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
+  32 |
+> 33 | <'activeTab'.Provider  value={activeTab}><div>{activeTab}</div></'activeTab'.Provider>
      |             ^
-  33 |
   34 |
-  35 |"
+  35 |
+  36 | );"
 `;
 
 exports[`RSC > svelte > Typescript Test > each 1`] = `

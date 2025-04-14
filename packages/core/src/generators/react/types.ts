@@ -9,6 +9,7 @@ export interface ToReactOptions extends BaseTranspilerOptions {
     | 'style-tag'
     | 'twrnc'
     | 'native-wind';
+  styleTagsPlacement?: 'top' | 'bottom';
   stateType: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder' | 'variables';
   format?: 'lite' | 'safe';
   type: 'dom' | 'native' | 'taro';
