@@ -1,11 +1,7 @@
 import { camelCase } from 'lodash';
 
-export const checkIsEvent = (code: string): boolean => {
-  if (!code.startsWith('on')) return false;
-
-  const eventName = code.substring(2).toLowerCase();
-  return nativeEvents.some((nativeEvent) => nativeEvent === eventName);
-};
+export const checkIsEvent = (code: string): boolean =>
+  code.startsWith('on') && /[A-Z]/.test(code.charAt(2));
 
 export const getEventNameWithoutOn = (code: string) => camelCase(code.replace('on', ''));
 
