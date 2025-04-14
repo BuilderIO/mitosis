@@ -7,6 +7,7 @@ import { tryFormat } from '@/generators/angular/helpers/format';
 import { getOutputs } from '@/generators/angular/helpers/get-outputs';
 import { getDomRefs } from '@/generators/angular/helpers/get-refs';
 import { getAngularStyles } from '@/generators/angular/helpers/get-styles';
+import { addCodeNgAfterViewInit } from '@/generators/angular/helpers/hooks';
 import { blockToAngularSignals } from '@/generators/angular/signals/blocks';
 import { getAngularCoreImportsAsString } from '@/generators/angular/signals/helpers';
 import { getSignalInputs } from '@/generators/angular/signals/helpers/get-inputs';
@@ -16,7 +17,6 @@ import {
   DEFAULT_ANGULAR_OPTIONS,
   ToAngularOptions,
 } from '@/generators/angular/types';
-import { stringifySingleScopeOnMount } from '@/generators/helpers/on-mount';
 import { ProcessBindingOptions } from '@/helpers/class-components';
 import { dedent } from '@/helpers/dedent';
 import { checkIsEvent } from '@/helpers/event-handlers';
@@ -144,7 +144,8 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
       .join('\n');
 
     if (options.prettier !== false) {
-      template = tryFormat(template, 'html');
+      // We need to use 'strict' mode for Angular otherwise it could add spaces around some content
+      template = tryFormat(template, 'html', 'strict');
     }
 
     // Angular component settings
@@ -211,7 +212,19 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       effect: json.hooks.onUpdate?.length !== 0,
       signal: dataString.length !== 0,
       onPush,
+      OnDestroy: Boolean(json.hooks.onUnMount),
     });
+
+    // Hooks
+    if (json.hooks.onMount.length) {
+      addCodeNgAfterViewInit(json, json.hooks.onMount.map((onMount) => onMount.code).join('\n'));
+    }
+
+    // Angular interfaces
+    const angularInterfaces = ['AfterViewInit'];
+    if (json.hooks.onUnMount) {
+      angularInterfaces.push('OnDestroy');
+    }
 
     let str = dedent`
         import { ${coreImports} } from '@angular/core';
@@ -248,7 +261,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
             .map(([k, v]) => `${k}: ${v}`)
             .join(',')}
         })
-        export class ${json.name} implements AfterViewInit {   
+        export class ${json.name} implements ${angularInterfaces.join(',')} {   
           ${uniq<string>(json.compileContext!.angular!.extra!.importCalls)
             .map((importCall: string) => `protected readonly ${importCall} = ${importCall};`)
             .join('\n')}
@@ -303,11 +316,10 @@ Please add a initial value for every state property even if it's \`undefined\`.`
           ${withAttributePassing ? getAttributePassingString(options.typescript) : ''}
           
           ${
-            !json.hooks.onMount.length && !json.hooks.onInit?.code
+            !json.hooks.onInit?.code
               ? ''
               : `ngOnInit() {
                   ${!json.hooks?.onInit ? '' : json.hooks.onInit?.code}
-                  ${json.hooks.onMount.length > 0 ? stringifySingleScopeOnMount(json) : ''}
                 }`
           }
     

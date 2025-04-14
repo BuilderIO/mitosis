@@ -6,12 +6,14 @@ export const getAngularCoreImportsAsString = ({
   onPush,
   effect,
   signal,
+  OnDestroy,
 }: {
   refs: boolean;
   output: boolean;
   input: boolean;
   model: boolean;
   onPush: boolean;
+  OnDestroy: boolean;
   effect: boolean;
   signal: boolean;
 }): string => {
@@ -26,6 +28,7 @@ export const getAngularCoreImportsAsString = ({
     effect,
     signal,
     ChangeDetectionStrategy: onPush,
+    OnDestroy,
   };
   return Object.entries(angularCoreImports)
     .map(([key, bool]) => (bool ? key : ''))
