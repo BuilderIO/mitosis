@@ -294,6 +294,14 @@ export const jsxElementToJson = (
             arguments: args.length ? args : undefined,
             bindingType: 'function',
           });
+        } else if (key.startsWith('on') && types.isExpression(expression)) {
+          // <Foo onClick={state.handler} />
+          const call = types.callExpression(expression, []);
+
+          memo.bindings[key] = createSingleBinding({
+            code: generate(call, { compact: true }).code,
+            bindingType: 'function',
+          });
         } else if (types.isJSXElement(expression) || types.isJSXFragment(expression)) {
           // <Foo myProp={<MoreMitosisNode><div /></MoreMitosisNode>} />
           // <Foo myProp={<><Node /><Node /></>} />
