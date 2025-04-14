@@ -207,7 +207,6 @@ Please add a initial value for every state property even if it's \`undefined\`.`
 
     // Handle getters as computed signals
     const gettersString = getComputedGetters({ json });
-    const hasGetters = !!gettersString.length;
 
     // Imports
     const coreImports = getAngularCoreImportsAsString({
@@ -217,7 +216,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       model: writeableSignals.length !== 0,
       effect: json.hooks.onUpdate?.length !== 0,
       signal: dataString.length !== 0,
-      computed: hasGetters,
+      computed: gettersString.length !== 0,
       onPush,
     });
 
