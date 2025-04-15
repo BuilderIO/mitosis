@@ -45,7 +45,7 @@ describe('Builder Invalid JSX Flag', () => {
     `);
     });
 
-    test('escaping invalid binding does not crash jsx generatoron element', () => {
+    test('escaping invalid binding does not crash jsx generator on element', () => {
       const builderJson = {
         data: {
           blocks: [
@@ -246,13 +246,7 @@ describe('export default transpiling', () => {
     });
     expect(mitosis).toMatchInlineSnapshot(`
       "export default function MyComponent(props) {
-        return (
-          <div
-            foo={function () {
-              return bar;
-            }}
-          />
-        );
+        return <div foo={new Function(\`return bar;\`)()} />;
       }
       "
     `);
@@ -291,15 +285,7 @@ describe('export default transpiling', () => {
     });
     expect(mitosis).toMatchInlineSnapshot(`
       "export default function MyComponent(props) {
-        return (
-          <div
-            foo={function () {
-              return bar;
-            }}
-          >
-            Text
-          </div>
-        );
+        return <div foo={new Function(\`return bar;\`)()}>Text</div>;
       }
       "
     `);
