@@ -22,6 +22,7 @@ import { MitosisComponent } from '@/types/mitosis-component';
 import { MitosisNode, checkIsForNode, checkIsShowNode } from '@/types/mitosis-node';
 import { TranspilerGenerator } from '@/types/transpiler';
 import json5 from 'json5';
+import traverse from 'neotraverse/legacy';
 import { check, format } from 'prettier/standalone';
 
 import { blockToReact, componentToReact } from '../react';
@@ -224,6 +225,45 @@ export const blockToMitosis = (
       str += '</>';
     }
     str += `}`;
+  }
+
+  // TODO clean this stuff up
+  const doStuff = (v: any) => {
+    let str = '';
+    if (Array.isArray(v)) {
+      str += '[';
+
+      str += v.map(doStuff).join(',');
+
+      str += ']';
+    } else if (typeof v === 'object') {
+      str += '{';
+
+      for (const k in v) {
+        if (v.hasOwnProperty(k)) {
+          str += `${k}: ${doStuff(v[k])},`;
+        }
+      }
+
+      str += '}';
+    } else {
+      str += v;
+    }
+
+    return str;
+  };
+
+  for (const key in json.blocksSlots) {
+    const value = json.blocksSlots[key];
+    traverse(value).forEach(function (v) {
+      if (isMitosisNode(v)) {
+        this.update(blockToMitosis(v, toMitosisOptions, component, insideJsx));
+      }
+    });
+
+    str += `${key}={`;
+    str += doStuff(value);
+    str += '}';
   }
 
   if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
