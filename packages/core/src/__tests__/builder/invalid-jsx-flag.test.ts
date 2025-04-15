@@ -246,7 +246,13 @@ describe('export default transpiling', () => {
     });
     expect(mitosis).toMatchInlineSnapshot(`
       "export default function MyComponent(props) {
-        return <div foo={new Function(\`return bar;\`)()} />;
+        return (
+          <div
+            foo={function () {
+              return bar;
+            }}
+          />
+        );
       }
       "
     `);
@@ -285,7 +291,15 @@ describe('export default transpiling', () => {
     });
     expect(mitosis).toMatchInlineSnapshot(`
       "export default function MyComponent(props) {
-        return <div foo={new Function(\`return bar;\`)()}>Text</div>;
+        return (
+          <div
+            foo={function () {
+              return bar;
+            }}
+          >
+            Text
+          </div>
+        );
       }
       "
     `);
