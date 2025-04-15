@@ -650,25 +650,20 @@ const processBoundLogic = (code: string) => {
   const ast = babel.parse(code);
   if (!ast) return code;
 
-  let hasReturn = false;
+  let replacedWithReturn = false;
   babelTraverse(ast, {
     ExportDefaultDeclaration(path) {
       const exportedNode = path.node.declaration;
       if (t.isExpression(exportedNode)) {
         const returnStatement = t.returnStatement(exportedNode);
         path.replaceWith(returnStatement);
-        hasReturn = true;
+        replacedWithReturn = true;
       }
-    },
-    ReturnStatement() {
-      hasReturn = true;
     },
   });
 
-  if (hasReturn) {
-    const processedCode = generate(ast);
-
-    return `new Function(\`${processedCode.code}\`)()`;
+  if (replacedWithReturn) {
+    return generate(ast).code;
   }
 
   return code;
