@@ -227,32 +227,6 @@ export const blockToMitosis = (
     str += `}`;
   }
 
-  // TODO clean this stuff up
-  const doStuff = (v: any) => {
-    let str = '';
-    if (Array.isArray(v)) {
-      str += '[';
-
-      str += v.map(doStuff).join(',');
-
-      str += ']';
-    } else if (typeof v === 'object') {
-      str += '{';
-
-      for (const k in v) {
-        if (v.hasOwnProperty(k)) {
-          str += `${k}: ${doStuff(v[k])},`;
-        }
-      }
-
-      str += '}';
-    } else {
-      str += v;
-    }
-
-    return str;
-  };
-
   for (const key in json.blocksSlots) {
     const value = json.blocksSlots[key];
     traverse(value).forEach(function (v) {
@@ -261,9 +235,7 @@ export const blockToMitosis = (
       }
     });
 
-    str += `${key}={`;
-    str += doStuff(value);
-    str += '}';
+    str += `${key}={${generateBlockSlotsCode(value)}}`;
   }
 
   if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
@@ -284,6 +256,27 @@ export const blockToMitosis = (
   str += `</${json.name}>`;
 
   return str;
+};
+
+const generateBlockSlotsCode = (blockSlot: any) => {
+  let code = '';
+  if (Array.isArray(blockSlot)) {
+    code += `[${blockSlot.map(generateBlockSlotsCode).join(',')}]`;
+  } else if (typeof blockSlot === 'object' && blockSlot !== null) {
+    code += '{';
+
+    for (const key in blockSlot) {
+      if (blockSlot.hasOwnProperty(key)) {
+        code += `${key}: ${generateBlockSlotsCode(blockSlot[key])},`;
+      }
+    }
+
+    code += '}';
+  } else {
+    code += blockSlot;
+  }
+
+  return code;
 };
 
 const getRefsString = (json: MitosisComponent, refs = Array.from(getRefs(json))) => {
