@@ -35,6 +35,24 @@ const isStateOrPropsExpression = (path: NodePath) => {
   );
 };
 
+const isAFunctionOrMethod = (
+  json: MitosisComponent | undefined,
+  path: NodePath<MemberExpression>,
+) => {
+  return (
+    json &&
+    isIdentifier(path.node.object) &&
+    isIdentifier(path.node.property) &&
+    path.node.object.name === 'state' &&
+    json.state &&
+    typeof path.node.property.name === 'string' &&
+    json.state[path.node.property.name] &&
+    json.state[path.node.property.name]?.type &&
+    (json.state[path.node.property.name]?.type === 'method' ||
+      json.state[path.node.property.name]?.type === 'function')
+  );
+};
+
 const handleAssignmentExpression = (path: NodePath<AssignmentExpression | BinaryExpression>) => {
   if (
     isMemberExpression(path.node.left) &&
@@ -68,17 +86,7 @@ const handleMemberExpression = (path: NodePath<MemberExpression>, json?: Mitosis
 
   if (isStateOrPropsExpression(path)) {
     // Check if the property is a method or function type, and if so, don't convert it to a callable
-    if (
-      isIdentifier(path.node.object) &&
-      isIdentifier(path.node.property) &&
-      path.node.object.name === 'state' &&
-      json?.state &&
-      typeof path.node.property.name === 'string' &&
-      json.state[path.node.property.name] &&
-      json.state[path.node.property.name]?.type &&
-      (json.state[path.node.property.name]?.type === 'method' ||
-        json.state[path.node.property.name]?.type === 'function')
-    ) {
+    if (isAFunctionOrMethod(json, path)) {
       // It's a function/method reference, don't convert it to a callable
       return;
     }
@@ -174,6 +182,28 @@ const handleTemplateLiteral = (
   return `${fnName}(${paramsList.join(', ')})`;
 };
 
+const handleCallExpressionArgument = (json: MitosisComponent | undefined, arg: any) => {
+  if (
+    isMemberExpression(arg) &&
+    isIdentifier(arg.object) &&
+    isIdentifier(arg.property) &&
+    (arg.object.name === 'state' || arg.object.name === 'props') &&
+    !arg.extra?.makeCallExpressionDone
+  ) {
+    if (arg.object.name === 'state' && json) {
+      const argPath = { node: arg } as unknown as NodePath<MemberExpression>;
+      if (isAFunctionOrMethod(json, argPath)) {
+        return arg;
+      }
+    }
+
+    const newArg = callExpression(arg, []);
+    newArg.extra = { makeCallExpressionDone: true };
+    return newArg;
+  }
+  return arg;
+};
+
 const transformHooksAndState = (
   code: string,
   isHookDepArray?: boolean,
@@ -222,38 +252,7 @@ const transformHooksAndState = (
     CallExpression(path) {
       // if args has a state.x or props.x, we need to add this.x() to the args
       if (path.node.arguments.length > 0) {
-        // Create new array for the transformed arguments
-        const newArgs = path.node.arguments.map((arg) => {
-          if (
-            isMemberExpression(arg) &&
-            isIdentifier(arg.object) &&
-            isIdentifier(arg.property) &&
-            (arg.object.name === 'state' || arg.object.name === 'props') &&
-            !arg.extra?.makeCallExpressionDone
-          ) {
-            // Check if the property is a method or function type
-            const isFunctionOrMethod =
-              arg.object.name === 'state' &&
-              json?.state &&
-              typeof arg.property.name === 'string' &&
-              json.state[arg.property.name] &&
-              json.state[arg.property.name]?.type &&
-              (json.state[arg.property.name]?.type === 'method' ||
-                json.state[arg.property.name]?.type === 'function');
-
-            // If it's a function/method reference, don't add parentheses
-            if (isFunctionOrMethod) {
-              return arg;
-            }
-
-            // Otherwise create a call expression for normal state values
-            const newArg = callExpression(arg, []);
-            newArg.extra = { makeCallExpressionDone: true };
-            return newArg;
-          }
-          return arg;
-        });
-
+        const newArgs = path.node.arguments.map((arg) => handleCallExpressionArgument(json, arg));
         // Only replace arguments if we made any changes
         if (newArgs.some((arg, i) => arg !== path.node.arguments[i])) {
           path.node.arguments = newArgs;
@@ -298,23 +297,7 @@ ${code}`);
       }
 
       if (path.node.arguments.length > 0) {
-        // Create new array for the transformed arguments
-        const newArgs = path.node.arguments.map((arg) => {
-          if (
-            isMemberExpression(arg) &&
-            isIdentifier(arg.object) &&
-            isIdentifier(arg.property) &&
-            (arg.object.name === 'state' || arg.object.name === 'props') &&
-            !arg.extra?.makeCallExpressionDone
-          ) {
-            // Create a new call expression instead of modifying the original node
-            const newArg = callExpression(arg, []);
-            newArg.extra = { makeCallExpressionDone: true };
-            return newArg;
-          }
-          return arg;
-        });
-
+        const newArgs = path.node.arguments.map((arg) => handleCallExpressionArgument(json, arg));
         // Only replace arguments if we made any changes
         if (newArgs.some((arg, i) => arg !== path.node.arguments[i])) {
           path.node.arguments = newArgs;
