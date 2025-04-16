@@ -854,6 +854,7 @@ export const builderElementToMitosisNode = (
         slots[key] = childrenElements;
       } else if (Array.isArray(value) || (typeof value === 'object' && value !== null)) {
         const data = Array.isArray(value) ? [...value] : { ...value };
+        let hasElement = false;
         traverse(data).forEach(function (d) {
           if (isBuilderElement(d)) {
             /**
@@ -862,9 +863,16 @@ export const builderElementToMitosisNode = (
              * of this deeply nested data.
              */
             this.update(builderElementToMitosisNode(d, options, _internalOptions));
+            hasElement = true;
           }
         });
-        blocksSlots[key] = data;
+
+        // If no elements were updated then this is just a regular binding
+        if (hasElement) {
+          blocksSlots[key] = data;
+        } else {
+          bindings[key] = createSingleBinding({ code: json5.stringify(value) });
+        }
       } else {
         bindings[key] = createSingleBinding({ code: json5.stringify(value) });
       }
@@ -906,7 +914,7 @@ export const builderElementToMitosisNode = (
     slots: {
       ...slots,
     },
-    blocksSlots,
+    ...(Object.keys(blocksSlots).length > 0 && { blocksSlots }),
     meta: getMetaFromBlock(block, options),
     ...(Object.keys(localizedValues).length && { localizedValues }),
   });
