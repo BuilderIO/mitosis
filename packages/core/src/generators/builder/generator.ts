@@ -623,6 +623,17 @@ export const blockToBuilder = (
     componentOptions[key] = json.slots[key].map((node) => blockToBuilder(node, options));
   }
 
+  // TODO fix types
+  for (const key in (json as any).blocksSlots) {
+    const value = (json as any).blocksSlots[key];
+    traverse(value).forEach(function (v) {
+      if (isMitosisNode(v)) {
+        this.update(blockToBuilder(v, options, _internalOptions));
+      }
+    });
+    componentOptions[key] = value;
+  }
+
   const hasCss = !!bindings.css?.code;
 
   let responsiveStyles: {

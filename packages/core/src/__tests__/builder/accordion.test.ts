@@ -1,4 +1,6 @@
+import { componentToBuilder } from '@/generators/builder';
 import { componentToMitosis } from '@/generators/mitosis';
+
 import { builderContentToMitosisComponent } from '@/parsers/builder';
 import { describe, test } from 'vitest';
 
@@ -131,6 +133,163 @@ describe('Builder Invalid JSX Flag', () => {
       }
       "
     `);
+
+    // TODO JSX --> Mitosis JSON
+
+    const backToBuilder = componentToBuilder()({ component: builderToMitosis });
+    expect(backToBuilder).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "blocks": [
+            {
+              "@type": "@builder.io/sdk:Element",
+              "actions": {},
+              "bindings": {},
+              "children": [],
+              "code": {
+                "actions": {},
+                "bindings": {},
+              },
+              "component": {
+                "name": "Builder:Accordion",
+                "options": {
+                  "items": [
+                    {
+                      "detail": [
+                        {
+                          "@type": "@builder.io/sdk:Element",
+                          "actions": {},
+                          "bindings": {},
+                          "children": [
+                            {
+                              "@type": "@builder.io/sdk:Element",
+                              "actions": {},
+                              "bindings": {},
+                              "children": [],
+                              "code": {
+                                "actions": {},
+                                "bindings": {},
+                              },
+                              "component": {
+                                "name": "Builder:Accordion",
+                                "options": {
+                                  "items": [
+                                    {
+                                      "detail": [
+                                        {
+                                          "@type": "@builder.io/sdk:Element",
+                                          "actions": {},
+                                          "bindings": {},
+                                          "children": [],
+                                          "code": {
+                                            "actions": {},
+                                            "bindings": {},
+                                          },
+                                          "properties": {},
+                                          "tagName": "div",
+                                        },
+                                      ],
+                                      "title": [
+                                        {
+                                          "@type": "@builder.io/sdk:Element",
+                                          "actions": {},
+                                          "bindings": {},
+                                          "children": [
+                                            {
+                                              "@type": "@builder.io/sdk:Element",
+                                              "bindings": {},
+                                              "component": {
+                                                "name": "Text",
+                                                "options": {
+                                                  "text": "Title Text",
+                                                },
+                                              },
+                                              "tagName": "span",
+                                            },
+                                          ],
+                                          "code": {
+                                            "actions": {},
+                                            "bindings": {},
+                                          },
+                                          "properties": {},
+                                          "tagName": "div",
+                                        },
+                                        {
+                                          "@type": "@builder.io/sdk:Element",
+                                          "actions": {},
+                                          "bindings": {},
+                                          "children": [
+                                            {
+                                              "@type": "@builder.io/sdk:Element",
+                                              "bindings": {},
+                                              "component": {
+                                                "name": "Text",
+                                                "options": {
+                                                  "text": "Title Part Two",
+                                                },
+                                              },
+                                              "tagName": "span",
+                                            },
+                                          ],
+                                          "code": {
+                                            "actions": {},
+                                            "bindings": {},
+                                          },
+                                          "properties": {},
+                                          "tagName": "div",
+                                        },
+                                      ],
+                                    },
+                                  ],
+                                },
+                              },
+                            },
+                          ],
+                          "code": {
+                            "actions": {},
+                            "bindings": {},
+                          },
+                          "properties": {},
+                          "tagName": "div",
+                        },
+                      ],
+                      "title": [
+                        {
+                          "@type": "@builder.io/sdk:Element",
+                          "actions": {},
+                          "bindings": {},
+                          "children": [
+                            {
+                              "@type": "@builder.io/sdk:Element",
+                              "bindings": {},
+                              "component": {
+                                "name": "Text",
+                                "options": {
+                                  "text": "Title Text",
+                                },
+                              },
+                              "tagName": "span",
+                            },
+                          ],
+                          "code": {
+                            "actions": {},
+                            "bindings": {},
+                          },
+                          "properties": {},
+                          "tagName": "div",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          "jsCode": "",
+          "tsCode": "",
+        },
+      }
+    `);
   });
   test('compile carousel', () => {
     const builderJson = {
@@ -196,6 +355,59 @@ describe('Builder Invalid JSX Flag', () => {
         );
       }
       "
+    `);
+
+    // TODO JSX --> Mitosis JSON
+
+    const backToBuilder = componentToBuilder()({ component: builderToMitosis });
+    expect(backToBuilder).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "blocks": [
+            {
+              "@type": "@builder.io/sdk:Element",
+              "actions": {},
+              "bindings": {},
+              "children": [],
+              "code": {
+                "actions": {},
+                "bindings": {},
+              },
+              "component": {
+                "name": "Builder:Carousel",
+                "options": {
+                  "slides": [
+                    {
+                      "content": [
+                        {
+                          "@type": "@builder.io/sdk:Element",
+                          "actions": {
+                            "click": " state.pasttime = !state.pasttime;
+       ",
+                          },
+                          "bindings": {},
+                          "children": [],
+                          "code": {
+                            "actions": {
+                              "click": " state.pasttime = !state.pasttime;
+       ",
+                            },
+                            "bindings": {},
+                          },
+                          "properties": {},
+                          "tagName": "div",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          "jsCode": "",
+          "tsCode": "",
+        },
+      }
     `);
   });
 });
