@@ -357,11 +357,6 @@ export const jsxElementToJson = (
               replacedCode.substring(0, start) + JSON.stringify(node) + replacedCode.substring(end);
           });
 
-          /**
-           * The result should be a valid array of objects. Use json5 to parse
-           * as not every key will be wrapped in quotes, so a normal JSON.parse
-           * will fail.
-           */
           let finalCode = replacedCode;
           if (types.isObjectExpression(expression)) {
             /**
@@ -374,6 +369,11 @@ export const jsxElementToJson = (
             }
           }
 
+          /**
+           * The result should be a valid array of objects. Use json5 to parse
+           * as not every key will be wrapped in quotes, so a normal JSON.parse
+           * will fail.
+           */
           memo.blocksSlots[key] = json5.parse(finalCode);
         } else {
           memo.bindings[key] = createSingleBinding({
