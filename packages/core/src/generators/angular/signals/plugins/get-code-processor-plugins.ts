@@ -312,7 +312,7 @@ ${code}`);
     StringLiteral(path) {
       // We cannot use " for string literal in template
       if (path.node.extra?.raw) {
-        path.node.extra.raw = (path.node.extra.raw as string).replaceAll('"', "'");
+        path.node.extra.raw = (path.node.extra.raw as string).replaceAll('"', '&quot;');
       }
     },
     AssignmentExpression(path) {

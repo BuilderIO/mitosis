@@ -1964,10 +1964,36 @@ export class SubmitButton {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Text 1`] = `
-"unknown: Missing semicolon. (1:70)
+"import { Component, input, effect, signal } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
-> 1 | let _ = props.text() || props.content() || state.name() || '<p class='text-lg'>my name</p>'
-    |                                                                       ^"
+import { Builder } from \\"@builder.io/sdk\\";
+
+@Component({
+  selector: \\"text\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div
+      [attr.contentEditable]=\\"allowEditingText || undefined\\"
+      [attr.data-name]=\\"{
+          test: name() || 'any name'
+        }\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text() || content() || name() || '<p class=&quot;text-lg&quot;>my name</p>')\\"
+    ></div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class Text {
+  text = input<any>();
+  content = input<any>();
+
+  name = signal(\\"Decadef20\\");
+
+  constructor(protected sanitizer: DomSanitizer) {}
+}
+"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Textarea 1`] = `
@@ -7676,10 +7702,44 @@ export class SubmitButton {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Text 1`] = `
-"unknown: Missing semicolon. (1:70)
+"import { Component, input, effect, signal } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+import { DomSanitizer } from \\"@angular/platform-browser\\";
 
-> 1 | let _ = props.text() || props.content() || state.name() || '<p class='text-lg'>my name</p>'
-    |                                                                       ^"
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+@Component({
+  selector: \\"text\\",
+  standalone: true,
+  imports: [CommonModule],
+  template: \`
+    <div
+      [attr.contentEditable]=\\"allowEditingText || undefined\\"
+      [attr.data-name]=\\"{
+          test: name() || 'any name'
+        }\\"
+      [innerHTML]=\\"sanitizer.bypassSecurityTrustHtml(text() || content() || name() || '<p class=&quot;text-lg&quot;>my name</p>')\\"
+    ></div>
+  \`,
+  styles: \`:host { display: contents; }\`,
+})
+export class Text {
+  text = input<TextProps[\\"text\\"]>();
+  content = input<TextProps[\\"content\\"]>();
+
+  name = signal(\\"Decadef20\\");
+
+  constructor(protected sanitizer: DomSanitizer) {}
+}
+"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Textarea 1`] = `
