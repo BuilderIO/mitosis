@@ -5,12 +5,86 @@ import { parseJsx } from '@/parsers/jsx';
 import { describe, test } from 'vitest';
 
 describe('Builder Invalid JSX Flag', () => {
-  test.only('liam', () => {
+  test.only('liam2', () => {
+    const jsx = parseJsx(`export default function MyFunction() { 
+      return (
+        <Cmp
+          items={{
+            foo: [<div><br /></div>],
+            bar: [<br />],
+            baz: <div></div>
+          }}
+        />
+      )
+    }`);
+
+    expect(jsx.children[0]).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/node",
+        "bindings": {},
+        "blocksSlots": {
+          "items": {
+            "bar": [
+              {
+                "@type": "@builder.io/mitosis/node",
+                "bindings": {},
+                "blocksSlots": {},
+                "children": [],
+                "meta": {},
+                "name": "br",
+                "properties": {},
+                "scope": {},
+              },
+            ],
+            "baz": {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": {},
+              "blocksSlots": {},
+              "children": [],
+              "meta": {},
+              "name": "div",
+              "properties": {},
+              "scope": {},
+            },
+            "foo": [
+              {
+                "@type": "@builder.io/mitosis/node",
+                "bindings": {},
+                "blocksSlots": {},
+                "children": [
+                  {
+                    "@type": "@builder.io/mitosis/node",
+                    "bindings": {},
+                    "blocksSlots": {},
+                    "children": [],
+                    "meta": {},
+                    "name": "br",
+                    "properties": {},
+                    "scope": {},
+                  },
+                ],
+                "meta": {},
+                "name": "div",
+                "properties": {},
+                "scope": {},
+              },
+            ],
+          },
+        },
+        "children": [],
+        "meta": {},
+        "name": "Cmp",
+        "properties": {},
+        "scope": {},
+      }
+    `);
+  });
+  test('liam', () => {
     const jsx = parseJsx(`export default function MyFunction() { 
       return (
         <Cmp
           items={[
-            { foo: [<div><br /></div>]}
+            { foo: [<div><br /></div>], bar: [<br />], baz: <div></div> }
           ]}
         />
       )
@@ -22,6 +96,28 @@ describe('Builder Invalid JSX Flag', () => {
         "blocksSlots": {
           "items": [
             {
+              "bar": [
+                {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": {},
+                  "blocksSlots": {},
+                  "children": [],
+                  "meta": {},
+                  "name": "br",
+                  "properties": {},
+                  "scope": {},
+                },
+              ],
+              "baz": {
+                "@type": "@builder.io/mitosis/node",
+                "bindings": {},
+                "blocksSlots": {},
+                "children": [],
+                "meta": {},
+                "name": "div",
+                "properties": {},
+                "scope": {},
+              },
               "foo": [
                 {
                   "@type": "@builder.io/mitosis/node",
@@ -56,7 +152,7 @@ describe('Builder Invalid JSX Flag', () => {
       }
     `);
   });
-  test.only('compile accordion', () => {
+  test('compile accordion', () => {
     const builderJson = {
       data: {
         blocks: [
@@ -498,7 +594,7 @@ describe('Builder Invalid JSX Flag', () => {
       }
     `);
   });
-  test.only('compile carousel', () => {
+  test('compile carousel', () => {
     const builderJson = {
       data: {
         blocks: [
@@ -574,42 +670,27 @@ describe('Builder Invalid JSX Flag', () => {
             {
               "@type": "@builder.io/sdk:Element",
               "actions": {},
-              "bindings": {},
+              "bindings": {
+                "component.options.slides": " return [{
+        content: [<div onClick={event => {
+          state.pasttime = !state.pasttime;
+        }} />]
+      }]",
+              },
               "children": [],
               "code": {
                 "actions": {},
-                "bindings": {},
+                "bindings": {
+                  "component.options.slides": "[{
+        content: [<div onClick={event => {
+          state.pasttime = !state.pasttime;
+        }} />]
+      }]",
+                },
               },
               "component": {
                 "name": "Builder:Carousel",
-                "options": {
-                  "slides": [
-                    {
-                      "content": [
-                        {
-                          "@type": "@builder.io/sdk:Element",
-                          "actions": {
-                            "click": "
-        state.pasttime = !state.pasttime;
-      ",
-                          },
-                          "bindings": {},
-                          "children": [],
-                          "code": {
-                            "actions": {
-                              "click": "
-        state.pasttime = !state.pasttime;
-      ",
-                            },
-                            "bindings": {},
-                          },
-                          "properties": {},
-                          "tagName": "div",
-                        },
-                      ],
-                    },
-                  ],
-                },
+                "options": {},
               },
             },
           ],

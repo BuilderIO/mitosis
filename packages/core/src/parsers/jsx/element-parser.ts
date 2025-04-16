@@ -307,14 +307,18 @@ export const jsxElementToJson = (
           memo.bindings[key] = createSingleBinding({
             code: generate(expression, { compact: true }).code,
           });
-        } else if (types.isArrayExpression(expression)) {
+        } else if (types.isArrayExpression(expression) || types.isObjectExpression(expression)) {
           /**
            * Find any deeply nested JSX Elements, convert them to Mitosis nodes
            * then store them in "replacements" to later do a string substitution
            * to swap out the stringified JSX with stringified Mitosis nodes.
            */
-          const code = generate(expression).code;
+
+          const code = types.isObjectExpression(expression)
+            ? generate(types.expressionStatement(expression)).code
+            : generate(expression).code;
           const replacements: { start: number; end: number; node: MitosisNode }[] = [];
+          console.log('nailed it', expression);
 
           babelDefaultTransform(code, {
             JSXElement(path) {
@@ -357,7 +361,11 @@ export const jsxElementToJson = (
            * as not every key will be wrapped in quotes, so a normal JSON.parse
            * will fail.
            */
-          memo.blocksSlots[key] = json5.parse(replacedCode);
+          // TODO hacky
+          const finalCode = types.isObjectExpression(expression)
+            ? replacedCode.substring(1, replacedCode.length - 2)
+            : replacedCode;
+          memo.blocksSlots[key] = json5.parse(finalCode);
         } else {
           memo.bindings[key] = createSingleBinding({
             code: generate(expression, { compact: true }).code,
