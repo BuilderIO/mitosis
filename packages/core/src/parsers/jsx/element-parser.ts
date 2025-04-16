@@ -308,37 +308,56 @@ export const jsxElementToJson = (
             code: generate(expression, { compact: true }).code,
           });
         } else if (types.isArrayExpression(expression)) {
-          let code = generate(expression).code;
+          /**
+           * Find any deeply nested JSX Elements, convert them to Mitosis nodes
+           * then store them in "replacements" to later do a string substitution
+           * to swap out the stringified JSX with stringified Mitosis nodes.
+           */
+          const code = generate(expression).code;
+          const replacements: { start: number; end: number; node: MitosisNode }[] = [];
 
-          console.log('cODE', code);
-          const data = [];
-
-          let hasElements = false;
           babelDefaultTransform(code, {
-            JSXElement(path, context) {
-              const node = JSON.stringify(jsxElementToJson(path.node));
+            JSXElement(path) {
               const { start, end } = path.node;
-              console.log('good', code.substring(start, end));
-              hasElements = true;
+              if (start == null || end == null) {
+                return;
+              }
+              const node = jsxElementToJson(path.node);
+              if (!node) return;
 
-              data.push({
+              /**
+               * Perform replacements in the reverse order in which we saw them
+               * otherwise start/end indices will quickly become incorrect.
+               */
+              replacements.unshift({
                 start,
                 end,
                 node,
               });
 
-              // do not keep traversing deeper otherwise youll process nodes multiple times
+              /**
+               * babelTransform will keep iterating into deeper nodes. However,
+               * the "jsxElementToJson" call above will handle deeper nodes.
+               * Replace the path will null so we do not accidentally process
+               * child nodes multiple times.
+               */
               path.replaceWith(types.nullLiteral());
             },
           });
-          let newCode = code;
-          data.reverse().forEach((d, i) => {
-            newCode = newCode.substring(0, d.start) + d.node + newCode.substring(d.end);
+
+          // Replace stringified JSX (e.g. <Foo></Foo>) with stringified Mitosis JSON
+          let replacedCode = code;
+          replacements.forEach(({ start, end, node }) => {
+            replacedCode =
+              replacedCode.substring(0, start) + JSON.stringify(node) + replacedCode.substring(end);
           });
 
-          console.log('trying to convert', newCode);
-          memo.blocksSlots[key] = json5.parse(newCode);
-          console.log('set', memo.blocksSlots['items'], typeof memo.blocksSlots['items']);
+          /**
+           * The result should be a valid array of objects. Use json5 to parse
+           * as not every key will be wrapped in quotes, so a normal JSON.parse
+           * will fail.
+           */
+          memo.blocksSlots[key] = json5.parse(replacedCode);
         } else {
           memo.bindings[key] = createSingleBinding({
             code: generate(expression, { compact: true }).code,
