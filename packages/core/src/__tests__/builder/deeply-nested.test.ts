@@ -14,6 +14,7 @@ describe('Deeply Nested Builder Components', () => {
             component: {
               name: 'TestComponent',
               options: {
+                prop: null,
                 items: [
                   {
                     foo: [
@@ -47,49 +48,88 @@ describe('Deeply Nested Builder Components', () => {
     const builderToMitosis = builderContentToMitosisComponent(builderJson);
     const mitosis = componentToMitosis()({ component: builderToMitosis });
     expect(mitosis).toMatchInlineSnapshot(`
-        "import { TestComponent } from \\"@components\\";
+      "import { TestComponent } from \\"@components\\";
 
-        export default function MyComponent(props) {
-          return (
-            <TestComponent
-              items={[
-                {
-                  foo: [
-                    <div>
-                      <br />
-                    </div>,
-                    <br />,
-                  ],
-                  bar: <br />,
-                },
-              ]}
-            />
-          );
-        }
-        "
-      `);
+      export default function MyComponent(props) {
+        return (
+          <TestComponent
+            prop={null}
+            items={[
+              {
+                foo: [
+                  <div>
+                    <br />
+                  </div>,
+                  <br />,
+                ],
+                bar: <br />,
+              },
+            ]}
+          />
+        );
+      }
+      "
+    `);
 
     const backToMitosis = parseJsx(mitosis);
     const backToBuilder = componentToBuilder()({ component: backToMitosis });
     expect(backToBuilder).toMatchInlineSnapshot(`
-        {
-          "data": {
-            "blocks": [
-              {
-                "@type": "@builder.io/sdk:Element",
+      {
+        "data": {
+          "blocks": [
+            {
+              "@type": "@builder.io/sdk:Element",
+              "actions": {},
+              "bindings": {},
+              "children": [],
+              "code": {
                 "actions": {},
                 "bindings": {},
-                "children": [],
-                "code": {
-                  "actions": {},
-                  "bindings": {},
-                },
-                "component": {
-                  "name": "TestComponent",
-                  "options": {
-                    "items": [
-                      {
-                        "bar": {
+              },
+              "component": {
+                "name": "TestComponent",
+                "options": {
+                  "items": [
+                    {
+                      "bar": {
+                        "@type": "@builder.io/sdk:Element",
+                        "actions": {},
+                        "bindings": {},
+                        "children": [],
+                        "code": {
+                          "actions": {},
+                          "bindings": {},
+                        },
+                        "properties": {},
+                        "tagName": "br",
+                      },
+                      "foo": [
+                        {
+                          "@type": "@builder.io/sdk:Element",
+                          "actions": {},
+                          "bindings": {},
+                          "children": [
+                            {
+                              "@type": "@builder.io/sdk:Element",
+                              "actions": {},
+                              "bindings": {},
+                              "children": [],
+                              "code": {
+                                "actions": {},
+                                "bindings": {},
+                              },
+                              "properties": {},
+                              "tagName": "br",
+                            },
+                          ],
+                          "code": {
+                            "actions": {},
+                            "bindings": {},
+                          },
+                          "properties": {},
+                          "tagName": "div",
+                        },
+                        {
                           "@type": "@builder.io/sdk:Element",
                           "actions": {},
                           "bindings": {},
@@ -101,56 +141,19 @@ describe('Deeply Nested Builder Components', () => {
                           "properties": {},
                           "tagName": "br",
                         },
-                        "foo": [
-                          {
-                            "@type": "@builder.io/sdk:Element",
-                            "actions": {},
-                            "bindings": {},
-                            "children": [
-                              {
-                                "@type": "@builder.io/sdk:Element",
-                                "actions": {},
-                                "bindings": {},
-                                "children": [],
-                                "code": {
-                                  "actions": {},
-                                  "bindings": {},
-                                },
-                                "properties": {},
-                                "tagName": "br",
-                              },
-                            ],
-                            "code": {
-                              "actions": {},
-                              "bindings": {},
-                            },
-                            "properties": {},
-                            "tagName": "div",
-                          },
-                          {
-                            "@type": "@builder.io/sdk:Element",
-                            "actions": {},
-                            "bindings": {},
-                            "children": [],
-                            "code": {
-                              "actions": {},
-                              "bindings": {},
-                            },
-                            "properties": {},
-                            "tagName": "br",
-                          },
-                        ],
-                      },
-                    ],
-                  },
+                      ],
+                    },
+                  ],
+                  "prop": null,
                 },
               },
-            ],
-            "jsCode": "",
-            "tsCode": "",
-          },
-        }
-      `);
+            },
+          ],
+          "jsCode": "",
+          "tsCode": "",
+        },
+      }
+    `);
   });
   test('parse object with deeply nested elements', () => {
     const builderJson = {
@@ -161,6 +164,7 @@ describe('Deeply Nested Builder Components', () => {
             component: {
               name: 'TestComponent',
               options: {
+                prop: null,
                 items: {
                   foo: [
                     {
@@ -197,6 +201,7 @@ describe('Deeply Nested Builder Components', () => {
       export default function MyComponent(props) {
         return (
           <TestComponent
+            prop={null}
             items={{
               foo: [
                 <div>
@@ -283,6 +288,7 @@ describe('Deeply Nested Builder Components', () => {
                       },
                     ],
                   },
+                  "prop": null,
                 },
               },
             },

@@ -852,8 +852,7 @@ export const builderElementToMitosisNode = (
           .map(transformBldrElementToMitosisNode);
 
         slots[key] = childrenElements;
-        // TODO null check?
-      } else if (Array.isArray(value) || typeof value === 'object') {
+      } else if (Array.isArray(value) || (typeof value === 'object' && value !== null)) {
         const data = Array.isArray(value) ? [...value] : { ...value };
         traverse(data).forEach(function (d) {
           if (isBuilderElement(d)) {
