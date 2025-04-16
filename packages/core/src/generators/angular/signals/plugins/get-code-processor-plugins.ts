@@ -121,23 +121,18 @@ const handleHookAndStateOnEvents = (
 const handleTemplateLiteral = (
   path: NodePath<TemplateLiteral>,
   json: MitosisComponent,
-  key?: string,
   context?: any,
 ) => {
   const fnName = `templateStr_${hashCodeAsString(path.toString())}`;
+  const extraParams = new Set<string>();
 
-  const extraParams: string[] = [];
-
+  // Collect loop variables from context
   let currentContext = context;
   while (currentContext?.parent) {
     if (currentContext.parent.node?.name === ForNodeName) {
       const forNode = currentContext.parent.node;
-      if (forNode.scope.forName && !extraParams.includes(forNode.scope.forName)) {
-        extraParams.push(forNode.scope.forName);
-      }
-      if (forNode.scope.indexName && !extraParams.includes(forNode.scope.indexName)) {
-        extraParams.push(forNode.scope.indexName);
-      }
+      if (forNode.scope.forName) extraParams.add(forNode.scope.forName);
+      if (forNode.scope.indexName) extraParams.add(forNode.scope.indexName);
     }
     currentContext = currentContext.parent;
   }
@@ -151,83 +146,20 @@ const handleTemplateLiteral = (
       exprCode = expr.toString();
     }
 
-    if (
-      (key && checkIsEvent(key)) ||
-      exprCode.includes('.emit(') ||
-      exprCode.includes('.addEventListener')
-    ) {
-      return exprCode;
-    }
-
-    if (exprCode.includes('`')) {
-      return exprCode;
-    }
-
-    // Special handling for ternary operators to properly preserve string literals
-    if (exprCode.includes('?') && exprCode.includes(':')) {
-      extraParams.forEach((param) => {
-        exprCode = exprCode.replace(new RegExp(`\\b${param}\\b`, 'g'), `__${param}__`);
-      });
-
-      exprCode = exprCode.replace(/\bstate\.(\w+)(?!\()/g, 'this.$1()');
-      exprCode = exprCode.replace(/\bprops\.(\w+)(?!\()/g, 'this.$1()');
-
-      extraParams.forEach((param) => {
-        exprCode = exprCode.replace(new RegExp(`__${param}__`, 'g'), param);
-      });
-
-      return exprCode;
-    }
-
-    // Keep loop variables like 'index' as-is (don't prefix with this)
-    // But we need to process the rest of the expression
-    if (extraParams.some((param) => exprCode.includes(param))) {
-      extraParams.forEach((param) => {
-        exprCode = exprCode.replace(new RegExp(`\\b${param}\\b`, 'g'), `__${param}__`);
-      });
-
-      // Replace state.x with this.x() but preserve the loop variables
-      exprCode = exprCode.replace(/\bstate\.(\w+)(?!\()/g, 'this.$1()');
-      exprCode = exprCode.replace(/\bprops\.(\w+)(?!\()/g, 'this.$1()');
-
-      extraParams.forEach((param) => {
-        exprCode = exprCode.replace(new RegExp(`__${param}__`, 'g'), param);
-      });
-
-      return exprCode;
-    }
-
     // Replace state.x with this.x() for signals
-    exprCode = exprCode.replace(/\bstate\.(\w+)(?!\()/g, 'this.$1()');
-    exprCode = exprCode.replace(/\bprops\.(\w+)(?!\()/g, 'this.$1()');
-
-    return exprCode;
+    return exprCode
+      .replace(/\bstate\.(\w+)(?!\()/g, 'this.$1()')
+      .replace(/\bprops\.(\w+)(?!\()/g, 'this.$1()');
   });
 
-  const templateContent = path.node.quasis.map((quasi) => quasi.value.raw).join('');
-
-  // Add loop variables like 'index' to the function parameters if they're in the template content
-  // or if they appear in any expression
-  extraParams.forEach((param) => {
-    if (!extraParams.includes(param)) {
-      processedExpressions.forEach((expr) => {
-        if (expr.includes(param)) {
-          extraParams.push(param);
-        }
-      });
-    }
-
-    if (!extraParams.includes(param) && templateContent.includes(param)) {
-      extraParams.push(param);
-    }
-  });
+  // Convert Set to Array for final usage
+  const paramsList = Array.from(extraParams);
 
   json.state[fnName] = {
-    code: `${fnName}(${extraParams.join(', ')}) { 
+    code: `${fnName}(${paramsList.join(', ')}) { 
       return \`${path.node.quasis
         .map((quasi, i) => {
           const escapedRaw = quasi.value.raw.replace(/\\/g, '\\\\').replace(/\$/g, '\\$');
-
           return (
             escapedRaw +
             (i < processedExpressions.length ? '${' + processedExpressions[i] + '}' : '')
@@ -239,7 +171,7 @@ const handleTemplateLiteral = (
   };
 
   // Return the function call with any needed parameters
-  return `${fnName}(${extraParams.join(', ')})`;
+  return `${fnName}(${paramsList.join(', ')})`;
 };
 
 const transformHooksAndState = (
@@ -413,7 +345,7 @@ ${code}`);
         return;
       }
       // When we encounter a template literal, convert it to a function
-      const fnCall = handleTemplateLiteral(path, json, key, context);
+      const fnCall = handleTemplateLiteral(path, json, context);
       path.replaceWith(identifier(fnCall));
     },
   });
