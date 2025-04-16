@@ -85,9 +85,8 @@ const handleMemberExpression = (path: NodePath<MemberExpression>, json?: Mitosis
   }
 
   if (isStateOrPropsExpression(path)) {
-    // Check if the property is a method or function type, and if so, don't convert it to a callable
+    // Check if the state property is a method or function type, and if so, don't convert it to a callable
     if (isAFunctionOrMethod(json, path)) {
-      // It's a function/method reference, don't convert it to a callable
       return;
     }
 
