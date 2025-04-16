@@ -856,6 +856,11 @@ export const builderElementToMitosisNode = (
         const data = Array.isArray(value) ? [...value] : { ...value };
         traverse(data).forEach(function (d) {
           if (isBuilderElement(d)) {
+            /**
+             * Replacing the Builder element with a Mitosis node in-place
+             * allows us to assign to blockSlots while preserving the structure
+             * of this deeply nested data.
+             */
             this.update(builderElementToMitosisNode(d, options, _internalOptions));
           }
         });
