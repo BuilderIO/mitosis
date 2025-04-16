@@ -1,12 +1,12 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import { pipe } from 'fp-ts/lib/function';
+import json5 from 'json5';
 import { createSingleBinding } from '../../helpers/bindings';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { checkIsDefined } from '../../helpers/nullable';
 import { ForNode, MitosisNode } from '../../types/mitosis-node';
-import { transformAttributeName } from './helpers';
-
+import { babelDefaultTransform, transformAttributeName } from './helpers';
 const { types } = babel;
 
 const getBodyExpression = (node: babel.types.Node) => {
@@ -255,10 +255,11 @@ export const jsxElementToJson = (
   // const bindings: MitosisNode['bindings'] = {}
   // const slots: MitosisNode['slots'] = {}
 
-  const { bindings, properties, slots } = node.openingElement.attributes.reduce<{
+  const { bindings, properties, slots, blocksSlots } = node.openingElement.attributes.reduce<{
     bindings: MitosisNode['bindings'];
     properties: MitosisNode['properties'];
     slots: {} & MitosisNode['slots'];
+    blocksSlots: any;
   }>(
     (memo, item) => {
       if (types.isJSXAttribute(item)) {
@@ -306,6 +307,38 @@ export const jsxElementToJson = (
           memo.bindings[key] = createSingleBinding({
             code: generate(expression, { compact: true }).code,
           });
+        } else if (types.isArrayExpression(expression)) {
+          let code = generate(expression).code;
+
+          console.log('cODE', code);
+          const data = [];
+
+          let hasElements = false;
+          babelDefaultTransform(code, {
+            JSXElement(path, context) {
+              const node = JSON.stringify(jsxElementToJson(path.node));
+              const { start, end } = path.node;
+              console.log('good', code.substring(start, end));
+              hasElements = true;
+
+              data.push({
+                start,
+                end,
+                node,
+              });
+
+              // do not keep traversing deeper otherwise youll process nodes multiple times
+              path.replaceWith(types.nullLiteral());
+            },
+          });
+          let newCode = code;
+          data.reverse().forEach((d, i) => {
+            newCode = newCode.substring(0, d.start) + d.node + newCode.substring(d.end);
+          });
+
+          console.log('trying to convert', newCode);
+          memo.blocksSlots[key] = json5.parse(newCode);
+          console.log('set', memo.blocksSlots['items'], typeof memo.blocksSlots['items']);
         } else {
           memo.bindings[key] = createSingleBinding({
             code: generate(expression, { compact: true }).code,
@@ -332,6 +365,7 @@ export const jsxElementToJson = (
       bindings: {},
       properties: {},
       slots: {},
+      blocksSlots: {},
     },
   );
 
@@ -341,5 +375,6 @@ export const jsxElementToJson = (
     bindings,
     children: node.children.map(jsxElementToJson).filter(checkIsDefined),
     slots: Object.keys(slots).length > 0 ? slots : undefined,
+    blocksSlots,
   });
 };

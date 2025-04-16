@@ -1,11 +1,62 @@
 import { componentToBuilder } from '@/generators/builder';
 import { componentToMitosis } from '@/generators/mitosis';
-
 import { builderContentToMitosisComponent } from '@/parsers/builder';
+import { parseJsx } from '@/parsers/jsx';
 import { describe, test } from 'vitest';
 
 describe('Builder Invalid JSX Flag', () => {
-  test('compile accordion', () => {
+  test.only('liam', () => {
+    const jsx = parseJsx(`export default function MyFunction() { 
+      return (
+        <Cmp
+          items={[
+            { foo: [<div><br /></div>]}
+          ]}
+        />
+      )
+    }`);
+    expect(jsx.children[0]).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/node",
+        "bindings": {},
+        "blocksSlots": {
+          "items": [
+            {
+              "foo": [
+                {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": {},
+                  "blocksSlots": {},
+                  "children": [
+                    {
+                      "@type": "@builder.io/mitosis/node",
+                      "bindings": {},
+                      "blocksSlots": {},
+                      "children": [],
+                      "meta": {},
+                      "name": "br",
+                      "properties": {},
+                      "scope": {},
+                    },
+                  ],
+                  "meta": {},
+                  "name": "div",
+                  "properties": {},
+                  "scope": {},
+                },
+              ],
+            },
+          ],
+        },
+        "children": [],
+        "meta": {},
+        "name": "Cmp",
+        "properties": {},
+        "scope": {},
+      }
+    `);
+  });
+  test.only('compile accordion', () => {
     const builderJson = {
       data: {
         blocks: [
@@ -134,9 +185,165 @@ describe('Builder Invalid JSX Flag', () => {
       "
     `);
 
-    // TODO JSX --> Mitosis JSON
+    const backToMitosis = parseJsx(mitosis);
+    expect(backToMitosis).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/component",
+        "children": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {},
+            "blocksSlots": {
+              "items": [
+                {
+                  "detail": [
+                    {
+                      "@type": "@builder.io/mitosis/node",
+                      "bindings": {},
+                      "blocksSlots": {},
+                      "children": [
+                        {
+                          "@type": "@builder.io/mitosis/node",
+                          "bindings": {},
+                          "blocksSlots": {
+                            "items": [
+                              {
+                                "detail": [
+                                  {
+                                    "@type": "@builder.io/mitosis/node",
+                                    "bindings": {},
+                                    "blocksSlots": {},
+                                    "children": [],
+                                    "meta": {},
+                                    "name": "div",
+                                    "properties": {},
+                                    "scope": {},
+                                  },
+                                ],
+                                "title": [
+                                  {
+                                    "@type": "@builder.io/mitosis/node",
+                                    "bindings": {},
+                                    "blocksSlots": {},
+                                    "children": [
+                                      {
+                                        "@type": "@builder.io/mitosis/node",
+                                        "bindings": {},
+                                        "children": [],
+                                        "meta": {},
+                                        "name": "div",
+                                        "properties": {
+                                          "_text": "Title Text",
+                                        },
+                                        "scope": {},
+                                      },
+                                    ],
+                                    "meta": {},
+                                    "name": "div",
+                                    "properties": {},
+                                    "scope": {},
+                                  },
+                                  {
+                                    "@type": "@builder.io/mitosis/node",
+                                    "bindings": {},
+                                    "blocksSlots": {},
+                                    "children": [
+                                      {
+                                        "@type": "@builder.io/mitosis/node",
+                                        "bindings": {},
+                                        "children": [],
+                                        "meta": {},
+                                        "name": "div",
+                                        "properties": {
+                                          "_text": "Title Part Two",
+                                        },
+                                        "scope": {},
+                                      },
+                                    ],
+                                    "meta": {},
+                                    "name": "div",
+                                    "properties": {},
+                                    "scope": {},
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                          "children": [],
+                          "meta": {},
+                          "name": "BuilderAccordion",
+                          "properties": {},
+                          "scope": {},
+                        },
+                      ],
+                      "meta": {},
+                      "name": "div",
+                      "properties": {},
+                      "scope": {},
+                    },
+                  ],
+                  "title": [
+                    {
+                      "@type": "@builder.io/mitosis/node",
+                      "bindings": {},
+                      "blocksSlots": {},
+                      "children": [
+                        {
+                          "@type": "@builder.io/mitosis/node",
+                          "bindings": {},
+                          "children": [],
+                          "meta": {},
+                          "name": "div",
+                          "properties": {
+                            "_text": "Title Text",
+                          },
+                          "scope": {},
+                        },
+                      ],
+                      "meta": {},
+                      "name": "div",
+                      "properties": {},
+                      "scope": {},
+                    },
+                  ],
+                },
+              ],
+            },
+            "children": [],
+            "meta": {},
+            "name": "BuilderAccordion",
+            "properties": {},
+            "scope": {},
+          },
+        ],
+        "context": {
+          "get": {},
+          "set": {},
+        },
+        "exports": {},
+        "hooks": {
+          "onEvent": [],
+          "onMount": [],
+        },
+        "imports": [
+          {
+            "importKind": "value",
+            "imports": {
+              "BuilderAccordion": "BuilderAccordion",
+            },
+            "path": "@components",
+          },
+        ],
+        "inputs": [],
+        "meta": {},
+        "name": "MyComponent",
+        "refs": {},
+        "state": {},
+        "subComponents": [],
+      }
+    `);
 
-    const backToBuilder = componentToBuilder()({ component: builderToMitosis });
+    const backToBuilder = componentToBuilder()({ component: backToMitosis });
     expect(backToBuilder).toMatchInlineSnapshot(`
       {
         "data": {
@@ -291,7 +498,7 @@ describe('Builder Invalid JSX Flag', () => {
       }
     `);
   });
-  test('compile carousel', () => {
+  test.only('compile carousel', () => {
     const builderJson = {
       data: {
         blocks: [
@@ -357,9 +564,9 @@ describe('Builder Invalid JSX Flag', () => {
       "
     `);
 
-    // TODO JSX --> Mitosis JSON
+    const backToMitosis = parseJsx(mitosis);
 
-    const backToBuilder = componentToBuilder()({ component: builderToMitosis });
+    const backToBuilder = componentToBuilder()({ component: backToMitosis });
     expect(backToBuilder).toMatchInlineSnapshot(`
       {
         "data": {
@@ -382,15 +589,17 @@ describe('Builder Invalid JSX Flag', () => {
                         {
                           "@type": "@builder.io/sdk:Element",
                           "actions": {
-                            "click": " state.pasttime = !state.pasttime;
-       ",
+                            "click": "
+        state.pasttime = !state.pasttime;
+      ",
                           },
                           "bindings": {},
                           "children": [],
                           "code": {
                             "actions": {
-                              "click": " state.pasttime = !state.pasttime;
-       ",
+                              "click": "
+        state.pasttime = !state.pasttime;
+      ",
                             },
                             "bindings": {},
                           },
