@@ -745,7 +745,7 @@ export const builderElementToMitosisNode = (
   const bindings: MitosisNode['bindings'] = {};
   const children: MitosisNode[] = [];
   const slots: MitosisNode['slots'] = {};
-  const blocksSlots: any = {};
+  const blocksSlots: MitosisNode['blocksSlots'] = {};
 
   if (blockBindings) {
     for (const key in blockBindings) {
@@ -859,7 +859,6 @@ export const builderElementToMitosisNode = (
             this.update(builderElementToMitosisNode(d, options, _internalOptions));
           }
         });
-        // TODO fix type
         blocksSlots[key] = data;
       } else {
         bindings[key] = createSingleBinding({ code: json5.stringify(value) });
@@ -879,8 +878,6 @@ export const builderElementToMitosisNode = (
   }
 
   const node = createMitosisNode({
-    // TODO Fix Type
-    blocksSlots,
     name:
       block.component?.name?.replace(/[^a-z0-9]/gi, '') ||
       block.tagName ||
@@ -904,10 +901,10 @@ export const builderElementToMitosisNode = (
     slots: {
       ...slots,
     },
+    blocksSlots,
     meta: getMetaFromBlock(block, options),
     ...(Object.keys(localizedValues).length && { localizedValues }),
-    // TODO fix type
-  } as any);
+  });
 
   // Has single text node child
   const firstChild = block.children?.[0];

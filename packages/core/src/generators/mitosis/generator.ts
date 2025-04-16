@@ -253,9 +253,8 @@ export const blockToMitosis = (
     return str;
   };
 
-  // TODO types
-  for (const key in (json as any).blocksSlots) {
-    const value = (json as any).blocksSlots[key];
+  for (const key in json.blocksSlots) {
+    const value = json.blocksSlots[key];
     traverse(value).forEach(function (v) {
       if (isMitosisNode(v)) {
         this.update(blockToMitosis(v, toMitosisOptions, component, insideJsx));

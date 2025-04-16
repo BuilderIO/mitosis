@@ -259,7 +259,7 @@ export const jsxElementToJson = (
     bindings: MitosisNode['bindings'];
     properties: MitosisNode['properties'];
     slots: {} & MitosisNode['slots'];
-    blocksSlots: any;
+    blocksSlots: {} & MitosisNode['blocksSlots'];
   }>(
     (memo, item) => {
       if (types.isJSXAttribute(item)) {

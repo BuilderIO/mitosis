@@ -82,6 +82,8 @@ export type BaseNode = {
    * It is used when a Builder content block has localized values.
    */
   localizedValues?: { [index: string]: BuilderLocalizedValue };
+
+  blocksSlots?: { [key: string]: any }; // TODO fix this
 };
 
 export const ForNodeName = 'For';
