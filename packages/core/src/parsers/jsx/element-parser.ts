@@ -312,13 +312,14 @@ export const jsxElementToJson = (
            * Find any deeply nested JSX Elements, convert them to Mitosis nodes
            * then store them in "replacements" to later do a string substitution
            * to swap out the stringified JSX with stringified Mitosis nodes.
+           *
+           * Object expressions need to wrapped in an expression statement (e.g. `({... })`)
+           * otherwise Babel generate will fail.
            */
-
           const code = types.isObjectExpression(expression)
             ? generate(types.expressionStatement(expression)).code
             : generate(expression).code;
           const replacements: { start: number; end: number; node: MitosisNode }[] = [];
-          console.log('nailed it', expression);
 
           babelDefaultTransform(code, {
             JSXElement(path) {
@@ -361,10 +362,18 @@ export const jsxElementToJson = (
            * as not every key will be wrapped in quotes, so a normal JSON.parse
            * will fail.
            */
-          // TODO hacky
-          const finalCode = types.isObjectExpression(expression)
-            ? replacedCode.substring(1, replacedCode.length - 2)
-            : replacedCode;
+          let finalCode = replacedCode;
+          if (types.isObjectExpression(expression)) {
+            /**
+             * Remove the ( and ); surrounding the expression because we just want
+             * a valid JS object instead.
+             */
+            const match = replacedCode.match(/\(([\s\S]*?)\);/);
+            if (match) {
+              finalCode = match[1];
+            }
+          }
+
           memo.blocksSlots[key] = json5.parse(finalCode);
         } else {
           memo.bindings[key] = createSingleBinding({
