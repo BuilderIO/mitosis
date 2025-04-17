@@ -83,8 +83,16 @@ export type BaseNode = {
    */
   localizedValues?: { [index: string]: BuilderLocalizedValue };
 
-  blocksSlots?: { [key: string]: MitosisNode[] };
+  /**
+   * Key-value store of serialized elements passed into properties.
+   * Disabled by default. Use `enableBlocksSlots` on supported parsers to enable.
+   */
+  blocksSlots?: BlockSlot;
 };
+
+interface BlockSlot {
+  [key: string]: BlockSlot | BlockSlot[] | MitosisNode | MitosisNode[];
+}
 
 export const ForNodeName = 'For';
 export const FragmentNodeName = 'Fragment';
