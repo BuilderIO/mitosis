@@ -852,7 +852,15 @@ export const builderElementToMitosisNode = (
           .map(transformBldrElementToMitosisNode);
 
         slots[key] = childrenElements;
-      } else if (Array.isArray(value) || (typeof value === 'object' && value !== null)) {
+      } else if (
+        !componentMappers[block.component?.name] &&
+        (Array.isArray(value) || (typeof value === 'object' && value !== null))      
+      ) {
+        /**
+         * Builder Elements that have their own mappers should not use blocksSlots
+         * even if the mapper is disabled via _internalOptions as it will cause
+         * problems when trying to use the mapper in the future.
+         */
         const data = Array.isArray(value) ? [...value] : { ...value };
         let hasElement = false;
         traverse(data).forEach(function (d) {
