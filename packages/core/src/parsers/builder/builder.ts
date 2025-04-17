@@ -640,6 +640,14 @@ type BuilderToMitosisOptions = {
    * Defaults to `false`.
    */
   escapeInvalidCode?: boolean;
+  
+  /**
+   * When `true`, the `blocksSlots` field on Mitosis Nodes will be used to transform
+   * deeply nested Builder elements found in component options. Note that not every
+   * generator supportes parsing `blocksSlots`.
+   * Defaults to `false`.
+   */
+  enableBlocksSlots?: boolean;
 };
 
 export const builderElementToMitosisNode = (
@@ -853,6 +861,7 @@ export const builderElementToMitosisNode = (
 
         slots[key] = childrenElements;
       } else if (
+        options.enableBlocksSlots &&
         !componentMappers[block.component?.name] &&
         (Array.isArray(value) || (typeof value === 'object' && value !== null))      
       ) {
