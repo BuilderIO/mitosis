@@ -644,7 +644,7 @@ type BuilderToMitosisOptions = {
   /**
    * When `true`, the `blocksSlots` field on Mitosis Nodes will be used to transform
    * deeply nested Builder elements found in component options. Note that not every
-   * generator supportes parsing `blocksSlots`.
+   * generator supports parsing `blocksSlots`.
    * Defaults to `false`.
    */
   enableBlocksSlots?: boolean;
