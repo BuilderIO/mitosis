@@ -7,6 +7,7 @@ import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { checkIsDefined } from '../../helpers/nullable';
 import { ForNode, MitosisNode } from '../../types/mitosis-node';
 import { babelDefaultTransform, transformAttributeName } from './helpers';
+import type { ParseMitosisOptions } from './types';
 const { types } = babel;
 
 const getBodyExpression = (node: babel.types.Node) => {
@@ -43,6 +44,7 @@ const getForArguments = (params: any[]): ForNode['scope'] => {
  */
 export const jsxElementToJson = (
   node: babel.types.Expression | babel.types.JSX,
+  options: Partial<ParseMitosisOptions>,
 ): MitosisNode | null => {
   if (types.isJSXText(node)) {
     const value = typeof node.extra?.raw === 'string' ? node.extra.raw : node.value;
@@ -58,7 +60,7 @@ export const jsxElementToJson = (
   }
 
   if (types.isJSXExpressionContainer(node)) {
-    return jsxElementToJson(node.expression as any);
+    return jsxElementToJson(node.expression as any, options);
   }
 
   if (
@@ -88,7 +90,7 @@ export const jsxElementToJson = (
             }),
           },
           scope: forArguments,
-          children: [jsxElementToJson(bodyExpression)!].filter(checkIsDefined),
+          children: [jsxElementToJson(bodyExpression, options)!].filter(checkIsDefined),
         });
       }
     } else if (isArrayFrom) {
@@ -117,7 +119,7 @@ export const jsxElementToJson = (
             }),
           },
           scope: forArguments,
-          children: [jsxElementToJson(bodyExpression)!],
+          children: [jsxElementToJson(bodyExpression, options)!],
         });
       }
     }
@@ -133,15 +135,15 @@ export const jsxElementToJson = (
             }).code!,
           }),
         },
-        children: [jsxElementToJson(node.right as any)!].filter(checkIsDefined),
+        children: [jsxElementToJson(node.right as any, options)!].filter(checkIsDefined),
       });
     } else {
       // TODO: good warning system for unsupported operators
     }
   } else if (types.isConditionalExpression(node)) {
     // {foo ? <div /> : <span />} -> <Show when={foo} else={<span />}>...</Show>
-    const child = jsxElementToJson(node.consequent as any);
-    const elseCase = jsxElementToJson(node.alternate as any);
+    const child = jsxElementToJson(node.consequent as any, options);
+    const elseCase = jsxElementToJson(node.alternate as any, options);
 
     return createMitosisNode({
       name: 'Show',
@@ -156,7 +158,9 @@ export const jsxElementToJson = (
   } else if (types.isJSXFragment(node)) {
     return createMitosisNode({
       name: 'Fragment',
-      children: node.children.map(jsxElementToJson).filter(checkIsDefined),
+      children: node.children
+        .map((child) => jsxElementToJson(child, options))
+        .filter(checkIsDefined),
     });
   } else if (types.isJSXSpreadChild(node)) {
     // TODO: support spread attributes
@@ -203,7 +207,7 @@ export const jsxElementToJson = (
     const elseValue =
       elseAttr &&
       types.isJSXExpressionContainer(elseAttr.value) &&
-      jsxElementToJson(elseAttr.value.expression as any);
+      jsxElementToJson(elseAttr.value.expression as any, options);
 
     return createMitosisNode({
       name: 'Show',
@@ -213,7 +217,9 @@ export const jsxElementToJson = (
       bindings: {
         ...(whenValue ? { when: createSingleBinding({ code: whenValue }) } : {}),
       },
-      children: node.children.map(jsxElementToJson).filter(checkIsDefined),
+      children: node.children
+        .map((child) => jsxElementToJson(child, options))
+        .filter(checkIsDefined),
     });
   }
 
@@ -245,7 +251,7 @@ export const jsxElementToJson = (
             }),
           },
           scope: forArguments,
-          children: [jsxElementToJson(childExpression.body as any)!],
+          children: [jsxElementToJson(childExpression.body as any, options)!],
         });
       }
     }
@@ -298,7 +304,7 @@ export const jsxElementToJson = (
         } else if (types.isJSXElement(expression) || types.isJSXFragment(expression)) {
           // <Foo myProp={<MoreMitosisNode><div /></MoreMitosisNode>} />
           // <Foo myProp={<><Node /><Node /></>} />
-          const slotNode = jsxElementToJson(expression);
+          const slotNode = jsxElementToJson(expression, options);
           if (!slotNode) return memo;
 
           memo.slots[key] = [slotNode];
@@ -308,7 +314,10 @@ export const jsxElementToJson = (
             code: generate(expression, { compact: true }).code,
           });
         } else {
-          if (types.isArrayExpression(expression) || types.isObjectExpression(expression)) {
+          if (
+            options.enableBlocksSlots &&
+            (types.isArrayExpression(expression) || types.isObjectExpression(expression))
+          ) {
             /**
              * Find any deeply nested JSX Elements, convert them to Mitosis nodes
              * then store them in "replacements" to later do a string substitution
@@ -328,7 +337,7 @@ export const jsxElementToJson = (
                 if (start == null || end == null) {
                   return;
                 }
-                const node = jsxElementToJson(path.node);
+                const node = jsxElementToJson(path.node, options);
                 if (!node) return;
 
                 /**
@@ -417,7 +426,7 @@ export const jsxElementToJson = (
     name: nodeName,
     properties,
     bindings,
-    children: node.children.map(jsxElementToJson).filter(checkIsDefined),
+    children: node.children.map((child) => jsxElementToJson(child, options)).filter(checkIsDefined),
     slots: Object.keys(slots).length > 0 ? slots : undefined,
     blocksSlots: Object.keys(blocksSlots).length > 0 ? blocksSlots : undefined,
   });

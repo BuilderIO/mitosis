@@ -90,7 +90,7 @@ export type BaseNode = {
   blocksSlots?: BlockSlot;
 };
 
-interface BlockSlot {
+export interface BlockSlot {
   [key: string]: BlockSlot | BlockSlot[] | MitosisNode | MitosisNode[];
 }
 

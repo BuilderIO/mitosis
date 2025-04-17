@@ -1,5 +1,6 @@
 import { componentToBuilder } from '@/generators/builder';
 import { componentToMitosis } from '@/generators/mitosis';
+import { componentToReact } from '@/generators/react';
 import { builderContentToMitosisComponent } from '@/parsers/builder';
 import { parseJsx } from '@/parsers/jsx';
 import { describe, test } from 'vitest';
@@ -190,7 +191,9 @@ describe('Deeply Nested Builder Components', () => {
       "
     `);
 
-    const backToMitosis = parseJsx(mitosis);
+    const backToMitosis = parseJsx(mitosis, {
+      enableBlocksSlots: true,
+    });
     const backToBuilder = componentToBuilder()({ component: backToMitosis });
     expect(backToBuilder).toMatchInlineSnapshot(`
       {
@@ -469,7 +472,9 @@ describe('Deeply Nested Builder Components', () => {
       "
     `);
 
-    const backToMitosis = parseJsx(mitosis);
+    const backToMitosis = parseJsx(mitosis, {
+      enableBlocksSlots: true,
+    });
     const backToBuilder = componentToBuilder()({ component: backToMitosis });
     expect(backToBuilder).toMatchInlineSnapshot(`
       {
@@ -610,7 +615,9 @@ describe('Deeply Nested Builder Components', () => {
       "
     `);
 
-    const backToMitosis = parseJsx(mitosis);
+    const backToMitosis = parseJsx(mitosis, {
+      enableBlocksSlots: true,
+    });
     const backToBuilder = componentToBuilder()({ component: backToMitosis });
     expect(backToBuilder).toMatchInlineSnapshot(`
       {
@@ -780,6 +787,34 @@ describe('Deeply Nested Builder Components', () => {
           "tsCode": "",
         },
       }
+    `);
+  });
+  test('do not alter existing deeply nested behavior when disabled on other generators', () => {
+    const mitosis = parseJsx(`
+    import { useState } from "@builder.io/mitosis";
+    
+    export default function MyComponent(props) {
+      const [name, setName] = useState("Steve");
+    
+      return (
+        <MyCmp items={[ <br /> ]} />
+      );
+    }   
+    `);
+    const react = componentToReact()({ component: mitosis });
+    expect(react).toMatchInlineSnapshot(`
+      "\\"use client\\";
+      import * as React from \\"react\\";
+      import { useState } from \\"react\\";
+
+      function MyComponent(props) {
+        const [name, setName] = useState(() => \\"Steve\\");
+
+        return <MyCmp items={[<br />]} />;
+      }
+
+      export default MyComponent;
+      "
     `);
   });
 });

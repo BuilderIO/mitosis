@@ -9,6 +9,7 @@ export type ParseMitosisOptions = {
     project: Project;
   };
   filePath?: string;
+  enableBlocksSlots?: boolean;
 };
 
 export type ResolvedImport = {
