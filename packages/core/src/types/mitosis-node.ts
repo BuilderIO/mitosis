@@ -83,7 +83,7 @@ export type BaseNode = {
    */
   localizedValues?: { [index: string]: BuilderLocalizedValue };
 
-  blocksSlots?: { [key: string]: any }; // TODO fix this
+  blocksSlots?: { [key: string]: MitosisNode[] };
 };
 
 export const ForNodeName = 'For';
