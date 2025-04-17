@@ -45,7 +45,9 @@ describe('Deeply Nested Builder Components', () => {
         ],
       },
     };
-    const builderToMitosis = builderContentToMitosisComponent(builderJson, { enableBlocksSlots: true });
+    const builderToMitosis = builderContentToMitosisComponent(builderJson, {
+      enableBlocksSlots: true,
+    });
     const mitosis = componentToMitosis()({ component: builderToMitosis });
     expect(mitosis).toMatchInlineSnapshot(`
       "import { TestComponent } from \\"@components\\";
@@ -193,7 +195,9 @@ describe('Deeply Nested Builder Components', () => {
         ],
       },
     };
-    const builderToMitosis = builderContentToMitosisComponent(builderJson, { enableBlocksSlots: true });
+    const builderToMitosis = builderContentToMitosisComponent(builderJson, {
+      enableBlocksSlots: true,
+    });
     const mitosis = componentToMitosis()({ component: builderToMitosis });
     expect(mitosis).toMatchInlineSnapshot(`
       "import { TestComponent } from \\"@components\\";
@@ -313,17 +317,19 @@ describe('Deeply Nested Builder Components', () => {
                     blocks: [
                       {
                         '@type': '@builder.io/sdk:Element' as const,
-                      }
-                    ]
-                  }
-                ]
-              }
+                      },
+                    ],
+                  },
+                ],
+              },
             },
           },
         ],
       },
     };
-    const builderToMitosis = builderContentToMitosisComponent(builderJson, { enableBlocksSlots: true });
+    const builderToMitosis = builderContentToMitosisComponent(builderJson, {
+      enableBlocksSlots: true,
+    });
     const mitosis = componentToMitosis()({ component: builderToMitosis });
     expect(mitosis).toMatchInlineSnapshot(`
       "import { Columns, Column } from \\"@components\\";
@@ -339,7 +345,7 @@ describe('Deeply Nested Builder Components', () => {
       }
       "
     `);
-  
+
     const backToMitosis = parseJsx(mitosis);
     const backToBuilder = componentToBuilder()({ component: backToMitosis });
     expect(backToBuilder).toMatchInlineSnapshot(`
@@ -460,7 +466,7 @@ describe('Deeply Nested Builder Components', () => {
       }
       "
     `);
-  
+
     const backToMitosis = parseJsx(mitosis);
     const backToBuilder = componentToBuilder()({ component: backToMitosis });
     expect(backToBuilder).toMatchInlineSnapshot(`
