@@ -152,7 +152,7 @@ describe('qwik', () => {
     expect(toObj(fileSet)).toMatchSnapshot();
   });
 
-  test.only('Accordion', async () => {
+  test('Accordion', async () => {
     const component = builderContentToMitosisComponent(
       require('./qwik/specs/qwik.test.accordion.json'),
       {
