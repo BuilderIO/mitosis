@@ -14,7 +14,7 @@ import { parseCode, parseCodeJson } from './helpers';
 import { generateUseStyleCode, parseDefaultPropsHook } from './hooks';
 import { processHookCode } from './hooks/helpers';
 import { parseStateObjectToMitosisState } from './state';
-import { Context } from './types';
+import type { Context, ParseMitosisOptions } from './types';
 
 const { types } = babel;
 
@@ -25,6 +25,7 @@ export const componentFunctionToJson = (
   node: babel.types.FunctionDeclaration,
   context: Context,
   stateToScope: string[],
+  options: Partial<ParseMitosisOptions>,
 ): JSONOrNode => {
   const hooks: MitosisComponent['hooks'] = {
     onMount: [],
@@ -337,7 +338,7 @@ export const componentFunctionToJson = (
   if (theReturn) {
     const value = (theReturn as babel.types.ReturnStatement).argument;
     if (types.isJSXElement(value) || types.isJSXFragment(value)) {
-      const jsxElement = jsxElementToJson(value);
+      const jsxElement = jsxElementToJson(value, options);
       if (jsxElement) {
         children.push(jsxElement);
       }

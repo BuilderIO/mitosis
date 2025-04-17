@@ -640,6 +640,14 @@ type BuilderToMitosisOptions = {
    * Defaults to `false`.
    */
   escapeInvalidCode?: boolean;
+
+  /**
+   * When `true`, the `blocksSlots` field on Mitosis Nodes will be used to transform
+   * deeply nested Builder elements found in component options. Note that not every
+   * generator supports parsing `blocksSlots`.
+   * Defaults to `false`.
+   */
+  enableBlocksSlots?: boolean;
 };
 
 export const builderElementToMitosisNode = (
@@ -745,6 +753,7 @@ export const builderElementToMitosisNode = (
   const bindings: MitosisNode['bindings'] = {};
   const children: MitosisNode[] = [];
   const slots: MitosisNode['slots'] = {};
+  const blocksSlots: MitosisNode['blocksSlots'] = {};
 
   if (blockBindings) {
     for (const key in blockBindings) {
@@ -851,6 +860,36 @@ export const builderElementToMitosisNode = (
           .map(transformBldrElementToMitosisNode);
 
         slots[key] = childrenElements;
+      } else if (
+        options.enableBlocksSlots &&
+        !componentMappers[block.component?.name] &&
+        (Array.isArray(value) || (typeof value === 'object' && value !== null))
+      ) {
+        /**
+         * Builder Elements that have their own mappers should not use blocksSlots
+         * even if the mapper is disabled via _internalOptions as it will cause
+         * problems when trying to use the mapper in the future.
+         */
+        const data = Array.isArray(value) ? [...value] : { ...value };
+        let hasElement = false;
+        traverse(data).forEach(function (d) {
+          if (isBuilderElement(d)) {
+            /**
+             * Replacing the Builder element with a Mitosis node in-place
+             * allows us to assign to blockSlots while preserving the structure
+             * of this deeply nested data.
+             */
+            this.update(builderElementToMitosisNode(d, options, _internalOptions));
+            hasElement = true;
+          }
+        });
+
+        // If no elements were updated then this is just a regular binding
+        if (hasElement) {
+          blocksSlots[key] = data;
+        } else {
+          bindings[key] = createSingleBinding({ code: json5.stringify(value) });
+        }
       } else {
         bindings[key] = createSingleBinding({ code: json5.stringify(value) });
       }
@@ -892,6 +931,7 @@ export const builderElementToMitosisNode = (
     slots: {
       ...slots,
     },
+    ...(Object.keys(blocksSlots).length > 0 && { blocksSlots }),
     meta: getMetaFromBlock(block, options),
     ...(Object.keys(localizedValues).length && { localizedValues }),
   });

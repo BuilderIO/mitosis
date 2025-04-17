@@ -82,7 +82,17 @@ export type BaseNode = {
    * It is used when a Builder content block has localized values.
    */
   localizedValues?: { [index: string]: BuilderLocalizedValue };
+
+  /**
+   * Key-value store of serialized elements passed into properties.
+   * Disabled by default. Use `enableBlocksSlots` on supported parsers to enable.
+   */
+  blocksSlots?: BlockSlot;
 };
+
+export interface BlockSlot {
+  [key: string]: BlockSlot | BlockSlot[] | MitosisNode | MitosisNode[];
+}
 
 export const ForNodeName = 'For';
 export const FragmentNodeName = 'Fragment';
