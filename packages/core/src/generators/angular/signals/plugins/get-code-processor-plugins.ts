@@ -3,6 +3,7 @@ import { babelTransformExpression } from '@/helpers/babel-transform';
 import { ProcessBindingOptions, processClassComponentBinding } from '@/helpers/class-components';
 import { checkIsEvent } from '@/helpers/event-handlers';
 import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
+import { hashCodeAsString } from '@/symbols/symbol-processor';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { ForNodeName } from '@/types/mitosis-node';
 import { NodePath } from '@babel/core';
@@ -10,6 +11,7 @@ import {
   AssignmentExpression,
   BinaryExpression,
   MemberExpression,
+  TemplateLiteral,
   arrowFunctionExpression,
   blockStatement,
   callExpression,
@@ -33,6 +35,24 @@ const isStateOrPropsExpression = (path: NodePath) => {
   );
 };
 
+const isAFunctionOrMethod = (
+  json: MitosisComponent | undefined,
+  path: NodePath<MemberExpression>,
+) => {
+  return (
+    json &&
+    isIdentifier(path.node.object) &&
+    isIdentifier(path.node.property) &&
+    path.node.object.name === 'state' &&
+    json.state &&
+    typeof path.node.property.name === 'string' &&
+    json.state[path.node.property.name] &&
+    json.state[path.node.property.name]?.type &&
+    (json.state[path.node.property.name]?.type === 'method' ||
+      json.state[path.node.property.name]?.type === 'function')
+  );
+};
+
 const handleAssignmentExpression = (path: NodePath<AssignmentExpression | BinaryExpression>) => {
   if (
     isMemberExpression(path.node.left) &&
@@ -47,7 +67,7 @@ const handleAssignmentExpression = (path: NodePath<AssignmentExpression | Binary
   }
 };
 
-const handleMemberExpression = (path: NodePath<MemberExpression>) => {
+const handleMemberExpression = (path: NodePath<MemberExpression>, json?: MitosisComponent) => {
   if (path.node.extra?.makeCallExpressionDone || path.parentPath?.node.extra?.updateExpression) {
     // Don't add a function if we've done it already
     return;
@@ -65,6 +85,11 @@ const handleMemberExpression = (path: NodePath<MemberExpression>) => {
   }
 
   if (isStateOrPropsExpression(path)) {
+    // Check if the state property is a method or function type, and if so, don't convert it to a callable
+    if (isAFunctionOrMethod(json, path)) {
+      return;
+    }
+
     path.node.extra = { ...path.node.extra, makeCallExpressionDone: true };
     path.replaceWith(callExpression(path.node, []));
   }
@@ -100,7 +125,89 @@ const handleHookAndStateOnEvents = (
   return false;
 };
 
-const transformHooksAndState = (code: string, isHookDepArray?: boolean) => {
+const handleTemplateLiteral = (
+  path: NodePath<TemplateLiteral>,
+  json: MitosisComponent,
+  context?: any,
+) => {
+  const fnName = `templateStr_${hashCodeAsString(path.toString())}`;
+  const extraParams = new Set<string>();
+
+  // Collect loop variables from context
+  let currentContext = context;
+  while (currentContext?.parent) {
+    if (currentContext.parent.node?.name === ForNodeName) {
+      const forNode = currentContext.parent.node;
+      if (forNode.scope.forName) extraParams.add(forNode.scope.forName);
+      if (forNode.scope.indexName) extraParams.add(forNode.scope.indexName);
+    }
+    currentContext = currentContext.parent;
+  }
+
+  const processedExpressions = path.node.expressions.map((expr) => {
+    let exprCode = '';
+    try {
+      const { code } = require('@babel/generator').default(expr);
+      exprCode = code;
+    } catch (e) {
+      exprCode = expr.toString();
+    }
+
+    // Replace state.x with this.x() for signals
+    return exprCode
+      .replace(/\bstate\.(\w+)(?!\()/g, 'this.$1()')
+      .replace(/\bprops\.(\w+)(?!\()/g, 'this.$1()');
+  });
+
+  // Convert Set to Array for final usage
+  const paramsList = Array.from(extraParams);
+
+  json.state[fnName] = {
+    code: `${fnName}(${paramsList.join(', ')}) { 
+      return \`${path.node.quasis
+        .map((quasi, i) => {
+          const escapedRaw = quasi.value.raw.replace(/\\/g, '\\\\').replace(/\$/g, '\\$');
+          return (
+            escapedRaw +
+            (i < processedExpressions.length ? '${' + processedExpressions[i] + '}' : '')
+          );
+        })
+        .join('')}\`; 
+    }`,
+    type: 'method',
+  };
+
+  // Return the function call with any needed parameters
+  return `${fnName}(${paramsList.join(', ')})`;
+};
+
+const handleCallExpressionArgument = (json: MitosisComponent | undefined, arg: any) => {
+  if (
+    isMemberExpression(arg) &&
+    isIdentifier(arg.object) &&
+    isIdentifier(arg.property) &&
+    (arg.object.name === 'state' || arg.object.name === 'props') &&
+    !arg.extra?.makeCallExpressionDone
+  ) {
+    if (arg.object.name === 'state' && json) {
+      const argPath = { node: arg } as unknown as NodePath<MemberExpression>;
+      if (isAFunctionOrMethod(json, argPath)) {
+        return arg;
+      }
+    }
+
+    const newArg = callExpression(arg, []);
+    newArg.extra = { makeCallExpressionDone: true };
+    return newArg;
+  }
+  return arg;
+};
+
+const transformHooksAndState = (
+  code: string,
+  isHookDepArray?: boolean,
+  json?: MitosisComponent,
+) => {
   return babelTransformExpression(code, {
     AssignmentExpression(path) {
       handleAssignmentExpression(path);
@@ -139,20 +246,41 @@ const transformHooksAndState = (code: string, isHookDepArray?: boolean) => {
         return;
       }
 
-      handleMemberExpression(path);
+      handleMemberExpression(path, json);
+    },
+    CallExpression(path) {
+      // if args has a state.x or props.x, we need to add this.x() to the args
+      if (path.node.arguments.length > 0) {
+        const newArgs = path.node.arguments.map((arg) => handleCallExpressionArgument(json, arg));
+        // Only replace arguments if we made any changes
+        if (newArgs.some((arg, i) => arg !== path.node.arguments[i])) {
+          path.node.arguments = newArgs;
+        }
+      }
     },
   });
 };
 
 const addToImportCall = (json: MitosisComponent, importName: string) => {
-  const isImportCall = json.imports.find((imp) => imp.imports[importName]);
+  const importInstance = json.imports.find((imp) => imp.imports[importName]);
+  // Check if this is a type import - if it is, don't add it to importCalls
+  if (importInstance?.importKind === 'type') {
+    return;
+  }
+
+  const isImportCall = !!importInstance;
   const isExportCall = json.exports ? !!json.exports[importName] : false;
   if (isImportCall || isExportCall) {
     json.compileContext!.angular!.extra!.importCalls.push(importName);
   }
 };
 
-const transformBindings = (json: MitosisComponent, code: string): string => {
+const transformBindings = (
+  json: MitosisComponent,
+  code: string,
+  key?: string,
+  context?: any,
+): string => {
   return babelTransformExpression(code, {
     BlockStatement() {
       console.error(`
@@ -166,6 +294,14 @@ ${code}`);
       if (isIdentifier(path.node.callee)) {
         addToImportCall(json, path.node.callee.name);
       }
+
+      if (path.node.arguments.length > 0) {
+        const newArgs = path.node.arguments.map((arg) => handleCallExpressionArgument(json, arg));
+        // Only replace arguments if we made any changes
+        if (newArgs.some((arg, i) => arg !== path.node.arguments[i])) {
+          path.node.arguments = newArgs;
+        }
+      }
     },
     Identifier(path) {
       // If we use a constant from an import we need to add it to the Component as well
@@ -176,14 +312,23 @@ ${code}`);
     StringLiteral(path) {
       // We cannot use " for string literal in template
       if (path.node.extra?.raw) {
-        path.node.extra.raw = (path.node.extra.raw as string).replaceAll('"', "'");
+        path.node.extra.raw = (path.node.extra.raw as string).replaceAll('"', '&quot;');
       }
     },
     AssignmentExpression(path) {
       handleAssignmentExpression(path);
     },
     MemberExpression(path) {
-      handleMemberExpression(path);
+      handleMemberExpression(path, json);
+    },
+    TemplateLiteral(path) {
+      // they are already created as trackBy functions
+      if (key === 'key') {
+        return;
+      }
+      // When we encounter a template literal, convert it to a function
+      const fnCall = handleTemplateLiteral(path, json, context);
+      path.replaceWith(identifier(fnCall));
     },
   });
 };
@@ -199,6 +344,8 @@ export const getCodeProcessorPlugins = (
       switch (codeType) {
         case 'bindings':
           return (code, key, context) => {
+            const theyConvertToGetters =
+              (code.startsWith('{') && code.includes('...')) || code.includes(' as ');
             let replaceWith = '';
             if (key === 'key') {
               /**
@@ -211,8 +358,11 @@ export const getCodeProcessorPlugins = (
                 replaceWith = 'this.';
               }
             }
+            if (theyConvertToGetters) {
+              replaceWith = 'this.';
+            }
 
-            return processClassComponentBinding(json, transformBindings(json, code), {
+            return processClassComponentBinding(json, transformBindings(json, code, key, context), {
               ...processBindingOptions,
               replaceWith,
             });
@@ -223,7 +373,7 @@ export const getCodeProcessorPlugins = (
           return (code) => {
             return processClassComponentBinding(
               json,
-              transformHooksAndState(code, codeType === 'hooks-deps-array'),
+              transformHooksAndState(code, codeType === 'hooks-deps-array', json),
               processBindingOptions,
             );
           };
