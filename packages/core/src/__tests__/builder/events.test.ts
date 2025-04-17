@@ -7,12 +7,17 @@ describe('Builder Events', () => {
     const mitosis = parseJsx(`
     export default function MyComponent(props) {
       return (
-        <button onClick={state.foo}>Click Me</button>
+        <button onion={state.onion} onClick={state.foo}>Click Me</button>
       );
     }
     `);
 
     const builderJson = componentToBuilder()({ component: mitosis });
+    expect(builderJson.data!.blocks![0].bindings).toMatchInlineSnapshot(`
+      {
+        "onion": "state.onion",
+      }
+    `);
     expect(builderJson.data!.blocks![0].actions).toMatchInlineSnapshot(`
       {
         "click": "state.foo()",

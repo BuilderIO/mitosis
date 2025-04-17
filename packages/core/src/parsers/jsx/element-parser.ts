@@ -294,7 +294,8 @@ export const jsxElementToJson = (
             arguments: args.length ? args : undefined,
             bindingType: 'function',
           });
-        } else if (key.startsWith('on') && types.isExpression(expression)) {
+        } else if (/^on[A-Z]/.test(key) && types.isExpression(expression)) {
+          // regex ignores props that happen to start with "on" but are not handlers
           // <Foo onClick={state.handler} />
           const call = types.callExpression(expression, []);
 
