@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.9.3
+
+### Patch Changes
+
+- ada6d73: [all]: update jsx-runtime.d.ts
+- de198af: expressions in action bindings are converted to call expressions
+- 1eb4d28: Builder: Symbol information is preserved
+
 ## 0.9.2
 
 ### Patch Changes
