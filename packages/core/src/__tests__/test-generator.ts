@@ -154,6 +154,9 @@ const StoreShadowVars = getRawFile('./data/store/store-shadow-vars.raw.tsx');
 const StoreWithState = getRawFile('./data/store/store-with-state.raw.tsx');
 const StoreComment = getRawFile('./data/store/store-comment.raw.tsx');
 
+// Swift
+const SwiftPlainComponent = getRawFile('./data/swift/plain-component-export.raw.tsx');
+
 /**
  * Use TestsWithFailFor when you want to write a test that you know will fail
  * on certain targets. This is useful in test driven development when you want
@@ -187,6 +190,10 @@ const SVELTE_SYNTAX_TESTS: Tests = {
 const REACT_NATIVE_TESTS: Tests = {
   onClickToPressable,
   inputToTextInputRN,
+};
+
+const SWIFT_TESTS: Tests = {
+  SwiftPlainComponent,
 };
 
 const BASIC_TESTS: Tests = {
@@ -601,6 +608,19 @@ const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     ADVANCED_REF,
     ON_UPDATE_RETURN,
   ],
+  swift: [
+    // CONTEXT_TEST,
+    SWIFT_TESTS,
+    // BASIC_TESTS,
+    // SLOTS_TESTS,
+    // SHOW_TESTS,
+    // FORWARD_REF_TESTS,
+    // MULTI_ON_UPDATE_TESTS,
+    // FORM_BLOCK_TESTS,
+    // ADVANCED_REF,
+    // ON_UPDATE_RETURN,
+    // FOR_SHOW_TESTS,
+  ],
 };
 
 const metaDataPlugin: Plugin = () => ({
@@ -672,7 +692,7 @@ const filterTests = (testArray?: Tests[], only?: string[]) =>
     const filteredTests: Tests = {};
 
     Object.entries(tests).forEach(([key, test]) => {
-      if (only.includes(key)) {
+      if (only.some((o) => o.toLowerCase() === key.toLowerCase())) {
         filteredTests[key] = test;
       }
     });

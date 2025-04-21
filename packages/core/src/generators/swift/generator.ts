@@ -1,387 +1,333 @@
-import { ToSwiftOptions } from '@/generators/swift/types';
-import { checkIsEvent } from '@/helpers/event-handlers';
-import traverse from 'neotraverse/legacy';
-import { dedent } from '../../helpers/dedent';
-import { fastClone } from '../../helpers/fast-clone';
-import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
-import { format } from '../../helpers/generic-format';
-import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
-import { getStyles } from '../../helpers/get-styles';
-import isChildren from '../../helpers/is-children';
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { checkHasState } from '../../helpers/state';
-import { tryPrettierFormat } from '../../helpers/try-prettier-format';
-import { MitosisComponent } from '../../types/mitosis-component';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
-import { MitosisStyles } from '../../types/mitosis-styles';
-import { TranspilerGenerator } from '../../types/transpiler';
+import { dedent } from '@/helpers/dedent';
+import { fastClone } from '@/helpers/fast-clone';
+import { getProps } from '@/helpers/get-props';
+import { getRefs } from '@/helpers/get-refs';
+import { gettersToFunctions } from '@/helpers/getters-to-functions';
+import { initializeOptions } from '@/helpers/merge-options';
+import { processOnEventHooksPlugin } from '@/helpers/on-event';
+import { stripGetter } from '@/helpers/patterns';
+import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
+import { isSlotProperty } from '@/helpers/slots';
+import { stripMetaProperties } from '@/helpers/strip-meta-properties';
+import { TranspilerGenerator } from '@/types/transpiler';
+import {
+  runPostCodePlugins,
+  runPostJsonPlugins,
+  runPreCodePlugins,
+  runPreJsonPlugins,
+} from '../../modules/plugins';
+import { blockToSwift } from './blocks';
+import {
+  convertConsoleLogToPrint,
+  convertJsFunctionToSwift,
+  getStatePropertyTypeAnnotation,
+  getSwiftType,
+  stripStateAndProps,
+} from './helpers';
+import { ToSwiftOptions } from './types';
 
-const scrolls = (json: MitosisNode) => {
-  return getStyles(json)?.overflow === 'auto';
+const DEFAULT_OPTIONS: ToSwiftOptions = {
+  stateType: 'state',
+  formatCode: true,
+  includeTypes: true,
+  includePreview: true,
+  classPrefix: '',
 };
 
-const mappers: {
-  [key: string]: (json: MitosisNode, options: ToSwiftOptions) => string;
-} = {
-  Fragment: (json, options) => {
-    return `${json.children.map((item) => blockToSwift(item, options)).join('\n')}`;
-  },
-  link: () => '',
-  Image: (json, options) => {
-    return (
-      `Image(${
-        processBinding(json.bindings.image?.code as string, options) || `"${json.properties.image}"`
-      })` +
-      getStyleString(json, options) +
-      getActionsString(json, options)
-    );
-  },
-  input: (json, options) => {
-    const name = json.properties.$name;
-    let str =
-      `TextField(${
-        json.bindings.placeholder
-          ? processBinding(json.bindings.placeholder?.code as string, options)
-          : json.properties.placeholder
-          ? JSON.stringify(json.bindings.placeholder!.code)
-          : '""'
-      }, text: $${name})` +
-      getStyleString(json, options) +
-      getActionsString(json, options);
+export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
+  (userProvidedOptions) =>
+  ({ component }) => {
+    const options = initializeOptions({
+      target: 'swift',
+      component,
+      defaults: DEFAULT_OPTIONS,
+      userOptions: userProvidedOptions,
+    });
 
-    if (json.bindings.onChange) {
-      str += `
-        .onChange(of: ${name}) { ${name} in 
-          ${processBinding(
-            wrapAction(
-              `var event = { target: { value: "\\(${name})" } };
-              ${json.bindings.onChange?.code}`,
-            ),
-            options,
-          )} 
-        }`;
-    }
-
-    return str;
-  },
-};
-
-const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
-  if (mappers[json.name]) {
-    return mappers[json.name](json, options);
-  }
-
-  // TODO: Add support for `{props.children}` bindings
-  // Right now we return an empty string because the generated code
-  // is very likely wrong.
-  if (isChildren({ node: json })) {
-    return '/* `props.children` is not supported yet for SwiftUI */';
-  }
-
-  if (json.properties._text) {
-    if (!json.properties._text.trim().length) {
-      return '';
-    }
-    return `Text("${json.properties._text.trim().replace(/\s+/g, ' ')}")`;
-  }
-  if (json.bindings._text) {
-    return `Text(${processBinding(json.bindings._text.code as string, options)}.toString())`;
-  }
-
-  let str = '';
-
-  const children = json.children.filter(filterEmptyTextNodes);
-
-  const style = getStyles(json);
-
-  // TODO: do as preprocess step and do more mappings of dom attributes to special
-  // Image, TextField, etc component props
-  const name =
-    json.name === 'input'
-      ? 'TextField'
-      : json.name === 'img'
-      ? 'Image'
-      : json.name[0].toLowerCase() === json.name[0]
-      ? scrolls(json)
-        ? 'ScrollView'
-        : style?.display === 'flex' && style.flexDirection !== 'column'
-        ? 'HStack'
-        : 'VStack'
-      : json.name;
-
-  if (name === 'TextField') {
-    const placeholder = json.properties.placeholder;
-    delete json.properties.placeholder;
-    json.properties._ = placeholder || '';
-  }
-
-  if (checkIsForNode(json)) {
-    str += `ForEach(${processBinding(
-      json.bindings.each?.code as string,
-      options,
-    )}, id: \\.self) { ${json.scope.forName} in ${children
-      .map((item) => blockToSwift(item, options))
-      .join('\n')} }`;
-  } else if (json.name === 'Show') {
-    str += `if ${processBinding(json.bindings.when?.code as string, options)} {
-      ${children.map((item) => blockToSwift(item, options)).join('\n')}
-    }`;
-  } else {
-    str += `${name}(`;
-
-    for (const key in json.properties) {
-      if (key === 'class' || key === 'className') {
-        continue;
-      }
-      // TODO: binding mappings
-      // const value = json.properties[key];
-      // str += ` ${key}: "${(value as string).replace(/"/g, '&quot;')}", `;
-      console.warn(`Unsupported property "${key}"`);
-    }
-    for (const key in json.bindings) {
-      if (
-        // TODO: implement spread, ref, more css
-        key === '_spread' ||
-        key === 'ref' ||
-        key === 'css' ||
-        key === 'class' ||
-        key === 'className'
-      ) {
-        continue;
-      }
-
-      if (checkIsEvent(key)) {
-        if (key === 'onClick') {
-          continue;
-        } else {
-          // TODO: other event mappings
-          console.warn(`Unsupported event binding "${key}"`);
+    options.plugins = [
+      ...(options.plugins || []),
+      processOnEventHooksPlugin(),
+      CODE_PROCESSOR_PLUGIN((codeType) => {
+        switch (codeType) {
+          case 'bindings':
+          case 'properties':
+          case 'hooks':
+          case 'hooks-deps':
+          case 'hooks-deps-array':
+          case 'state':
+          case 'context-set':
+          case 'dynamic-jsx-elements':
+          case 'types':
+            return (x) => convertConsoleLogToPrint(x);
         }
-      } else {
-        console.warn(`Unsupported binding "${key}"`);
-        // TODO: need binding mappings
-        // str += ` ${key}: ${processBinding(value, options)}, `;
-      }
-    }
-    str += `)`;
+      }),
+      CODE_PROCESSOR_PLUGIN((codeType) => {
+        switch (codeType) {
+          case 'hooks':
+            return (code: string) => stripStateAndProps({ json, options })(code);
+          case 'bindings':
+          case 'hooks-deps':
+          case 'state':
+            return (code: string) => stripGetter(stripStateAndProps({ json, options })(code));
+          case 'properties':
+          case 'context-set':
+            return (code: string) => stripStateAndProps({ json, options })(code);
+          case 'dynamic-jsx-elements':
+          case 'hooks-deps-array':
+          case 'types':
+            return (x) => convertConsoleLogToPrint(x);
+        }
+      }),
+    ];
 
-    str += ` {`;
-    if (json.children) {
-      str += json.children.map((item) => blockToSwift(item, options)).join('\n');
-    }
+    // Make a copy we can safely mutate
+    let json = fastClone(component);
+    json = runPreJsonPlugins({ json, plugins: options.plugins });
 
-    str += `}`;
-    str += getStyleString(json, options);
-    str += getActionsString(json, options);
-  }
+    gettersToFunctions(json);
 
-  return str;
-};
+    const componentName =
+      options.classPrefix + (json.name || json.meta.useMetadata?.name || 'MitosisComponent');
 
-const wrapAction = (str: string) => `(() => { ${str} })()`;
+    // Process props
+    const filteredProps = Array.from(getProps(json)).filter((prop) => !isSlotProperty(prop));
 
-function getActionsString(json: MitosisNode, options: ToSwiftOptions): string {
-  let str = '';
-  if (json.bindings.onClick) {
-    str += `\n.onTapGesture {
-      ${processBinding(wrapAction(json.bindings.onClick.code as string), options)}
-    }`;
-  }
-  return str;
-}
+    const props = Array.from(new Set(filteredProps));
 
-function getStyleString(node: MitosisNode, options: ToSwiftOptions): string {
-  const style = getStyles(node);
-  let str = '';
-  for (const key in style) {
-    let useKey = key;
-    const rawValue = style[key as keyof MitosisStyles]!;
-    let value: number | string = `"${rawValue}"`;
-    if (['padding', 'margin'].includes(key)) {
-      // TODO: throw error if calc()
-      value = parseFloat(rawValue as string);
-      str += `\n.${useKey}(${value})`;
-    } else if (key === 'color') {
-      useKey = 'foregroundColor';
-      // TODO: convert to RBG and use Color(red: ..., ....)
-    } else {
-      console.warn(`Styling key "${key}" is not supported`);
-    }
-  }
+    // Process refs (not directly applicable in SwiftUI, will be converted to @State)
+    const refs = Array.from(getRefs(json))
+      .map(stripStateAndProps({ json, options }))
+      .filter((x) => !props.includes(x));
 
-  return str;
-}
+    json = runPostJsonPlugins({ json, plugins: options.plugins });
+    stripMetaProperties(json);
 
-function getJsSource(json: MitosisComponent, options: ToSwiftOptions) {
-  const str = `const state = new Proxy(${getStateObjectStringFromComponent(json)}, {
-    set: (target, key, value) => {
-      const returnVal = Reflect.set(target, key, value);
-      update();
-      return returnVal;
-    }
-  });`;
-  if (options.prettier === false) {
-    return str.trim();
-  } else {
-    return tryPrettierFormat(str, 'typescript').trim();
-  }
-}
+    // Generate state variables
+    const stateProperties = Object.entries(json.state)
+      .filter(([_, value]) => {
+        // Skip methods - they'll be handled separately
+        return !(
+          value?.type === 'method' ||
+          (value?.code && (value.code.includes('function') || value.code.includes('=>')))
+        );
+      })
+      .map(([key, value]) => {
+        // Check for value properties safely
+        const propertyType = value?.propertyType;
 
-const processBinding = (str: string, options: ToSwiftOptions) => {
-  // Use triple quotes for multiline strings or strings including '"'
-  if (str.includes('\n') || str.includes('"')) {
-    return `eval(code: """
-      ${str}
-      """)`;
-  }
-  // Use double quotes for simple strings
-  return `eval(code: "${str}")`;
-};
+        // Determine Swift type - handle missing type property
+        let valueType = 'Any';
+        if (value?.typeParameter) {
+          valueType = (value as any).typeParameter;
+        } else {
+          // Try to infer type from code if possible
+          if (value?.code?.includes('"') || value?.code?.includes("'")) {
+            valueType = 'string';
+          } else if (value?.code?.match(/^[0-9]+(\.[0-9]+)?$/)) {
+            valueType = 'number';
+          } else if (value?.code === 'true' || value?.code === 'false') {
+            valueType = 'boolean';
+          } else if (value?.code?.startsWith('[') || value?.code?.startsWith('Array')) {
+            valueType = 'Array<Any>';
+          }
+        }
 
-function componentHasDynamicData(json: MitosisComponent) {
-  const hasState = checkHasState(json);
-  if (hasState) {
-    return true;
-  }
-  let found = false;
-  traverse(json).forEach(function (node) {
-    if (isMitosisNode(node)) {
-      if (Object.keys(node.bindings).filter((item) => item !== 'css').length) {
-        found = true;
-        this.stop();
-      }
-    }
-  });
+        const typeAnnotation = getStatePropertyTypeAnnotation(propertyType, valueType);
+        const swiftType = getSwiftType(valueType);
 
-  return found;
-}
+        let stateDeclaration = `${typeAnnotation} ${key}: ${swiftType}`;
 
-function mapDataForSwiftCompatability(json: MitosisComponent) {
-  let inputIndex = 0;
-  json.meta.inputNames = json.meta.inputNames || [];
+        // Add default value if present
+        if (value?.code) {
+          stateDeclaration += ` = ${value.code}`;
+        } else {
+          // Add default initialization based on type
+          switch (swiftType) {
+            case 'String':
+              stateDeclaration += ' = ""';
+              break;
+            case 'Bool':
+              stateDeclaration += ' = false';
+              break;
+            case 'Double':
+            case 'Int':
+              stateDeclaration += ' = 0';
+              break;
+            case 'Array<String>':
+            case '[String]':
+              stateDeclaration += ' = []';
+              break;
+            default:
+              if (swiftType.includes('Array') || swiftType.includes('[')) {
+                stateDeclaration += ' = []';
+              } else if (swiftType !== 'Any' && swiftType !== 'Void') {
+                stateDeclaration += '/* initialize with appropriate default */';
+              }
+          }
+        }
 
-  traverse(json).forEach(function (node) {
-    if (isMitosisNode(node)) {
-      if (node.name === 'input') {
-        if (!Object.keys(node.bindings).filter((item) => item !== 'css').length) {
+        return stateDeclaration;
+      })
+      .join('\n  ');
+
+    // Generate state function variables with inline closure assignment
+    const functionStateProperties: string[] = [];
+
+    Object.entries(json.state)
+      .filter(([_, value]) => {
+        return (
+          value?.type === 'method' ||
+          (value?.code && (value.code.includes('function') || value.code.includes('=>')))
+        );
+      })
+      .forEach(([key, value]) => {
+        if (!value?.code) {
+          // Handle empty function with inline closure
+          functionStateProperties.push(
+            `private var ${key}: () -> Void = { () in /* Empty function */ }`,
+          );
           return;
         }
-        if (!node.properties.$name) {
-          node.properties.$name = `input${++inputIndex}`;
+
+        // Convert the JS function to Swift
+        const processedCode = stripStateAndProps({ json, options })(value.code);
+        const { swiftCode, signature } = convertJsFunctionToSwift(processedCode, `_${key}`);
+
+        // Parse signature to get parameter list and return type
+        const signatureMatch = signature.match(/func _([^(]+)\(([^)]*)\) -> ([^{]+)/);
+        if (signatureMatch) {
+          const [, funcName, params, returnType] = signatureMatch;
+
+          // Create the function type for the state variable
+          const paramTypes = params
+            ? params
+                .split(',')
+                .map((p) => p.trim().split(':')[1]?.trim() || 'Any')
+                .join(', ')
+            : '';
+
+          const functionType = params
+            ? `(${paramTypes}) -> ${returnType.trim()}`
+            : `() -> ${returnType.trim()}`;
+
+          // Extract function body from swiftCode
+          const bodyMatch = swiftCode.match(/{\s*([\s\S]*?)\s*}/);
+          const functionBody = bodyMatch ? bodyMatch[1].trim() : '/* Empty function body */';
+
+          // Build closure syntax for inline assignment
+          const closureSyntax = params
+            ? `{ (${params}) -> ${returnType.trim()} in\n    ${functionBody}\n  }`
+            : `{ () -> ${returnType.trim()} in\n    ${functionBody}\n  }`;
+
+          // Add the state variable declaration with inline closure assignment
+          functionStateProperties.push(`var ${key}: ${functionType} = ${closureSyntax}`);
+        } else {
+          // Fallback if signature parsing fails
+          functionStateProperties.push(
+            `var ${key}: () -> Void = { () in /* Could not parse function */ }`,
+          );
         }
-        (json.meta.inputNames as Record<string, string>)[node.properties.$name] =
-          node.bindings.value?.code || '';
-      }
-    }
-  });
-}
+      });
 
-function getInputBindings(json: MitosisComponent, options: ToSwiftOptions) {
-  let str = '';
-  const inputNames = json.meta.inputNames as Record<string, string>;
-  if (!inputNames) {
-    return str;
-  }
+    // Process lifecycle methods
+    const lifecycleMethods: string[] = [];
 
-  for (const item in inputNames) {
-    str += `\n@State private var ${item}: String = ""`;
-  }
-  return str;
-}
-export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
-  (options = {}) =>
-  ({ component }) => {
-    const json = fastClone(component);
-    mapDataForSwiftCompatability(json);
-
-    const hasDyanmicData = componentHasDynamicData(json);
-
-    let children = json.children.map((item) => blockToSwift(item, options)).join('\n');
-
-    const hasInputNames = Object.keys(json.meta.inputNames || {}).length > 0;
-
-    let str = dedent`
-    import SwiftUI
-    ${
-      !hasDyanmicData
-        ? ''
-        : `import JavaScriptCore
-    
-    final class UpdateTracker: ObservableObject {
-        @Published var value = 0;
-    
-        func update() {
-            value += 1
-        }
-    }
-    `
-    }
-
-    struct ${component.name}: View {
-      ${
-        !hasDyanmicData
-          ? ''
-          : `
-        @ObservedObject var updateTracker = UpdateTracker()
-        private var jsContext = JSContext()
-        ${getInputBindings(json, options)}
-
-        func eval(code: String) -> JSValue! {
-          return jsContext?.evaluateScript(code)
-        }
-
-        ${
-          !hasInputNames
-            ? ''
-            : `
-        func setComputedState() {
-          ${Object.keys(json.meta.inputNames || {})
-            .map((item) => {
-              return `${item} = ${processBinding(
-                (json.meta.inputNames as Record<string, string>)[item],
-                options,
-              )}.toString()!`;
-            })
-            .join('\n')}
-        }`
-        }
-
+    // Only add onInit if needed and if there are no function state properties
+    // (to avoid duplicate initializers)
+    if (json.hooks.onInit?.code) {
+      lifecycleMethods.push(dedent`
         init() {
-          let jsSource = """
-              ${getJsSource(json, options)}
-          """
-          jsContext?.exceptionHandler = { context, exception in
-            print("JS Error: \\(exception!)") 
+          ${json.hooks.onInit.code}
+        }
+      `);
+    }
+
+    // Generate SwiftUI component
+    let str = dedent`
+      import SwiftUI
+
+      struct ${componentName}: View {
+        // Props
+        ${props
+          .map((prop) => {
+            const propType = json.props?.[prop]?.propertyType || 'Any';
+            const swiftType = getSwiftType(propType);
+            return `let ${prop}: ${swiftType}${json.props?.[prop]?.optional ? '?' : ''}`;
+          })
+          .join('\n  ')}
+        
+        // State
+        ${stateProperties}
+        ${
+          functionStateProperties.length > 0
+            ? '\n  // Function state variables\n  ' + functionStateProperties.join('\n  ')
+            : ''
+        }
+        
+        // Body
+        var body: some View {
+          ${json.children
+            .map((item) =>
+              blockToSwift({
+                json: item,
+                options: options,
+                parentComponent: json,
+              }),
+            )
+            .join('\n')}
+          ${lifecycleMethods.filter((method) => method.startsWith('.')).join('\n  ')}
+        }
+        
+        ${lifecycleMethods.filter((method) => !method.startsWith('.')).join('\n  ')}
+      }
+    `;
+
+    // Add preview if enabled
+    if (options.includePreview) {
+      str += dedent`
+        \n
+        #if DEBUG
+        struct ${componentName}_Previews: PreviewProvider {
+          static var previews: some View {
+            ${componentName}(
+              ${props
+                .map((prop) => {
+                  const propType = json.props?.[prop]?.propertyType || 'Any';
+                  const swiftType = getSwiftType(propType);
+
+                  // Generate appropriate preview values based on type
+                  let previewValue = '';
+                  switch (swiftType) {
+                    case 'String':
+                      previewValue = '"Preview"';
+                      break;
+                    case 'Bool':
+                      previewValue = 'false';
+                      break;
+                    case 'Double':
+                    case 'Int':
+                      previewValue = '0';
+                      break;
+                    default:
+                      if (json.props?.[prop]?.optional) {
+                        previewValue = 'nil';
+                      } else {
+                        previewValue = '/* provide preview value */';
+                      }
+                  }
+
+                  return `${prop}: ${previewValue}`;
+                })
+                .join(',\n              ')}
+            )
           }
-
-          let updateRef = updateTracker.update
-          let updateFn : @convention(block) () -> Void = { updateRef() }
-          jsContext?.setObject(updateFn, forKeyedSubscript: "update" as NSString)
-
-          jsContext?.evaluateScript(jsSource)
         }
-      `.trim()
-      }
-
-      var body: some View {
-        VStack {
-          ${children}
-        }${
-          !hasInputNames
-            ? ''
-            : `
-        .onAppear {
-          setComputedState()
-        }
-        `
-        }
-      }
+        #endif
+      `;
     }
-  `;
 
-    if (options.prettier !== false) {
-      str = format(str);
-    }
+    str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
+    str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
 
     return str;
   };
