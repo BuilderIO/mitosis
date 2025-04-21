@@ -16,7 +16,8 @@ export type OutputFramework =
   | 'preact'
   | 'stencil'
   | 'alpine'
-  | 'builder';
+  | 'builder'
+  | 'swift';
 export const outputs: OutputFramework[] = [
   'react',
   'svelte',
@@ -33,6 +34,7 @@ export const outputs: OutputFramework[] = [
   'reactNative',
   'alpine',
   'builder',
+  'swift',
 ];
 
 export type InputSyntax = 'jsx' | 'svelte';
@@ -54,6 +56,7 @@ export const languageByFramework: Record<OutputFramework, string> = {
   reactNative: 'typescript',
   alpine: 'html',
   builder: 'json',
+  swift: 'swift',
 };
 
 const getOutputGenerator = async ({ output }: { output: OutputFramework }) => {
@@ -72,6 +75,7 @@ const getOutputGenerator = async ({ output }: { output: OutputFramework }) => {
     componentToSolid,
     componentToStencil,
     componentToBuilder,
+    componentToSwift,
   } = await import('@builder.io/mitosis');
 
   const options = {};
@@ -109,6 +113,8 @@ const getOutputGenerator = async ({ output }: { output: OutputFramework }) => {
       return ({ component }: { component: MitosisComponent }) => {
         return JSON.stringify(componentToBuilder(options)({ component }), null, 2);
       };
+    case 'swift':
+      return componentToSwift();
     default:
       throw new Error('unexpected Output ' + output);
   }

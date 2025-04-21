@@ -49,7 +49,7 @@ const mappers: {
       getStyleString(json, options) +
       getActionsString(json, options);
 
-    if (json.bindings.onChange) {
+    if (json.bindings.onChange && options.includeBindingsAsJs) {
       str += `
         .onChange(of: ${name}) { ${name} in 
           ${processBinding(
@@ -181,6 +181,10 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
 const wrapAction = (str: string) => `(() => { ${str} })()`;
 
 function getActionsString(json: MitosisNode, options: ToSwiftOptions): string {
+  if (!options.includeBindingsAsJs) {
+    return '';
+  }
+
   let str = '';
   if (json.bindings.onClick) {
     str += `\n.onTapGesture {
@@ -192,6 +196,7 @@ function getActionsString(json: MitosisNode, options: ToSwiftOptions): string {
 
 function getStyleString(node: MitosisNode, options: ToSwiftOptions): string {
   const style = getStyles(node);
+
   let str = '';
   for (const key in style) {
     let useKey = key;
@@ -228,6 +233,10 @@ function getJsSource(json: MitosisComponent, options: ToSwiftOptions) {
 }
 
 const processBinding = (str: string, options: ToSwiftOptions) => {
+  if (!options.includeBindingsAsJs) {
+    return str;
+  }
+
   // Use triple quotes for multiline strings or strings including '"'
   if (str.includes('\n') || str.includes('"')) {
     return `eval(code: """
@@ -303,7 +312,7 @@ export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
     let str = dedent`
     import SwiftUI
     ${
-      !hasDyanmicData
+      !hasDyanmicData || !options.includeBindingsAsJs
         ? ''
         : `import JavaScriptCore
     
@@ -319,7 +328,7 @@ export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
 
     struct ${component.name}: View {
       ${
-        !hasDyanmicData
+        !hasDyanmicData || !options.includeBindingsAsJs
           ? ''
           : `
         @ObservedObject var updateTracker = UpdateTracker()
@@ -329,9 +338,11 @@ export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
         func eval(code: String) -> JSValue! {
           return jsContext?.evaluateScript(code)
         }
+          `
+      }
 
         ${
-          !hasInputNames
+          !hasInputNames || !options.includeBindingsAsJs
             ? ''
             : `
         func setComputedState() {
@@ -346,6 +357,10 @@ export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
         }`
         }
 
+        ${
+          !options.includeBindingsAsJs
+            ? ''
+            : `
         init() {
           let jsSource = """
               ${getJsSource(json, options)}
@@ -361,13 +376,13 @@ export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
           jsContext?.evaluateScript(jsSource)
         }
       `.trim()
-      }
+        }
 
       var body: some View {
         VStack {
           ${children}
         }${
-          !hasInputNames
+          !hasInputNames || !options.includeBindingsAsJs
             ? ''
             : `
         .onAppear {
