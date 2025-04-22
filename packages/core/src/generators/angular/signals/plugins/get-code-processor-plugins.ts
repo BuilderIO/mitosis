@@ -345,7 +345,10 @@ export const getCodeProcessorPlugins = (
         case 'bindings':
           return (code, key, context) => {
             const theyConvertToGetters =
-              (code.startsWith('{') && code.includes('...')) || code.includes(' as ');
+              (code.startsWith('{') && code.includes('...')) ||
+              code.includes(' as ') ||
+              context?.node.name.includes('.');
+
             let replaceWith = '';
             if (key === 'key') {
               /**

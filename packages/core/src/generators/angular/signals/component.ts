@@ -2,6 +2,7 @@ import {
   getDefaultProps,
   getTemplateFormat,
   traverseAndCheckIfInnerHTMLIsUsed,
+  traverseToGetAllDynamicComponents,
 } from '@/generators/angular/helpers';
 import { tryFormat } from '@/generators/angular/helpers/format';
 import { getOutputs } from '@/generators/angular/helpers/get-outputs';
@@ -46,6 +47,7 @@ import {
 import { MitosisComponent, MitosisImport } from '@/types/mitosis-component';
 import { TranspilerGenerator } from '@/types/transpiler';
 import { kebabCase, uniq } from 'lodash';
+import { getDynamicTemplateRefs, getInitEmbedViewCode } from './helpers/get-dynamic-template-refs';
 
 export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = (
   userOptions = {},
@@ -150,6 +152,21 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
       template = tryFormat(template, 'html');
     }
 
+    const { components: dynamicComponents, dynamicTemplate } = traverseToGetAllDynamicComponents(
+      json,
+      options,
+      {
+        childComponents,
+        nativeAttributes: json.meta?.useMetadata?.angular?.nativeAttributes ?? [],
+        nativeEvents: json.meta?.useMetadata?.angular?.nativeEvents ?? [],
+      },
+      'signals',
+    );
+
+    const hasDynamicComponents = dynamicComponents.size > 0;
+    if (hasDynamicComponents) {
+      injectables.push('private viewContainer: ViewContainerRef');
+    }
     // Angular component settings
     const componentsUsed = Array.from(getComponentsUsed(json)).filter(
       (item) => item.length && isUpperCase(item[0]) && !BUILT_IN_COMPONENTS.has(item),
@@ -158,7 +175,7 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
       selector: `'${kebabCase(json.name)}'`,
       standalone: 'true',
       imports: `[${['CommonModule', ...componentsUsed].join(', ')}]`,
-      template: `\`${getTemplateFormat(template)}\``,
+      template: `\`${dynamicTemplate}${getTemplateFormat(template)}\``,
     };
     if (onPush) {
       componentSettings.changeDetection = 'ChangeDetectionStrategy.OnPush';
@@ -215,9 +232,12 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       output: events.length !== 0,
       model: writeableSignals.length !== 0,
       effect: json.hooks.onUpdate?.length !== 0,
-      signal: dataString.length !== 0,
+      signal: dataString.length !== 0 || hasDynamicComponents,
       computed: gettersString.length !== 0,
       onPush,
+      viewChild: hasDynamicComponents,
+      viewContainerRef: hasDynamicComponents,
+      templateRef: hasDynamicComponents,
     });
 
     let str = dedent`
@@ -261,7 +281,9 @@ Please add a initial value for every state property even if it's \`undefined\`.`
           ${uniq<string>(json.compileContext!.angular!.extra!.importCalls)
             .map((importCall: string) => `protected readonly ${importCall} = ${importCall};`)
             .join('\n')}
-         
+
+          ${hasDynamicComponents ? getDynamicTemplateRefs(dynamicComponents) : ''}
+          
           ${getSignalInputs({
             json,
             writeableSignals,
@@ -313,11 +335,20 @@ Please add a initial value for every state property even if it's \`undefined\`.`
           ${withAttributePassing ? getAttributePassingString(options.typescript) : ''}
           
           ${
-            isHookEmpty(json.hooks.onMount) && isHookEmpty(json.hooks.onInit)
+            isHookEmpty(json.hooks.onMount) &&
+            isHookEmpty(json.hooks.onInit) &&
+            !hasDynamicComponents
               ? ''
               : `ngOnInit() {
                   ${!json.hooks?.onInit ? '' : json.hooks.onInit?.code}
                   ${json.hooks.onMount.length > 0 ? stringifySingleScopeOnMount(json) : ''}
+                  ${
+                    hasDynamicComponents
+                      ? `
+                      ${getInitEmbedViewCode(dynamicComponents)}
+                      `
+                      : ''
+                  }
                 }`
           }
     

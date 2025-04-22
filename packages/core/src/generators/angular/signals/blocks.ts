@@ -12,6 +12,7 @@ import {
 import isChildren from '@/helpers/is-children';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { stripSlotPrefix } from '@/helpers/slots';
+import { hashCodeAsString } from '@/symbols/symbol-processor';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { Binding, ForNode, MitosisNode } from '@/types/mitosis-node';
 import { isCallExpression } from '@babel/types';
@@ -119,6 +120,58 @@ Try to invert it like this:
 const BINDINGS_MAPPER: { [key: string]: string | undefined } = {
   innerHTML: 'innerHTML',
   style: 'ngStyle',
+};
+
+const handleDynamicComponentBindings = (node: MitosisNode) => {
+  let allProps = '';
+
+  for (const key in node.properties) {
+    if (key.startsWith('$') || key === 'key') {
+      continue;
+    }
+    const value = node.properties[key];
+    allProps += `${key}: '${value}', `;
+  }
+
+  for (const key in node.bindings) {
+    if (key.startsWith('"') || key.startsWith('$') || key === 'key') {
+      continue;
+    }
+    const { code } = node.bindings[key]!;
+
+    if (key === 'ref') {
+      allProps += `${key}: this.${code}(), `;
+      continue;
+    }
+
+    if (node.bindings[key]?.type === 'spread') {
+      allProps += `...${code}, `;
+      continue;
+    }
+
+    let keyToUse = key.includes('-') ? `'${key}'` : key;
+    keyToUse = keyToUse.replace('state.', '').replace('props.', '');
+
+    if (checkIsEvent(key)) {
+      const eventName = getEventNameWithoutOn(key);
+      allProps += `on${eventName.charAt(0).toUpperCase() + eventName.slice(1)}: ${code.replace(
+        /\(.*?\)/g,
+        '',
+      )}.bind(this), `;
+    } else {
+      allProps += `${keyToUse}: ${code}, `;
+    }
+  }
+
+  if (allProps.endsWith(', ')) {
+    allProps = allProps.slice(0, -2);
+  }
+
+  if (allProps.startsWith(', ')) {
+    allProps = allProps.slice(2);
+  }
+
+  return allProps;
 };
 
 const stringifyBinding =
@@ -272,6 +325,37 @@ export const blockToAngularSignals = ({
   }
 
   let str = '';
+
+  // Handle dynamic components, state.MyComponent / props.MyComponent
+  if (json.name.includes('.')) {
+    const elSelector = blockOptions.childComponents?.find((impName) => impName === json.name)
+      ? kebabCase(json.name)
+      : json.name;
+
+    const elSelectorProcessed = elSelector.replace('state.', '').replace('props.', '');
+    const dynamicComponentRef = elSelectorProcessed.replace(/^this\.([^.]+)/, '$1()');
+
+    let allProps = handleDynamicComponentBindings(json);
+
+    const computedName = `dynamicProps_${hashCodeAsString(allProps)}`;
+    if (!root.state[computedName]) {
+      root.state[computedName] = {
+        code: `get ${computedName}() { 
+          return { ${allProps} };
+        }`,
+        type: 'getter',
+      };
+    }
+
+    str += `<ng-container *ngComponentOutlet="
+      ${dynamicComponentRef};
+      inputs: ${computedName}();
+      content: myContent();
+      ">  `;
+
+    str += `</ng-container>`;
+    return str;
+  }
 
   const { element, additionalString } = getElementTag(json, blockOptions);
   str += `<${element} ${additionalString}`;
