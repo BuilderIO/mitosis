@@ -283,7 +283,6 @@ Please add a initial value for every state property even if it's \`undefined\`.`
             .join('\n')}
 
           ${hasDynamicComponents ? getDynamicTemplateRefs(dynamicComponents) : ''}
-          
           ${getSignalInputs({
             json,
             writeableSignals,

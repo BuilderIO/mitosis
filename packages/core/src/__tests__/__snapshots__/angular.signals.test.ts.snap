@@ -2231,7 +2231,16 @@ export class BasicForFragment {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > basicForNoTagReference 1`] = `
-"import { Component, input, effect, signal, computed } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ViewContainerRef,
+  TemplateRef,
+  input,
+  effect,
+  signal,
+  computed,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2239,21 +2248,26 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <this.TagNameGetter>
-      Hello
-      <this.tag>{{name()}}</this.tag>
-
-      @for (action of actions();track i;let i = $index) {
-      <this.TagName>
-        <action.icon></action.icon>
-        <span>{{action.text}}</span>
-      </this.TagName>
-      }
-    </this.TagNameGetter>
+    <ng-template #iconTemplate></ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              TagNameGetter();
+              content: myContent();
+              \\"
+    ></ng-container>
   \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyBasicForNoTagRefComponent {
+  // Signal to store embedded views for dynamic components
+  myContent = signal<any[]>([]);
+  tagnamegetterTemplateRef = viewChild<TemplateRef<any>>(
+    \\"tagnamegetterTemplate\\"
+  );
+  tagTemplateRef = viewChild<TemplateRef<any>>(\\"tagTemplate\\");
+  tagnameTemplateRef = viewChild<TemplateRef<any>>(\\"tagnameTemplate\\");
+  iconTemplateRef = viewChild<TemplateRef<any>>(\\"iconTemplate\\");
+
   actions = input<any>();
 
   name = signal(\\"VincentW\\");
@@ -2264,7 +2278,18 @@ export class MyBasicForNoTagRefComponent {
     return \\"span\\";
   });
 
-  constructor() {}
+  constructor(private viewContainer: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent.set([
+      this.viewContainer.createEmbeddedView(this.tagnamegetterTemplateRef())
+        .rootNodes,
+      this.viewContainer.createEmbeddedView(this.tagTemplateRef()).rootNodes,
+      this.viewContainer.createEmbeddedView(this.tagnameTemplateRef())
+        .rootNodes,
+      this.viewContainer.createEmbeddedView(this.iconTemplateRef()).rootNodes,
+    ]);
+  }
 }
 "
 `;
@@ -2300,6 +2325,7 @@ import { CommonModule } from '@angular/common';
 \`
 })
 export class MyBasicForwardRefComponent {
+
 
 
   inputRef = input<any>()
@@ -2364,6 +2390,7 @@ import { CommonModule } from '@angular/common';
 \`
 })
 export class MyBasicForwardRefComponent {
+
 
 
   inputRef = input<any>()
@@ -3027,7 +3054,7 @@ export class ComponentWithTypes {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > dynamicComponent 1`] = `
-"import { Component, input, effect, signal } from \\"@angular/core\\";
+"import { Component, input, effect, signal, computed } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3035,11 +3062,13 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <this.obj.Component hello=\\"world\\" (click)=\\"onClick()\\">
-      hello
-
-      <ng-content></ng-content>
-    </this.obj.Component>
+    <ng-container
+      *ngComponentOutlet=\\"
+              obj().Component;
+        inputs: dynamicProps_37i2pk();
+              content: myContent();
+              \\"
+    ></ng-container>
   \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -3052,6 +3081,14 @@ export class MyComponent {
     Component: FooComponent,
   });
 
+  dynamicProps_37i2pk = computed(() => {
+    return {
+      hello: \\"world\\",
+      onClick: this.onClick.bind(this),
+      ...this.attributes(),
+      ...this.something(),
+    };
+  });
   onClick() {
     console.log(\\"hello\\");
   }
@@ -3062,7 +3099,16 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > dynamicComponentWithEventArg 1`] = `
-"import { Component, input, effect, signal } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ViewContainerRef,
+  TemplateRef,
+  input,
+  effect,
+  signal,
+  computed,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3070,23 +3116,47 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <this.Component hello=\\"world\\" (click)=\\"onClick($event)\\">
-      hello
-    </this.Component>
+    <ng-template #componentTemplate>hello</ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              Component();
+        inputs: dynamicProps_37i2pk();
+              content: myContent();
+              \\"
+    ></ng-container>
   \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyComponent {
+  // Signal to store embedded views for dynamic components
+  myContent = signal<any[]>([]);
+  componentTemplateRef = viewChild<TemplateRef<any>>(\\"componentTemplate\\");
+
   attributes = input<any>();
   something = input<any>();
 
   Component = signal(HelloComponent);
 
+  dynamicProps_37i2pk = computed(() => {
+    return {
+      hello: \\"world\\",
+      onClick: this.onClick.bind(this),
+      ...this.attributes(),
+      ...this.something(),
+    };
+  });
   onClick(event) {
     console.log(\\"hello\\", event);
   }
 
-  constructor() {}
+  constructor(private viewContainer: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent.set([
+      this.viewContainer.createEmbeddedView(this.componentTemplateRef())
+        .rootNodes,
+    ]);
+  }
 }
 "
 `;
@@ -4076,7 +4146,16 @@ export class OnUpdate {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > renderBlock 1`] = `
-"import { Component, input, effect, computed } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ViewContainerRef,
+  TemplateRef,
+  input,
+  effect,
+  signal,
+  computed,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { TARGET } from \\"../../constants/target.js\\";
@@ -4099,8 +4178,15 @@ import { RenderRepeatedBlock } from \\"./render-repeated-block.lite\\";
   standalone: true,
   imports: [CommonModule, RenderRepeatedBlock, RenderBlock, BlockStyles],
   template: \`
+    <ng-template #rendercomponenttagTemplate></ng-template>
     @if(shouldWrap()){ @if(isEmptyHtmlElement(tag())){
-    <this.tag></this.tag>
+    <ng-container
+      *ngComponentOutlet=\\"
+              tag();
+        inputs: dynamicProps_ya7n4j();
+              content: myContent();
+              \\"
+    ></ng-container>
     } @if(!isEmptyHtmlElement(tag()) && repeatItemData()){ @for (data of
     repeatItemData();track trackByData0;let index = $index) {
     <render-repeated-block
@@ -4108,31 +4194,34 @@ import { RenderRepeatedBlock } from \\"./render-repeated-block.lite\\";
       [block]=\\"data.block\\"
     ></render-repeated-block>
     } } @if(!isEmptyHtmlElement(tag()) && !repeatItemData()){
-    <this.tag>
-      <this.renderComponentTag></this.renderComponentTag>
-
-      @for (child of childrenWithoutParentComponent();track trackByChild1;let i
-      = $index) {
-      <render-block
-        [block]=\\"child\\"
-        [context]=\\"childrenContext()\\"
-      ></render-block>
-      } @for (child of childrenWithoutParentComponent();track trackByChild2;let
-      i = $index) {
-      <block-styles
-        [block]=\\"child\\"
-        [context]=\\"childrenContext()\\"
-      ></block-styles>
-      }
-    </this.tag>
+    <ng-container
+      *ngComponentOutlet=\\"
+              tag();
+        inputs: dynamicProps_ya7n4j();
+              content: myContent();
+              \\"
+    ></ng-container>
     } }@else{
-    <this.renderComponentTag></this.renderComponentTag>
+    <ng-container
+      *ngComponentOutlet=\\"
+              renderComponentTag();
+        inputs: dynamicProps_emn6k5();
+              content: myContent();
+              \\"
+    ></ng-container>
     }
   \`,
   styles: \`:host { display: contents; }\`,
 })
 export class RenderBlock {
   protected readonly isEmptyHtmlElement = isEmptyHtmlElement;
+
+  // Signal to store embedded views for dynamic components
+  myContent = signal<any[]>([]);
+  rendercomponenttagTemplateRef = viewChild<TemplateRef<any>>(
+    \\"rendercomponenttagTemplate\\"
+  );
+  tagTemplateRef = viewChild<TemplateRef<any>>(\\"tagTemplate\\");
 
   block = input<any>();
   context = input<any>();
@@ -4309,6 +4398,12 @@ export class RenderBlock {
       return RenderComponent;
     }
   });
+  dynamicProps_ya7n4j = computed(() => {
+    return { ...this.attributes(), ...this.actions() };
+  });
+  dynamicProps_emn6k5 = computed(() => {
+    return { ...this.renderComponentProps() };
+  });
   trackByData0(index: number, data: any) {
     return index;
   }
@@ -4319,7 +4414,16 @@ export class RenderBlock {
     return \\"block-style-\\" + child.id;
   }
 
-  constructor() {}
+  constructor(private viewContainer: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent.set([
+      this.viewContainer.createEmbeddedView(
+        this.rendercomponenttagTemplateRef()
+      ).rootNodes,
+      this.viewContainer.createEmbeddedView(this.tagTemplateRef()).rootNodes,
+    ]);
+  }
 }
 "
 `;
@@ -4945,6 +5049,7 @@ exports[`Angular signals > jsx > Javascript Test > store-async-function 1`] = `
 
 
 
+
         async function arrowFunction() {
 return Promise.resolve();
 }
@@ -5012,6 +5117,7 @@ import { CommonModule } from '@angular/common';
 \`,styles: \`:host { display: contents; }\`
 })
 export class StringLiteralStore {
+
 
 
 
@@ -8020,7 +8126,16 @@ export class BasicForFragment {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > basicForNoTagReference 1`] = `
-"import { Component, input, effect, signal, computed } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ViewContainerRef,
+  TemplateRef,
+  input,
+  effect,
+  signal,
+  computed,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -8028,21 +8143,26 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <this.TagNameGetter>
-      Hello
-      <this.tag>{{name()}}</this.tag>
-
-      @for (action of actions();track i;let i = $index) {
-      <this.TagName>
-        <action.icon></action.icon>
-        <span>{{action.text}}</span>
-      </this.TagName>
-      }
-    </this.TagNameGetter>
+    <ng-template #iconTemplate></ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              TagNameGetter();
+              content: myContent();
+              \\"
+    ></ng-container>
   \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyBasicForNoTagRefComponent {
+  // Signal to store embedded views for dynamic components
+  myContent = signal<any[]>([]);
+  tagnamegetterTemplateRef = viewChild<TemplateRef<any>>(
+    \\"tagnamegetterTemplate\\"
+  );
+  tagTemplateRef = viewChild<TemplateRef<any>>(\\"tagTemplate\\");
+  tagnameTemplateRef = viewChild<TemplateRef<any>>(\\"tagnameTemplate\\");
+  iconTemplateRef = viewChild<TemplateRef<any>>(\\"iconTemplate\\");
+
   actions = input<any>();
 
   name = signal(\\"VincentW\\");
@@ -8053,7 +8173,18 @@ export class MyBasicForNoTagRefComponent {
     return \\"span\\";
   });
 
-  constructor() {}
+  constructor(private viewContainer: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent.set([
+      this.viewContainer.createEmbeddedView(this.tagnamegetterTemplateRef())
+        .rootNodes,
+      this.viewContainer.createEmbeddedView(this.tagTemplateRef()).rootNodes,
+      this.viewContainer.createEmbeddedView(this.tagnameTemplateRef())
+        .rootNodes,
+      this.viewContainer.createEmbeddedView(this.iconTemplateRef()).rootNodes,
+    ]);
+  }
 }
 "
 `;
@@ -8092,6 +8223,7 @@ inputRef: HTMLInputElement;
 \`
       })
       export class MyBasicForwardRefComponent {
+
 
 
         inputRef = input<Props[\\"inputRef\\"]>()
@@ -8159,6 +8291,7 @@ inputRef: HTMLInputElement;
 \`
       })
       export class MyBasicForwardRefComponent {
+
 
 
         inputRef = input<Props[\\"inputRef\\"]>()
@@ -8867,7 +9000,7 @@ export class ComponentWithTypes {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > dynamicComponent 1`] = `
-"import { Component, input, effect, signal } from \\"@angular/core\\";
+"import { Component, input, effect, signal, computed } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -8875,11 +9008,13 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <this.obj.Component hello=\\"world\\" (click)=\\"onClick()\\">
-      hello
-
-      <ng-content></ng-content>
-    </this.obj.Component>
+    <ng-container
+      *ngComponentOutlet=\\"
+              obj().Component;
+        inputs: dynamicProps_37i2pk();
+              content: myContent();
+              \\"
+    ></ng-container>
   \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -8892,6 +9027,14 @@ export class MyComponent {
     Component: FooComponent,
   });
 
+  dynamicProps_37i2pk = computed(() => {
+    return {
+      hello: \\"world\\",
+      onClick: this.onClick.bind(this),
+      ...this.attributes(),
+      ...this.something(),
+    };
+  });
   onClick() {
     console.log(\\"hello\\");
   }
@@ -8902,7 +9045,16 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > dynamicComponentWithEventArg 1`] = `
-"import { Component, input, effect, signal } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ViewContainerRef,
+  TemplateRef,
+  input,
+  effect,
+  signal,
+  computed,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -8910,23 +9062,47 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <this.Component hello=\\"world\\" (click)=\\"onClick($event)\\">
-      hello
-    </this.Component>
+    <ng-template #componentTemplate>hello</ng-template>
+    <ng-container
+      *ngComponentOutlet=\\"
+              Component();
+        inputs: dynamicProps_37i2pk();
+              content: myContent();
+              \\"
+    ></ng-container>
   \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyComponent {
+  // Signal to store embedded views for dynamic components
+  myContent = signal<any[]>([]);
+  componentTemplateRef = viewChild<TemplateRef<any>>(\\"componentTemplate\\");
+
   attributes = input<any>();
   something = input<any>();
 
   Component = signal(HelloComponent);
 
+  dynamicProps_37i2pk = computed(() => {
+    return {
+      hello: \\"world\\",
+      onClick: this.onClick.bind(this),
+      ...this.attributes(),
+      ...this.something(),
+    };
+  });
   onClick(event: any) {
     console.log(\\"hello\\", event);
   }
 
-  constructor() {}
+  constructor(private viewContainer: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent.set([
+      this.viewContainer.createEmbeddedView(this.componentTemplateRef())
+        .rootNodes,
+    ]);
+  }
 }
 "
 `;
@@ -9990,7 +10166,16 @@ export class OnUpdate {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > renderBlock 1`] = `
-"import { Component, input, effect, computed } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ViewContainerRef,
+  TemplateRef,
+  input,
+  effect,
+  signal,
+  computed,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export type RenderBlockProps = {
@@ -10026,8 +10211,15 @@ import type { RepeatData } from \\"./types.js\\";
   standalone: true,
   imports: [CommonModule, RenderRepeatedBlock, RenderBlock, BlockStyles],
   template: \`
+    <ng-template #rendercomponenttagTemplate></ng-template>
     @if(shouldWrap()){ @if(isEmptyHtmlElement(tag())){
-    <this.tag></this.tag>
+    <ng-container
+      *ngComponentOutlet=\\"
+              tag();
+        inputs: dynamicProps_ya7n4j();
+              content: myContent();
+              \\"
+    ></ng-container>
     } @if(!isEmptyHtmlElement(tag()) && repeatItemData()){ @for (data of
     repeatItemData();track trackByData0;let index = $index) {
     <render-repeated-block
@@ -10035,31 +10227,34 @@ import type { RepeatData } from \\"./types.js\\";
       [block]=\\"data.block\\"
     ></render-repeated-block>
     } } @if(!isEmptyHtmlElement(tag()) && !repeatItemData()){
-    <this.tag>
-      <this.renderComponentTag></this.renderComponentTag>
-
-      @for (child of childrenWithoutParentComponent();track trackByChild1;let i
-      = $index) {
-      <render-block
-        [block]=\\"child\\"
-        [context]=\\"childrenContext()\\"
-      ></render-block>
-      } @for (child of childrenWithoutParentComponent();track trackByChild2;let
-      i = $index) {
-      <block-styles
-        [block]=\\"child\\"
-        [context]=\\"childrenContext()\\"
-      ></block-styles>
-      }
-    </this.tag>
+    <ng-container
+      *ngComponentOutlet=\\"
+              tag();
+        inputs: dynamicProps_ya7n4j();
+              content: myContent();
+              \\"
+    ></ng-container>
     } }@else{
-    <this.renderComponentTag></this.renderComponentTag>
+    <ng-container
+      *ngComponentOutlet=\\"
+              renderComponentTag();
+        inputs: dynamicProps_emn6k5();
+              content: myContent();
+              \\"
+    ></ng-container>
     }
   \`,
   styles: \`:host { display: contents; }\`,
 })
 export class RenderBlock {
   protected readonly isEmptyHtmlElement = isEmptyHtmlElement;
+
+  // Signal to store embedded views for dynamic components
+  myContent = signal<any[]>([]);
+  rendercomponenttagTemplateRef = viewChild<TemplateRef<any>>(
+    \\"rendercomponenttagTemplate\\"
+  );
+  tagTemplateRef = viewChild<TemplateRef<any>>(\\"tagTemplate\\");
 
   block = input<RenderBlockProps[\\"block\\"]>();
   context = input<RenderBlockProps[\\"context\\"]>();
@@ -10236,6 +10431,12 @@ export class RenderBlock {
       return RenderComponent;
     }
   });
+  dynamicProps_ya7n4j = computed(() => {
+    return { ...this.attributes(), ...this.actions() };
+  });
+  dynamicProps_emn6k5 = computed(() => {
+    return { ...this.renderComponentProps() };
+  });
   trackByData0(index: number, data: any) {
     return index;
   }
@@ -10246,7 +10447,16 @@ export class RenderBlock {
     return \\"block-style-\\" + child.id;
   }
 
-  constructor() {}
+  constructor(private viewContainer: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent.set([
+      this.viewContainer.createEmbeddedView(
+        this.rendercomponenttagTemplateRef()
+      ).rootNodes,
+      this.viewContainer.createEmbeddedView(this.tagTemplateRef()).rootNodes,
+    ]);
+  }
 }
 "
 `;
@@ -10928,6 +11138,7 @@ exports[`Angular signals > jsx > Typescript Test > store-async-function 1`] = `
 
 
 
+
         async function arrowFunction() {
 return Promise.resolve();
 }
@@ -10995,6 +11206,7 @@ import { CommonModule } from '@angular/common';
 \`,styles: \`:host { display: contents; }\`
 })
 export class StringLiteralStore {
+
 
 
 

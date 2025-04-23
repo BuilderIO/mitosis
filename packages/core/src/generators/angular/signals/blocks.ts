@@ -336,20 +336,21 @@ export const blockToAngularSignals = ({
     const dynamicComponentRef = elSelectorProcessed.replace(/^this\.([^.]+)/, '$1()');
 
     let allProps = handleDynamicComponentBindings(json);
-
     const computedName = `dynamicProps_${hashCodeAsString(allProps)}`;
-    if (!root.state[computedName]) {
-      root.state[computedName] = {
-        code: `get ${computedName}() { 
+
+    if (allProps) {
+      if (!root.state[computedName]) {
+        root.state[computedName] = {
+          code: `get ${computedName}() { 
           return { ${allProps} };
         }`,
-        type: 'getter',
-      };
+          type: 'getter',
+        };
+      }
     }
 
     str += `<ng-container *ngComponentOutlet="
-      ${dynamicComponentRef};
-      inputs: ${computedName}();
+      ${dynamicComponentRef};${allProps ? `\ninputs: ${computedName}();` : ''}
       content: myContent();
       ">  `;
 
