@@ -764,7 +764,7 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
       },
     ];
     for (const { name, parser, testsArray } of parsers) {
-      if (testsArray) {
+      if (testsArray && Object.keys(testsArray[0]).length > 0) {
         describe(name, () => {
           if (!only) {
             if (name === 'jsx' && options.typescript === false) {
