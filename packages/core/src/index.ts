@@ -46,6 +46,7 @@ export * from './helpers/typescript-project';
 export * from './parsers/angular';
 export * from './parsers/builder';
 export * from './parsers/context';
+export * from './parsers/alpine';
 export * from './parsers/jsx';
 export * from './parsers/svelte';
 export * from './plugins/compile-away-builder-components';
