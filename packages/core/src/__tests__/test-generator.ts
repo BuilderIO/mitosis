@@ -830,7 +830,7 @@ export const runTestsForAlpineSyntax = () => {
     test(key, async () => {
       const singleTest = ALPINE_SYNTAX_TESTS[key];
       const t = isTestWithFailFor(singleTest) ? singleTest.file : singleTest;
-      const component = await parseAlpine((await t).code);
+      const component = parseAlpine((await t).code);
       expect(component).toMatchSnapshot();
     });
   });
