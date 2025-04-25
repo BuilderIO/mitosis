@@ -1,0 +1,79 @@
+<div x-data="{ count: 0, message: 'Hello', open: false }">
+
+  <!-- Basic click events -->
+  <div>
+    <p>Count: <span x-text="count"></span></p>
+    <button x-on:click="count++">Increment</button>
+    <!-- <button x-on:click.prevent="count++">Prevent Default</button> -->
+    <!-- <button x-on:click.stop="count++">Stop Propagation</button> -->
+    <!-- <button x-on:click.once="count++">Once Only</button> -->
+  </div>
+
+  <!-- Keyboard events -->
+  <!-- <div>
+    <p>Message: <span x-text="message"></span></p>
+    <input type="text" x-on:keyup.enter="message = 'Enter pressed'" placeholder="Press Enter" />
+    <input type="text" x-on:keyup.shift.enter="message = 'Shift + Enter pressed'" placeholder="Press Shift + Enter" />
+    <input type="text" x-on:keyup.escape="message = 'Escape pressed'" placeholder="Press Escape" />
+  </div> -->
+
+  <!-- Mouse events with modifiers -->
+  <!-- <div>
+    <button x-on:click.shift="message = 'Shift Click!'">Shift Click</button>
+    <button x-on:click.ctrl="message = 'Ctrl Click!'">Ctrl Click</button>
+    <button x-on:click.alt="message = 'Alt Click!'">Alt Click</button>
+  </div> -->
+
+  <!-- Custom events -->
+  <!-- <div x-on:foo="message = 'Custom Event!'">
+    <button x-on:click="$dispatch('foo')">Dispatch Custom Event</button>
+  </div> -->
+
+  <!-- .outside modifier -->
+  <!-- <div>
+    <button x-on:click="open = !open">Toggle Dropdown</button>
+    <div x-show="open" x-on:click.outside="open = false" style="border: 1px solid black; padding: 10px;">
+      Click outside to close
+    </div>
+  </div> -->
+
+  <!-- .window and .document modifiers -->
+  <!-- <div>
+    <p>Press Escape to close dropdown</p>
+    <div x-on:keyup.escape.window="open = false">Window Event</div>
+    <div x-on:keyup.escape.document="open = false">Document Event</div>
+  </div> -->
+
+  <!-- .debounce and .throttle -->
+  <!-- <div>
+    <input type="text" x-on:input.debounce.500ms="message = $event.target.value" placeholder="Type with debounce" />
+    <div x-on:scroll.window.throttle.750ms="count++" style="height: 100px; overflow-y: scroll; border: 1px solid black;">
+      <p>Scroll me (throttled)</p>
+      <p>Scroll me (throttled)</p>
+      <p>Scroll me (throttled)</p>
+      <p>Scroll me (throttled)</p>
+      <p>Scroll me (throttled)</p>
+    </div>
+  </div> -->
+
+  <!-- .self modifier -->
+  <!-- <div x-on:click.self="message = 'Clicked self'" style="border: 1px solid black; padding: 10px;">
+    Click me (not children)
+    <button>Child button</button>
+  </div> -->
+
+  <!-- .camel modifier -->
+  <!-- <div x-on:custom-event.camel="message = 'Custom Event'">
+    <button x-on:click="$dispatch('customEvent')">Dispatch Camel Case</button>
+  </div> -->
+
+  <!-- .passive modifier -->
+  <!-- <div x-on:touchstart.passive="count++" style="border: 1px solid black; padding: 10px;">
+    Touch me (passive)
+  </div> -->
+
+  <!-- .capture modifier -->
+  <!-- <div x-on:click.capture="message = 'Captured'" style="border: 1px solid black; padding: 10px;">
+    <button x-on:click="message = 'Bubbled'">Click me (capture vs bubble)</button>
+  </div> -->
+</div> 

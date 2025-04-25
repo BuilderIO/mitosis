@@ -1,0 +1,67 @@
+<div x-data="{ 
+  isActive: true, 
+  classList: 'text-red-500', 
+  style: { color: 'red', display: 'flex' },
+  placeholder: 'Type here...',
+  show: true,
+  closed: false,
+  styles: { color: 'red', display: 'flex' },
+  // New properties for dynamic updates
+  dynamicClass: 'bg-blue-500',
+  dynamicStyle: { fontSize: '16px' },
+  isDisabled: false,
+  inputValue: ''
+}">
+  <!-- Basic attribute binding with updates -->
+  <div>
+    <p>Input State: <span x-text="isDisabled ? 'Disabled' : 'Enabled'"></span></p>
+    <button x-on:click="isDisabled = !isDisabled">Toggle Input State</button>
+    <input type="text" 
+           x-bind:disabled="isDisabled" 
+           x-bind:placeholder="placeholder"
+           x-model="inputValue" />
+  </div>
+
+  <!-- Dynamic class updates -->
+  <div>
+    <p>Current Class: <span x-text="dynamicClass"></span></p>
+    <button x-on:click="dynamicClass = 'bg-blue-500'">Blue Background</button>
+    <button x-on:click="dynamicClass = 'bg-green-500'">Green Background</button>
+    <div x-bind:class="dynamicClass" class="p-4">Dynamic Class Example</div>
+  </div>
+
+  <!-- Dynamic style updates -->
+  <div>
+    <p>Current Font Size: <span x-text="dynamicStyle.fontSize"></span></p>
+    <button x-on:click="dynamicStyle.fontSize = '16px'">Small Text</button>
+    <button x-on:click="dynamicStyle.fontSize = '24px'">Large Text</button>
+    <div x-bind:style="dynamicStyle">Dynamic Style Example</div>
+  </div>
+
+  <!-- Toggle visibility with class -->
+  <div>
+    <p>Visibility: <span x-text="show ? 'Visible' : 'Hidden'"></span></p>
+    <button x-on:click="show = !show">Toggle Visibility</button>
+    <div x-bind:class="{ 'hidden': !show }" class="p-4 border">Toggle me with class</div>
+  </div>
+
+  <!-- Complex style binding -->
+  <div>
+    <p>Style State: <span x-text="JSON.stringify(style)"></span></p>
+    <button x-on:click="style.color = 'red'">Red Text</button>
+    <button x-on:click="style.color = 'blue'">Blue Text</button>
+    <button x-on:click="style.display = style.display === 'flex' ? 'block' : 'flex'">Toggle Display</button>
+    <div x-bind:style="style" class="p-4">Complex Style Binding</div>
+  </div>
+
+  <!-- Multiple bindings on one element -->
+  <div>
+    <p>Multiple Bindings Example</p>
+    <input type="text"
+           x-bind:class="dynamicClass"
+           x-bind:style="dynamicStyle"
+           x-bind:disabled="isDisabled"
+           x-bind:placeholder="placeholder"
+           x-model="inputValue" />
+  </div>
+</div>

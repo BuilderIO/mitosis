@@ -140,21 +140,62 @@ function transformDirective(directive: AlpineDirective) {
         _text: createSingleBinding({ code: directive.value })
       };
     case 'bind':
+      // Handle x-bind:attribute="value" or :attribute="value"
+      const attribute = directive.modifiers[0];
+      if (!attribute) {
+        throw new Error('x-bind directive requires an attribute name');
+      }
       return {
-        [directive.modifiers[0] || 'value']: createSingleBinding({ code: directive.value })
+        [attribute]: createSingleBinding({ code: directive.value })
       };
     case 'on':
+      // Handle x-on:event="handler" or @event="handler"
+      const event = directive.modifiers[0] || 'click';
+      // Convert Alpine event modifiers to Mitosis event handlers
+      const modifiers = directive.modifiers.slice(1);
+      let handlerCode = directive.value;
+      
+      if (modifiers.includes('prevent')) {
+        handlerCode = `(e) => { e.preventDefault(); ${handlerCode} }`;
+      }
+      if (modifiers.includes('stop')) {
+        handlerCode = `(e) => { e.stopPropagation(); ${handlerCode} }`;
+      }
+      if (modifiers.includes('once')) {
+        handlerCode = `(function() { let called = false; return (e) => { if (!called) { called = true; ${handlerCode} } } })()`;
+      }
+      
       return {
-        [directive.modifiers[0] || 'onClick']: createSingleBinding({ code: directive.value })
+        [`on${event.charAt(0).toUpperCase() + event.slice(1)}`]: createSingleBinding({ code: handlerCode })
       };
     case 'if':
       return {
         _if: createSingleBinding({ code: directive.value })
       };
     case 'for':
+      // Handle x-for="item in items" syntax
+      const [item, , items] = directive.value.split(' ');
       return {
-        each: createSingleBinding({ code: directive.value })
+        each: createSingleBinding({ code: items }),
+        forName: item
       };
+    case 'show':
+      return {
+        _show: createSingleBinding({ code: directive.value })
+      };
+    case 'model':
+      // Handle x-model="variable" for two-way binding
+      return {
+        value: createSingleBinding({ code: directive.value }),
+        onChange: createSingleBinding({ code: `(e) => { ${directive.value} = e.target.value }` })
+      };
+    case 'html':
+      return {
+        innerHTML: createSingleBinding({ code: directive.value })
+      };
+    case 'cloak':
+      // x-cloak is handled by CSS, no need for binding
+      return {};
     default:
       return {
         [directive.name]: createSingleBinding({ code: directive.value })
