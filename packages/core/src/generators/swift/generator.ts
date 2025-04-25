@@ -1,5 +1,6 @@
 import { dedent } from '@/helpers/dedent';
 import { fastClone } from '@/helpers/fast-clone';
+import { format } from '@/helpers/generic-format';
 import { getProps } from '@/helpers/get-props';
 import { getRefs } from '@/helpers/get-refs';
 import { gettersToFunctions } from '@/helpers/getters-to-functions';
@@ -247,7 +248,6 @@ export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
       import SwiftUI
 
       struct ${componentName}: View {
-        // Props
         ${props
           .map((prop) => {
             const propType = json.props?.[prop]?.propertyType || 'Any';
@@ -256,7 +256,6 @@ export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
           })
           .join('\n  ')}
         
-        // State
         ${stateProperties}
         ${
           functionStateProperties.length > 0
@@ -264,7 +263,6 @@ export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
             : ''
         }
         
-        // Body
         var body: some View {
           ${json.children
             .map((item) =>
@@ -327,6 +325,7 @@ export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
     }
 
     str = runPreCodePlugins({ json, code: str, plugins: options.plugins });
+    str = format(str);
     str = runPostCodePlugins({ json, code: str, plugins: options.plugins });
 
     return str;
