@@ -5,7 +5,6 @@ import {
   getBindingType,
   getEventHandlerName,
   getForEachParams,
-  isForEachBlock,
   jsxElementToSwiftUIView,
   needsScrollView,
   stripStateAndProps,
@@ -51,17 +50,42 @@ export const blockToSwift = ({
   // Process bindings and properties - use parentComponent here instead of json
   const processCode = stripStateAndProps({ json: parentComponent, options });
 
-  // Handle ForEach blocks
-  if (isForEachBlock(json)) {
+  // Handle ForEach blocks - use bindings.each pattern like other generators
+  if (json.bindings.each?.code) {
     const { collection, itemName, indexName } = getForEachParams(json, processCode);
     const forEachContent = json.children
       .map((child) => blockToSwift({ json: child, options, parentComponent }))
       .join('\n');
 
-    if (indexName) {
-      return `ForEach(Array(zip(${collection}.indices, ${collection})), id: \\.0) { index, ${itemName} in\n${forEachContent}\n}`;
+    // Check if the collection is using Array.from({length: X}) pattern
+    const arrayFromMatch = collection.match(/Array\.from\(\s*\{\s*length:\s*(\d+)\s*\}\s*\)/);
+
+    if (arrayFromMatch) {
+      // Convert to SwiftUI's ForEach with a range
+      const length = arrayFromMatch[1];
+      if (indexName) {
+        // With index
+        return `ForEach(0..<${length}, id: \\.self) { ${indexName} in
+  let ${itemName} = ${indexName}
+  ${forEachContent}
+}`;
+      } else {
+        // Without index
+        return `ForEach(0..<${length}, id: \\.self) { ${itemName} in
+  ${forEachContent}
+}`;
+      }
     } else {
-      return `ForEach(${collection}, id: \\.self) { ${itemName} in\n${forEachContent}\n}`;
+      // Standard collection-based ForEach
+      if (indexName) {
+        return `ForEach(Array(zip(${collection}.indices, ${collection})), id: \\.0) { ${indexName}, ${itemName} in
+  ${forEachContent}
+}`;
+      } else {
+        return `ForEach(${collection}, id: \\.self) { ${itemName} in
+  ${forEachContent}
+}`;
+      }
     }
   }
 

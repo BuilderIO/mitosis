@@ -254,8 +254,8 @@ export const needsScrollView = (json: MitosisNode): boolean => {
 };
 
 export const isForEachBlock = (json: MitosisNode): boolean => {
-  // Check if this is a ForEach binding
-  return !!json.bindings.forEach?.code;
+  // Check if this is a ForEach binding using the bindings.each pattern
+  return !!json.bindings.each?.code;
 };
 
 export const getForEachParams = (
@@ -266,19 +266,19 @@ export const getForEachParams = (
   itemName: string;
   indexName: string | null;
 } => {
-  if (!json.bindings.forEach?.code) {
+  if (!json.bindings.each?.code) {
     return { collection: '', itemName: 'item', indexName: null };
   }
 
-  const forEachCode = json.bindings.forEach.code;
+  const eachCode = json.bindings.each.code;
   let itemName = 'item';
   let indexName = null;
 
-  // Extract collection, item name, and index name from forEach
+  // Extract collection, item name, and index name from each binding
   try {
-    // Parse forEach expressions like: items.map(item => ...)
+    // Parse expressions like: items.map(item => ...)
     // or items.map((item, index) => ...)
-    const match = forEachCode.match(/(\w+)\.map\(\s*(?:\()?([^,)]+)(?:,\s*([^)]+))?\)?/);
+    const match = eachCode.match(/(\w+)\.map\(\s*(?:\()?([^,)]+)(?:,\s*([^)]+))?\)?/);
 
     if (match) {
       const collection = processCode(match[1]);
@@ -290,14 +290,14 @@ export const getForEachParams = (
 
     // Fallback to the whole code as collection if pattern doesn't match
     return {
-      collection: processCode(forEachCode),
+      collection: processCode(eachCode),
       itemName,
       indexName,
     };
   } catch (e) {
-    console.warn('Failed to parse forEach binding:', forEachCode);
+    console.warn('Failed to parse each binding:', eachCode);
     return {
-      collection: processCode(forEachCode),
+      collection: processCode(eachCode),
       itemName,
       indexName,
     };
