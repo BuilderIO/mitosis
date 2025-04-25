@@ -155,6 +155,7 @@ function transformDirective(directive: AlpineDirective) {
       const modifiers = directive.modifiers.slice(1);
       let handlerCode = directive.value;
       
+      // Handle event modifiers
       if (modifiers.includes('prevent')) {
         handlerCode = `(e) => { e.preventDefault(); ${handlerCode} }`;
       }
@@ -163,6 +164,31 @@ function transformDirective(directive: AlpineDirective) {
       }
       if (modifiers.includes('once')) {
         handlerCode = `(function() { let called = false; return (e) => { if (!called) { called = true; ${handlerCode} } } })()`;
+      }
+      if (modifiers.includes('self')) {
+        handlerCode = `(e) => { if (e.target === e.currentTarget) { ${handlerCode} } }`;
+      }
+      if (modifiers.includes('window')) {
+        handlerCode = `(e) => { if (e.target === window) { ${handlerCode} } }`;
+      }
+      if (modifiers.includes('document')) {
+        handlerCode = `(e) => { if (e.target === document) { ${handlerCode} } }`;
+      }
+      if (modifiers.includes('outside')) {
+        handlerCode = `(e) => { if (!e.currentTarget.contains(e.target)) { ${handlerCode} } }`;
+      }
+      
+      // Handle debounce and throttle
+      const debounceMatch = modifiers.find(m => m.startsWith('debounce'));
+      if (debounceMatch) {
+        const ms = debounceMatch.split('.')[1] || '250';
+        handlerCode = `(function() { let timeout; return (e) => { clearTimeout(timeout); timeout = setTimeout(() => { ${handlerCode} }, ${ms}); } })()`;
+      }
+      
+      const throttleMatch = modifiers.find(m => m.startsWith('throttle'));
+      if (throttleMatch) {
+        const ms = throttleMatch.split('.')[1] || '250';
+        handlerCode = `(function() { let lastCall = 0; return (e) => { const now = Date.now(); if (now - lastCall >= ${ms}) { lastCall = now; ${handlerCode} } } })()`;
       }
       
       return {
@@ -173,11 +199,18 @@ function transformDirective(directive: AlpineDirective) {
         _if: createSingleBinding({ code: directive.value })
       };
     case 'for':
-      // Handle x-for="item in items" syntax
-      const [item, , items] = directive.value.split(' ');
+      // Handle x-for="item in items" or x-for="(item, index) in items" syntax
+      const forMatch = directive.value.match(/^\((.*?),\s*(.*?)\)\s+in\s+(.*)$/) || 
+                      directive.value.match(/^(.*?)\s+in\s+(.*)$/);
+      if (!forMatch) {
+        throw new Error('Invalid x-for syntax');
+      }
+      
+      const [_, item, index, items] = forMatch;
       return {
         each: createSingleBinding({ code: items }),
-        forName: item
+        forName: item,
+        indexName: index
       };
     case 'show':
       return {
@@ -185,9 +218,24 @@ function transformDirective(directive: AlpineDirective) {
       };
     case 'model':
       // Handle x-model="variable" for two-way binding
+      // Also handle x-model modifiers like .number, .trim, .lazy
+      const modelModifiers = directive.modifiers;
+      let modelValue = directive.value;
+      let modelHandler = `(e) => { ${directive.value} = e.target.value }`;
+      
+      if (modelModifiers.includes('number')) {
+        modelHandler = `(e) => { ${directive.value} = Number(e.target.value) }`;
+      }
+      if (modelModifiers.includes('trim')) {
+        modelHandler = `(e) => { ${directive.value} = e.target.value.trim() }`;
+      }
+      if (modelModifiers.includes('lazy')) {
+        modelHandler = `(e) => { ${directive.value} = e.target.value }`;
+      }
+      
       return {
-        value: createSingleBinding({ code: directive.value }),
-        onChange: createSingleBinding({ code: `(e) => { ${directive.value} = e.target.value }` })
+        value: createSingleBinding({ code: modelValue }),
+        onChange: createSingleBinding({ code: modelHandler })
       };
     case 'html':
       return {
@@ -196,6 +244,29 @@ function transformDirective(directive: AlpineDirective) {
     case 'cloak':
       // x-cloak is handled by CSS, no need for binding
       return {};
+    case 'init':
+      // x-init is handled by component initialization
+      return {};
+    case 'transition':
+      // Handle x-transition directives
+      const transitionModifier = directive.modifiers[0];
+      if (transitionModifier) {
+        return {
+          [`transition${transitionModifier.charAt(0).toUpperCase() + transitionModifier.slice(1)}`]: 
+            createSingleBinding({ code: directive.value })
+        };
+      }
+      return {};
+    case 'teleport':
+      // Handle x-teleport directive
+      return {
+        _teleport: createSingleBinding({ code: directive.value })
+      };
+    case 'ref':
+      // Handle x-ref directive
+      return {
+        ref: createSingleBinding({ code: directive.value })
+      };
     default:
       return {
         [directive.name]: createSingleBinding({ code: directive.value })

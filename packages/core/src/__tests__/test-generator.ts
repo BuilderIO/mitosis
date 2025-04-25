@@ -396,6 +396,11 @@ const CONTEXT_TEST: Tests = {
 
 const ALPINE_SYNTAX_TESTS: Tests = {
   basic: getRawFile('./syntax/alpine/basic.raw.html'),
+  bind: getRawFile('./syntax/alpine/bind.raw.html'),
+  model: getRawFile('./syntax/alpine/model.raw.html'),
+  on: getRawFile('./syntax/alpine/on.raw.html'),
+  for: getRawFile('./syntax/alpine/for.raw.html'),
+  conditional: getRawFile('./syntax/alpine/conditional.raw.html'),
 };
 
 const JSX_TESTS: Tests[] = [
