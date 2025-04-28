@@ -68,13 +68,25 @@ function parseData(value: string): Record<string, any> {
 function parseNode(node: any): AlpineNode {
   if (node.nodeType === 3) {
     // Text node
+    const text = node.text?.trim();
+    // Skip whitespace-only text nodes
+    if (!text) {
+      return {
+        type: 'AlpineNode',
+        tagName: '',
+        attributes: {},
+        directives: [],
+        children: [],
+        text: undefined,
+      };
+    }
     return {
       type: 'AlpineNode',
       tagName: '',
       attributes: {},
       directives: [],
       children: [],
-      text: node.text,
+      text,
     };
   }
 
@@ -117,7 +129,8 @@ function parseNode(node: any): AlpineNode {
   if (node.childNodes) {
     for (const child of node.childNodes) {
       const parsedChild = parseNode(child);
-      if (parsedChild.tagName || parsedChild.text) {
+      // Only add child if it has content (non-empty text or has children)
+      if (parsedChild.text || parsedChild.children.length > 0 || parsedChild.tagName) {
         children.push(parsedChild);
       }
     }
