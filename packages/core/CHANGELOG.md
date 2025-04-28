@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.9.4
+
+### Patch Changes
+
+- dc3de1e: Update experimental swift output
+
 ## 0.9.3
 
 ### Patch Changes
