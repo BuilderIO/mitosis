@@ -32,4 +32,4 @@ export interface AlpineAST {
   type: 'AlpineAST';
   root: AlpineNode;
   data: AlpineData | null;
-} 
+}

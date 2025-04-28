@@ -137,7 +137,7 @@ function transformDirective(directive: AlpineDirective) {
   switch (directive.name) {
     case 'text':
       return {
-        _text: createSingleBinding({ code: directive.value })
+        _text: createSingleBinding({ code: directive.value }),
       };
     case 'bind':
       // Handle x-bind:attribute="value" or :attribute="value"
@@ -146,7 +146,7 @@ function transformDirective(directive: AlpineDirective) {
         throw new Error('x-bind directive requires an attribute name');
       }
       return {
-        [attribute]: createSingleBinding({ code: directive.value })
+        [attribute]: createSingleBinding({ code: directive.value }),
       };
     case 'on':
       // Handle x-on:event="handler" or @event="handler"
@@ -154,7 +154,7 @@ function transformDirective(directive: AlpineDirective) {
       // Convert Alpine event modifiers to Mitosis event handlers
       const modifiers = directive.modifiers.slice(1);
       let handlerCode = directive.value;
-      
+
       // Handle event modifiers
       if (modifiers.includes('prevent')) {
         handlerCode = `(e) => { e.preventDefault(); ${handlerCode} }`;
@@ -177,44 +177,47 @@ function transformDirective(directive: AlpineDirective) {
       if (modifiers.includes('outside')) {
         handlerCode = `(e) => { if (!e.currentTarget.contains(e.target)) { ${handlerCode} } }`;
       }
-      
+
       // Handle debounce and throttle
-      const debounceMatch = modifiers.find(m => m.startsWith('debounce'));
+      const debounceMatch = modifiers.find((m) => m.startsWith('debounce'));
       if (debounceMatch) {
         const ms = debounceMatch.split('.')[1] || '250';
         handlerCode = `(function() { let timeout; return (e) => { clearTimeout(timeout); timeout = setTimeout(() => { ${handlerCode} }, ${ms}); } })()`;
       }
-      
-      const throttleMatch = modifiers.find(m => m.startsWith('throttle'));
+
+      const throttleMatch = modifiers.find((m) => m.startsWith('throttle'));
       if (throttleMatch) {
         const ms = throttleMatch.split('.')[1] || '250';
         handlerCode = `(function() { let lastCall = 0; return (e) => { const now = Date.now(); if (now - lastCall >= ${ms}) { lastCall = now; ${handlerCode} } } })()`;
       }
-      
+
       return {
-        [`on${event.charAt(0).toUpperCase() + event.slice(1)}`]: createSingleBinding({ code: handlerCode })
+        [`on${event.charAt(0).toUpperCase() + event.slice(1)}`]: createSingleBinding({
+          code: handlerCode,
+        }),
       };
     case 'if':
       return {
-        _if: createSingleBinding({ code: directive.value })
+        _if: createSingleBinding({ code: directive.value }),
       };
     case 'for':
       // Handle x-for="item in items" or x-for="(item, index) in items" syntax
-      const forMatch = directive.value.match(/^\((.*?),\s*(.*?)\)\s+in\s+(.*)$/) || 
-                      directive.value.match(/^(.*?)\s+in\s+(.*)$/);
+      const forMatch =
+        directive.value.match(/^\((.*?),\s*(.*?)\)\s+in\s+(.*)$/) ||
+        directive.value.match(/^(.*?)\s+in\s+(.*)$/);
       if (!forMatch) {
         throw new Error('Invalid x-for syntax');
       }
-      
+
       const [_, item, index, items] = forMatch;
       return {
         each: createSingleBinding({ code: items }),
         forName: item,
-        indexName: index
+        indexName: index,
       };
     case 'show':
       return {
-        _show: createSingleBinding({ code: directive.value })
+        _show: createSingleBinding({ code: directive.value }),
       };
     case 'model':
       // Handle x-model="variable" for two-way binding
@@ -222,7 +225,7 @@ function transformDirective(directive: AlpineDirective) {
       const modelModifiers = directive.modifiers;
       let modelValue = directive.value;
       let modelHandler = `(e) => { ${directive.value} = e.target.value }`;
-      
+
       if (modelModifiers.includes('number')) {
         modelHandler = `(e) => { ${directive.value} = Number(e.target.value) }`;
       }
@@ -232,14 +235,14 @@ function transformDirective(directive: AlpineDirective) {
       if (modelModifiers.includes('lazy')) {
         modelHandler = `(e) => { ${directive.value} = e.target.value }`;
       }
-      
+
       return {
         value: createSingleBinding({ code: modelValue }),
-        onChange: createSingleBinding({ code: modelHandler })
+        onChange: createSingleBinding({ code: modelHandler }),
       };
     case 'html':
       return {
-        innerHTML: createSingleBinding({ code: directive.value })
+        innerHTML: createSingleBinding({ code: directive.value }),
       };
     case 'cloak':
       // x-cloak is handled by CSS, no need for binding
@@ -252,24 +255,24 @@ function transformDirective(directive: AlpineDirective) {
       const transitionModifier = directive.modifiers[0];
       if (transitionModifier) {
         return {
-          [`transition${transitionModifier.charAt(0).toUpperCase() + transitionModifier.slice(1)}`]: 
-            createSingleBinding({ code: directive.value })
+          [`transition${transitionModifier.charAt(0).toUpperCase() + transitionModifier.slice(1)}`]:
+            createSingleBinding({ code: directive.value }),
         };
       }
       return {};
     case 'teleport':
       // Handle x-teleport directive
       return {
-        _teleport: createSingleBinding({ code: directive.value })
+        _teleport: createSingleBinding({ code: directive.value }),
       };
     case 'ref':
       // Handle x-ref directive
       return {
-        ref: createSingleBinding({ code: directive.value })
+        ref: createSingleBinding({ code: directive.value }),
       };
     default:
       return {
-        [directive.name]: createSingleBinding({ code: directive.value })
+        [directive.name]: createSingleBinding({ code: directive.value }),
       };
   }
 }
@@ -284,7 +287,7 @@ function transformNode(node: AlpineNode | null | undefined): MitosisNode {
       bindings: {},
       children: [],
       meta: {},
-      scope: {}
+      scope: {},
     });
   }
 
@@ -295,11 +298,11 @@ function transformNode(node: AlpineNode | null | undefined): MitosisNode {
       name: 'div',
       properties: {},
       bindings: {
-        _text: createSingleBinding({ code: `"${node.text}"` })
+        _text: createSingleBinding({ code: `"${node.text}"` }),
       },
       children: [],
       meta: {},
-      scope: {}
+      scope: {},
     });
   }
 
@@ -310,19 +313,19 @@ function transformNode(node: AlpineNode | null | undefined): MitosisNode {
     bindings: {},
     children: [],
     meta: {},
-    scope: {}
+    scope: {},
   });
 
   // Transform directives
   if (node.directives) {
-    node.directives.forEach(directive => {
+    node.directives.forEach((directive) => {
       Object.assign(mitosisNode.bindings, transformDirective(directive));
     });
   }
 
   // Transform children
   if (node.children) {
-    mitosisNode.children = node.children.map(child => transformNode(child));
+    mitosisNode.children = node.children.map((child) => transformNode(child));
   }
 
   return mitosisNode;
@@ -338,19 +341,19 @@ function convertToMitosis(ast: AlpineAST): MitosisComponent {
     meta: {},
     hooks: {
       onMount: [],
-      onEvent: []
+      onEvent: [],
     },
     subComponents: [],
     context: {
       get: {},
-      set: {}
+      set: {},
     },
     props: {},
     refs: {},
-    inputs: []
+    inputs: [],
   };
 
   component.children = [transformNode(ast.root)];
 
   return component;
-} 
+}

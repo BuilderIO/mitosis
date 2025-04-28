@@ -1,4 +1,5 @@
-<div x-data="{ 
+<div
+  x-data="{ 
   isActive: true, 
   classList: 'text-red-500', 
   style: { color: 'red', display: 'flex' },
@@ -11,15 +12,18 @@
   dynamicStyle: { fontSize: '16px' },
   isDisabled: false,
   inputValue: ''
-}">
+}"
+>
   <!-- Basic attribute binding with updates -->
   <div>
     <p>Input State: <span x-text="isDisabled ? 'Disabled' : 'Enabled'"></span></p>
     <button x-on:click="isDisabled = !isDisabled">Toggle Input State</button>
-    <input type="text" 
-           x-bind:disabled="isDisabled" 
-           x-bind:placeholder="placeholder"
-           x-model="inputValue" />
+    <input
+      type="text"
+      x-bind:disabled="isDisabled"
+      x-bind:placeholder="placeholder"
+      x-model="inputValue"
+    />
   </div>
 
   <!-- Dynamic class updates -->
@@ -50,18 +54,22 @@
     <p>Style State: <span x-text="JSON.stringify(style)"></span></p>
     <button x-on:click="style.color = 'red'">Red Text</button>
     <button x-on:click="style.color = 'blue'">Blue Text</button>
-    <button x-on:click="style.display = style.display === 'flex' ? 'block' : 'flex'">Toggle Display</button>
+    <button x-on:click="style.display = style.display === 'flex' ? 'block' : 'flex'">
+      Toggle Display
+    </button>
     <div x-bind:style="style" class="p-4">Complex Style Binding</div>
   </div>
 
   <!-- Multiple bindings on one element -->
   <div>
     <p>Multiple Bindings Example</p>
-    <input type="text"
-           x-bind:class="dynamicClass"
-           x-bind:style="dynamicStyle"
-           x-bind:disabled="isDisabled"
-           x-bind:placeholder="placeholder"
-           x-model="inputValue" />
+    <input
+      type="text"
+      x-bind:class="dynamicClass"
+      x-bind:style="dynamicStyle"
+      x-bind:disabled="isDisabled"
+      x-bind:placeholder="placeholder"
+      x-model="inputValue"
+    />
   </div>
 </div>

@@ -34,4 +34,4 @@ export function parseDataObject(dataString: string): Record<string, any> {
     // If parsing fails, return an empty object
     return {};
   }
-} 
+}
