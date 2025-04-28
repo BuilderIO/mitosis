@@ -1,5 +1,5 @@
 import { componentToBuilder } from '@/generators/builder';
-import { componentToMitosis } from '@/generators/mitosis';
+import { blockToMitosis, componentToMitosis } from '@/generators/mitosis';
 import { componentToReact } from '@/generators/react';
 import { builderContentToMitosisComponent } from '@/parsers/builder';
 import { parseJsx } from '@/parsers/jsx';
@@ -816,5 +816,114 @@ describe('Deeply Nested Builder Components', () => {
       export default MyComponent;
       "
     `);
+  });
+});
+
+describe('generate code', () => {
+  test('generate array props', () => {
+    const el = {
+      '@type': '@builder.io/mitosis/node' as const,
+      bindings: {},
+      blocksSlots: {
+        items: [
+          {
+            '@type': '@builder.io/mitosis/node' as const,
+            bindings: {},
+            children: [],
+            meta: {},
+            name: 'br',
+            properties: {},
+            scope: {},
+            slots: {},
+          },
+        ],
+      },
+      children: [],
+      meta: {},
+      name: 'TestComponent',
+      properties: {},
+      scope: {},
+      slots: {},
+    };
+    const cmp = {
+      '@type': '@builder.io/mitosis/component' as const,
+      children: [],
+      context: {
+        get: {},
+        set: {},
+      },
+      exports: {},
+      hooks: {
+        onEvent: [],
+        onMount: [],
+      },
+      imports: [],
+      inputs: [],
+      meta: {
+        useMetadata: {
+          httpRequests: undefined,
+        },
+      },
+      name: 'MyComponent',
+      refs: {},
+      state: {},
+      subComponents: [],
+    };
+    expect(blockToMitosis(el, {}, cmp, false)).toMatchInlineSnapshot(
+      '"<TestComponent items={[<br  />]} />"',
+    );
+  });
+  test('generate object props', () => {
+    const el = {
+      '@type': '@builder.io/mitosis/node' as const,
+      bindings: {},
+      blocksSlots: {
+        items: {
+          foo: {
+            '@type': '@builder.io/mitosis/node' as const,
+            bindings: {},
+            children: [],
+            meta: {},
+            name: 'br',
+            properties: {},
+            scope: {},
+            slots: {},
+          },
+        },
+      },
+      children: [],
+      meta: {},
+      name: 'TestComponent',
+      properties: {},
+      scope: {},
+      slots: {},
+    };
+    const cmp = {
+      '@type': '@builder.io/mitosis/component' as const,
+      children: [],
+      context: {
+        get: {},
+        set: {},
+      },
+      exports: {},
+      hooks: {
+        onEvent: [],
+        onMount: [],
+      },
+      imports: [],
+      inputs: [],
+      meta: {
+        useMetadata: {
+          httpRequests: undefined,
+        },
+      },
+      name: 'MyComponent',
+      refs: {},
+      state: {},
+      subComponents: [],
+    };
+    expect(blockToMitosis(el, {}, cmp, false)).toMatchInlineSnapshot(
+      '"<TestComponent items={{foo: <br  />,}} />"',
+    );
   });
 });

@@ -260,8 +260,10 @@ export const blockToMitosis = (
 
 const generateBlockSlotsCode = (blockSlot: any) => {
   let code = '';
+  // generate array props (foo=[...])
   if (Array.isArray(blockSlot)) {
     code += `[${blockSlot.map(generateBlockSlotsCode).join(',')}]`;
+    // generate object props (foo={{ ... }})
   } else if (typeof blockSlot === 'object' && blockSlot !== null) {
     code += '{';
 
