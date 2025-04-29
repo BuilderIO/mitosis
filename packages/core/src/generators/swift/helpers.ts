@@ -29,9 +29,51 @@ export const convertConsoleLogToPrint = (code: string): string => {
 export const ensureSwiftStringFormat = (code: string): string => {
   if (!code) return code;
 
-  // Replace string literals enclosed in single quotes with double quotes
-  // This regex looks for single-quoted strings not inside double quotes
-  return code.replace(/'([^'\\]*(?:\\.[^'\\]*)*)'(?=(?:[^"]*"[^"]*")*[^"]*$)/g, '"$1"');
+  // We need a more reliable approach to handle nested quotes
+  // This uses a state machine approach to track whether we're inside double quotes
+  let result = '';
+  let insideDoubleQuotes = false;
+
+  for (let i = 0; i < code.length; i++) {
+    const char = code[i];
+    const prevChar = i > 0 ? code[i - 1] : '';
+
+    // Handle quote state tracking
+    if (char === '"' && prevChar !== '\\') {
+      insideDoubleQuotes = !insideDoubleQuotes;
+      result += char;
+    }
+    // Only replace single quotes when not inside double quotes
+    else if (char === "'" && prevChar !== '\\' && !insideDoubleQuotes) {
+      // Start of a single-quoted string
+      result += '"';
+
+      // Find the end of the single-quoted string, accounting for escaped quotes
+      let j = i + 1;
+      while (j < code.length) {
+        if (code[j] === "'" && code[j - 1] !== '\\') {
+          break;
+        }
+        j++;
+      }
+
+      // Add the string content
+      result += code.substring(i + 1, j);
+
+      // Add closing double quote if we found the end
+      if (j < code.length) {
+        result += '"';
+        i = j; // Skip to the end of the single-quoted string
+      } else {
+        // If no closing quote was found, just add the single quote as is
+        result = result.substring(0, result.length - 1) + "'";
+      }
+    } else {
+      result += char;
+    }
+  }
+
+  return result;
 };
 
 export const stripStateAndProps = ({
