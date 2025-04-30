@@ -41,7 +41,6 @@ export type AngularMetadata = {
    */
   nativeEvents?: string[];
   /**
-   * @deprecated Rename component in *.lite.tsx
    * Overwrite default selector for component. Default will be kebab case (MyComponent -> my-component)
    */
   selector?: string;

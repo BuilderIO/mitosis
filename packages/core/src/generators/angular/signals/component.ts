@@ -172,7 +172,9 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
       (item) => item.length && isUpperCase(item[0]) && !BUILT_IN_COMPONENTS.has(item),
     );
     const componentSettings: Record<string, any> = {
-      selector: `'${kebabCase(json.name)}'`,
+      selector: useMetadata?.angular?.selector
+        ? `'${useMetadata?.angular?.selector}'`
+        : `'${kebabCase(json.name || 'my-component')}'`,
       standalone: 'true',
       imports: `[${['CommonModule', ...componentsUsed].join(', ')}]`,
       template: `\`${dynamicTemplate}${getTemplateFormat(template)}\``,
@@ -195,6 +197,7 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
         code: string,
         _: 'data' | 'function' | 'getter',
         typeParameter: string | undefined,
+        key: string | undefined,
       ) => {
         if (typeParameter && !code.length) {
           console.error(`
@@ -202,6 +205,23 @@ Component ${json.name} has state property without an initial value'.
 This will cause an error in Angular.
 Please add a initial value for every state property even if it's \`undefined\`.`);
         }
+
+        if (key) {
+          const propRefs = props.filter((prop) => code.includes(`this.${prop}()`));
+          if (propRefs.length > 0) {
+            if (!json.hooks.onInit?.code) {
+              json.hooks.onInit = {
+                code: `
+          this.${key}.set(${code});
+        `,
+              };
+            } else {
+              json.hooks.onInit.code = `this.${key}.set(${code});`.concat(json.hooks.onInit.code);
+            }
+            return `signal${typeParameter ? `<${typeParameter}>` : ''}(undefined)`;
+          }
+        }
+
         return `signal${typeParameter ? `<${typeParameter}>` : ''}(${code})`;
       },
     });
@@ -334,21 +354,20 @@ Please add a initial value for every state property even if it's \`undefined\`.`
           ${withAttributePassing ? getAttributePassingString(options.typescript) : ''}
           
           ${
-            isHookEmpty(json.hooks.onMount) &&
-            isHookEmpty(json.hooks.onInit) &&
-            !hasDynamicComponents
+            isHookEmpty(json.hooks.onMount) && isHookEmpty(json.hooks.onInit)
               ? ''
               : `ngOnInit() {
                   ${!json.hooks?.onInit ? '' : json.hooks.onInit?.code}
                   ${json.hooks.onMount.length > 0 ? stringifySingleScopeOnMount(json) : ''}
-                  ${
-                    hasDynamicComponents
-                      ? `
-                      ${getInitEmbedViewCode(dynamicComponents)}
-                      `
-                      : ''
-                  }
                 }`
+          }
+
+          ${
+            !hasDynamicComponents
+              ? ''
+              : `ngAfterContentInit() {
+                ${getInitEmbedViewCode(dynamicComponents)}
+              }`
           }
     
           ${
