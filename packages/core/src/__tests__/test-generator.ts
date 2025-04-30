@@ -194,7 +194,7 @@ const REACT_NATIVE_TESTS: Tests = {
 
 const SWIFT_TESTS: Tests = {
   SwiftPlainComponent,
-  SwiftSingleQuotesReplacement
+  SwiftSingleQuotesReplacement,
 };
 
 const BASIC_TESTS: Tests = {
