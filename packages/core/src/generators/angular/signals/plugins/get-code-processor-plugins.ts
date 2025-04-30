@@ -85,8 +85,10 @@ const handleMemberExpression = (path: NodePath<MemberExpression>, json?: Mitosis
   }
 
   if (isStateOrPropsExpression(path)) {
-    // Check if the state property is a method or function type, and if so, don't convert it to a callable
+    // Check if the state property is a method or function type, and if so, bind it to 'this'
     if (isAFunctionOrMethod(json, path)) {
+      const bindExpr = `${path.toString()}.bind(this)`;
+      path.replaceWith(identifier(bindExpr));
       return;
     }
 
@@ -192,7 +194,8 @@ const handleCallExpressionArgument = (json: MitosisComponent | undefined, arg: a
     if (arg.object.name === 'state' && json) {
       const argPath = { node: arg } as unknown as NodePath<MemberExpression>;
       if (isAFunctionOrMethod(json, argPath)) {
-        return arg;
+        const argStr = arg.object.name + '.' + arg.property.name;
+        return identifier(`${argStr}.bind(this)`);
       }
     }
 
