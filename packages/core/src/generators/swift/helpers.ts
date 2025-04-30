@@ -8,10 +8,6 @@ import { ToSwiftOptions } from './types';
 export const convertConsoleLogToPrint = (code: string): string => {
   if (!code) return code;
 
-  if (code.includes('console.log')) {
-    console.log('Converting console.log to print');
-  }
-
   // Match console.log statements with various argument patterns
   return code.replace(/console\.log\s*\(\s*(.*?)\s*\)/g, (match, args) => {
     // Handle empty console.log()
