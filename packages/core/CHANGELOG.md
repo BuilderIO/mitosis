@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.9.5
+
+### Patch Changes
+
+- df7c51b: Addresses issue in the swift string format generator
+
 ## 0.9.4
 
 ### Patch Changes
