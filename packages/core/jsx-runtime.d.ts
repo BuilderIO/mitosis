@@ -393,6 +393,9 @@ export declare namespace JSX {
   }
 
   interface DetailsHtmlAttributes<T> extends HTMLAttributes<T> {
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDetailsElement/name) */
+    name?: string;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDetailsElement/open) */
     open?: boolean;
   }
 
@@ -500,6 +503,8 @@ export declare namespace JSX {
     // camelcase
     crossOrigin?: HTMLCrossorigin;
     formAction?: string;
+    autoComplete?: string;
+    autoFocus?: boolean;
     formEnctype?: HTMLFormEncType;
     formMethod?: HTMLFormMethod;
     formNoValidate?: boolean;
