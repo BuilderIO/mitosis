@@ -62,6 +62,12 @@ export type AngularMetadata = {
   outputs?: string[];
 
   /**
+   * Skip hydration for the component.
+   * Adds `host: { ngSkipHydration: "true" }` to the component decorator.
+   */
+  skipHydration?: boolean;
+
+  /**
    * Only for api=signals
    */
   signals?: {

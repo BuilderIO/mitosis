@@ -185,6 +185,9 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
     if (styles) {
       componentSettings.styles = `\`${styles}\``;
     }
+    if (useMetadata?.angular?.skipHydration) {
+      componentSettings.host = `{ ngSkipHydration: 'true' }`;
+    }
 
     stripMetaProperties(json);
 
