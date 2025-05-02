@@ -1,36 +1,6 @@
-import { filesystem, system } from 'gluegun';
 import * as path from 'path';
 import { expect, test } from 'vitest';
-
-const { version } = require('../../package.json');
-
-const cli = async (cmd: string) => {
-  const root = filesystem.path(__dirname, '..', '..');
-  const mitosisCliScript = filesystem.path(root, 'bin', 'mitosis');
-  const shcmd = `node ${mitosisCliScript} ${cmd}`;
-  console.debug(`Running: ${shcmd}`);
-  return system.run(shcmd);
-};
-
-const TIMEOUT = 20000;
-
-test(
-  'outputs version',
-  async () => {
-    const output = await cli('--version');
-    expect(output).toContain(version);
-  },
-  { timeout: TIMEOUT },
-);
-
-test(
-  'outputs help',
-  async () => {
-    const output = await cli('--help');
-    expect(output).toContain(version);
-  },
-  { timeout: TIMEOUT },
-);
+import { DEFAULT_TEST_TIMEOUT, cli } from '../utils';
 
 // TODO refactor commands/compile.ts to not have side effects (like calling
 // process.exit) so that this can be unit tested instead.
@@ -39,7 +9,7 @@ test(
   async () => {
     const filepath = path.resolve(__dirname, 'data/triptych.builder.json');
 
-    const output = await cli(`compile --from=builder --to=react ${filepath}`);
+    const output = await cli(`compile --from=builder --to=react "${filepath}"`);
 
     expect(output).toMatchSnapshot();
     expect(output).toContain('function MyComponent(props) {');
@@ -48,7 +18,7 @@ test(
     expect(output).not.toContain('<Image');
     expect(output).toContain('<img');
   },
-  { timeout: TIMEOUT },
+  { timeout: DEFAULT_TEST_TIMEOUT },
 );
 
 test(
@@ -56,7 +26,9 @@ test(
   async () => {
     const filepath = path.resolve(__dirname, 'data/triptych.builder.json');
 
-    const output = await cli(`compile --builder-components --from=builder --to=react ${filepath}`);
+    const output = await cli(
+      `compile --builder-components --from=builder --to=react "${filepath}"`,
+    );
 
     expect(output).toMatchSnapshot();
     expect(output).toContain('function MyComponent(props) {');
@@ -65,5 +37,5 @@ test(
     expect(output).toContain('<Image');
     expect(output).not.toContain('<img');
   },
-  { timeout: TIMEOUT },
+  { timeout: DEFAULT_TEST_TIMEOUT },
 );
