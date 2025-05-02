@@ -489,13 +489,13 @@ export class MyBasicComponent implements AfterViewInit {
   ngOnInit() {
     const hi = this.myService.method(\\"hi\\");
     console.log(hi);
-    const bye = this.myService.method(\\"hi\\");
-    console.log(bye);
   }
 
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"my-basic-component\\");
+    const bye = this.myService.method(\\"hi\\");
+    console.log(bye);
   }
 }
 "
@@ -575,12 +575,12 @@ export class MyBasicOnMountUpdateComponent implements AfterViewInit {
 
   ngOnInit() {
     this.name.set(\\"PatrickJS onInit\\" + this.hi());
-    this.name.set(\\"PatrickJS onMount\\" + this.bye());
   }
 
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"my-basic-on-mount-update-component\\");
+    this.name.set(\\"PatrickJS onMount\\" + this.bye());
   }
 }
 "
@@ -659,14 +659,11 @@ export class MyBasicOutputsComponent implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    this.messageChange.emit(this.name());
-    this.event.emit(this.message());
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"my-basic-outputs-component\\");
+    this.messageChange.emit(this.name());
+    this.event.emit(this.message());
   }
 }
 "
@@ -750,14 +747,11 @@ export class MyBasicOutputsComponent implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    this.messageChange.emit(this.name());
-    this.event.emit(this.message());
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"my-basic-outputs-component\\");
+    this.messageChange.emit(this.name());
+    this.event.emit(this.message());
   }
 }
 "
@@ -1114,13 +1108,10 @@ export class MyBasicForComponent implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    console.log(\\"onMount code\\");
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"my-basic-for-component\\");
+    console.log(\\"onMount code\\");
   }
 }
 "
@@ -1936,13 +1927,10 @@ export class CustomCode implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    this.findAndRunScripts();
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"custom-code\\");
+    this.findAndRunScripts();
   }
 }
 "
@@ -2069,384 +2057,361 @@ export class CustomCode implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    this.findAndRunScripts();
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"custom-code\\");
+    this.findAndRunScripts();
   }
 }
 "
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Form 1`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  input,
-  effect,
-  signal,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"import { Component, AfterViewInit, viewChild, ElementRef, input, effect, signal } from '@angular/core';
+       import { CommonModule } from '@angular/common';
 
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import {
-  BuilderBlock as BuilderBlockComponent,
-  BuilderBlocks,
-  get,
-  set,
-} from \\"@fake\\";
 
-@Component({
-  selector: \\"form-component\\",
-  standalone: true,
-  imports: [CommonModule, BuilderBlockComponent, BuilderBlocks],
-  template: \`
-    <form
-      [attr.validate]=\\"validate()\\"
-      #formRef
-      [attr.action]=\\"!sendWithJs() && action()\\"
-      [attr.method]=\\"method()\\"
-      [attr.name]=\\"name()\\"
-      (submit)=\\"onSubmit($event)\\"
-      #_root
-    >
-      @if(builderBlock() && builderBlock().children){ @for (block of
-      builderBlock()?.children;track trackByBlock0;let index = $index) {
-      <builder-block-component
-        [block]=\\"block\\"
-        [index]=\\"index\\"
-      ></builder-block-component>
-      } } @if(submissionState() === 'error'){
-      <builder-blocks
-        dataPath=\\"errorMessage\\"
-        [blocks]=\\"errorMessage()\\"
-      ></builder-blocks>
-      } @if(submissionState() === 'sending'){
-      <builder-blocks
-        dataPath=\\"sendingMessage\\"
-        [blocks]=\\"sendingMessage()\\"
-      ></builder-blocks>
-      } @if(submissionState() === 'error' && responseData()){
-      <pre class=\\"builder-form-error-text pre\\">
+
+
+
+
+
+   import  { Builder, builder } from '@builder.io/sdk';
+import  { BuilderBlock as BuilderBlockComponent, BuilderBlocks, get, set } from '@fake';
+
+
+
+
+       @Component({
+         selector: 'form-component',standalone: true,imports: [CommonModule, BuilderBlockComponent, BuilderBlocks],template: \`<form
+          [attr.validate]=\\"validate()\\"
+          #formRef
+          [attr.action]=\\"!sendWithJs() && action()\\"
+          [attr.method]=\\"method()\\"
+          [attr.name]=\\"name()\\"
+          (submit)=\\"onSubmit($event)\\"
+          #_root
+          >@if(builderBlock() && builderBlock().children){ @for (block of
+          builderBlock()?.children;track trackByBlock0(index, block);let index = $index)
+          {
+          <builder-block-component
+            [block]=\\"block\\"
+            [index]=\\"index\\"
+          ></builder-block-component>
+          } } @if(submissionState() === 'error'){
+          <builder-blocks
+            dataPath=\\"errorMessage\\"
+            [blocks]=\\"errorMessage()\\"
+          ></builder-blocks>
+          } @if(submissionState() === 'sending'){
+          <builder-blocks
+            dataPath=\\"sendingMessage\\"
+            [blocks]=\\"sendingMessage()\\"
+          ></builder-blocks>
+          } @if(submissionState() === 'error' && responseData()){
+          <pre class=\\"builder-form-error-text pre\\">
         {{JSON.stringify(responseData(), null, 2)}}</pre
-      >
-      } @if(submissionState() === 'success'){
-      <builder-blocks
-        dataPath=\\"successMessage\\"
-        [blocks]=\\"successMessage()\\"
-      ></builder-blocks>
-      }
-    </form>
-  \`,
-  styles: \`:host { display: contents; }
+          >
+          } @if(submissionState() === 'success'){
+          <builder-blocks
+            dataPath=\\"successMessage\\"
+            [blocks]=\\"successMessage()\\"
+          ></builder-blocks>
+          }</form
+        >
+\`,styles: \`:host { display: contents; }
         .pre {
           padding: 10px;
           color: red;
           text-align: center;
         }
-\`,
-})
-export class FormComponent implements AfterViewInit {
-  previewState = input<any>();
-  sendWithJs = input<any>();
-  sendSubmissionsTo = input<any>();
-  action = input<any>();
-  customHeaders = input<any>();
-  contentType = input<any>();
-  sendSubmissionsToEmail = input<any>();
-  name = input<any>();
-  method = input<any>();
-  errorMessagePath = input<any>();
-  resetFormOnSubmit = input<any>();
-  successUrl = input<any>();
-  validate = input<any>();
-  attributes = input<any>();
-  builderBlock = input<any>();
-  errorMessage = input<any>();
-  sendingMessage = input<any>();
-  successMessage = input<any>();
+\`
+       })
+       export class FormComponent implements AfterViewInit {
 
-  formRef = viewChild<ElementRef>(\\"formRef\\");
-  _root = viewChild<ElementRef>(\\"_root\\");
 
-  formState = signal(\\"unsubmitted\\");
-  responseData = signal(null);
-  formErrorMessage = signal(\\"\\");
+         previewState = input<any>()
+sendWithJs = input<any>()
+sendSubmissionsTo = input<any>()
+action = input<any>()
+customHeaders = input<any>()
+contentType = input<any>()
+sendSubmissionsToEmail = input<any>()
+name = input<any>()
+method = input<any>()
+errorMessagePath = input<any>()
+resetFormOnSubmit = input<any>()
+successUrl = input<any>()
+validate = input<any>()
+attributes = input<any>()
+builderBlock = input<any>()
+errorMessage = input<any>()
+sendingMessage = input<any>()
+successMessage = input<any>()
 
-  get submissionState() {
-    return (Builder.isEditing && this.previewState()) || this.formState();
-  }
-  onSubmit(event) {
-    const sendWithJs =
-      this.sendWithJs() || this.sendSubmissionsTo() === \\"email\\";
 
-    if (this.sendSubmissionsTo() === \\"zapier\\") {
-      event.preventDefault();
-    } else if (sendWithJs) {
-      if (!(this.action() || this.sendSubmissionsTo() === \\"email\\")) {
-        event.preventDefault();
-        return;
-      }
+         formRef = viewChild<ElementRef>(\\"formRef\\")
+_root = viewChild<ElementRef>(\\"_root\\")
 
-      event.preventDefault();
-      const el = event.currentTarget;
-      const headers = this.customHeaders() || {};
-      let body;
-      const formData = new FormData(el); // TODO: maybe support null
+          formState= signal('unsubmitted')
+responseData= signal(null)
+formErrorMessage= signal('')
 
-      const formPairs = Array.from(
-        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
-      )
-        .filter((el) => !!el.name)
-        .map((el) => {
-          let value;
-          const key = el.name;
-
-          if (el instanceof HTMLInputElement) {
-            if (el.type === \\"radio\\") {
-              if (el.checked) {
-                value = el.name;
-                return {
-                  key,
-                  value,
-                };
-              }
-            } else if (el.type === \\"checkbox\\") {
-              value = el.checked;
-            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
-              const num = el.valueAsNumber;
-
-              if (!isNaN(num)) {
-                value = num;
-              }
-            } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
-              value = el.files;
-            } else {
-              value = el.value;
-            }
-          } else {
-            value = el.value;
-          }
-
-          return {
-            key,
-            value,
-          };
-        });
-      let contentType = this.contentType();
-
-      if (this.sendSubmissionsTo() === \\"email\\") {
-        contentType = \\"multipart/form-data\\";
-      }
-
-      Array.from(formPairs).forEach(({ value }) => {
-        if (
-          value instanceof File ||
-          (Array.isArray(value) && value[0] instanceof File) ||
-          value instanceof FileList
-        ) {
-          contentType = \\"multipart/form-data\\";
-        }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
-
-      if (contentType !== \\"application/json\\") {
-        body = formData;
-      } else {
-        // Json
-        const json = {};
-        Array.from(formPairs).forEach(({ value, key }) => {
-          set(json, key, value);
-        });
-        body = JSON.stringify(json);
-      }
-
-      if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && this.action()?.includes(\\"zapier.com\\"))
-        ) {
-          headers[\\"content-type\\"] = contentType;
-        }
-      }
-
-      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
-        detail: {
-          body,
-        },
-      });
-
-      if (this.formRef()?.nativeElement) {
-        this.formRef()?.nativeElement.dispatchEvent(presubmitEvent);
-
-        if (presubmitEvent.defaultPrevented) {
-          return;
-        }
-      }
-
-      this.formState.set(\\"sending\\");
-      const formUrl = \`\${
-        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
-      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-        this.sendSubmissionsToEmail() || \\"\\"
-      )}&name=\${encodeURIComponent(this.name() || \\"\\")}\`;
-      fetch(
-        this.sendSubmissionsTo() === \\"email\\" ? formUrl : this.action(),
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: this.method() || \\"post\\",
-        }
-      ).then(
-        async (res) => {
-          let body;
-          const contentType = res.headers.get(\\"content-type\\");
-
-          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
-            body = await res.json();
-          } else {
-            body = await res.text();
-          }
-
-          if (!res.ok && this.errorMessagePath()) {
-            /* TODO: allow supplying an error formatter function */
-            let message = get(body, this.errorMessagePath());
-
-            if (message) {
-              if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-            error: - email has been taken */
-                message = JSON.stringify(message);
-              }
-
-              this.formErrorMessage.set(message);
-            }
-          }
-
-          this.responseData.set(body);
-          this.formState.set(res.ok ? \\"success\\" : \\"error\\");
-
-          if (res.ok) {
-            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-              detail: {
-                res,
-                body,
-              },
-            });
-
-            if (this.formRef()?.nativeElement) {
-              this.formRef()?.nativeElement.dispatchEvent(submitSuccessEvent);
-
-              if (submitSuccessEvent.defaultPrevented) {
-                return;
-              }
-              /* TODO: option to turn this on/off? */
-
-              if (this.resetFormOnSubmit() !== false) {
-                this.formRef()?.nativeElement.reset();
-              }
-            }
-            /* TODO: client side route event first that can be preventDefaulted */
-
-            if (this.successUrl()) {
-              if (this.formRef()?.nativeElement) {
-                const event = new CustomEvent(\\"route\\", {
-                  detail: {
-                    url: this.successUrl(),
-                  },
-                });
-                this.formRef()?.nativeElement.dispatchEvent(event);
-
-                if (!event.defaultPrevented) {
-                  location.href = this.successUrl();
-                }
-              } else {
-                location.href = this.successUrl();
-              }
-            }
-          }
-        },
-        (err) => {
-          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
-            detail: {
-              error: err,
-            },
-          });
-
-          if (this.formRef()?.nativeElement) {
-            this.formRef()?.nativeElement.dispatchEvent(submitErrorEvent);
-
-            if (submitErrorEvent.defaultPrevented) {
-              return;
-            }
-          }
-
-          this.responseData.set(err);
-          this.formState.set(\\"error\\");
-        }
-      );
-    }
-  }
-  trackByBlock0(index: number, block: any) {
-    return block.id;
-  }
-
-  constructor() {}
-
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
-          }
-        }
-      }
-    }
-  }
-
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"form-component\\");
-  }
+         get submissionState() {
+ return Builder.isEditing && this.previewState() || this.formState();
 }
-"
+onSubmit(event) {
+ const sendWithJs = this.sendWithJs() || this.sendSubmissionsTo() === 'email';
+
+ if (this.sendSubmissionsTo() === 'zapier') {
+   event.preventDefault();
+ } else if (sendWithJs) {
+   if (!(this.action() || this.sendSubmissionsTo() === 'email')) {
+     event.preventDefault();
+     return;
+   }
+
+   event.preventDefault();
+   const el = event.currentTarget;
+   const headers = this.customHeaders() || {};
+   let body;
+   const formData = new FormData(el); // TODO: maybe support null
+
+   const formPairs = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!el.name).map(el => {
+     let value;
+     const key = el.name;
+
+     if (el instanceof HTMLInputElement) {
+       if (el.type === 'radio') {
+         if (el.checked) {
+           value = el.name;
+           return {
+             key,
+             value
+           };
+         }
+       } else if (el.type === 'checkbox') {
+         value = el.checked;
+       } else if (el.type === 'number' || el.type === 'range') {
+         const num = el.valueAsNumber;
+
+         if (!isNaN(num)) {
+           value = num;
+         }
+       } else if (el.type === 'file') {
+         // TODO: one vs multiple files
+         value = el.files;
+       } else {
+         value = el.value;
+       }
+     } else {
+       value = el.value;
+     }
+
+     return {
+       key,
+       value
+     };
+   });
+   let contentType = this.contentType();
+
+   if (this.sendSubmissionsTo() === 'email') {
+     contentType = 'multipart/form-data';
+   }
+
+   Array.from(formPairs).forEach(({
+     value
+   }) => {
+     if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
+       contentType = 'multipart/form-data';
+     }
+   }); // TODO: send as urlEncoded or multipart by default
+   // because of ease of use and reliability in browser API
+   // for encoding the form?
+
+   if (contentType !== 'application/json') {
+     body = formData;
+   } else {
+     // Json
+     const json = {};
+     Array.from(formPairs).forEach(({
+       value,
+       key
+     }) => {
+       set(json, key, value);
+     });
+     body = JSON.stringify(json);
+   }
+
+   if (contentType && contentType !== 'multipart/form-data') {
+     if (
+     /* Zapier doesn't allow content-type header to be sent from browsers */
+     !(sendWithJs && this.action()?.includes('zapier.com'))) {
+       headers['content-type'] = contentType;
+     }
+   }
+
+   const presubmitEvent = new CustomEvent('presubmit', {
+     detail: {
+       body
+     }
+   });
+
+   if (this.formRef()?.nativeElement) {
+     this.formRef()?.nativeElement.dispatchEvent(presubmitEvent);
+
+     if (presubmitEvent.defaultPrevented) {
+       return;
+     }
+   }
+
+   this.formState.set('sending');
+   const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(this.sendSubmissionsToEmail() || '')}&name=\${encodeURIComponent(this.name() || '')}\`;
+   fetch(this.sendSubmissionsTo() === 'email' ? formUrl : this.action()
+   /* TODO: throw error if no action URL */
+   , {
+     body,
+     headers,
+     method: this.method() || 'post'
+   }).then(async res => {
+     let body;
+     const contentType = res.headers.get('content-type');
+
+     if (contentType && contentType.indexOf('application/json') !== -1) {
+       body = await res.json();
+     } else {
+       body = await res.text();
+     }
+
+     if (!res.ok && this.errorMessagePath()) {
+       /* TODO: allow supplying an error formatter function */
+       let message = get(body, this.errorMessagePath());
+
+       if (message) {
+         if (typeof message !== 'string') {
+           /* TODO: ideally convert json to yaml so it woul dbe like
+            error: - email has been taken */
+           message = JSON.stringify(message);
+         }
+
+         this.formErrorMessage.set(message);
+       }
+     }
+
+     this.responseData.set(body);
+     this.formState.set(res.ok ? 'success' : 'error');
+
+     if (res.ok) {
+       const submitSuccessEvent = new CustomEvent('submit:success', {
+         detail: {
+           res,
+           body
+         }
+       });
+
+       if (this.formRef()?.nativeElement) {
+         this.formRef()?.nativeElement.dispatchEvent(submitSuccessEvent);
+
+         if (submitSuccessEvent.defaultPrevented) {
+           return;
+         }
+         /* TODO: option to turn this on/off? */
+
+
+         if (this.resetFormOnSubmit() !== false) {
+           this.formRef()?.nativeElement.reset();
+         }
+       }
+       /* TODO: client side route event first that can be preventDefaulted */
+
+
+       if (this.successUrl()) {
+         if (this.formRef()?.nativeElement) {
+           const event = new CustomEvent('route', {
+             detail: {
+               url: this.successUrl()
+             }
+           });
+           this.formRef()?.nativeElement.dispatchEvent(event);
+
+           if (!event.defaultPrevented) {
+             location.href = this.successUrl();
+           }
+         } else {
+           location.href = this.successUrl();
+         }
+       }
+     }
+   }, err => {
+     const submitErrorEvent = new CustomEvent('submit:error', {
+       detail: {
+         error: err
+       }
+     });
+
+     if (this.formRef()?.nativeElement) {
+       this.formRef()?.nativeElement.dispatchEvent(submitErrorEvent);
+
+       if (submitErrorEvent.defaultPrevented) {
+         return;
+       }
+     }
+
+     this.responseData.set(err);
+     this.formState.set('error');
+   });
+ }
+}
+trackByBlock0(index, block)(index: number, block: any) { return block.id; }
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"form-component\\");
+
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Image 1`] = `
@@ -2458,6 +2423,7 @@ exports[`Angular signals > jsx > Javascript Test > Image 1`] = `
   input,
   effect,
   signal,
+  OnDestroy,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
@@ -2493,7 +2459,7 @@ import { CommonModule } from \\"@angular/common\\";
         }
 \`,
 })
-export class Image implements AfterViewInit {
+export class Image implements AfterViewInit, OnDestroy {
   lazy = input<any>();
   altText = input<any>();
   _class = input<any>();
@@ -2563,7 +2529,9 @@ export class Image implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"image\\");
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
@@ -2586,11 +2554,6 @@ export class Image implements AfterViewInit {
       });
       listener();
     }
-  }
-
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"image\\");
   }
 
   ngOnDestroy() {
@@ -3685,55 +3648,49 @@ export class SlotCode implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Stamped.io 1`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  input,
-  effect,
-  signal,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"import { Component, AfterViewInit, viewChild, ElementRef, input, effect, signal } from '@angular/core';
+       import { CommonModule } from '@angular/common';
 
-import { kebabCase, snakeCase } from \\"lodash\\";
 
-@Component({
-  selector: \\"smile-reviews\\",
-  standalone: true,
-  imports: [CommonModule],
-  template: \`
-    <div [attr.data-user]=\\"name()\\" #_root>
-      <button (click)=\\"showReviewPrompt.set(true)\\">Write a review</button>
-      @if(showReviewPrompt() || 'asdf'){
-      <input placeholder=\\"Email\\" />
-      <input placeholder=\\"Title\\" class=\\"input\\" />
-      <textarea
-        placeholder=\\"How was your experience?\\"
-        class=\\"textarea\\"
-      ></textarea>
-      <button
-        class=\\"button\\"
-        (click)=\\"{
+
+
+
+
+
+   import  { kebabCase, snakeCase } from 'lodash';
+
+
+
+
+       @Component({
+         selector: 'smile-reviews',standalone: true,imports: [CommonModule],template: \`<div [attr.data-user]=\\"name()\\" #_root
+          ><button (click)=\\"showReviewPrompt.set(true)\\">Write a review</button>
+          @if(showReviewPrompt() || 'asdf'){
+          <input placeholder=\\"Email\\" />
+          <input placeholder=\\"Title\\" class=\\"input\\" />
+          <textarea placeholder=\\"How was your experience?\\" class=\\"textarea\\"></textarea>
+          <button
+            class=\\"button\\"
+            (click)=\\"{
           ev.preventDefault();
           showReviewPrompt.set(false);
         }\\"
-      >
-        Submit
-      </button>
-      } @for (review of reviews();track trackByReview0;let index = $index) {
-      <div $name=\\"Review\\" class=\\"review\\">
-        <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
-        <div [class]=\\"showReviewPrompt() ? 'bg-primary' : 'bg-secondary'\\">
-          <div>N: {{index}}</div>
-          <div>{{review.author}}</div>
-          <div>{{review.reviewMessage}}</div>
+          >
+            Submit
+          </button>
+          } @for (review of reviews();track trackByReview0(index, review);let index =
+          $index) {
+          <div $name=\\"Review\\" class=\\"review\\"
+            ><img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
+            <div [class]=\\"showReviewPrompt() ? 'bg-primary' : 'bg-secondary'\\"
+              ><div>N: {{index}}</div>
+              <div>{{review.author}}</div>
+              <div>{{review.reviewMessage}}</div></div
+            ></div
+          >
+          }
         </div>
-      </div>
-      }
-    </div>
-  \`,
-  styles: \`:host { display: contents; }
+\`,styles: \`:host { display: contents; }
         .input {
           display: block;
         }
@@ -3757,88 +3714,79 @@ import { kebabCase, snakeCase } from \\"lodash\\";
           width: 30px;
           margin-right: 10px;
         }
-\`,
-})
-export class SmileReviews implements AfterViewInit {
-  apiKey = input<any>();
-  productId = input<any>();
+\`
+       })
+       export class SmileReviews implements AfterViewInit {
 
-  _root = viewChild<ElementRef>(\\"_root\\");
 
-  reviews = signal([]);
-  name = signal(\\"test\\");
-  showReviewPrompt = signal(false);
+         apiKey = input<any>()
+productId = input<any>()
 
-  kebabCaseValue() {
-    return kebabCase(\\"testThat\\");
-  }
-  snakeCaseValue() {
-    return snakeCase(\\"testThis\\");
-  }
-  trackByReview0(index: number, review: any) {
-    return review.id;
-  }
 
-  constructor() {}
+         _root = viewChild<ElementRef>(\\"_root\\")
 
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
-          }
-        }
-      }
-    }
-  }
+          reviews= signal([])
+name= signal('test')
+showReviewPrompt= signal(false)
 
-  ngOnInit() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey() || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId() || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews.set(data.data);
-      });
-  }
-
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"smile-reviews\\");
-  }
+         kebabCaseValue() {
+ return kebabCase('testThat');
 }
-"
+snakeCaseValue() {
+ return snakeCase('testThis');
+}
+trackByReview0(index, review)(index: number, review: any) { return review.id; }
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"smile-reviews\\");
+           fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${this.apiKey() || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${this.productId() || '2410511106127'}\`).then(res => res.json()).then(data => {
+ this.reviews.set(data.data);
+})
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > StoreComment 1`] = `
@@ -4617,104 +4565,101 @@ export class MyComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > basicForFragment 1`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  effect,
-  signal,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"import { Component, AfterViewInit, viewChild, ElementRef, effect, signal } from '@angular/core';
+       import { CommonModule } from '@angular/common';
 
-@Component({
-  selector: \\"basic-for-fragment\\",
-  standalone: true,
-  imports: [CommonModule],
-  template: \`
-    <div #_root>
-      @for (option of ['a', 'b', 'c'];track trackByOption0;let i = $index) {
-      <ng-container>
-        <div>{{option}}</div>
-      </ng-container>
-      } @for (option of ['a', 'b', 'c'];track trackByOption1;let i = $index) {
-      <ng-container>
-        <div>{{option}}</div>
-      </ng-container>
-      }
 
-      <select>
-        @for (option of ['d', 'e', 'f'];track trackByOption2;let i = $index) {
-        <option [attr.value]=\\"option\\">{{option}}</option>
-        }
-      </select>
-    </div>
-  \`,
-  styles: \`:host { display: contents; }\`,
-})
-export class BasicForFragment implements AfterViewInit {
-  _root = viewChild<ElementRef>(\\"_root\\");
 
-  id = signal(\\"xyz\\");
 
-  trackByOption0(_: number, option: any) {
-    return \`key-\${option}\`;
-  }
-  trackByOption1(_: number, option: any) {
-    return \`\${this.id()}-\${option}\`;
-  }
-  trackByOption2(_: number, option: any) {
-    return \`\${this.id()}-\${option}\`;
-  }
 
-  constructor() {}
 
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
+
+
+
+
+
+
+       @Component({
+         selector: 'basic-for-fragment',standalone: true,imports: [CommonModule],template: \`<div #_root>
+          @for (option of ['a', 'b', 'c'];track trackByOption0(i, option);let i =
+          $index) {
+          <ng-container><div>{{option}}</div></ng-container>
+          } @for (option of ['a', 'b', 'c'];track trackByOption1(i, option);let i =
+          $index) {
+          <ng-container><div>{{option}}</div></ng-container>
           }
-        }
-      }
-    }
-  }
 
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"basic-for-fragment\\");
-  }
-}
-"
+          <select>
+            @for (option of ['d', 'e', 'f'];track trackByOption2(i, option);let i =
+            $index) {
+            <option [attr.value]=\\"option\\">{{option}}</option>
+            }
+          </select></div
+        >
+\`,styles: \`:host { display: contents; }\`
+       })
+       export class BasicForFragment implements AfterViewInit {
+
+
+
+
+
+         _root = viewChild<ElementRef>(\\"_root\\")
+
+          id= signal('xyz')
+
+         trackByOption0(i, option)(_: number, option: any) { return \`key-\${option}\`; }
+trackByOption1(i, option)(_: number, option: any) { return \`\${this.id()}-\${option}\`; }
+trackByOption2(i, option)(_: number, option: any) { return \`\${this.id()}-\${option}\`; }
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"basic-for-fragment\\");
+
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > basicForNoTagReference 1`] = `
@@ -4827,14 +4772,13 @@ exports[`Angular signals > jsx > Javascript Test > basicForwardRef 1`] = `
 
 
        @Component({
-         selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div #_root>
-          <input
+         selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div #_root
+          ><input
             class=\\"input\\"
             #inputRef()
             [attr.value]=\\"name()\\"
             (change)=\\"name.set($event.target.value)\\"
-          />
-        </div>
+        /></div>
 \`,styles: \`:host { display: contents; }
         .input {
           color: red;
@@ -4925,14 +4869,13 @@ exports[`Angular signals > jsx > Javascript Test > basicForwardRefMetadata 1`] =
 
 
        @Component({
-         selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div #_root>
-          <input
+         selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div #_root
+          ><input
             class=\\"input\\"
             #inputRef()
             [attr.value]=\\"name()\\"
             (change)=\\"name.set($event.target.value)\\"
-          />
-        </div>
+        /></div>
 \`,styles: \`:host { display: contents; }
         .input {
           color: red;
@@ -8165,15 +8108,12 @@ export class Embed implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    this.elem()?.nativeElement.dispatchEvent(
-      new CustomEvent(\\"initEditingBldr\\")
-    );
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"embed\\");
+    this.elem()?.nativeElement.dispatchEvent(
+      new CustomEvent(\\"initEditingBldr\\")
+    );
   }
 }
 "
@@ -8245,12 +8185,12 @@ export class OnInit implements AfterViewInit {
 
   ngOnInit() {
     console.log(\\"onInit\\");
-    console.log(\\"onMount\\");
   }
 
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"on-init\\");
+    console.log(\\"onMount\\");
   }
 }
 "
@@ -8426,6 +8366,7 @@ exports[`Angular signals > jsx > Javascript Test > onMount 1`] = `
   viewChild,
   ElementRef,
   effect,
+  OnDestroy,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
@@ -8438,7 +8379,7 @@ import { CommonModule } from \\"@angular/common\\";
   \`,
   styles: \`:host { display: contents; }\`,
 })
-export class Comp implements AfterViewInit {
+export class Comp implements AfterViewInit, OnDestroy {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   constructor() {}
@@ -8483,13 +8424,10 @@ export class Comp implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    console.log(\\"Runs on mount\\");
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"comp\\");
+    console.log(\\"Runs on mount\\");
   }
 
   ngOnDestroy() {
@@ -8563,24 +8501,12 @@ export class Comp implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    const onMountHook_0 = () => {
-      console.log(\\"Runs on mount\\");
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      console.log(\\"Another one runs on Mount\\");
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      console.log(\\"SSR runs on Mount\\");
-    };
-    onMountHook_2();
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"comp\\");
+    console.log(\\"Runs on mount\\");
+    console.log(\\"Another one runs on Mount\\");
+    console.log(\\"SSR runs on Mount\\");
   }
 }
 "
@@ -9338,306 +9264,286 @@ export class OnUpdate implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > renderBlock 1`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  input,
-  effect,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"import { Component, AfterViewInit, viewChild, ElementRef, input, effect } from '@angular/core';
+       import { CommonModule } from '@angular/common';
 
-import { TARGET } from \\"../../constants/target.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
-import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
-import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
-import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
-import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
-import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
-import { BlockStyles } from \\"./block-styles.lite\\";
-import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderComponentWithContext from \\"./render-component-with-context.js\\";
-import RenderComponent from \\"./render-component.js\\";
-import { RenderRepeatedBlock } from \\"./render-repeated-block.lite\\";
 
-@Component({
-  selector: \\"render-block\\",
-  standalone: true,
-  imports: [CommonModule, RenderRepeatedBlock, RenderBlock, BlockStyles],
-  template: \`
-    @if(shouldWrap()){ @if(isEmptyHtmlElement(tag())){
-    <this.tag></this.tag>
-    } @if(!isEmptyHtmlElement(tag()) && repeatItemData()){ @for (data of
-    repeatItemData();track trackByData0;let index = $index) {
-    <render-repeated-block
-      [repeatContext]=\\"data.context\\"
-      [block]=\\"data.block\\"
-    ></render-repeated-block>
-    } } @if(!isEmptyHtmlElement(tag()) && !repeatItemData()){
-    <this.tag>
-      <this.renderComponentTag></this.renderComponentTag>
 
-      @for (child of childrenWithoutParentComponent();track trackByChild1;let i
-      = $index) {
-      <render-block
-        [block]=\\"child\\"
-        [context]=\\"childrenContext()\\"
-      ></render-block>
-      } @for (child of childrenWithoutParentComponent();track trackByChild2;let
-      i = $index) {
-      <block-styles
-        [block]=\\"child\\"
-        [context]=\\"childrenContext()\\"
-      ></block-styles>
-      }
-    </this.tag>
-    } }@else{
-    <this.renderComponentTag></this.renderComponentTag>
-    }
-  \`,
-  styles: \`:host { display: contents; }\`,
-})
-export class RenderBlock implements AfterViewInit {
-  protected readonly isEmptyHtmlElement = isEmptyHtmlElement;
 
-  block = input<any>();
-  context = input<any>();
 
-  _root = viewChild<ElementRef>(\\"_root\\");
 
-  get component() {
-    const componentName = getProcessedBlock({
-      block: this.block(),
-      state: this.context().state,
-      context: this.context().context,
-      shouldEvaluateBindings: false,
-    }).component?.name;
 
-    if (!componentName) {
-      return null;
-    }
+   import  { TARGET } from '../../constants/target.js';
+import  { evaluate } from '../../functions/evaluate.js';
+import  { extractTextStyles } from '../../functions/extract-text-styles.js';
+import  { getBlockActions } from '../../functions/get-block-actions.js';
+import  { getBlockComponentOptions } from '../../functions/get-block-component-options.js';
+import  { getBlockProperties } from '../../functions/get-block-properties.js';
+import  { getBlockTag } from '../../functions/get-block-tag.js';
+import  { getProcessedBlock } from '../../functions/get-processed-block.js';
+import  { getReactNativeBlockStyles } from '../../functions/get-react-native-block-styles.js';
+import { BlockStyles } from './block-styles.lite';
+import  { isEmptyHtmlElement } from './render-block.helpers.js';
+import  RenderComponentWithContext from './render-component-with-context.js';
+import  RenderComponent from './render-component.js';
+import { RenderRepeatedBlock } from './render-repeated-block.lite';
 
-    const ref = this.context().registeredComponents[componentName];
 
-    if (!ref) {
-      // TODO: Public doc page with more info about this message
-      console.warn(\`
+
+
+       @Component({
+         selector: 'render-block',standalone: true,imports: [CommonModule, RenderRepeatedBlock, RenderBlock, BlockStyles],template: \`@if(shouldWrap()){ @if(isEmptyHtmlElement(tag())){
+        <this.tag></this.tag>
+        } @if(!isEmptyHtmlElement(tag()) && repeatItemData()){ @for (data of
+        repeatItemData();track trackByData0(index, data);let index = $index) {
+        <render-repeated-block
+          [repeatContext]=\\"data.context\\"
+          [block]=\\"data.block\\"
+        ></render-repeated-block>
+        } } @if(!isEmptyHtmlElement(tag()) && !repeatItemData()){
+        <this.tag
+          ><this.renderComponentTag></this.renderComponentTag>
+
+          @for (child of childrenWithoutParentComponent();track trackByChild1(i,
+          child);let i = $index) {
+          <render-block [block]=\\"child\\" [context]=\\"childrenContext()\\"></render-block>
+          } @for (child of childrenWithoutParentComponent();track trackByChild2(i,
+          child);let i = $index) {
+          <block-styles [block]=\\"child\\" [context]=\\"childrenContext()\\"></block-styles>
+          }
+        </this.tag>
+        } }@else{
+        <this.renderComponentTag></this.renderComponentTag>
+        }
+\`,styles: \`:host { display: contents; }\`
+       })
+       export class RenderBlock implements AfterViewInit {
+         protected readonly isEmptyHtmlElement = isEmptyHtmlElement;
+
+         block = input<any>()
+context = input<any>()
+
+
+         _root = viewChild<ElementRef>(\\"_root\\")
+
+
+         get component() {
+ const componentName = getProcessedBlock({
+   block: this.block(),
+   state: this.context().state,
+   context: this.context().context,
+   shouldEvaluateBindings: false
+ }).component?.name;
+
+ if (!componentName) {
+   return null;
+ }
+
+ const ref = this.context().registeredComponents[componentName];
+
+ if (!ref) {
+   // TODO: Public doc page with more info about this message
+   console.warn(\`
           Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
-      return undefined;
-    } else {
-      return ref;
-    }
-  }
-  get tag() {
-    return getBlockTag(this.useBlock());
-  }
-  get useBlock() {
-    return this.repeatItemData()
-      ? this.block()
-      : getProcessedBlock({
-          block: this.block(),
-          state: this.context().state,
-          context: this.context().context,
-          shouldEvaluateBindings: true,
-        });
-  }
-  get actions() {
-    return getBlockActions({
-      block: this.useBlock(),
-      state: this.context().state,
-      context: this.context().context,
-    });
-  }
-  get attributes() {
-    const blockProperties = getBlockProperties(this.useBlock());
-    return {
-      ...blockProperties,
-      ...(TARGET === \\"reactNative\\"
-        ? {
-            style: getReactNativeBlockStyles({
-              block: this.useBlock(),
-              context: this.context(),
-              blockStyles: blockProperties.style,
-            }),
-          }
-        : {}),
-    };
-  }
-  get shouldWrap() {
-    return !this.component()?.noWrap;
-  }
-  get renderComponentProps() {
-    return {
-      blockChildren: this.useChildren(),
-      componentRef: this.component()?.component,
-      componentOptions: {
-        ...getBlockComponentOptions(this.useBlock()),
-
-        /**
-         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the component itself directly.
-         */
-        ...(this.shouldWrap()
-          ? {}
-          : {
-              attributes: { ...this.attributes(), ...this.actions() },
-            }),
-        customBreakpoints: this.childrenContext()?.content?.meta?.breakpoints,
-      },
-      context: this.childrenContext(),
-    };
-  }
-  get useChildren() {
-    // TO-DO: When should \`canHaveChildren\` dictate rendering?
-    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-    // but still receive and need to render children.
-    // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
-    return this.useBlock().children ?? [];
-  }
-  get childrenWithoutParentComponent() {
-    /**
-     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-     * we render them outside of \`componentRef\`.
-     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-     * blocks, and the children will be repeated within those blocks.
-     */
-    const shouldRenderChildrenOutsideRef =
-      !this.component()?.component && !this.repeatItemData();
-    return shouldRenderChildrenOutsideRef ? this.useChildren() : [];
-  }
-  get repeatItemData() {
-    /**
-     * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-     * which will not work if there is a repeat.
-     */
-    const { repeat, ...blockWithoutRepeat } = this.block();
-
-    if (!repeat?.collection) {
-      return undefined;
-    }
-
-    const itemsArray = evaluate({
-      code: repeat.collection,
-      state: this.context().state,
-      context: this.context().context,
-    });
-
-    if (!Array.isArray(itemsArray)) {
-      return undefined;
-    }
-
-    const collectionName = repeat.collection.split(\\".\\").pop();
-    const itemNameToUse =
-      repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map((item, index) => ({
-      context: {
-        ...this.context(),
-        state: {
-          ...this.context().state,
-          $index: index,
-          $item: item,
-          [itemNameToUse]: item,
-          [\`$\${itemNameToUse}Index\`]: index,
-        },
-      },
-      block: blockWithoutRepeat,
-    }));
-    return repeatArray;
-  }
-  get inheritedTextStyles() {
-    if (TARGET !== \\"reactNative\\") {
-      return {};
-    }
-
-    const styles = getReactNativeBlockStyles({
-      block: this.useBlock(),
-      context: this.context(),
-      blockStyles: this.attributes().style,
-    });
-    return extractTextStyles(styles);
-  }
-  get childrenContext() {
-    return {
-      apiKey: this.context().apiKey,
-      state: this.context().state,
-      content: this.context().content,
-      context: this.context().context,
-      registeredComponents: this.context().registeredComponents,
-      inheritedStyles: this.inheritedTextStyles(),
-    };
-  }
-  get renderComponentTag() {
-    if (TARGET === \\"reactNative\\") {
-      return RenderComponentWithContext;
-    } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the component tag
-      return \\"RenderComponent\\";
-    } else {
-      return RenderComponent;
-    }
-  }
-  trackByData0(index: number, data: any) {
-    return index;
-  }
-  trackByChild1(_: number, child: any) {
-    return \\"render-block-\\" + child.id;
-  }
-  trackByChild2(_: number, child: any) {
-    return \\"block-style-\\" + child.id;
-  }
-
-  constructor() {}
-
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
-          }
-        }
-      }
-    }
-  }
-
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"render-block\\");
-  }
+   return undefined;
+ } else {
+   return ref;
+ }
 }
-"
+get tag() {
+ return getBlockTag(this.useBlock());
+}
+get useBlock() {
+ return this.repeatItemData() ? this.block() : getProcessedBlock({
+   block: this.block(),
+   state: this.context().state,
+   context: this.context().context,
+   shouldEvaluateBindings: true
+ });
+}
+get actions() {
+ return getBlockActions({
+   block: this.useBlock(),
+   state: this.context().state,
+   context: this.context().context
+ });
+}
+get attributes() {
+ const blockProperties = getBlockProperties(this.useBlock());
+ return { ...blockProperties,
+   ...(TARGET === 'reactNative' ? {
+     style: getReactNativeBlockStyles({
+       block: this.useBlock(),
+       context: this.context(),
+       blockStyles: blockProperties.style
+     })
+   } : {})
+ };
+}
+get shouldWrap() {
+ return !this.component()?.noWrap;
+}
+get renderComponentProps() {
+ return {
+   blockChildren: this.useChildren(),
+   componentRef: this.component()?.component,
+   componentOptions: { ...getBlockComponentOptions(this.useBlock()),
+
+     /**
+      * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+      * they are provided to the component itself directly.
+      */
+     ...(this.shouldWrap() ? {} : {
+       attributes: { ...this.attributes(),
+         ...this.actions()
+       }
+     }),
+     customBreakpoints: this.childrenContext()?.content?.meta?.breakpoints
+   },
+   context: this.childrenContext()
+ };
+}
+get useChildren() {
+ // TO-DO: When should \`canHaveChildren\` dictate rendering?
+ // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+ // but still receive and need to render children.
+ // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
+ return this.useBlock().children ?? [];
+}
+get childrenWithoutParentComponent() {
+ /**
+  * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
+  * we render them outside of \`componentRef\`.
+  * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
+  * blocks, and the children will be repeated within those blocks.
+  */
+ const shouldRenderChildrenOutsideRef = !this.component()?.component && !this.repeatItemData();
+ return shouldRenderChildrenOutsideRef ? this.useChildren() : [];
+}
+get repeatItemData() {
+ /**
+  * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
+  * which will not work if there is a repeat.
+  */
+ const {
+   repeat,
+   ...blockWithoutRepeat
+ } = this.block();
+
+ if (!repeat?.collection) {
+   return undefined;
+ }
+
+ const itemsArray = evaluate({
+   code: repeat.collection,
+   state: this.context().state,
+   context: this.context().context
+ });
+
+ if (!Array.isArray(itemsArray)) {
+   return undefined;
+ }
+
+ const collectionName = repeat.collection.split('.').pop();
+ const itemNameToUse = repeat.itemName || (collectionName ? collectionName + 'Item' : 'item');
+ const repeatArray = itemsArray.map((item, index) => ({
+   context: { ...this.context(),
+     state: { ...this.context().state,
+       $index: index,
+       $item: item,
+       [itemNameToUse]: item,
+       [\`$\${itemNameToUse}Index\`]: index
+     }
+   },
+   block: blockWithoutRepeat
+ }));
+ return repeatArray;
+}
+get inheritedTextStyles() {
+ if (TARGET !== 'reactNative') {
+   return {};
+ }
+
+ const styles = getReactNativeBlockStyles({
+   block: this.useBlock(),
+   context: this.context(),
+   blockStyles: this.attributes().style
+ });
+ return extractTextStyles(styles);
+}
+get childrenContext() {
+ return {
+   apiKey: this.context().apiKey,
+   state: this.context().state,
+   content: this.context().content,
+   context: this.context().context,
+   registeredComponents: this.context().registeredComponents,
+   inheritedStyles: this.inheritedTextStyles()
+ };
+}
+get renderComponentTag() {
+ if (TARGET === 'reactNative') {
+   return RenderComponentWithContext;
+ } else if (TARGET === 'vue3') {
+   // vue3 expects a string for the component tag
+   return 'RenderComponent';
+ } else {
+   return RenderComponent;
+ }
+}
+trackByData0(index, data)(index: number, data: any) { return index; }
+trackByChild1(i, child)(_: number, child: any) { return 'render-block-' + child.id; }
+trackByChild2(i, child)(_: number, child: any) { return 'block-style-' + child.id; }
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"render-block\\");
+
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > renderContentExample 1`] = `
@@ -9738,13 +9644,10 @@ export class RenderContent implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    sendComponentsToVisualEditor(this.customComponents());
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"render-content\\");
+    sendComponentsToVisualEditor(this.customComponents());
   }
 }
 "
@@ -10256,9 +10159,8 @@ import { CommonModule } from \\"@angular/common\\";
     <div #_root>
       @if(conditionA()){ Content0 }@else{ ContentA } @if(conditionA()){ ContentA
       } @if(conditionA()){ }@else{ ContentA } @if(conditionA()){ ContentB
-      }@else{
-      {{undefined}} } @if(conditionA()){ {{undefined}} }@else{ ContentB }
-      @if(conditionA()){ ContentC } @if(conditionA()){ }@else{ ContentC }
+      }@else{ {{undefined}} } @if(conditionA()){ {{undefined}} }@else{ ContentB
+      } @if(conditionA()){ ContentC } @if(conditionA()){ }@else{ ContentC }
       @if(conditionA()){ ContentD } @if(conditionA()){ }@else{ ContentD }
       @if(conditionA()){ ContentE }@else{ hello } @if(conditionA()){ hello
       }@else{ ContentE } @if(conditionA()){ ContentF }@else{ 123 }
@@ -10333,88 +10235,89 @@ export class ShowWithOtherValues implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > showWithFor 1`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  input,
-  effect,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"import { Component, AfterViewInit, viewChild, ElementRef, input, effect } from '@angular/core';
+       import { CommonModule } from '@angular/common';
 
-@Component({
-  selector: \\"nested-show\\",
-  standalone: true,
-  imports: [CommonModule],
-  template: \`
-    @if(conditionA()){ @for (item of items();track trackByItem0;let idx =
-    $index) {
-    <div>{{item}}</div>
-    } }@else{
-    <div>else-condition-A</div>
-    }
-  \`,
-  styles: \`:host { display: contents; }\`,
-})
-export class NestedShow implements AfterViewInit {
-  conditionA = input<any>();
-  items = input<any>();
 
-  _root = viewChild<ElementRef>(\\"_root\\");
 
-  trackByItem0(idx: number, item: any) {
-    return idx;
-  }
 
-  constructor() {}
 
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
+
+
+
+
+
+
+
+       @Component({
+         selector: 'nested-show',standalone: true,imports: [CommonModule],template: \`@if(conditionA()){ @for (item of items();track trackByItem0(idx, item);let idx =
+        $index) {
+        <div>{{item}}</div>
+        } }@else{
+        <div>else-condition-A</div>
         }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
-          }
-        }
-      }
-    }
-  }
+\`,styles: \`:host { display: contents; }\`
+       })
+       export class NestedShow implements AfterViewInit {
 
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"nested-show\\");
-  }
-}
-"
+
+         conditionA = input<any>()
+items = input<any>()
+
+
+         _root = viewChild<ElementRef>(\\"_root\\")
+
+
+         trackByItem0(idx, item)(idx: number, item: any) { return idx; }
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"nested-show\\");
+
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > showWithOtherValues 1`] = `
@@ -11781,91 +11684,91 @@ export class SvgComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > twoForsTrackBy 1`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  effect,
-  signal,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"import { Component, AfterViewInit, viewChild, ElementRef, effect, signal } from '@angular/core';
+       import { CommonModule } from '@angular/common';
 
-@Component({
-  selector: \\"my-component\\",
-  standalone: true,
-  imports: [CommonModule],
-  template: \`
-    <div #_root>
-      @for (item of items();track trackByItem0;let i = $index) {
-      <div>{{item}}</div>
-      } @for (item of items();track trackByItem1;let i = $index) {
-      <div>{{item}}</div>
-      }
-    </div>
-  \`,
-  styles: \`:host { display: contents; }\`,
-})
-export class MyComponent implements AfterViewInit {
-  _root = viewChild<ElementRef>(\\"_root\\");
 
-  items = signal([1, 2, 3]);
 
-  trackByItem0(_: number, item: any) {
-    return item;
-  }
-  trackByItem1(_: number, item: any) {
-    return item;
-  }
 
-  constructor() {}
 
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
+
+
+
+
+
+
+
+       @Component({
+         selector: 'my-component',standalone: true,imports: [CommonModule],template: \`<div #_root>
+          @for (item of items();track trackByItem0(i, item);let i = $index) {
+          <div>{{item}}</div>
+          } @for (item of items();track trackByItem1(i, item);let i = $index) {
+          <div>{{item}}</div>
           }
-        }
-      }
-    }
-  }
+        </div>
+\`,styles: \`:host { display: contents; }\`
+       })
+       export class MyComponent implements AfterViewInit {
 
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"my-component\\");
-  }
-}
-"
+
+
+
+
+         _root = viewChild<ElementRef>(\\"_root\\")
+
+          items= signal([1, 2, 3])
+
+         trackByItem0(i, item)(_: number, item: any) { return item; }
+trackByItem1(i, item)(_: number, item: any) { return item; }
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"my-component\\");
+
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Javascript Test > typeDependency 1`] = `
@@ -12606,14 +12509,11 @@ export class UseTargetComponent implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    console.log(this.foo());
-    this.foo.set(\\"bar\\");
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"use-target-component\\");
+    console.log(this.foo());
+    this.foo.set(\\"bar\\");
   }
 }
 "
@@ -13280,13 +13180,13 @@ export class MyBasicComponent implements AfterViewInit {
   ngOnInit() {
     const hi = this.myService.method(\\"hi\\");
     console.log(hi);
-    const bye = this.myService.method(\\"hi\\");
-    console.log(bye);
   }
 
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"my-basic-component\\");
+    const bye = this.myService.method(\\"hi\\");
+    console.log(bye);
   }
 }
 "
@@ -13371,12 +13271,12 @@ export class MyBasicOnMountUpdateComponent implements AfterViewInit {
 
   ngOnInit() {
     this.name.set(\\"PatrickJS onInit\\" + this.hi());
-    this.name.set(\\"PatrickJS onMount\\" + this.bye());
   }
 
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"my-basic-on-mount-update-component\\");
+    this.name.set(\\"PatrickJS onMount\\" + this.bye());
   }
 }
 "
@@ -13455,14 +13355,11 @@ export class MyBasicOutputsComponent implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    this.messageChange.emit(this.name());
-    this.event.emit(this.message());
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"my-basic-outputs-component\\");
+    this.messageChange.emit(this.name());
+    this.event.emit(this.message());
   }
 }
 "
@@ -13546,14 +13443,11 @@ export class MyBasicOutputsComponent implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    this.messageChange.emit(this.name());
-    this.event.emit(this.message());
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"my-basic-outputs-component\\");
+    this.messageChange.emit(this.name());
+    this.event.emit(this.message());
   }
 }
 "
@@ -13915,13 +13809,10 @@ export class MyBasicForComponent implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    console.log(\\"onMount code\\");
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"my-basic-for-component\\");
+    console.log(\\"onMount code\\");
   }
 }
 "
@@ -14788,13 +14679,10 @@ export class CustomCode implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    this.findAndRunScripts();
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"custom-code\\");
+    this.findAndRunScripts();
   }
 }
 "
@@ -14926,415 +14814,388 @@ export class CustomCode implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    this.findAndRunScripts();
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"custom-code\\");
+    this.findAndRunScripts();
   }
 }
 "
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Form 1`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  input,
-  effect,
-  signal,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"import { Component, AfterViewInit, viewChild, ElementRef, input, effect, signal } from '@angular/core';
+       import { CommonModule } from '@angular/common';
 
-export interface FormProps {
-  attributes?: any;
-  name?: string;
-  action?: string;
-  validate?: boolean;
-  method?: string;
-  builderBlock?: BuilderElement;
-  sendSubmissionsTo?: string;
-  sendSubmissionsToEmail?: string;
-  sendWithJs?: boolean;
-  contentType?: string;
-  customHeaders?: {
-    [key: string]: string;
-  };
-  successUrl?: string;
-  previewState?: FormState;
-  successMessage?: BuilderElement[];
-  errorMessage?: BuilderElement[];
-  sendingMessage?: BuilderElement[];
-  resetFormOnSubmit?: boolean;
-  errorMessagePath?: string;
+
+
+       export interface FormProps {
+ attributes?: any;
+ name?: string;
+ action?: string;
+ validate?: boolean;
+ method?: string;
+ builderBlock?: BuilderElement;
+ sendSubmissionsTo?: string;
+ sendSubmissionsToEmail?: string;
+ sendWithJs?: boolean;
+ contentType?: string;
+ customHeaders?: {
+   [key: string]: string;
+ };
+ successUrl?: string;
+ previewState?: FormState;
+ successMessage?: BuilderElement[];
+ errorMessage?: BuilderElement[];
+ sendingMessage?: BuilderElement[];
+ resetFormOnSubmit?: boolean;
+ errorMessagePath?: string;
 }
-export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
+export type FormState = 'unsubmitted' | 'sending' | 'success' | 'error'
 
-import { Builder, BuilderElement, builder } from \\"@builder.io/sdk\\";
-import {
-  BuilderBlock as BuilderBlockComponent,
-  BuilderBlocks,
-  get,
-  set,
-} from \\"@fake\\";
 
-@Component({
-  selector: \\"form-component\\",
-  standalone: true,
-  imports: [CommonModule, BuilderBlockComponent, BuilderBlocks],
-  template: \`
-    <form
-      [attr.validate]=\\"validate()\\"
-      #formRef
-      [attr.action]=\\"!sendWithJs() && action()\\"
-      [attr.method]=\\"method()\\"
-      [attr.name]=\\"name()\\"
-      (submit)=\\"onSubmit($event)\\"
-      #_root
-    >
-      @if(builderBlock() && builderBlock().children){ @for (block of
-      builderBlock()?.children;track trackByBlock0;let index = $index) {
-      <builder-block-component
-        [block]=\\"block\\"
-        [index]=\\"index\\"
-      ></builder-block-component>
-      } } @if(submissionState() === 'error'){
-      <builder-blocks
-        dataPath=\\"errorMessage\\"
-        [blocks]=\\"errorMessage()!\\"
-      ></builder-blocks>
-      } @if(submissionState() === 'sending'){
-      <builder-blocks
-        dataPath=\\"sendingMessage\\"
-        [blocks]=\\"sendingMessage()!\\"
-      ></builder-blocks>
-      } @if(submissionState() === 'error' && responseData()){
-      <pre class=\\"builder-form-error-text pre\\">
+
+   import  { Builder, BuilderElement, builder } from '@builder.io/sdk';
+import  { BuilderBlock as BuilderBlockComponent, BuilderBlocks, get, set } from '@fake';
+
+
+
+
+       @Component({
+         selector: 'form-component',standalone: true,imports: [CommonModule, BuilderBlockComponent, BuilderBlocks],template: \`<form
+          [attr.validate]=\\"validate()\\"
+          #formRef
+          [attr.action]=\\"!sendWithJs() && action()\\"
+          [attr.method]=\\"method()\\"
+          [attr.name]=\\"name()\\"
+          (submit)=\\"onSubmit($event)\\"
+          #_root
+          >@if(builderBlock() && builderBlock().children){ @for (block of
+          builderBlock()?.children;track trackByBlock0(index, block);let index = $index)
+          {
+          <builder-block-component
+            [block]=\\"block\\"
+            [index]=\\"index\\"
+          ></builder-block-component>
+          } } @if(submissionState() === 'error'){
+          <builder-blocks
+            dataPath=\\"errorMessage\\"
+            [blocks]=\\"errorMessage()!\\"
+          ></builder-blocks>
+          } @if(submissionState() === 'sending'){
+          <builder-blocks
+            dataPath=\\"sendingMessage\\"
+            [blocks]=\\"sendingMessage()!\\"
+          ></builder-blocks>
+          } @if(submissionState() === 'error' && responseData()){
+          <pre class=\\"builder-form-error-text pre\\">
         {{JSON.stringify(responseData(), null, 2)}}</pre
-      >
-      } @if(submissionState() === 'success'){
-      <builder-blocks
-        dataPath=\\"successMessage\\"
-        [blocks]=\\"successMessage()!\\"
-      ></builder-blocks>
-      }
-    </form>
-  \`,
-  styles: \`:host { display: contents; }
+          >
+          } @if(submissionState() === 'success'){
+          <builder-blocks
+            dataPath=\\"successMessage\\"
+            [blocks]=\\"successMessage()!\\"
+          ></builder-blocks>
+          }</form
+        >
+\`,styles: \`:host { display: contents; }
         .pre {
           padding: 10px;
           color: red;
           text-align: center;
         }
-\`,
-})
-export class FormComponent implements AfterViewInit {
-  previewState = input<FormProps[\\"previewState\\"]>();
-  sendWithJs = input<FormProps[\\"sendWithJs\\"]>();
-  sendSubmissionsTo = input<FormProps[\\"sendSubmissionsTo\\"]>();
-  action = input<FormProps[\\"action\\"]>();
-  customHeaders = input<FormProps[\\"customHeaders\\"]>();
-  contentType = input<FormProps[\\"contentType\\"]>();
-  sendSubmissionsToEmail = input<FormProps[\\"sendSubmissionsToEmail\\"]>();
-  name = input<FormProps[\\"name\\"]>();
-  method = input<FormProps[\\"method\\"]>();
-  errorMessagePath = input<FormProps[\\"errorMessagePath\\"]>();
-  resetFormOnSubmit = input<FormProps[\\"resetFormOnSubmit\\"]>();
-  successUrl = input<FormProps[\\"successUrl\\"]>();
-  validate = input<FormProps[\\"validate\\"]>();
-  attributes = input<FormProps[\\"attributes\\"]>();
-  builderBlock = input<FormProps[\\"builderBlock\\"]>();
-  errorMessage = input<FormProps[\\"errorMessage\\"]>();
-  sendingMessage = input<FormProps[\\"sendingMessage\\"]>();
-  successMessage = input<FormProps[\\"successMessage\\"]>();
+\`
+       })
+       export class FormComponent implements AfterViewInit {
 
-  formRef = viewChild<ElementRef>(\\"formRef\\");
-  _root = viewChild<ElementRef>(\\"_root\\");
 
-  formState = signal(\\"unsubmitted\\");
-  responseData = signal(null);
-  formErrorMessage = signal(\\"\\");
+         previewState = input<FormProps[\\"previewState\\"]>()
+sendWithJs = input<FormProps[\\"sendWithJs\\"]>()
+sendSubmissionsTo = input<FormProps[\\"sendSubmissionsTo\\"]>()
+action = input<FormProps[\\"action\\"]>()
+customHeaders = input<FormProps[\\"customHeaders\\"]>()
+contentType = input<FormProps[\\"contentType\\"]>()
+sendSubmissionsToEmail = input<FormProps[\\"sendSubmissionsToEmail\\"]>()
+name = input<FormProps[\\"name\\"]>()
+method = input<FormProps[\\"method\\"]>()
+errorMessagePath = input<FormProps[\\"errorMessagePath\\"]>()
+resetFormOnSubmit = input<FormProps[\\"resetFormOnSubmit\\"]>()
+successUrl = input<FormProps[\\"successUrl\\"]>()
+validate = input<FormProps[\\"validate\\"]>()
+attributes = input<FormProps[\\"attributes\\"]>()
+builderBlock = input<FormProps[\\"builderBlock\\"]>()
+errorMessage = input<FormProps[\\"errorMessage\\"]>()
+sendingMessage = input<FormProps[\\"sendingMessage\\"]>()
+successMessage = input<FormProps[\\"successMessage\\"]>()
 
-  get submissionState() {
-    return (Builder.isEditing && this.previewState()) || this.formState();
-  }
-  onSubmit(
-    event: Event & {
-      currentTarget: HTMLFormElement;
-    }
-  ) {
-    const sendWithJs =
-      this.sendWithJs() || this.sendSubmissionsTo() === \\"email\\";
 
-    if (this.sendSubmissionsTo() === \\"zapier\\") {
-      event.preventDefault();
-    } else if (sendWithJs) {
-      if (!(this.action() || this.sendSubmissionsTo() === \\"email\\")) {
-        event.preventDefault();
-        return;
-      }
+         formRef = viewChild<ElementRef>(\\"formRef\\")
+_root = viewChild<ElementRef>(\\"_root\\")
 
-      event.preventDefault();
-      const el = event.currentTarget;
-      const headers = this.customHeaders() || {};
-      let body: any;
-      const formData = new FormData(el); // TODO: maybe support null
+          formState= signal('unsubmitted')
+responseData= signal(null)
+formErrorMessage= signal('')
 
-      const formPairs: {
-        key: string;
-        value: File | boolean | number | string | FileList;
-      }[] = Array.from(
-        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
-      )
-        .filter((el) => !!(el as HTMLInputElement).name)
-        .map((el) => {
-          let value: any;
-          const key = (el as HTMLImageElement).name;
-
-          if (el instanceof HTMLInputElement) {
-            if (el.type === \\"radio\\") {
-              if (el.checked) {
-                value = el.name;
-                return {
-                  key,
-                  value,
-                };
-              }
-            } else if (el.type === \\"checkbox\\") {
-              value = el.checked;
-            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
-              const num = el.valueAsNumber;
-
-              if (!isNaN(num)) {
-                value = num;
-              }
-            } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
-              value = el.files;
-            } else {
-              value = el.value;
-            }
-          } else {
-            value = (el as HTMLInputElement).value;
-          }
-
-          return {
-            key,
-            value,
-          };
-        });
-      let contentType = this.contentType();
-
-      if (this.sendSubmissionsTo() === \\"email\\") {
-        contentType = \\"multipart/form-data\\";
-      }
-
-      Array.from(formPairs).forEach(({ value }) => {
-        if (
-          value instanceof File ||
-          (Array.isArray(value) && value[0] instanceof File) ||
-          value instanceof FileList
-        ) {
-          contentType = \\"multipart/form-data\\";
-        }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
-
-      if (contentType !== \\"application/json\\") {
-        body = formData;
-      } else {
-        // Json
-        const json = {};
-        Array.from(formPairs).forEach(({ value, key }) => {
-          set(json, key, value);
-        });
-        body = JSON.stringify(json);
-      }
-
-      if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && this.action()?.includes(\\"zapier.com\\"))
-        ) {
-          headers[\\"content-type\\"] = contentType;
-        }
-      }
-
-      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
-        detail: {
-          body,
-        },
-      });
-
-      if (this.formRef()?.nativeElement) {
-        this.formRef()?.nativeElement.dispatchEvent(presubmitEvent);
-
-        if (presubmitEvent.defaultPrevented) {
-          return;
-        }
-      }
-
-      this.formState.set(\\"sending\\");
-      const formUrl = \`\${
-        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
-      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-        this.sendSubmissionsToEmail() || \\"\\"
-      )}&name=\${encodeURIComponent(this.name() || \\"\\")}\`;
-      fetch(
-        this.sendSubmissionsTo() === \\"email\\" ? formUrl : this.action()!,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: this.method() || \\"post\\",
-        }
-      ).then(
-        async (res) => {
-          let body;
-          const contentType = res.headers.get(\\"content-type\\");
-
-          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
-            body = await res.json();
-          } else {
-            body = await res.text();
-          }
-
-          if (!res.ok && this.errorMessagePath()) {
-            /* TODO: allow supplying an error formatter function */
-            let message = get(body, this.errorMessagePath());
-
-            if (message) {
-              if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-            error: - email has been taken */
-                message = JSON.stringify(message);
-              }
-
-              this.formErrorMessage.set(message);
-            }
-          }
-
-          this.responseData.set(body);
-          this.formState.set(res.ok ? \\"success\\" : \\"error\\");
-
-          if (res.ok) {
-            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-              detail: {
-                res,
-                body,
-              },
-            });
-
-            if (this.formRef()?.nativeElement) {
-              this.formRef()?.nativeElement.dispatchEvent(submitSuccessEvent);
-
-              if (submitSuccessEvent.defaultPrevented) {
-                return;
-              }
-              /* TODO: option to turn this on/off? */
-
-              if (this.resetFormOnSubmit() !== false) {
-                this.formRef()?.nativeElement.reset();
-              }
-            }
-            /* TODO: client side route event first that can be preventDefaulted */
-
-            if (this.successUrl()) {
-              if (this.formRef()?.nativeElement) {
-                const event = new CustomEvent(\\"route\\", {
-                  detail: {
-                    url: this.successUrl(),
-                  },
-                });
-                this.formRef()?.nativeElement.dispatchEvent(event);
-
-                if (!event.defaultPrevented) {
-                  location.href = this.successUrl();
-                }
-              } else {
-                location.href = this.successUrl();
-              }
-            }
-          }
-        },
-        (err) => {
-          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
-            detail: {
-              error: err,
-            },
-          });
-
-          if (this.formRef()?.nativeElement) {
-            this.formRef()?.nativeElement.dispatchEvent(submitErrorEvent);
-
-            if (submitErrorEvent.defaultPrevented) {
-              return;
-            }
-          }
-
-          this.responseData.set(err);
-          this.formState.set(\\"error\\");
-        }
-      );
-    }
-  }
-  trackByBlock0(index: number, block: any) {
-    return block.id;
-  }
-
-  constructor() {}
-
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
-          }
-        }
-      }
-    }
-  }
-
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"form-component\\");
-  }
+         get submissionState() {
+ return Builder.isEditing && this.previewState() || this.formState();
 }
-"
+onSubmit(event: Event & {
+ currentTarget: HTMLFormElement;
+}) {
+ const sendWithJs = this.sendWithJs() || this.sendSubmissionsTo() === 'email';
+
+ if (this.sendSubmissionsTo() === 'zapier') {
+   event.preventDefault();
+ } else if (sendWithJs) {
+   if (!(this.action() || this.sendSubmissionsTo() === 'email')) {
+     event.preventDefault();
+     return;
+   }
+
+   event.preventDefault();
+   const el = event.currentTarget;
+   const headers = this.customHeaders() || {};
+   let body: any;
+   const formData = new FormData(el); // TODO: maybe support null
+
+   const formPairs: {
+     key: string;
+     value: File | boolean | number | string | FileList;
+   }[] = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!(el as HTMLInputElement).name).map(el => {
+     let value: any;
+     const key = (el as HTMLImageElement).name;
+
+     if (el instanceof HTMLInputElement) {
+       if (el.type === 'radio') {
+         if (el.checked) {
+           value = el.name;
+           return {
+             key,
+             value
+           };
+         }
+       } else if (el.type === 'checkbox') {
+         value = el.checked;
+       } else if (el.type === 'number' || el.type === 'range') {
+         const num = el.valueAsNumber;
+
+         if (!isNaN(num)) {
+           value = num;
+         }
+       } else if (el.type === 'file') {
+         // TODO: one vs multiple files
+         value = el.files;
+       } else {
+         value = el.value;
+       }
+     } else {
+       value = (el as HTMLInputElement).value;
+     }
+
+     return {
+       key,
+       value
+     };
+   });
+   let contentType = this.contentType();
+
+   if (this.sendSubmissionsTo() === 'email') {
+     contentType = 'multipart/form-data';
+   }
+
+   Array.from(formPairs).forEach(({
+     value
+   }) => {
+     if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
+       contentType = 'multipart/form-data';
+     }
+   }); // TODO: send as urlEncoded or multipart by default
+   // because of ease of use and reliability in browser API
+   // for encoding the form?
+
+   if (contentType !== 'application/json') {
+     body = formData;
+   } else {
+     // Json
+     const json = {};
+     Array.from(formPairs).forEach(({
+       value,
+       key
+     }) => {
+       set(json, key, value);
+     });
+     body = JSON.stringify(json);
+   }
+
+   if (contentType && contentType !== 'multipart/form-data') {
+     if (
+     /* Zapier doesn't allow content-type header to be sent from browsers */
+     !(sendWithJs && this.action()?.includes('zapier.com'))) {
+       headers['content-type'] = contentType;
+     }
+   }
+
+   const presubmitEvent = new CustomEvent('presubmit', {
+     detail: {
+       body
+     }
+   });
+
+   if (this.formRef()?.nativeElement) {
+     this.formRef()?.nativeElement.dispatchEvent(presubmitEvent);
+
+     if (presubmitEvent.defaultPrevented) {
+       return;
+     }
+   }
+
+   this.formState.set('sending');
+   const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(this.sendSubmissionsToEmail() || '')}&name=\${encodeURIComponent(this.name() || '')}\`;
+   fetch(this.sendSubmissionsTo() === 'email' ? formUrl : this.action()!
+   /* TODO: throw error if no action URL */
+   , {
+     body,
+     headers,
+     method: this.method() || 'post'
+   }).then(async res => {
+     let body;
+     const contentType = res.headers.get('content-type');
+
+     if (contentType && contentType.indexOf('application/json') !== -1) {
+       body = await res.json();
+     } else {
+       body = await res.text();
+     }
+
+     if (!res.ok && this.errorMessagePath()) {
+       /* TODO: allow supplying an error formatter function */
+       let message = get(body, this.errorMessagePath());
+
+       if (message) {
+         if (typeof message !== 'string') {
+           /* TODO: ideally convert json to yaml so it woul dbe like
+            error: - email has been taken */
+           message = JSON.stringify(message);
+         }
+
+         this.formErrorMessage.set(message);
+       }
+     }
+
+     this.responseData.set(body);
+     this.formState.set(res.ok ? 'success' : 'error');
+
+     if (res.ok) {
+       const submitSuccessEvent = new CustomEvent('submit:success', {
+         detail: {
+           res,
+           body
+         }
+       });
+
+       if (this.formRef()?.nativeElement) {
+         this.formRef()?.nativeElement.dispatchEvent(submitSuccessEvent);
+
+         if (submitSuccessEvent.defaultPrevented) {
+           return;
+         }
+         /* TODO: option to turn this on/off? */
+
+
+         if (this.resetFormOnSubmit() !== false) {
+           this.formRef()?.nativeElement.reset();
+         }
+       }
+       /* TODO: client side route event first that can be preventDefaulted */
+
+
+       if (this.successUrl()) {
+         if (this.formRef()?.nativeElement) {
+           const event = new CustomEvent('route', {
+             detail: {
+               url: this.successUrl()
+             }
+           });
+           this.formRef()?.nativeElement.dispatchEvent(event);
+
+           if (!event.defaultPrevented) {
+             location.href = this.successUrl();
+           }
+         } else {
+           location.href = this.successUrl();
+         }
+       }
+     }
+   }, err => {
+     const submitErrorEvent = new CustomEvent('submit:error', {
+       detail: {
+         error: err
+       }
+     });
+
+     if (this.formRef()?.nativeElement) {
+       this.formRef()?.nativeElement.dispatchEvent(submitErrorEvent);
+
+       if (submitErrorEvent.defaultPrevented) {
+         return;
+       }
+     }
+
+     this.responseData.set(err);
+     this.formState.set('error');
+   });
+ }
+}
+trackByBlock0(index, block)(index: number, block: any) { return block.id; }
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"form-component\\");
+
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Image 1`] = `
@@ -15346,6 +15207,7 @@ exports[`Angular signals > jsx > Typescript Test > Image 1`] = `
   input,
   effect,
   signal,
+  OnDestroy,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
@@ -15400,7 +15262,7 @@ export interface ImageProps {
         }
 \`,
 })
-export class Image implements AfterViewInit {
+export class Image implements AfterViewInit, OnDestroy {
   lazy = input<ImageProps[\\"lazy\\"]>();
   altText = input<ImageProps[\\"altText\\"]>();
   _class = input<ImageProps[\\"_class\\"]>();
@@ -15470,7 +15332,9 @@ export class Image implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(element, \\"image\\");
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
@@ -15493,11 +15357,6 @@ export class Image implements AfterViewInit {
       });
       listener();
     }
-  }
-
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"image\\");
   }
 
   ngOnDestroy() {
@@ -16671,60 +16530,52 @@ export class SlotCode implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Stamped.io 1`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  input,
-  effect,
-  signal,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"import { Component, AfterViewInit, viewChild, ElementRef, input, effect, signal } from '@angular/core';
+       import { CommonModule } from '@angular/common';
 
-type SmileReviewsProps = {
-  productId: string;
-  apiKey: string;
-};
 
-import { kebabCase, snakeCase } from \\"lodash\\";
 
-@Component({
-  selector: \\"smile-reviews\\",
-  standalone: true,
-  imports: [CommonModule],
-  template: \`
-    <div [attr.data-user]=\\"name()\\" #_root>
-      <button (click)=\\"showReviewPrompt.set(true)\\">Write a review</button>
-      @if(showReviewPrompt() || 'asdf'){
-      <input placeholder=\\"Email\\" />
-      <input placeholder=\\"Title\\" class=\\"input\\" />
-      <textarea
-        placeholder=\\"How was your experience?\\"
-        class=\\"textarea\\"
-      ></textarea>
-      <button
-        class=\\"button\\"
-        (click)=\\"{
+       type SmileReviewsProps = {
+ productId: string;
+ apiKey: string;
+}
+
+
+
+   import  { kebabCase, snakeCase } from 'lodash';
+
+
+
+
+       @Component({
+         selector: 'smile-reviews',standalone: true,imports: [CommonModule],template: \`<div [attr.data-user]=\\"name()\\" #_root
+          ><button (click)=\\"showReviewPrompt.set(true)\\">Write a review</button>
+          @if(showReviewPrompt() || 'asdf'){
+          <input placeholder=\\"Email\\" />
+          <input placeholder=\\"Title\\" class=\\"input\\" />
+          <textarea placeholder=\\"How was your experience?\\" class=\\"textarea\\"></textarea>
+          <button
+            class=\\"button\\"
+            (click)=\\"{
           ev.preventDefault();
           showReviewPrompt.set(false);
         }\\"
-      >
-        Submit
-      </button>
-      } @for (review of reviews();track trackByReview0;let index = $index) {
-      <div $name=\\"Review\\" class=\\"review\\">
-        <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
-        <div [class]=\\"showReviewPrompt() ? 'bg-primary' : 'bg-secondary'\\">
-          <div>N: {{index}}</div>
-          <div>{{review.author}}</div>
-          <div>{{review.reviewMessage}}</div>
+          >
+            Submit
+          </button>
+          } @for (review of reviews();track trackByReview0(index, review);let index =
+          $index) {
+          <div $name=\\"Review\\" class=\\"review\\"
+            ><img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
+            <div [class]=\\"showReviewPrompt() ? 'bg-primary' : 'bg-secondary'\\"
+              ><div>N: {{index}}</div>
+              <div>{{review.author}}</div>
+              <div>{{review.reviewMessage}}</div></div
+            ></div
+          >
+          }
         </div>
-      </div>
-      }
-    </div>
-  \`,
-  styles: \`:host { display: contents; }
+\`,styles: \`:host { display: contents; }
         .input {
           display: block;
         }
@@ -16748,88 +16599,79 @@ import { kebabCase, snakeCase } from \\"lodash\\";
           width: 30px;
           margin-right: 10px;
         }
-\`,
-})
-export class SmileReviews implements AfterViewInit {
-  apiKey = input<SmileReviewsProps[\\"apiKey\\"]>();
-  productId = input<SmileReviewsProps[\\"productId\\"]>();
+\`
+       })
+       export class SmileReviews implements AfterViewInit {
 
-  _root = viewChild<ElementRef>(\\"_root\\");
 
-  reviews = signal([]);
-  name = signal(\\"test\\");
-  showReviewPrompt = signal(false);
+         apiKey = input<SmileReviewsProps[\\"apiKey\\"]>()
+productId = input<SmileReviewsProps[\\"productId\\"]>()
 
-  kebabCaseValue() {
-    return kebabCase(\\"testThat\\");
-  }
-  snakeCaseValue() {
-    return snakeCase(\\"testThis\\");
-  }
-  trackByReview0(index: number, review: any) {
-    return review.id;
-  }
 
-  constructor() {}
+         _root = viewChild<ElementRef>(\\"_root\\")
 
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
-          }
-        }
-      }
-    }
-  }
+          reviews= signal([])
+name= signal('test')
+showReviewPrompt= signal(false)
 
-  ngOnInit() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey() || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId() || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews.set(data.data);
-      });
-  }
-
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"smile-reviews\\");
-  }
+         kebabCaseValue() {
+ return kebabCase('testThat');
 }
-"
+snakeCaseValue() {
+ return snakeCase('testThis');
+}
+trackByReview0(index, review)(index: number, review: any) { return review.id; }
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"smile-reviews\\");
+           fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${this.apiKey() || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${this.productId() || '2410511106127'}\`).then(res => res.json()).then(data => {
+ this.reviews.set(data.data);
+})
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > StoreComment 1`] = `
@@ -17656,104 +17498,101 @@ export class MyComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > basicForFragment 1`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  effect,
-  signal,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"import { Component, AfterViewInit, viewChild, ElementRef, effect, signal } from '@angular/core';
+       import { CommonModule } from '@angular/common';
 
-@Component({
-  selector: \\"basic-for-fragment\\",
-  standalone: true,
-  imports: [CommonModule],
-  template: \`
-    <div #_root>
-      @for (option of ['a', 'b', 'c'];track trackByOption0;let i = $index) {
-      <ng-container>
-        <div>{{option}}</div>
-      </ng-container>
-      } @for (option of ['a', 'b', 'c'];track trackByOption1;let i = $index) {
-      <ng-container>
-        <div>{{option}}</div>
-      </ng-container>
-      }
 
-      <select>
-        @for (option of ['d', 'e', 'f'];track trackByOption2;let i = $index) {
-        <option [attr.value]=\\"option\\">{{option}}</option>
-        }
-      </select>
-    </div>
-  \`,
-  styles: \`:host { display: contents; }\`,
-})
-export class BasicForFragment implements AfterViewInit {
-  _root = viewChild<ElementRef>(\\"_root\\");
 
-  id = signal(\\"xyz\\");
 
-  trackByOption0(_: number, option: any) {
-    return \`key-\${option}\`;
-  }
-  trackByOption1(_: number, option: any) {
-    return \`\${this.id()}-\${option}\`;
-  }
-  trackByOption2(_: number, option: any) {
-    return \`\${this.id()}-\${option}\`;
-  }
 
-  constructor() {}
 
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
+
+
+
+
+
+
+       @Component({
+         selector: 'basic-for-fragment',standalone: true,imports: [CommonModule],template: \`<div #_root>
+          @for (option of ['a', 'b', 'c'];track trackByOption0(i, option);let i =
+          $index) {
+          <ng-container><div>{{option}}</div></ng-container>
+          } @for (option of ['a', 'b', 'c'];track trackByOption1(i, option);let i =
+          $index) {
+          <ng-container><div>{{option}}</div></ng-container>
           }
-        }
-      }
-    }
-  }
 
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"basic-for-fragment\\");
-  }
-}
-"
+          <select>
+            @for (option of ['d', 'e', 'f'];track trackByOption2(i, option);let i =
+            $index) {
+            <option [attr.value]=\\"option\\">{{option}}</option>
+            }
+          </select></div
+        >
+\`,styles: \`:host { display: contents; }\`
+       })
+       export class BasicForFragment implements AfterViewInit {
+
+
+
+
+
+         _root = viewChild<ElementRef>(\\"_root\\")
+
+          id= signal('xyz')
+
+         trackByOption0(i, option)(_: number, option: any) { return \`key-\${option}\`; }
+trackByOption1(i, option)(_: number, option: any) { return \`\${this.id()}-\${option}\`; }
+trackByOption2(i, option)(_: number, option: any) { return \`\${this.id()}-\${option}\`; }
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"basic-for-fragment\\");
+
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > basicForNoTagReference 1`] = `
@@ -17869,14 +17708,13 @@ exports[`Angular signals > jsx > Typescript Test > basicForwardRef 1`] = `
 
 
        @Component({
-         selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div #_root>
-          <input
+         selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div #_root
+          ><input
             class=\\"input\\"
             #inputRef()
             [attr.value]=\\"name()\\"
             (change)=\\"name.set($event.target.value)\\"
-          />
-        </div>
+        /></div>
 \`,styles: \`:host { display: contents; }
         .input {
           color: red;
@@ -17970,14 +17808,13 @@ exports[`Angular signals > jsx > Typescript Test > basicForwardRefMetadata 1`] =
 
 
        @Component({
-         selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div #_root>
-          <input
+         selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div #_root
+          ><input
             class=\\"input\\"
             #inputRef()
             [attr.value]=\\"name()\\"
             (change)=\\"name.set($event.target.value)\\"
-          />
-        </div>
+        /></div>
 \`,styles: \`:host { display: contents; }
         .input {
           color: red;
@@ -21283,15 +21120,12 @@ export class Embed implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    this.elem()?.nativeElement.dispatchEvent(
-      new CustomEvent(\\"initEditingBldr\\")
-    );
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"embed\\");
+    this.elem()?.nativeElement.dispatchEvent(
+      new CustomEvent(\\"initEditingBldr\\")
+    );
   }
 }
 "
@@ -21363,12 +21197,12 @@ export class OnInit implements AfterViewInit {
 
   ngOnInit() {
     console.log(\\"onInit\\");
-    console.log(\\"onMount\\");
   }
 
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"on-init\\");
+    console.log(\\"onMount\\");
   }
 }
 "
@@ -21548,6 +21382,7 @@ exports[`Angular signals > jsx > Typescript Test > onMount 1`] = `
   viewChild,
   ElementRef,
   effect,
+  OnDestroy,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
@@ -21560,7 +21395,7 @@ import { CommonModule } from \\"@angular/common\\";
   \`,
   styles: \`:host { display: contents; }\`,
 })
-export class Comp implements AfterViewInit {
+export class Comp implements AfterViewInit, OnDestroy {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   constructor() {}
@@ -21605,13 +21440,10 @@ export class Comp implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    console.log(\\"Runs on mount\\");
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"comp\\");
+    console.log(\\"Runs on mount\\");
   }
 
   ngOnDestroy() {
@@ -21685,24 +21517,12 @@ export class Comp implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    const onMountHook_0 = () => {
-      console.log(\\"Runs on mount\\");
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      console.log(\\"Another one runs on Mount\\");
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      console.log(\\"SSR runs on Mount\\");
-    };
-    onMountHook_2();
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"comp\\");
+    console.log(\\"Runs on mount\\");
+    console.log(\\"Another one runs on Mount\\");
+    console.log(\\"SSR runs on Mount\\");
   }
 }
 "
@@ -22502,319 +22322,294 @@ export class OnUpdate implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > renderBlock 1`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  input,
-  effect,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"import { Component, AfterViewInit, viewChild, ElementRef, input, effect } from '@angular/core';
+       import { CommonModule } from '@angular/common';
 
-export type RenderBlockProps = {
-  block: BuilderBlock;
-  context: BuilderContextInterface;
-};
 
-import { TARGET } from \\"../../constants/target.js\\";
-import type {
-  BuilderContextInterface,
-  RegisteredComponent,
-} from \\"../../context/types.js\\";
-import { evaluate } from \\"../../functions/evaluate.js\\";
-import { extractTextStyles } from \\"../../functions/extract-text-styles.js\\";
-import { getBlockActions } from \\"../../functions/get-block-actions.js\\";
-import { getBlockComponentOptions } from \\"../../functions/get-block-component-options.js\\";
-import { getBlockProperties } from \\"../../functions/get-block-properties.js\\";
-import { getBlockTag } from \\"../../functions/get-block-tag.js\\";
-import { getProcessedBlock } from \\"../../functions/get-processed-block.js\\";
-import { getReactNativeBlockStyles } from \\"../../functions/get-react-native-block-styles.js\\";
-import type { BuilderBlock } from \\"../../types/builder-block.js\\";
-import type { Nullable } from \\"../../types/typescript.js\\";
-import { BlockStyles } from \\"./block-styles.lite\\";
-import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
-import RenderComponentWithContext from \\"./render-component-with-context.js\\";
-import type { RenderComponentProps } from \\"./render-component.js\\";
-import RenderComponent from \\"./render-component.js\\";
-import { RenderRepeatedBlock } from \\"./render-repeated-block.lite\\";
-import type { RepeatData } from \\"./types.js\\";
 
-@Component({
-  selector: \\"render-block\\",
-  standalone: true,
-  imports: [CommonModule, RenderRepeatedBlock, RenderBlock, BlockStyles],
-  template: \`
-    @if(shouldWrap()){ @if(isEmptyHtmlElement(tag())){
-    <this.tag></this.tag>
-    } @if(!isEmptyHtmlElement(tag()) && repeatItemData()){ @for (data of
-    repeatItemData();track trackByData0;let index = $index) {
-    <render-repeated-block
-      [repeatContext]=\\"data.context\\"
-      [block]=\\"data.block\\"
-    ></render-repeated-block>
-    } } @if(!isEmptyHtmlElement(tag()) && !repeatItemData()){
-    <this.tag>
-      <this.renderComponentTag></this.renderComponentTag>
+       export type RenderBlockProps = {
+ block: BuilderBlock;
+ context: BuilderContextInterface;
+}
 
-      @for (child of childrenWithoutParentComponent();track trackByChild1;let i
-      = $index) {
-      <render-block
-        [block]=\\"child\\"
-        [context]=\\"childrenContext()\\"
-      ></render-block>
-      } @for (child of childrenWithoutParentComponent();track trackByChild2;let
-      i = $index) {
-      <block-styles
-        [block]=\\"child\\"
-        [context]=\\"childrenContext()\\"
-      ></block-styles>
-      }
-    </this.tag>
-    } }@else{
-    <this.renderComponentTag></this.renderComponentTag>
-    }
-  \`,
-  styles: \`:host { display: contents; }\`,
-})
-export class RenderBlock implements AfterViewInit {
-  protected readonly isEmptyHtmlElement = isEmptyHtmlElement;
 
-  block = input<RenderBlockProps[\\"block\\"]>();
-  context = input<RenderBlockProps[\\"context\\"]>();
 
-  _root = viewChild<ElementRef>(\\"_root\\");
+   import  { TARGET } from '../../constants/target.js';
+import type { BuilderContextInterface, RegisteredComponent } from '../../context/types.js';
+import  { evaluate } from '../../functions/evaluate.js';
+import  { extractTextStyles } from '../../functions/extract-text-styles.js';
+import  { getBlockActions } from '../../functions/get-block-actions.js';
+import  { getBlockComponentOptions } from '../../functions/get-block-component-options.js';
+import  { getBlockProperties } from '../../functions/get-block-properties.js';
+import  { getBlockTag } from '../../functions/get-block-tag.js';
+import  { getProcessedBlock } from '../../functions/get-processed-block.js';
+import  { getReactNativeBlockStyles } from '../../functions/get-react-native-block-styles.js';
+import type { BuilderBlock } from '../../types/builder-block.js';
+import type { Nullable } from '../../types/typescript.js';
+import { BlockStyles } from './block-styles.lite';
+import  { isEmptyHtmlElement } from './render-block.helpers.js';
+import  RenderComponentWithContext from './render-component-with-context.js';
+import type { RenderComponentProps } from './render-component.js';
+import  RenderComponent from './render-component.js';
+import { RenderRepeatedBlock } from './render-repeated-block.lite';
+import type { RepeatData } from './types.js';
 
-  get component() {
-    const componentName = getProcessedBlock({
-      block: this.block(),
-      state: this.context().state,
-      context: this.context().context,
-      shouldEvaluateBindings: false,
-    }).component?.name;
 
-    if (!componentName) {
-      return null;
-    }
 
-    const ref = this.context().registeredComponents[componentName];
 
-    if (!ref) {
-      // TODO: Public doc page with more info about this message
-      console.warn(\`
+       @Component({
+         selector: 'render-block',standalone: true,imports: [CommonModule, RenderRepeatedBlock, RenderBlock, BlockStyles],template: \`@if(shouldWrap()){ @if(isEmptyHtmlElement(tag())){
+        <this.tag></this.tag>
+        } @if(!isEmptyHtmlElement(tag()) && repeatItemData()){ @for (data of
+        repeatItemData();track trackByData0(index, data);let index = $index) {
+        <render-repeated-block
+          [repeatContext]=\\"data.context\\"
+          [block]=\\"data.block\\"
+        ></render-repeated-block>
+        } } @if(!isEmptyHtmlElement(tag()) && !repeatItemData()){
+        <this.tag
+          ><this.renderComponentTag></this.renderComponentTag>
+
+          @for (child of childrenWithoutParentComponent();track trackByChild1(i,
+          child);let i = $index) {
+          <render-block [block]=\\"child\\" [context]=\\"childrenContext()\\"></render-block>
+          } @for (child of childrenWithoutParentComponent();track trackByChild2(i,
+          child);let i = $index) {
+          <block-styles [block]=\\"child\\" [context]=\\"childrenContext()\\"></block-styles>
+          }
+        </this.tag>
+        } }@else{
+        <this.renderComponentTag></this.renderComponentTag>
+        }
+\`,styles: \`:host { display: contents; }\`
+       })
+       export class RenderBlock implements AfterViewInit {
+         protected readonly isEmptyHtmlElement = isEmptyHtmlElement;
+
+         block = input<RenderBlockProps[\\"block\\"]>()
+context = input<RenderBlockProps[\\"context\\"]>()
+
+
+         _root = viewChild<ElementRef>(\\"_root\\")
+
+
+         get component() {
+ const componentName = getProcessedBlock({
+   block: this.block(),
+   state: this.context().state,
+   context: this.context().context,
+   shouldEvaluateBindings: false
+ }).component?.name;
+
+ if (!componentName) {
+   return null;
+ }
+
+ const ref = this.context().registeredComponents[componentName];
+
+ if (!ref) {
+   // TODO: Public doc page with more info about this message
+   console.warn(\`
           Could not find a registered component named \\"\${componentName}\\".
           If you registered it, is the file that registered it imported by the file that needs to render it?\`);
-      return undefined;
-    } else {
-      return ref;
-    }
-  }
-  get tag() {
-    return getBlockTag(this.useBlock());
-  }
-  get useBlock() {
-    return this.repeatItemData()
-      ? this.block()
-      : getProcessedBlock({
-          block: this.block(),
-          state: this.context().state,
-          context: this.context().context,
-          shouldEvaluateBindings: true,
-        });
-  }
-  get actions() {
-    return getBlockActions({
-      block: this.useBlock(),
-      state: this.context().state,
-      context: this.context().context,
-    });
-  }
-  get attributes() {
-    const blockProperties = getBlockProperties(this.useBlock());
-    return {
-      ...blockProperties,
-      ...(TARGET === \\"reactNative\\"
-        ? {
-            style: getReactNativeBlockStyles({
-              block: this.useBlock(),
-              context: this.context(),
-              blockStyles: blockProperties.style,
-            }),
-          }
-        : {}),
-    };
-  }
-  get shouldWrap() {
-    return !this.component()?.noWrap;
-  }
-  get renderComponentProps() {
-    return {
-      blockChildren: this.useChildren(),
-      componentRef: this.component()?.component,
-      componentOptions: {
-        ...getBlockComponentOptions(this.useBlock()),
-
-        /**
-         * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
-         * they are provided to the component itself directly.
-         */
-        ...(this.shouldWrap()
-          ? {}
-          : {
-              attributes: { ...this.attributes(), ...this.actions() },
-            }),
-        customBreakpoints: this.childrenContext()?.content?.meta?.breakpoints,
-      },
-      context: this.childrenContext(),
-    };
-  }
-  get useChildren() {
-    // TO-DO: When should \`canHaveChildren\` dictate rendering?
-    // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
-    // but still receive and need to render children.
-    // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
-    return this.useBlock().children ?? [];
-  }
-  get childrenWithoutParentComponent() {
-    /**
-     * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
-     * we render them outside of \`componentRef\`.
-     * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
-     * blocks, and the children will be repeated within those blocks.
-     */
-    const shouldRenderChildrenOutsideRef =
-      !this.component()?.component && !this.repeatItemData();
-    return shouldRenderChildrenOutsideRef ? this.useChildren() : [];
-  }
-  get repeatItemData() {
-    /**
-     * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
-     * which will not work if there is a repeat.
-     */
-    const { repeat, ...blockWithoutRepeat } = this.block();
-
-    if (!repeat?.collection) {
-      return undefined;
-    }
-
-    const itemsArray = evaluate({
-      code: repeat.collection,
-      state: this.context().state,
-      context: this.context().context,
-    });
-
-    if (!Array.isArray(itemsArray)) {
-      return undefined;
-    }
-
-    const collectionName = repeat.collection.split(\\".\\").pop();
-    const itemNameToUse =
-      repeat.itemName || (collectionName ? collectionName + \\"Item\\" : \\"item\\");
-    const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
-      context: {
-        ...this.context(),
-        state: {
-          ...this.context().state,
-          $index: index,
-          $item: item,
-          [itemNameToUse]: item,
-          [\`$\${itemNameToUse}Index\`]: index,
-        },
-      },
-      block: blockWithoutRepeat,
-    }));
-    return repeatArray;
-  }
-  get inheritedTextStyles() {
-    if (TARGET !== \\"reactNative\\") {
-      return {};
-    }
-
-    const styles = getReactNativeBlockStyles({
-      block: this.useBlock(),
-      context: this.context(),
-      blockStyles: this.attributes().style,
-    });
-    return extractTextStyles(styles);
-  }
-  get childrenContext() {
-    return {
-      apiKey: this.context().apiKey,
-      state: this.context().state,
-      content: this.context().content,
-      context: this.context().context,
-      registeredComponents: this.context().registeredComponents,
-      inheritedStyles: this.inheritedTextStyles(),
-    };
-  }
-  get renderComponentTag() {
-    if (TARGET === \\"reactNative\\") {
-      return RenderComponentWithContext;
-    } else if (TARGET === \\"vue3\\") {
-      // vue3 expects a string for the component tag
-      return \\"RenderComponent\\";
-    } else {
-      return RenderComponent;
-    }
-  }
-  trackByData0(index: number, data: any) {
-    return index;
-  }
-  trackByChild1(_: number, child: any) {
-    return \\"render-block-\\" + child.id;
-  }
-  trackByChild2(_: number, child: any) {
-    return \\"block-style-\\" + child.id;
-  }
-
-  constructor() {}
-
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
-          }
-        }
-      }
-    }
-  }
-
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"render-block\\");
-  }
+   return undefined;
+ } else {
+   return ref;
+ }
 }
-"
+get tag() {
+ return getBlockTag(this.useBlock());
+}
+get useBlock() {
+ return this.repeatItemData() ? this.block() : getProcessedBlock({
+   block: this.block(),
+   state: this.context().state,
+   context: this.context().context,
+   shouldEvaluateBindings: true
+ });
+}
+get actions() {
+ return getBlockActions({
+   block: this.useBlock(),
+   state: this.context().state,
+   context: this.context().context
+ });
+}
+get attributes() {
+ const blockProperties = getBlockProperties(this.useBlock());
+ return { ...blockProperties,
+   ...(TARGET === 'reactNative' ? {
+     style: getReactNativeBlockStyles({
+       block: this.useBlock(),
+       context: this.context(),
+       blockStyles: blockProperties.style
+     })
+   } : {})
+ };
+}
+get shouldWrap() {
+ return !this.component()?.noWrap;
+}
+get renderComponentProps() {
+ return {
+   blockChildren: this.useChildren(),
+   componentRef: this.component()?.component,
+   componentOptions: { ...getBlockComponentOptions(this.useBlock()),
+
+     /**
+      * These attributes are passed to the wrapper element when there is one. If \`noWrap\` is set to true, then
+      * they are provided to the component itself directly.
+      */
+     ...(this.shouldWrap() ? {} : {
+       attributes: { ...this.attributes(),
+         ...this.actions()
+       }
+     }),
+     customBreakpoints: this.childrenContext()?.content?.meta?.breakpoints
+   },
+   context: this.childrenContext()
+ };
+}
+get useChildren() {
+ // TO-DO: When should \`canHaveChildren\` dictate rendering?
+ // This is currently commented out because some Builder components (e.g. Box) do not have \`canHaveChildren: true\`,
+ // but still receive and need to render children.
+ // return state.componentInfo?.canHaveChildren ? state.useBlock.children : [];
+ return this.useBlock().children ?? [];
+}
+get childrenWithoutParentComponent() {
+ /**
+  * When there is no \`componentRef\`, there might still be children that need to be rendered. In this case,
+  * we render them outside of \`componentRef\`.
+  * NOTE: We make sure not to render this if \`repeatItemData\` is non-null, because that means we are rendering an array of
+  * blocks, and the children will be repeated within those blocks.
+  */
+ const shouldRenderChildrenOutsideRef = !this.component()?.component && !this.repeatItemData();
+ return shouldRenderChildrenOutsideRef ? this.useChildren() : [];
+}
+get repeatItemData() {
+ /**
+  * we don't use \`state.useBlock\` here because the processing done within its logic includes evaluating the block's bindings,
+  * which will not work if there is a repeat.
+  */
+ const {
+   repeat,
+   ...blockWithoutRepeat
+ } = this.block();
+
+ if (!repeat?.collection) {
+   return undefined;
+ }
+
+ const itemsArray = evaluate({
+   code: repeat.collection,
+   state: this.context().state,
+   context: this.context().context
+ });
+
+ if (!Array.isArray(itemsArray)) {
+   return undefined;
+ }
+
+ const collectionName = repeat.collection.split('.').pop();
+ const itemNameToUse = repeat.itemName || (collectionName ? collectionName + 'Item' : 'item');
+ const repeatArray = itemsArray.map<RepeatData>((item, index) => ({
+   context: { ...this.context(),
+     state: { ...this.context().state,
+       $index: index,
+       $item: item,
+       [itemNameToUse]: item,
+       [\`$\${itemNameToUse}Index\`]: index
+     }
+   },
+   block: blockWithoutRepeat
+ }));
+ return repeatArray;
+}
+get inheritedTextStyles() {
+ if (TARGET !== 'reactNative') {
+   return {};
+ }
+
+ const styles = getReactNativeBlockStyles({
+   block: this.useBlock(),
+   context: this.context(),
+   blockStyles: this.attributes().style
+ });
+ return extractTextStyles(styles);
+}
+get childrenContext() {
+ return {
+   apiKey: this.context().apiKey,
+   state: this.context().state,
+   content: this.context().content,
+   context: this.context().context,
+   registeredComponents: this.context().registeredComponents,
+   inheritedStyles: this.inheritedTextStyles()
+ };
+}
+get renderComponentTag() {
+ if (TARGET === 'reactNative') {
+   return RenderComponentWithContext;
+ } else if (TARGET === 'vue3') {
+   // vue3 expects a string for the component tag
+   return 'RenderComponent';
+ } else {
+   return RenderComponent;
+ }
+}
+trackByData0(index, data)(index: number, data: any) { return index; }
+trackByChild1(i, child)(_: number, child: any) { return 'render-block-' + child.id; }
+trackByChild2(i, child)(_: number, child: any) { return 'block-style-' + child.id; }
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"render-block\\");
+
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > renderContentExample 1`] = `
@@ -22923,13 +22718,10 @@ export class RenderContent implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    sendComponentsToVisualEditor(this.customComponents());
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"render-content\\");
+    sendComponentsToVisualEditor(this.customComponents());
   }
 }
 "
@@ -23457,9 +23249,8 @@ interface Props {
     <div #_root>
       @if(conditionA()){ Content0 }@else{ ContentA } @if(conditionA()){ ContentA
       } @if(conditionA()){ }@else{ ContentA } @if(conditionA()){ ContentB
-      }@else{
-      {{undefined}} } @if(conditionA()){ {{undefined}} }@else{ ContentB }
-      @if(conditionA()){ ContentC } @if(conditionA()){ }@else{ ContentC }
+      }@else{ {{undefined}} } @if(conditionA()){ {{undefined}} }@else{ ContentB
+      } @if(conditionA()){ ContentC } @if(conditionA()){ }@else{ ContentC }
       @if(conditionA()){ ContentD } @if(conditionA()){ }@else{ ContentD }
       @if(conditionA()){ ContentE }@else{ hello } @if(conditionA()){ hello
       }@else{ ContentE } @if(conditionA()){ ContentF }@else{ 123 }
@@ -23534,93 +23325,92 @@ export class ShowWithOtherValues implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > showWithFor 1`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  input,
-  effect,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"import { Component, AfterViewInit, viewChild, ElementRef, input, effect } from '@angular/core';
+       import { CommonModule } from '@angular/common';
 
-interface Props {
-  conditionA: boolean;
-  items: string[];
+
+
+       interface Props {
+ conditionA: boolean;
+ items: string[];
 }
 
-@Component({
-  selector: \\"nested-show\\",
-  standalone: true,
-  imports: [CommonModule],
-  template: \`
-    @if(conditionA()){ @for (item of items();track trackByItem0;let idx =
-    $index) {
-    <div>{{item}}</div>
-    } }@else{
-    <div>else-condition-A</div>
-    }
-  \`,
-  styles: \`:host { display: contents; }\`,
-})
-export class NestedShow implements AfterViewInit {
-  conditionA = input<Props[\\"conditionA\\"]>();
-  items = input<Props[\\"items\\"]>();
 
-  _root = viewChild<ElementRef>(\\"_root\\");
 
-  trackByItem0(idx: number, item: any) {
-    return idx;
-  }
 
-  constructor() {}
 
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
+
+
+
+       @Component({
+         selector: 'nested-show',standalone: true,imports: [CommonModule],template: \`@if(conditionA()){ @for (item of items();track trackByItem0(idx, item);let idx =
+        $index) {
+        <div>{{item}}</div>
+        } }@else{
+        <div>else-condition-A</div>
         }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
-          }
-        }
-      }
-    }
-  }
+\`,styles: \`:host { display: contents; }\`
+       })
+       export class NestedShow implements AfterViewInit {
 
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"nested-show\\");
-  }
-}
-"
+
+         conditionA = input<Props[\\"conditionA\\"]>()
+items = input<Props[\\"items\\"]>()
+
+
+         _root = viewChild<ElementRef>(\\"_root\\")
+
+
+         trackByItem0(idx, item)(idx: number, item: any) { return idx; }
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"nested-show\\");
+
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > showWithOtherValues 1`] = `
@@ -25014,91 +24804,91 @@ export class SvgComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > twoForsTrackBy 1`] = `
-"import {
-  Component,
-  AfterViewInit,
-  viewChild,
-  ElementRef,
-  effect,
-  signal,
-} from \\"@angular/core\\";
-import { CommonModule } from \\"@angular/common\\";
+"import { Component, AfterViewInit, viewChild, ElementRef, effect, signal } from '@angular/core';
+       import { CommonModule } from '@angular/common';
 
-@Component({
-  selector: \\"my-component\\",
-  standalone: true,
-  imports: [CommonModule],
-  template: \`
-    <div #_root>
-      @for (item of items();track trackByItem0;let i = $index) {
-      <div>{{item}}</div>
-      } @for (item of items();track trackByItem1;let i = $index) {
-      <div>{{item}}</div>
-      }
-    </div>
-  \`,
-  styles: \`:host { display: contents; }\`,
-})
-export class MyComponent implements AfterViewInit {
-  _root = viewChild<ElementRef>(\\"_root\\");
 
-  items = signal([1, 2, 3]);
 
-  trackByItem0(_: number, item: any) {
-    return item;
-  }
-  trackByItem1(_: number, item: any) {
-    return item;
-  }
 
-  constructor() {}
 
-  /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
-   * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
-   */
-  private enableAttributePassing(
-    element: HTMLElement | null,
-    customElementSelector: string
-  ) {
-    const parent = element?.closest(customElementSelector);
-    if (element && parent) {
-      const attributes = parent.attributes;
-      for (let i = 0; i < attributes.length; i++) {
-        const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
-          const isWebComponent = attr.value.includes(\\"hydrated\\");
-          const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
-          const currentClass = element.getAttribute(\\"class\\");
-          element.setAttribute(
-            attr.name,
-            \`\${currentClass ? \`\${currentClass} \` : \\"\\"}\${value}\`
-          );
-          if (isWebComponent) {
-            // Stencil is using this class for lazy loading component
-            parent.setAttribute(\\"class\\", \\"hydrated\\");
-          } else {
-            parent.removeAttribute(attr.name);
+
+
+
+
+
+
+
+       @Component({
+         selector: 'my-component',standalone: true,imports: [CommonModule],template: \`<div #_root>
+          @for (item of items();track trackByItem0(i, item);let i = $index) {
+          <div>{{item}}</div>
+          } @for (item of items();track trackByItem1(i, item);let i = $index) {
+          <div>{{item}}</div>
           }
-        }
-      }
-    }
-  }
+        </div>
+\`,styles: \`:host { display: contents; }\`
+       })
+       export class MyComponent implements AfterViewInit {
 
-  ngAfterViewInit() {
-    const element: HTMLElement | null = this._root()?.nativeElement;
-    this.enableAttributePassing(element, \\"my-component\\");
-  }
-}
-"
+
+
+
+
+         _root = viewChild<ElementRef>(\\"_root\\")
+
+          items= signal([1, 2, 3])
+
+         trackByItem0(i, item)(_: number, item: any) { return item; }
+trackByItem1(i, item)(_: number, item: any) { return item; }
+
+
+         constructor() {
+
+         }
+
+         /**
+* Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+* @param element  the ref for the component
+* @param customElementSelector  the custom element like \`my-component\`
+*/
+private enableAttributePassing(element: HTMLElement | null, customElementSelector: string) {
+ const parent = element?.closest(customElementSelector);
+ if (element && parent) {
+   const attributes = parent.attributes;
+   for (let i = 0; i < attributes.length; i++) {
+     const attr = attributes.item(i);
+     if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {
+       element.setAttribute(attr.name, attr.value);
+       parent.removeAttribute(attr.name);
+     }
+     if (attr && attr.name === 'class') {
+       const isWebComponent = attr.value.includes('hydrated');
+       const value = attr.value.replace('hydrated', '').trim();
+       const currentClass = element.getAttribute('class');
+       element.setAttribute(attr.name, \`\${currentClass ? \`\${currentClass} \` : ''}\${value}\`);
+       if (isWebComponent) {
+         // Stencil is using this class for lazy loading component
+         parent.setAttribute('class', 'hydrated');
+       } else {
+         parent.removeAttribute(attr.name);
+       }
+     }
+   }
+ }
+};
+
+
+
+         ngAfterViewInit() {
+
+           const element: HTMLElement | null = this._root()?.nativeElement;
+           this.enableAttributePassing(element, \\"my-component\\");
+
+             }
+
+
+
+       }"
 `;
 
 exports[`Angular signals > jsx > Typescript Test > typeDependency 1`] = `
@@ -25857,14 +25647,11 @@ export class UseTargetComponent implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    console.log(this.foo());
-    this.foo.set(\\"bar\\");
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"use-target-component\\");
+    console.log(this.foo());
+    this.foo.set(\\"bar\\");
   }
 }
 "
@@ -26798,6 +26585,7 @@ exports[`Angular signals > svelte > Javascript Test > lifecycleHooks 1`] = `
   viewChild,
   ElementRef,
   effect,
+  OnDestroy,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
@@ -26810,7 +26598,7 @@ import { CommonModule } from \\"@angular/common\\";
   \`,
   styles: \`:host { display: contents; }\`,
 })
-export class MyComponent implements AfterViewInit {
+export class MyComponent implements AfterViewInit, OnDestroy {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   constructor() {
@@ -26864,13 +26652,10 @@ export class MyComponent implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    console.log(\\"onMount\\");
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"my-component\\");
+    console.log(\\"onMount\\");
   }
 
   ngOnDestroy() {
@@ -28146,6 +27931,7 @@ exports[`Angular signals > svelte > Typescript Test > lifecycleHooks 1`] = `
   viewChild,
   ElementRef,
   effect,
+  OnDestroy,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
@@ -28158,7 +27944,7 @@ import { CommonModule } from \\"@angular/common\\";
   \`,
   styles: \`:host { display: contents; }\`,
 })
-export class MyComponent implements AfterViewInit {
+export class MyComponent implements AfterViewInit, OnDestroy {
   _root = viewChild<ElementRef>(\\"_root\\");
 
   constructor() {
@@ -28212,13 +27998,10 @@ export class MyComponent implements AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    console.log(\\"onMount\\");
-  }
-
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root()?.nativeElement;
     this.enableAttributePassing(element, \\"my-component\\");
+    console.log(\\"onMount\\");
   }
 
   ngOnDestroy() {

@@ -1,6 +1,10 @@
 import { format } from 'prettier/standalone';
 
-export const tryFormat = (str: string, parser: string) => {
+export const tryFormat = (
+  str: string,
+  parser: string,
+  htmlWhitespaceSensitivity: 'css' | 'strict' | 'ignore' = 'ignore',
+) => {
   try {
     return format(str, {
       parser,
@@ -11,7 +15,7 @@ export const tryFormat = (str: string, parser: string) => {
         require('prettier/parser-html'),
         require('prettier/parser-babel'),
       ],
-      htmlWhitespaceSensitivity: 'ignore',
+      htmlWhitespaceSensitivity,
     });
   } catch (err) {
     console.warn('Could not prettify', { string: str }, err);
