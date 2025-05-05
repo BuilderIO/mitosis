@@ -213,7 +213,7 @@ import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
       {{myService.method('hello') + name()}} Hello! I can run in React, Vue,
       Solid, or Liquid!
 
-      <input (change)=\\"onChange\\" />
+      <input (change)=\\"onChange.bind(this)\\" />
     </div>
   \`,
   styles: \`:host { display: contents; }\`,
@@ -615,7 +615,15 @@ export class MyPreviousComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Button 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -626,13 +634,14 @@ import { CommonModule } from \\"@angular/common\\";
     <div>
       @if(link()){
       <a
+        #elRef0
         [attr.href]=\\"link()\\"
         [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
       >
         {{text()}}
       </a>
       } @if(!link()){
-      <button type=\\"button\\">{{text()}}</button>
+      <button type=\\"button\\" #elRef1>{{text()}}</button>
       }
     </div>
   \`,
@@ -644,7 +653,64 @@ export class Button {
   openLinkInNewTab = input<any>();
   text = input<any>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+  elRef1 = viewChild<ElementRef>(\\"elRef1\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -738,7 +804,16 @@ export class ContentSlotCode {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > ContentSlotJSX 1`] = `
-"import { Component, input, effect, signal, computed } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+  computed,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 const defaultProps: any = {
@@ -756,6 +831,7 @@ const defaultProps: any = {
     <div
       [attr.name]=\\"slotContent() ? 'name1' : 'name2'\\"
       [attr.title]=\\"slotContent() ? 'title1' : 'title2'\\"
+      #elRef0
       (click)=\\"show()\\"
       [class]=\\"cls()\\"
     >
@@ -775,8 +851,11 @@ export class ContentSlotJsxCode {
   attributes = input<any>();
   content = input<any>(defaultProps[\\"content\\"]);
 
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
   name = signal(\\"king\\");
   showContent = signal(false);
+  _listenerFns = new Map();
 
   cls = computed(() => {
     return this.slotContent() && this.children()
@@ -786,8 +865,50 @@ export class ContentSlotJsxCode {
   show() {
     this.slotContent() ? 1 : \\"\\";
   }
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
 
-  constructor() {}
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -967,6 +1088,7 @@ exports[`Angular signals > jsx > Javascript Test > Form 1`] = `
   Component,
   viewChild,
   ElementRef,
+  Renderer2,
   input,
   effect,
   signal,
@@ -994,6 +1116,7 @@ import {
       [attr.method]=\\"method()\\"
       [attr.name]=\\"name()\\"
       (submit)=\\"onSubmit($event)\\"
+      #elRef0
     >
       @if(builderBlock() && builderBlock().children){ @for (block of
       builderBlock()?.children;track trackByBlock0;let index = $index) {
@@ -1052,10 +1175,12 @@ export class FormComponent {
   successMessage = input<any>();
 
   formRef = viewChild<ElementRef>(\\"formRef\\");
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
 
   formState = signal(\\"unsubmitted\\");
   responseData = signal(null);
   formErrorMessage = signal(\\"\\");
+  _listenerFns = new Map();
 
   submissionState = computed(() => {
     return (Builder.isEditing && this.previewState()) || this.formState();
@@ -1274,11 +1399,53 @@ export class FormComponent {
       );
     }
   }
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
   trackByBlock0(index: number, block: any) {
     return block.id;
   }
 
-  constructor() {}
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -1418,7 +1585,15 @@ export class ImgStateComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Img 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -1433,6 +1608,7 @@ import { Builder } from \\"@builder.io/sdk\\";
           objectFit: backgroundSize() || 'cover',
           objectPosition: backgroundPosition() || 'center'
         }\\"
+      #elRef0
       [attr.alt]=\\"altText()\\"
       [attr.src]=\\"imgSrc()\\"
     />
@@ -1448,13 +1624,69 @@ export class ImgComponent {
   imgSrc = input<any>();
   altText = input<any>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Input 1`] = `
-"import { Component, output, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  output,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -1465,6 +1697,7 @@ import { Builder } from \\"@builder.io/sdk\\";
   imports: [CommonModule],
   template: \`
     <input
+      #elRef0
       [attr.placeholder]=\\"placeholder()\\"
       [attr.type]=\\"type()\\"
       [attr.name]=\\"name()\\"
@@ -1488,7 +1721,54 @@ export class FormInputComponent {
   required = input<any>();
   change = output();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -1575,7 +1855,15 @@ export class RawText {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Section 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -1584,6 +1872,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
   template: \`
     <section
+      #elRef0
       [ngStyle]=\\"maxWidth() && typeof maxWidth() === 'number' ? {
           maxWidth: maxWidth()
         } : undefined\\"
@@ -1597,13 +1886,68 @@ export class SectionComponent {
   attributes = input<any>();
   maxWidth = input<any>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Section 2`] = `
-"import { Component, input, effect, signal } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -1613,6 +1957,7 @@ import { CommonModule } from \\"@angular/common\\";
   template: \`
     @if(max()){ @for (item of items();track i;let i = $index) {
     <section
+      #elRef0
       [ngStyle]=\\"{
           maxWidth: item + max()
         }\\"
@@ -1626,16 +1971,70 @@ import { CommonModule } from \\"@angular/common\\";
 export class SectionStateComponent {
   attributes = input<any>();
 
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
   max = signal(42);
   items = signal([42]);
+  _listenerFns = new Map();
 
-  constructor() {}
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Select 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
@@ -1646,6 +2045,7 @@ import { Builder } from \\"@builder.io/sdk\\";
   imports: [CommonModule],
   template: \`
     <select
+      #elRef0
       [attr.value]=\\"value()\\"
       [attr.defaultValue]=\\"defaultValue()\\"
       [attr.name]=\\"name()\\"
@@ -1668,7 +2068,54 @@ export class SelectComponent {
   name = input<any>();
   options = input<any>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -1942,7 +2389,15 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Submit 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -1950,7 +2405,7 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <button type=\\"submit\\">{{text()}}</button>
+    <button type=\\"submit\\" #elRef0>{{text()}}</button>
   \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -1958,7 +2413,54 @@ export class SubmitButton {
   attributes = input<any>();
   text = input<any>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -1997,7 +2499,15 @@ export class Text {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Textarea 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2006,6 +2516,7 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
   template: \`
     <textarea
+      #elRef0
       [attr.placeholder]=\\"placeholder()\\"
       [attr.name]=\\"name()\\"
       [attr.value]=\\"value()\\"
@@ -2021,7 +2532,54 @@ export class Textarea {
   value = input<any>();
   defaultValue = input<any>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -2056,7 +2614,7 @@ export class UseValueAndFnFromStore {
   constructor() {
     effect(
       () => {
-        if (this._do) {
+        if (this._do.bind(this)) {
           this._do(this._id());
         }
       },
@@ -2070,7 +2628,16 @@ export class UseValueAndFnFromStore {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Video 1`] = `
-"import { Component, input, effect, computed } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+  computed,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2080,6 +2647,7 @@ import { CommonModule } from \\"@angular/common\\";
   template: \`
     <video
       preload=\\"none\\"
+      #elRef0
       [ngStyle]=\\"objSpread_style_yxyiqh()\\"
       [attr.poster]=\\"posterImage()\\"
       [attr.autoplay]=\\"autoPlay()\\"
@@ -2101,6 +2669,10 @@ export class Video {
   controls = input<any>();
   loop = input<any>();
 
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
   objSpread_style_yxyiqh = computed(() => {
     return {
       width: \\"100%\\",
@@ -2113,14 +2685,64 @@ export class Video {
       borderRadius: 1,
     };
   });
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
 
-  constructor() {}
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
 
 exports[`Angular signals > jsx > Javascript Test > allSpread 1`] = `
-"import { Component, input, effect, signal } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2128,7 +2750,7 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <div>
+    <div #elRef0>
       Hello! I can run natively in React, Vue, Svelte, Qwik, and many more
       frameworks!
     </div>
@@ -2138,6 +2760,8 @@ import { CommonModule } from \\"@angular/common\\";
 export class MyComponent {
   attributes = input<any>();
   accessHere = input<any>();
+
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
 
   attrsUsingUseState = signal({
     hello: \\"world\\",
@@ -2149,8 +2773,88 @@ export class MyComponent {
   specifics = signal({
     someSpecificState: \\"specific\\",
   });
+  _listenerFns = new Map();
 
-  constructor() {}
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(
+          this.elRef0()?.nativeElement,
+          this.attrsUsingUseState()
+        );
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.properties());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, {
+          someOtherAttrs: this.accessHere(),
+          someStateAttrs: this.specifics(),
+        });
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attrsUsingUseState());
+    this.setAttributes(this.elRef0()?.nativeElement, this.properties());
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef0()?.nativeElement, {
+      someOtherAttrs: this.accessHere(),
+      someStateAttrs: this.specifics(),
+    });
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -2234,6 +2938,7 @@ exports[`Angular signals > jsx > Javascript Test > basicForNoTagReference 1`] = 
 "import {
   Component,
   viewChild,
+  ElementRef,
   ViewContainerRef,
   TemplateRef,
   input,
@@ -2280,7 +2985,7 @@ export class MyBasicForNoTagRefComponent {
 
   constructor(private viewContainer: ViewContainerRef) {}
 
-  ngOnInit() {
+  ngAfterContentInit() {
     this.myContent.set([
       this.viewContainer.createEmbeddedView(this.tagnamegetterTemplateRef())
         .rootNodes,
@@ -2333,6 +3038,7 @@ export class MyBasicForwardRefComponent {
 
   props.inputRef = viewChild<ElementRef>(\\"props.inputRef\\")
 
+
    name= signal('PatrickJS')
 
 
@@ -2341,6 +3047,8 @@ export class MyBasicForwardRefComponent {
   constructor() {
 
   }
+
+
 
 
 
@@ -2398,6 +3106,7 @@ export class MyBasicForwardRefComponent {
 
   props.inputRef = viewChild<ElementRef>(\\"props.inputRef\\")
 
+
    name= signal('PatrickJS')
 
 
@@ -2406,6 +3115,8 @@ export class MyBasicForwardRefComponent {
   constructor() {
 
   }
+
+
 
 
 
@@ -2923,7 +3634,7 @@ import { Component, effect } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
-  selector: \\"my-component\\",
+  selector: \\"not-my-component\\",
   standalone: true,
   imports: [CommonModule],
   template: \`
@@ -2938,7 +3649,16 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > defaultProps 1`] = `
-"import { Component, output, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  output,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 const defaultProps: any = {
@@ -2958,13 +3678,14 @@ const defaultProps: any = {
     <div>
       @if(link()){
       <a
+        #elRef0
         [attr.href]=\\"link()\\"
         [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
       >
         {{text()}}
       </a>
       } @if(!link()){
-      <button type=\\"button\\" (click)=\\"click()\\">{{buttonText()}}</button>
+      <button type=\\"button\\" #elRef1 (click)=\\"click()\\">{{buttonText()}}</button>
       }
     </div>
   \`,
@@ -2978,13 +3699,79 @@ export class Button {
   buttonText = input<any>();
   click = output();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+  elRef1 = viewChild<ElementRef>(\\"elRef1\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
 
 exports[`Angular signals > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
-"import { Component, output, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  output,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 const defaultProps: any = {
@@ -3002,13 +3789,14 @@ const defaultProps: any = {
     <div>
       @if(link()){
       <a
+        #elRef0
         [attr.href]=\\"link()\\"
         [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
       >
         {{text()}}
       </a>
       } @if(!link()){
-      <button type=\\"button\\" (click)=\\"click($event)\\">{{text()}}</button>
+      <button type=\\"button\\" #elRef1 (click)=\\"click($event)\\">{{text()}}</button>
       }
     </div>
   \`,
@@ -3021,7 +3809,64 @@ export class Button {
   text = input<any>(defaultProps[\\"text\\"]);
   click = output();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+  elRef1 = viewChild<ElementRef>(\\"elRef1\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -3102,6 +3947,7 @@ exports[`Angular signals > jsx > Javascript Test > dynamicComponentWithEventArg 
 "import {
   Component,
   viewChild,
+  ElementRef,
   ViewContainerRef,
   TemplateRef,
   input,
@@ -3151,7 +3997,7 @@ export class MyComponent {
 
   constructor(private viewContainer: ViewContainerRef) {}
 
-  ngOnInit() {
+  ngAfterContentInit() {
     this.myContent.set([
       this.viewContainer.createEmbeddedView(this.componentTemplateRef())
         .rootNodes,
@@ -3248,11 +4094,15 @@ import { CommonModule } from \\"@angular/common\\";
 export class MyComponent {
   componentRef = input<any>();
 
-  refToUse = signal(
-    !(this.componentRef() instanceof Function) ? this.componentRef() : null
-  );
+  refToUse = signal(undefined);
 
   constructor() {}
+
+  ngOnInit() {
+    this.refToUse.set(
+      !(this.componentRef() instanceof Function) ? this.componentRef() : null
+    );
+  }
 }
 "
 `;
@@ -3537,7 +4387,14 @@ export class MultipleOnUpdateWithDeps {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > multipleSpreads 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3545,16 +4402,62 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyBasicComponent {
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
   attrs = signal({
     hello: \\"world\\",
   });
+  _listenerFns = new Map();
 
-  constructor() {}
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -4125,7 +5028,7 @@ export class OnUpdate {
   bar() {}
   zoo() {
     const params = {
-      cb: this.bar,
+      cb: this.bar.bind(this),
     };
   }
 
@@ -4133,7 +5036,7 @@ export class OnUpdate {
     effect(
       () => {
         this.foo({
-          someOption: this.bar,
+          someOption: this.bar.bind(this),
         });
       },
       {
@@ -4149,6 +5052,7 @@ exports[`Angular signals > jsx > Javascript Test > renderBlock 1`] = `
 "import {
   Component,
   viewChild,
+  ElementRef,
   ViewContainerRef,
   TemplateRef,
   input,
@@ -4416,7 +5320,7 @@ export class RenderBlock {
 
   constructor(private viewContainer: ViewContainerRef) {}
 
-  ngOnInit() {
+  ngAfterContentInit() {
     this.myContent.set([
       this.viewContainer.createEmbeddedView(
         this.rendercomponenttagTemplateRef()
@@ -4485,7 +5389,15 @@ export class RenderContent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4496,13 +5408,14 @@ import { CommonModule } from \\"@angular/common\\";
     <ng-container>
       @if(link()){
       <a
+        #elRef0
         [attr.href]=\\"link()\\"
         [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
       >
         {{text()}}
       </a>
       } @if(!link()){
-      <button type=\\"button\\">{{text()}}</button>
+      <button type=\\"button\\" #elRef1>{{text()}}</button>
       }
     </ng-container>
   \`,
@@ -4514,7 +5427,64 @@ export class Button {
   openLinkInNewTab = input<any>();
   text = input<any>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+  elRef1 = viewChild<ElementRef>(\\"elRef1\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -4897,7 +5867,14 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > spreadAttrs 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4905,18 +5882,73 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyBasicComponent {
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, attrs);
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, attrs);
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
 
 exports[`Angular signals > jsx > Javascript Test > spreadNestedProps 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4924,14 +5956,61 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyBasicComponent {
   nested = input<any>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.nested());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.nested());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -4978,8 +6057,8 @@ export class MyComponent {
 
   asfas = signal(\\"asga\\");
   someCompute = signal(this.add(1, 2));
-  someOtherVal = signal(this.val());
-  sf = signal(this.add(this.val(), 34));
+  someOtherVal = signal(undefined);
+  sf = signal(undefined);
 
   add(a, b) {
     return a + b;
@@ -4989,6 +6068,11 @@ export class MyComponent {
   }
 
   constructor() {}
+
+  ngOnInit() {
+    this.sf.set(this.add(this.val(), 34));
+    this.someOtherVal.set(this.val());
+  }
 }
 "
 `;
@@ -5009,13 +6093,17 @@ import { CommonModule } from \\"@angular/common\\";
 export class MyComponent {
   value = input<any>();
 
-  val = signal(this.value());
+  val = signal(undefined);
 
   objSpread_val_6y525v = computed(() => {
     return { ...this.val() };
   });
 
   constructor() {}
+
+  ngOnInit() {
+    this.val.set(this.value());
+  }
 }
 "
 `;
@@ -5050,6 +6138,7 @@ exports[`Angular signals > jsx > Javascript Test > store-async-function 1`] = `
 
 
 
+
         async function arrowFunction() {
 return Promise.resolve();
 }
@@ -5064,6 +6153,8 @@ return Promise.resolve();
         constructor() {
 
         }
+
+
 
 
 
@@ -5125,6 +6216,7 @@ export class StringLiteralStore {
 
 
 
+
    foo-bar= signal(123)
 
 
@@ -5133,6 +6225,8 @@ export class StringLiteralStore {
   constructor() {
 
   }
+
+
 
 
 
@@ -5852,7 +6946,7 @@ import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
       {{myService.method('hello') + name()}} Hello! I can run in React, Vue,
       Solid, or Liquid!
 
-      <input (change)=\\"onChange\\" />
+      <input (change)=\\"onChange.bind(this)\\" />
     </div>
   \`,
   styles: \`:host { display: contents; }\`,
@@ -6276,7 +7370,15 @@ export class MyPreviousComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Button 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -6294,13 +7396,14 @@ export interface ButtonProps {
     <div>
       @if(link()){
       <a
+        #elRef0
         [attr.href]=\\"link()\\"
         [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
       >
         {{text()}}
       </a>
       } @if(!link()){
-      <button type=\\"button\\">{{text()}}</button>
+      <button type=\\"button\\" #elRef1>{{text()}}</button>
       }
     </div>
   \`,
@@ -6312,7 +7415,64 @@ export class Button {
   openLinkInNewTab = input<ButtonProps[\\"openLinkInNewTab\\"]>();
   text = input<ButtonProps[\\"text\\"]>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+  elRef1 = viewChild<ElementRef>(\\"elRef1\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -6428,7 +7588,16 @@ export class ContentSlotCode {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > ContentSlotJSX 1`] = `
-"import { Component, input, effect, signal, computed } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+  computed,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -6451,6 +7620,7 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
     <div
       [attr.name]=\\"slotContent() ? 'name1' : 'name2'\\"
       [attr.title]=\\"slotContent() ? 'title1' : 'title2'\\"
+      #elRef0
       (click)=\\"show()\\"
       [class]=\\"cls()\\"
     >
@@ -6470,8 +7640,11 @@ export class ContentSlotJsxCode {
   attributes = input<Props[\\"attributes\\"]>();
   content = input<Props[\\"content\\"]>(defaultProps[\\"content\\"]);
 
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
   name = signal(\\"king\\");
   showContent = signal(false);
+  _listenerFns = new Map();
 
   cls = computed(() => {
     return this.slotContent() && this.children()
@@ -6481,8 +7654,50 @@ export class ContentSlotJsxCode {
   show() {
     this.slotContent() ? 1 : \\"\\";
   }
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
 
-  constructor() {}
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -6672,6 +7887,7 @@ exports[`Angular signals > jsx > Typescript Test > Form 1`] = `
   Component,
   viewChild,
   ElementRef,
+  Renderer2,
   input,
   effect,
   signal,
@@ -6723,6 +7939,7 @@ import {
       [attr.method]=\\"method()\\"
       [attr.name]=\\"name()\\"
       (submit)=\\"onSubmit($event)\\"
+      #elRef0
     >
       @if(builderBlock() && builderBlock().children){ @for (block of
       builderBlock()?.children;track trackByBlock0;let index = $index) {
@@ -6781,10 +7998,12 @@ export class FormComponent {
   successMessage = input<FormProps[\\"successMessage\\"]>();
 
   formRef = viewChild<ElementRef>(\\"formRef\\");
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
 
   formState = signal(\\"unsubmitted\\");
   responseData = signal(null);
   formErrorMessage = signal(\\"\\");
+  _listenerFns = new Map();
 
   submissionState = computed(() => {
     return (Builder.isEditing && this.previewState()) || this.formState();
@@ -7010,11 +8229,53 @@ export class FormComponent {
       );
     }
   }
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
   trackByBlock0(index: number, block: any) {
     return block.id;
   }
 
-  constructor() {}
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -7173,7 +8434,15 @@ export class ImgStateComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Img 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ImgProps {
@@ -7205,6 +8474,7 @@ import { Builder } from \\"@builder.io/sdk\\";
           objectFit: backgroundSize() || 'cover',
           objectPosition: backgroundPosition() || 'center'
         }\\"
+      #elRef0
       [attr.alt]=\\"altText()\\"
       [attr.src]=\\"imgSrc()\\"
     />
@@ -7220,13 +8490,69 @@ export class ImgComponent {
   imgSrc = input<ImgProps[\\"imgSrc\\"]>();
   altText = input<ImgProps[\\"altText\\"]>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Input 1`] = `
-"import { Component, output, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  output,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface FormInputProps {
@@ -7248,6 +8574,7 @@ import { Builder } from \\"@builder.io/sdk\\";
   imports: [CommonModule],
   template: \`
     <input
+      #elRef0
       [attr.placeholder]=\\"placeholder()\\"
       [attr.type]=\\"type()\\"
       [attr.name]=\\"name()\\"
@@ -7273,7 +8600,54 @@ export class FormInputComponent {
     Parameters<Required<FormInputProps>[\\"onChange\\"]>[number] | void
   >();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -7370,7 +8744,15 @@ export class RawText {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Section 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface SectionProps {
@@ -7385,6 +8767,7 @@ export interface SectionProps {
   imports: [CommonModule],
   template: \`
     <section
+      #elRef0
       [ngStyle]=\\"maxWidth() && typeof maxWidth() === 'number' ? {
           maxWidth: maxWidth()
         } : undefined\\"
@@ -7398,13 +8781,68 @@ export class SectionComponent {
   attributes = input<SectionProps[\\"attributes\\"]>();
   maxWidth = input<SectionProps[\\"maxWidth\\"]>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Section 2`] = `
-"import { Component, input, effect, signal } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface SectionProps {
@@ -7420,6 +8858,7 @@ export interface SectionProps {
   template: \`
     @if(max()){ @for (item of items();track i;let i = $index) {
     <section
+      #elRef0
       [ngStyle]=\\"{
           maxWidth: item + max()
         }\\"
@@ -7433,16 +8872,70 @@ export interface SectionProps {
 export class SectionStateComponent {
   attributes = input<SectionProps[\\"attributes\\"]>();
 
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
   max = signal(42);
   items = signal([42]);
+  _listenerFns = new Map();
 
-  constructor() {}
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Select 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface FormSelectProps {
@@ -7464,6 +8957,7 @@ import { Builder } from \\"@builder.io/sdk\\";
   imports: [CommonModule],
   template: \`
     <select
+      #elRef0
       [attr.value]=\\"value()\\"
       [attr.defaultValue]=\\"defaultValue()\\"
       [attr.name]=\\"name()\\"
@@ -7486,7 +8980,54 @@ export class SelectComponent {
   name = input<FormSelectProps[\\"name\\"]>();
   options = input<FormSelectProps[\\"options\\"]>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -7781,7 +9322,15 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Submit 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -7794,7 +9343,7 @@ export interface ButtonProps {
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <button type=\\"submit\\">{{text()}}</button>
+    <button type=\\"submit\\" #elRef0>{{text()}}</button>
   \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -7802,7 +9351,54 @@ export class SubmitButton {
   attributes = input<ButtonProps[\\"attributes\\"]>();
   text = input<ButtonProps[\\"text\\"]>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -7849,7 +9445,15 @@ export class Text {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Textarea 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface TextareaProps {
@@ -7866,6 +9470,7 @@ export interface TextareaProps {
   imports: [CommonModule],
   template: \`
     <textarea
+      #elRef0
       [attr.placeholder]=\\"placeholder()\\"
       [attr.name]=\\"name()\\"
       [attr.value]=\\"value()\\"
@@ -7881,7 +9486,54 @@ export class Textarea {
   value = input<TextareaProps[\\"value\\"]>();
   defaultValue = input<TextareaProps[\\"defaultValue\\"]>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -7925,7 +9577,7 @@ export class UseValueAndFnFromStore {
   constructor() {
     effect(
       () => {
-        if (this._do) {
+        if (this._do.bind(this)) {
           this._do(this._id());
         }
       },
@@ -7939,7 +9591,16 @@ export class UseValueAndFnFromStore {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Video 1`] = `
-"import { Component, input, effect, computed } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+  computed,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface VideoProps {
@@ -7975,6 +9636,7 @@ export interface VideoProps {
   template: \`
     <video
       preload=\\"none\\"
+      #elRef0
       [ngStyle]=\\"objSpread_style_yxyiqh()\\"
       [attr.poster]=\\"posterImage()\\"
       [attr.autoplay]=\\"autoPlay()\\"
@@ -7996,6 +9658,10 @@ export class Video {
   controls = input<VideoProps[\\"controls\\"]>();
   loop = input<VideoProps[\\"loop\\"]>();
 
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
   objSpread_style_yxyiqh = computed(() => {
     return {
       width: \\"100%\\",
@@ -8008,14 +9674,64 @@ export class Video {
       borderRadius: 1,
     };
   });
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
 
-  constructor() {}
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
 
 exports[`Angular signals > jsx > Typescript Test > allSpread 1`] = `
-"import { Component, input, effect, signal } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -8023,7 +9739,7 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <div>
+    <div #elRef0>
       Hello! I can run natively in React, Vue, Svelte, Qwik, and many more
       frameworks!
     </div>
@@ -8033,6 +9749,8 @@ import { CommonModule } from \\"@angular/common\\";
 export class MyComponent {
   attributes = input<any>();
   accessHere = input<any>();
+
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
 
   attrsUsingUseState = signal({
     hello: \\"world\\",
@@ -8044,8 +9762,88 @@ export class MyComponent {
   specifics = signal({
     someSpecificState: \\"specific\\",
   });
+  _listenerFns = new Map();
 
-  constructor() {}
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(
+          this.elRef0()?.nativeElement,
+          this.attrsUsingUseState()
+        );
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.properties());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, {
+          someOtherAttrs: this.accessHere(),
+          someStateAttrs: this.specifics(),
+        });
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attrsUsingUseState());
+    this.setAttributes(this.elRef0()?.nativeElement, this.properties());
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef0()?.nativeElement, {
+      someOtherAttrs: this.accessHere(),
+      someStateAttrs: this.specifics(),
+    });
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -8129,6 +9927,7 @@ exports[`Angular signals > jsx > Typescript Test > basicForNoTagReference 1`] = 
 "import {
   Component,
   viewChild,
+  ElementRef,
   ViewContainerRef,
   TemplateRef,
   input,
@@ -8175,7 +9974,7 @@ export class MyBasicForNoTagRefComponent {
 
   constructor(private viewContainer: ViewContainerRef) {}
 
-  ngOnInit() {
+  ngAfterContentInit() {
     this.myContent.set([
       this.viewContainer.createEmbeddedView(this.tagnamegetterTemplateRef())
         .rootNodes,
@@ -8231,6 +10030,7 @@ inputRef: HTMLInputElement;
 
         props.inputRef = viewChild<ElementRef>(\\"props.inputRef\\")
 
+
          name= signal('PatrickJS')
 
 
@@ -8239,6 +10039,8 @@ inputRef: HTMLInputElement;
         constructor() {
 
         }
+
+
 
 
 
@@ -8299,6 +10101,7 @@ inputRef: HTMLInputElement;
 
         props.inputRef = viewChild<ElementRef>(\\"props.inputRef\\")
 
+
          name= signal('PatrickJS')
 
 
@@ -8307,6 +10110,8 @@ inputRef: HTMLInputElement;
         constructor() {
 
         }
+
+
 
 
 
@@ -8845,7 +10650,7 @@ import { Component, effect } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
-  selector: \\"my-component\\",
+  selector: \\"not-my-component\\",
   standalone: true,
   imports: [CommonModule],
   template: \`
@@ -8860,7 +10665,16 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > defaultProps 1`] = `
-"import { Component, output, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  output,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -8889,13 +10703,14 @@ const defaultProps: any = {
     <div>
       @if(link()){
       <a
+        #elRef0
         [attr.href]=\\"link()\\"
         [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
       >
         {{text()}}
       </a>
       } @if(!link()){
-      <button type=\\"button\\" (click)=\\"click()\\">{{buttonText()}}</button>
+      <button type=\\"button\\" #elRef1 (click)=\\"click()\\">{{buttonText()}}</button>
       }
     </div>
   \`,
@@ -8911,13 +10726,79 @@ export class Button {
   buttonText = input<ButtonProps[\\"buttonText\\"]>();
   click = output<Parameters<Required<ButtonProps>[\\"onClick\\"]>[number] | void>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+  elRef1 = viewChild<ElementRef>(\\"elRef1\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
 
 exports[`Angular signals > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
-"import { Component, output, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  output,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -8942,13 +10823,14 @@ const defaultProps: any = {
     <div>
       @if(link()){
       <a
+        #elRef0
         [attr.href]=\\"link()\\"
         [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
       >
         {{text()}}
       </a>
       } @if(!link()){
-      <button type=\\"button\\" (click)=\\"click($event)\\">{{text()}}</button>
+      <button type=\\"button\\" #elRef1 (click)=\\"click($event)\\">{{text()}}</button>
       }
     </div>
   \`,
@@ -8963,7 +10845,64 @@ export class Button {
   text = input<ButtonProps[\\"text\\"]>(defaultProps[\\"text\\"]);
   click = output<Parameters<Required<ButtonProps>[\\"onClick\\"]>[number] | void>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+  elRef1 = viewChild<ElementRef>(\\"elRef1\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -9048,6 +10987,7 @@ exports[`Angular signals > jsx > Typescript Test > dynamicComponentWithEventArg 
 "import {
   Component,
   viewChild,
+  ElementRef,
   ViewContainerRef,
   TemplateRef,
   input,
@@ -9097,7 +11037,7 @@ export class MyComponent {
 
   constructor(private viewContainer: ViewContainerRef) {}
 
-  ngOnInit() {
+  ngAfterContentInit() {
     this.myContent.set([
       this.viewContainer.createEmbeddedView(this.componentTemplateRef())
         .rootNodes,
@@ -9198,11 +11138,15 @@ import { CommonModule } from \\"@angular/common\\";
 export class MyComponent {
   componentRef = input<any>();
 
-  refToUse = signal(
-    !(this.componentRef() instanceof Function) ? this.componentRef() : null
-  );
+  refToUse = signal(undefined);
 
   constructor() {}
+
+  ngOnInit() {
+    this.refToUse.set(
+      !(this.componentRef() instanceof Function) ? this.componentRef() : null
+    );
+  }
 }
 "
 `;
@@ -9502,7 +11446,14 @@ export class MultipleOnUpdateWithDeps {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > multipleSpreads 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9510,16 +11461,62 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyBasicComponent {
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
   attrs = signal({
     hello: \\"world\\",
   });
+  _listenerFns = new Map();
 
-  constructor() {}
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -10145,7 +12142,7 @@ export class OnUpdate {
   bar() {}
   zoo() {
     const params = {
-      cb: this.bar,
+      cb: this.bar.bind(this),
     };
   }
 
@@ -10153,7 +12150,7 @@ export class OnUpdate {
     effect(
       () => {
         this.foo({
-          someOption: this.bar,
+          someOption: this.bar.bind(this),
         });
       },
       {
@@ -10169,6 +12166,7 @@ exports[`Angular signals > jsx > Typescript Test > renderBlock 1`] = `
 "import {
   Component,
   viewChild,
+  ElementRef,
   ViewContainerRef,
   TemplateRef,
   input,
@@ -10449,7 +12447,7 @@ export class RenderBlock {
 
   constructor(private viewContainer: ViewContainerRef) {}
 
-  ngOnInit() {
+  ngAfterContentInit() {
     this.myContent.set([
       this.viewContainer.createEmbeddedView(
         this.rendercomponenttagTemplateRef()
@@ -10526,7 +12524,15 @@ export class RenderContent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -10544,13 +12550,14 @@ export interface ButtonProps {
     <ng-container>
       @if(link()){
       <a
+        #elRef0
         [attr.href]=\\"link()\\"
         [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
       >
         {{text()}}
       </a>
       } @if(!link()){
-      <button type=\\"button\\">{{text()}}</button>
+      <button type=\\"button\\" #elRef1>{{text()}}</button>
       }
     </ng-container>
   \`,
@@ -10562,7 +12569,64 @@ export class Button {
   openLinkInNewTab = input<ButtonProps[\\"openLinkInNewTab\\"]>();
   text = input<ButtonProps[\\"text\\"]>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+  elRef1 = viewChild<ElementRef>(\\"elRef1\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+    effect(
+      () => {
+        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -10986,7 +13050,14 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > spreadAttrs 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10994,18 +13065,73 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyBasicComponent {
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, attrs);
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, attrs);
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
 
 exports[`Angular signals > jsx > Typescript Test > spreadNestedProps 1`] = `
-"import { Component, input, effect } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  Renderer2,
+  input,
+  effect,
+  signal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11013,14 +13139,61 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    <input />
+    <input #elRef0 />
   \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyBasicComponent {
   nested = input<any>();
 
-  constructor() {}
+  elRef0 = viewChild<ElementRef>(\\"elRef0\\");
+
+  _listenerFns = new Map();
+
+  setAttributes(el: HTMLElement, value: any, changes?: any) {
+    if (!el) {
+      return;
+    }
+    const target = typeof changes === \\"undefined\\" ? value : changes;
+    Object.keys(target).forEach((key) => {
+      if (key.startsWith(\\"on\\")) {
+        if (this._listenerFns.has(key)) {
+          this._listenerFns.get(key)!();
+        }
+        this._listenerFns.set(
+          key,
+          this.renderer.listen(
+            el,
+            key.replace(\\"on\\", \\"\\").toLowerCase(),
+            target[key]
+          )
+        );
+      } else {
+        this.renderer.setAttribute(el, key.toLowerCase(), target[key] ?? \\"\\");
+      }
+    });
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(
+      () => {
+        this.setAttributes(this.elRef0()?.nativeElement, this.nested());
+      },
+      {
+        allowSignalWrites: true, // Enable writing to signals inside effects
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    this.setAttributes(this.elRef0()?.nativeElement, this.nested());
+  }
+
+  ngOnDestroy() {
+    for (const fn of this._listenerFns.values()) {
+      fn();
+    }
+  }
 }
 "
 `;
@@ -11067,8 +13240,8 @@ export class MyComponent {
 
   asfas = signal(\\"asga\\");
   someCompute = signal(this.add(1, 2));
-  someOtherVal = signal(this.val());
-  sf = signal(this.add(this.val(), 34));
+  someOtherVal = signal(undefined);
+  sf = signal(undefined);
 
   add(a, b) {
     return a + b;
@@ -11078,6 +13251,11 @@ export class MyComponent {
   }
 
   constructor() {}
+
+  ngOnInit() {
+    this.sf.set(this.add(this.val(), 34));
+    this.someOtherVal.set(this.val());
+  }
 }
 "
 `;
@@ -11098,13 +13276,17 @@ import { CommonModule } from \\"@angular/common\\";
 export class MyComponent {
   value = input<any>();
 
-  val = signal(this.value());
+  val = signal(undefined);
 
   objSpread_val_6y525v = computed(() => {
     return { ...this.val() };
   });
 
   constructor() {}
+
+  ngOnInit() {
+    this.val.set(this.value());
+  }
 }
 "
 `;
@@ -11139,6 +13321,7 @@ exports[`Angular signals > jsx > Typescript Test > store-async-function 1`] = `
 
 
 
+
         async function arrowFunction() {
 return Promise.resolve();
 }
@@ -11153,6 +13336,8 @@ return Promise.resolve();
         constructor() {
 
         }
+
+
 
 
 
@@ -11214,6 +13399,7 @@ export class StringLiteralStore {
 
 
 
+
    foo-bar= signal(123)
 
 
@@ -11222,6 +13408,8 @@ export class StringLiteralStore {
   constructor() {
 
   }
+
+
 
 
 
