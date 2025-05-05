@@ -209,6 +209,11 @@ This will cause an error in Angular.
 Please add a initial value for every state property even if it's \`undefined\`.`);
         }
 
+        // Special case for _listenerFns - don't wrap in signal()
+        if (key === '_listenerFns') {
+          return code;
+        }
+
         if (key) {
           const propRefs = props.filter((prop) => code.includes(`this.${prop}()`));
           if (propRefs.length > 0) {
@@ -248,6 +253,12 @@ Please add a initial value for every state property even if it's \`undefined\`.`
     // Handle getters as computed signals
     const gettersString = getComputedGetters({ json });
 
+    // Check if we need Renderer2 for spread attributes
+    const usesRenderer2 = !!json.state['_listenerFns'];
+    if (usesRenderer2) {
+      injectables.push('private renderer: Renderer2');
+    }
+
     // Imports
     const coreImports = getAngularCoreImportsAsString({
       refs: domRefs.size !== 0,
@@ -258,9 +269,10 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       signal: dataString.length !== 0 || hasDynamicComponents,
       computed: gettersString.length !== 0,
       onPush,
-      viewChild: hasDynamicComponents,
+      viewChild: hasDynamicComponents || domRefs.size !== 0,
       viewContainerRef: hasDynamicComponents,
       templateRef: hasDynamicComponents,
+      renderer: usesRenderer2,
     });
 
     let str = dedent`
@@ -317,6 +329,14 @@ Please add a initial value for every state property even if it's \`undefined\`.`
           ${Array.from(domRefs)
             .map((refName) => `${refName} = viewChild<ElementRef>("${refName}")`)
             .join('\n')}
+          ${
+            json.compileContext?.angular?.extra?.spreadRefs
+              ? Array.from(new Set(json.compileContext.angular.extra.spreadRefs as string[]))
+                  .filter((refName) => !Array.from(domRefs).includes(refName))
+                  .map((refName) => `${refName} = viewChild<ElementRef>("${refName}")`)
+                  .join('\n')
+              : ''
+          }
     
           ${dataString}
           ${gettersString}

@@ -1,9 +1,10 @@
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '@/constants/html_tags';
-import { hasFirstChildKeyAttribute } from '@/generators/angular/helpers';
+import { HELPER_FUNCTIONS, hasFirstChildKeyAttribute } from '@/generators/angular/helpers';
 import { parseSelector } from '@/generators/angular/helpers/parse-selector';
 import { createObjectSpreadComputed } from '@/generators/angular/signals/helpers/get-computed';
 import { AngularBlockOptions, ToAngularOptions } from '@/generators/angular/types';
 import { babelTransformExpression } from '@/helpers/babel-transform';
+import { createSingleBinding } from '@/helpers/bindings';
 import {
   checkIsBindingNativeEvent,
   checkIsEvent,
@@ -18,6 +19,7 @@ import { Binding, ForNode, MitosisNode } from '@/types/mitosis-node';
 import { isCallExpression } from '@babel/types';
 import { pipe } from 'fp-ts/function';
 import { isString, kebabCase } from 'lodash';
+import { addCodeNgAfterViewInit, addCodeToOnUpdate } from '../helpers/hooks';
 
 const getChildren = (
   root: MitosisComponent,
@@ -174,6 +176,98 @@ const handleDynamicComponentBindings = (node: MitosisNode) => {
   return allProps;
 };
 
+const saveSpreadRef = (root: MitosisComponent, refName: string) => {
+  root.compileContext = root.compileContext || {};
+  root.compileContext.angular = root.compileContext.angular || { extra: {} };
+  root.compileContext.angular.extra = root.compileContext.angular.extra || {};
+  root.compileContext.angular.extra.spreadRefs = root.compileContext.angular.extra.spreadRefs || [];
+  root.compileContext.angular.extra.spreadRefs.push(refName);
+};
+
+const handleSpreadBinding = (node: MitosisNode, binding: Binding, root: MitosisComponent) => {
+  if (VALID_HTML_TAGS.includes(node.name.trim())) {
+    if (binding.code === 'this') {
+      // if its an arbitrary { ...props } spread then we skip because Angular needs a named prop to be defined
+      return;
+    }
+
+    let refName = '';
+    if (node.meta._spreadRefName) {
+      refName = node.meta._spreadRefName as string;
+      const shouldAddRef = !node.meta._spreadRefAdded;
+      node.meta._spreadRefAdded = true;
+
+      addCodeToOnUpdate(
+        root,
+        `const el = this.${refName}()?.nativeElement;
+        if (el) {
+          this.setAttributes(el, this.${binding.code});
+        }`,
+      );
+
+      addCodeNgAfterViewInit(
+        root,
+        `this.setAttributes(this.${refName}()?.nativeElement, this.${binding.code});`,
+      );
+
+      return shouldAddRef ? `#${refName} ` : '';
+    }
+
+    const spreadRefIndex = root.meta._spreadRefIndex || 0;
+    refName = `elRef${spreadRefIndex}`;
+    root.meta._spreadRefIndex = (spreadRefIndex as number) + 1;
+
+    node.meta._spreadRefName = refName;
+    node.meta._spreadRefAdded = true;
+
+    node.bindings['spreadRef'] = createSingleBinding({ code: refName });
+    if (!root.refs[refName]) {
+      root.refs[refName] = { argument: '' };
+    }
+
+    if (!root.state['_listenerFns']) {
+      root.state['_listenerFns'] = {
+        code: 'new Map()',
+        type: 'property',
+      };
+    }
+
+    addCodeToOnUpdate(
+      root,
+      `const el = this.${refName}()?.nativeElement;
+      if (el) {
+        this.setAttributes(el, this.${binding.code});
+      }`,
+    );
+
+    addCodeNgAfterViewInit(
+      root,
+      `this.setAttributes(this.${refName}()?.nativeElement, this.${binding.code});`,
+    );
+
+    if (!root.state['setAttributes']) {
+      root.state['setAttributes'] = {
+        code: HELPER_FUNCTIONS(true).setAttributes,
+        type: 'method',
+      };
+    }
+
+    if (!root.hooks.onUnMount) {
+      root.hooks.onUnMount = {
+        code: `
+          for (const fn of this._listenerFns.values()) {
+            fn();
+          }
+        `,
+      };
+    }
+
+    saveSpreadRef(root, refName);
+
+    return `#${refName} `;
+  }
+};
+
 const stringifyBinding =
   (node: MitosisNode, blockOptions: AngularBlockOptions, root: MitosisComponent) =>
   ([key, binding]: [string, Binding | undefined]) => {
@@ -181,7 +275,7 @@ const stringifyBinding =
       return;
     }
     if (binding?.type === 'spread') {
-      return;
+      return handleSpreadBinding(node, binding, root);
     }
 
     const keyToUse = BINDINGS_MAPPER[key] || key;

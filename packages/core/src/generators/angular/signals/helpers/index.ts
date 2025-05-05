@@ -10,6 +10,7 @@ export const getAngularCoreImportsAsString = ({
   viewChild,
   viewContainerRef,
   templateRef,
+  renderer,
 }: {
   refs: boolean;
   output: boolean;
@@ -22,13 +23,15 @@ export const getAngularCoreImportsAsString = ({
   viewChild: boolean;
   viewContainerRef: boolean;
   templateRef: boolean;
+  renderer?: boolean;
 }): string => {
   const angularCoreImports: Record<string, boolean> = {
     Component: true,
     viewChild: refs || viewChild,
-    ElementRef: refs,
+    ElementRef: refs || viewChild,
     ViewContainerRef: viewContainerRef,
     TemplateRef: templateRef,
+    Renderer2: !!renderer,
     model,
     output,
     input,
