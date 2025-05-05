@@ -347,10 +347,11 @@ export const getCodeProcessorPlugins = (
       switch (codeType) {
         case 'bindings':
           return (code, key, context) => {
-            const theyConvertToGetters =
+            const needsToReplaceWithThis =
               (code.startsWith('{') && code.includes('...')) ||
               code.includes(' as ') ||
-              context?.node.name.includes('.');
+              context?.node.name.includes('.') ||
+              context?.node.bindings[key]?.type === 'spread';
 
             let replaceWith = '';
             if (key === 'key') {
@@ -364,7 +365,7 @@ export const getCodeProcessorPlugins = (
                 replaceWith = 'this.';
               }
             }
-            if (theyConvertToGetters) {
+            if (needsToReplaceWithThis) {
               replaceWith = 'this.';
             }
 

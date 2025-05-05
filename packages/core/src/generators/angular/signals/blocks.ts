@@ -176,6 +176,10 @@ const handleDynamicComponentBindings = (node: MitosisNode) => {
   return allProps;
 };
 
+const codeSetAttributes = (refName: string, code: string) => {
+  return `this.setAttributes(this.${refName}()?.nativeElement, ${code});`;
+};
+
 const saveSpreadRef = (root: MitosisComponent, refName: string) => {
   root.compileContext = root.compileContext || {};
   root.compileContext.angular = root.compileContext.angular || { extra: {} };
@@ -197,18 +201,8 @@ const handleSpreadBinding = (node: MitosisNode, binding: Binding, root: MitosisC
       const shouldAddRef = !node.meta._spreadRefAdded;
       node.meta._spreadRefAdded = true;
 
-      addCodeToOnUpdate(
-        root,
-        `const el = this.${refName}()?.nativeElement;
-        if (el) {
-          this.setAttributes(el, this.${binding.code});
-        }`,
-      );
-
-      addCodeNgAfterViewInit(
-        root,
-        `this.setAttributes(this.${refName}()?.nativeElement, this.${binding.code});`,
-      );
+      addCodeToOnUpdate(root, codeSetAttributes(refName, binding.code));
+      addCodeNgAfterViewInit(root, codeSetAttributes(refName, binding.code));
 
       return shouldAddRef ? `#${refName} ` : '';
     }
@@ -232,18 +226,8 @@ const handleSpreadBinding = (node: MitosisNode, binding: Binding, root: MitosisC
       };
     }
 
-    addCodeToOnUpdate(
-      root,
-      `const el = this.${refName}()?.nativeElement;
-      if (el) {
-        this.setAttributes(el, this.${binding.code});
-      }`,
-    );
-
-    addCodeNgAfterViewInit(
-      root,
-      `this.setAttributes(this.${refName}()?.nativeElement, this.${binding.code});`,
-    );
+    addCodeToOnUpdate(root, codeSetAttributes(refName, binding.code));
+    addCodeNgAfterViewInit(root, codeSetAttributes(refName, binding.code));
 
     if (!root.state['setAttributes']) {
       root.state['setAttributes'] = {

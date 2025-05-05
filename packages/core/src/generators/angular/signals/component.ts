@@ -259,6 +259,11 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       injectables.push('private renderer: Renderer2');
     }
 
+    const importsViewChild =
+      hasDynamicComponents ||
+      domRefs.size !== 0 ||
+      json.compileContext?.angular?.extra?.spreadRefs?.length > 0;
+
     // Imports
     const coreImports = getAngularCoreImportsAsString({
       refs: domRefs.size !== 0,
@@ -269,7 +274,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       signal: dataString.length !== 0 || hasDynamicComponents,
       computed: gettersString.length !== 0,
       onPush,
-      viewChild: hasDynamicComponents || domRefs.size !== 0,
+      viewChild: importsViewChild,
       viewContainerRef: hasDynamicComponents,
       templateRef: hasDynamicComponents,
       renderer: usesRenderer2,
