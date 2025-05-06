@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.10.0
+
+### Minor Changes
+
+- dee8a62: add flag for serializing and parsing deeply nested nodes
+
 ## 0.9.5
 
 ### Patch Changes
