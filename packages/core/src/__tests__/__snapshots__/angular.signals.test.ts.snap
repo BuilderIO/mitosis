@@ -2964,7 +2964,6 @@ import { CommonModule } from \\"@angular/common\\";
   styles: \`:host { display: contents; }\`,
 })
 export class MyBasicForNoTagRefComponent {
-  // Signal to store embedded views for dynamic components
   myContent = signal<any[]>([]);
   tagnamegetterTemplateRef = viewChild<TemplateRef<any>>(
     \\"tagnamegetterTemplate\\"
@@ -3899,7 +3898,17 @@ export class ComponentWithTypes {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > dynamicComponent 1`] = `
-"import { Component, input, effect, signal, computed } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  ViewContainerRef,
+  TemplateRef,
+  input,
+  effect,
+  signal,
+  computed,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3907,6 +3916,11 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
+    <ng-template #objTemplate>
+      hello
+
+      <ng-content></ng-content>
+    </ng-template>
     <ng-container
       *ngComponentOutlet=\\"
               obj().Component;
@@ -3918,6 +3932,9 @@ import { CommonModule } from \\"@angular/common\\";
   styles: \`:host { display: contents; }\`,
 })
 export class MyComponent {
+  myContent = signal<any[]>([]);
+  objTemplateRef = viewChild<TemplateRef<any>>(\\"objTemplate\\");
+
   attributes = input<any>();
   something = input<any>();
 
@@ -3938,7 +3955,13 @@ export class MyComponent {
     console.log(\\"hello\\");
   }
 
-  constructor() {}
+  constructor(private viewContainer: ViewContainerRef) {}
+
+  ngAfterContentInit() {
+    this.myContent.set([
+      this.viewContainer.createEmbeddedView(this.objTemplateRef()).rootNodes,
+    ]);
+  }
 }
 "
 `;
@@ -3974,7 +3997,6 @@ import { CommonModule } from \\"@angular/common\\";
   styles: \`:host { display: contents; }\`,
 })
 export class MyComponent {
-  // Signal to store embedded views for dynamic components
   myContent = signal<any[]>([]);
   componentTemplateRef = viewChild<TemplateRef<any>>(\\"componentTemplate\\");
 
@@ -5120,7 +5142,6 @@ import { RenderRepeatedBlock } from \\"./render-repeated-block.lite\\";
 export class RenderBlock {
   protected readonly isEmptyHtmlElement = isEmptyHtmlElement;
 
-  // Signal to store embedded views for dynamic components
   myContent = signal<any[]>([]);
   rendercomponenttagTemplateRef = viewChild<TemplateRef<any>>(
     \\"rendercomponenttagTemplate\\"
@@ -9953,7 +9974,6 @@ import { CommonModule } from \\"@angular/common\\";
   styles: \`:host { display: contents; }\`,
 })
 export class MyBasicForNoTagRefComponent {
-  // Signal to store embedded views for dynamic components
   myContent = signal<any[]>([]);
   tagnamegetterTemplateRef = viewChild<TemplateRef<any>>(
     \\"tagnamegetterTemplate\\"
@@ -10939,7 +10959,17 @@ export class ComponentWithTypes {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > dynamicComponent 1`] = `
-"import { Component, input, effect, signal, computed } from \\"@angular/core\\";
+"import {
+  Component,
+  viewChild,
+  ElementRef,
+  ViewContainerRef,
+  TemplateRef,
+  input,
+  effect,
+  signal,
+  computed,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10947,6 +10977,11 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
+    <ng-template #objTemplate>
+      hello
+
+      <ng-content></ng-content>
+    </ng-template>
     <ng-container
       *ngComponentOutlet=\\"
               obj().Component;
@@ -10958,6 +10993,9 @@ import { CommonModule } from \\"@angular/common\\";
   styles: \`:host { display: contents; }\`,
 })
 export class MyComponent {
+  myContent = signal<any[]>([]);
+  objTemplateRef = viewChild<TemplateRef<any>>(\\"objTemplate\\");
+
   attributes = input<any>();
   something = input<any>();
 
@@ -10978,7 +11016,13 @@ export class MyComponent {
     console.log(\\"hello\\");
   }
 
-  constructor() {}
+  constructor(private viewContainer: ViewContainerRef) {}
+
+  ngAfterContentInit() {
+    this.myContent.set([
+      this.viewContainer.createEmbeddedView(this.objTemplateRef()).rootNodes,
+    ]);
+  }
 }
 "
 `;
@@ -11014,7 +11058,6 @@ import { CommonModule } from \\"@angular/common\\";
   styles: \`:host { display: contents; }\`,
 })
 export class MyComponent {
-  // Signal to store embedded views for dynamic components
   myContent = signal<any[]>([]);
   componentTemplateRef = viewChild<TemplateRef<any>>(\\"componentTemplate\\");
 
@@ -12247,7 +12290,6 @@ import type { RepeatData } from \\"./types.js\\";
 export class RenderBlock {
   protected readonly isEmptyHtmlElement = isEmptyHtmlElement;
 
-  // Signal to store embedded views for dynamic components
   myContent = signal<any[]>([]);
   rendercomponenttagTemplateRef = viewChild<TemplateRef<any>>(
     \\"rendercomponenttagTemplate\\"

@@ -153,7 +153,7 @@ export const traverseToGetAllDynamicComponents = (
   const components: Set<string> = new Set();
   let dynamicTemplate = '';
   traverse(json).forEach((item) => {
-    if (isMitosisNode(item) && item.name.includes('.') && item.name.split('.').length === 2) {
+    if (isMitosisNode(item) && item.name.includes('.')) {
       const children = item.children
         .map((child) =>
           api === 'classic'

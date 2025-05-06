@@ -7,7 +7,7 @@ const getNgTemplateRefName = (component: string) => {
 };
 
 export const getDynamicTemplateRefs = (dynamicComponents: Set<string>) => {
-  return `// Signal to store embedded views for dynamic components
+  return `
   myContent = signal<any[]>([]);
   ${Array.from(dynamicComponents)
     .map(
