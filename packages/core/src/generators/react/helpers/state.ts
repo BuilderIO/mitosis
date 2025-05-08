@@ -152,7 +152,7 @@ export const getReactVariantStateString = ({
       : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
     : '';
 
-export const getDefaultImport = (options: ToReactOptions): string => {
+export const getDefaultImport = (options: ToReactOptions, json: MitosisComponent): string => {
   const { preact, type } = options;
   if (preact) {
     return `
@@ -161,9 +161,50 @@ export const getDefaultImport = (options: ToReactOptions): string => {
     `;
   }
   if (type === 'native') {
+    const namesUsed = new Set<string>(),
+      knownImports = new Set<string>();
+
+    json.imports.forEach((imported) => {
+      if (imported.imports) {
+        Object.keys(imported.imports).forEach((name) => {
+          knownImports.add(name);
+        });
+      }
+    });
+
+    traverse(json).forEach((node) => {
+      if (!isMitosisNode(node)) {
+        return;
+      }
+
+      // ReactNative has a special case for converting _text to Text
+      if (node.properties._text?.trim().length || node.bindings._text?.code?.trim()?.length) {
+        namesUsed.add('Text');
+      }
+
+      namesUsed.add(node.name);
+    });
+
+    const components = [
+      'FlatList',
+      'ScrollView',
+      'View',
+      'StyleSheet',
+      'Image',
+      'Text',
+      'Pressable',
+      'TextInput',
+      'TouchableOpacity',
+      'Button',
+      'Linking',
+    ].filter((name) => {
+      // Ony import if the name is used and not imported from somewhere else
+      return namesUsed.has(name) && !knownImports.has(name);
+    });
+
     return `
     import * as React from 'react';
-    import { FlatList, ScrollView, View, StyleSheet, Image, Text, Pressable, TextInput, TouchableOpacity, Button, Linking } from 'react-native';
+    import { ${components.join(', ')} } from 'react-native';
     `;
   }
   if (type === 'taro') {
