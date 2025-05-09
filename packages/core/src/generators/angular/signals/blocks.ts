@@ -1,8 +1,10 @@
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '@/constants/html_tags';
-import { hasFirstChildKeyAttribute } from '@/generators/angular/helpers';
+import { HELPER_FUNCTIONS, hasFirstChildKeyAttribute } from '@/generators/angular/helpers';
 import { parseSelector } from '@/generators/angular/helpers/parse-selector';
+import { createObjectSpreadComputed } from '@/generators/angular/signals/helpers/get-computed';
 import { AngularBlockOptions, ToAngularOptions } from '@/generators/angular/types';
 import { babelTransformExpression } from '@/helpers/babel-transform';
+import { createSingleBinding } from '@/helpers/bindings';
 import {
   checkIsBindingNativeEvent,
   checkIsEvent,
@@ -11,11 +13,13 @@ import {
 import isChildren from '@/helpers/is-children';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { stripSlotPrefix } from '@/helpers/slots';
+import { hashCodeAsString } from '@/symbols/symbol-processor';
 import { MitosisComponent } from '@/types/mitosis-component';
 import { Binding, ForNode, MitosisNode } from '@/types/mitosis-node';
 import { isCallExpression } from '@babel/types';
 import { pipe } from 'fp-ts/function';
 import { isString, kebabCase } from 'lodash';
+import { addCodeNgAfterViewInit, addCodeToOnUpdate } from '../helpers/hooks';
 
 const getChildren = (
   root: MitosisComponent,
@@ -120,14 +124,142 @@ const BINDINGS_MAPPER: { [key: string]: string | undefined } = {
   style: 'ngStyle',
 };
 
+const handleDynamicComponentBindings = (node: MitosisNode) => {
+  let allProps = '';
+
+  for (const key in node.properties) {
+    if (key.startsWith('$') || key === 'key') {
+      continue;
+    }
+    const value = node.properties[key];
+    allProps += `${key}: '${value}', `;
+  }
+
+  for (const key in node.bindings) {
+    if (key.startsWith('"') || key.startsWith('$') || key === 'key') {
+      continue;
+    }
+    const { code } = node.bindings[key]!;
+
+    if (key === 'ref') {
+      allProps += `${key}: this.${code}(), `;
+      continue;
+    }
+
+    if (node.bindings[key]?.type === 'spread') {
+      allProps += `...${code}, `;
+      continue;
+    }
+
+    let keyToUse = key.includes('-') ? `'${key}'` : key;
+    keyToUse = keyToUse.replace('state.', '').replace('props.', '');
+
+    if (checkIsEvent(key)) {
+      const eventName = getEventNameWithoutOn(key);
+      allProps += `on${eventName.charAt(0).toUpperCase() + eventName.slice(1)}: ${code.replace(
+        /\(.*?\)/g,
+        '',
+      )}.bind(this), `;
+    } else {
+      allProps += `${keyToUse}: ${code}, `;
+    }
+  }
+
+  if (allProps.endsWith(', ')) {
+    allProps = allProps.slice(0, -2);
+  }
+
+  if (allProps.startsWith(', ')) {
+    allProps = allProps.slice(2);
+  }
+
+  return allProps;
+};
+
+const codeSetAttributes = (refName: string, code: string) => {
+  return `this.setAttributes(this.${refName}()?.nativeElement, ${code});`;
+};
+
+const saveSpreadRef = (root: MitosisComponent, refName: string) => {
+  root.compileContext = root.compileContext || {};
+  root.compileContext.angular = root.compileContext.angular || { extra: {} };
+  root.compileContext.angular.extra = root.compileContext.angular.extra || {};
+  root.compileContext.angular.extra.spreadRefs = root.compileContext.angular.extra.spreadRefs || [];
+  root.compileContext.angular.extra.spreadRefs.push(refName);
+};
+
+const handleSpreadBinding = (node: MitosisNode, binding: Binding, root: MitosisComponent) => {
+  if (VALID_HTML_TAGS.includes(node.name.trim())) {
+    if (binding.code === 'this') {
+      // if its an arbitrary { ...props } spread then we skip because Angular needs a named prop to be defined
+      return;
+    }
+
+    let refName = '';
+    if (node.meta._spreadRefName) {
+      refName = node.meta._spreadRefName as string;
+      const shouldAddRef = !node.meta._spreadRefAdded;
+      node.meta._spreadRefAdded = true;
+
+      addCodeToOnUpdate(root, codeSetAttributes(refName, binding.code));
+      addCodeNgAfterViewInit(root, codeSetAttributes(refName, binding.code));
+
+      return shouldAddRef ? `#${refName} ` : '';
+    }
+
+    const spreadRefIndex = root.meta._spreadRefIndex || 0;
+    refName = `elRef${spreadRefIndex}`;
+    root.meta._spreadRefIndex = (spreadRefIndex as number) + 1;
+
+    node.meta._spreadRefName = refName;
+    node.meta._spreadRefAdded = true;
+
+    node.bindings['spreadRef'] = createSingleBinding({ code: refName });
+    if (!root.refs[refName]) {
+      root.refs[refName] = { argument: '' };
+    }
+
+    if (!root.state['_listenerFns']) {
+      root.state['_listenerFns'] = {
+        code: 'new Map()',
+        type: 'property',
+      };
+    }
+
+    addCodeToOnUpdate(root, codeSetAttributes(refName, binding.code));
+    addCodeNgAfterViewInit(root, codeSetAttributes(refName, binding.code));
+
+    if (!root.state['setAttributes']) {
+      root.state['setAttributes'] = {
+        code: HELPER_FUNCTIONS(true).setAttributes,
+        type: 'method',
+      };
+    }
+
+    if (!root.hooks.onUnMount) {
+      root.hooks.onUnMount = {
+        code: `
+          for (const fn of this._listenerFns.values()) {
+            fn();
+          }
+        `,
+      };
+    }
+
+    saveSpreadRef(root, refName);
+
+    return `#${refName} `;
+  }
+};
+
 const stringifyBinding =
-  (node: MitosisNode, blockOptions: AngularBlockOptions) =>
+  (node: MitosisNode, blockOptions: AngularBlockOptions, root: MitosisComponent) =>
   ([key, binding]: [string, Binding | undefined]) => {
     if (key.startsWith('$') || key.startsWith('"') || key === 'key') {
       return;
     }
     if (binding?.type === 'spread') {
-      return;
+      return handleSpreadBinding(node, binding, root);
     }
 
     const keyToUse = BINDINGS_MAPPER[key] || key;
@@ -187,6 +319,10 @@ Please create a new function with the EventTarget and use e.g:
         ? ` [innerHTML]="${code}" `
         : ` [innerHTML]="sanitizer.bypassSecurityTrustHtml(${code})" `;
     } else {
+      if ((code.startsWith('{') && code.includes('...')) || code.includes(' as ')) {
+        const computedName = createObjectSpreadComputed(root, binding, key);
+        return `[${keyToUse}]="${computedName}()"`;
+      }
       return `[${keyToUse}]="${code}"`;
     }
   };
@@ -268,6 +404,38 @@ export const blockToAngularSignals = ({
 
   let str = '';
 
+  // Handle dynamic components, state.MyComponent / props.MyComponent
+  if (json.name.includes('.')) {
+    const elSelector = blockOptions.childComponents?.find((impName) => impName === json.name)
+      ? kebabCase(json.name)
+      : json.name;
+
+    const elSelectorProcessed = elSelector.replace('state.', '').replace('props.', '');
+    const dynamicComponentRef = elSelectorProcessed.replace(/^this\.([^.]+)/, '$1()');
+
+    let allProps = handleDynamicComponentBindings(json);
+    const computedName = `dynamicProps_${hashCodeAsString(allProps)}`;
+
+    if (allProps) {
+      if (!root.state[computedName]) {
+        root.state[computedName] = {
+          code: `get ${computedName}() { 
+          return { ${allProps} };
+        }`,
+          type: 'getter',
+        };
+      }
+    }
+
+    str += `<ng-container *ngComponentOutlet="
+      ${dynamicComponentRef};${allProps ? `\ninputs: ${computedName}();` : ''}
+      content: myContent();
+      ">  `;
+
+    str += `</ng-container>`;
+    return str;
+  }
+
   const { element, additionalString } = getElementTag(json, blockOptions);
   str += `<${element} ${additionalString}`;
 
@@ -277,7 +445,7 @@ export const blockToAngularSignals = ({
   }
 
   const stringifiedBindings = Object.entries(json.bindings)
-    .map(stringifyBinding(json, blockOptions))
+    .map(stringifyBinding(json, blockOptions, root))
     .join('');
 
   str += stringifiedBindings;

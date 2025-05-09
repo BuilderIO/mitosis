@@ -6,6 +6,11 @@ export const getAngularCoreImportsAsString = ({
   onPush,
   effect,
   signal,
+  computed,
+  viewChild,
+  viewContainerRef,
+  templateRef,
+  renderer,
 }: {
   refs: boolean;
   output: boolean;
@@ -14,17 +19,25 @@ export const getAngularCoreImportsAsString = ({
   onPush: boolean;
   effect: boolean;
   signal: boolean;
+  computed: boolean;
+  viewChild: boolean;
+  viewContainerRef: boolean;
+  templateRef: boolean;
+  renderer?: boolean;
 }): string => {
   const angularCoreImports: Record<string, boolean> = {
     Component: true,
-    AfterViewInit: true,
-    viewChild: refs,
-    ElementRef: refs,
+    viewChild: refs || viewChild,
+    ElementRef: refs || viewChild,
+    ViewContainerRef: viewContainerRef,
+    TemplateRef: templateRef,
+    Renderer2: !!renderer,
     model,
     output,
     input,
     effect,
     signal,
+    computed,
     ChangeDetectionStrategy: onPush,
   };
   return Object.entries(angularCoreImports)

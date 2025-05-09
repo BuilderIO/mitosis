@@ -13,6 +13,7 @@ export interface ToAngularOptions extends BaseTranspilerOptions {
   importMapper?: Function;
   bootstrapMapper?: Function;
   visuallyIgnoreHostElement?: boolean;
+  defaultExportComponents?: boolean;
   experimental?: {
     injectables?: (variableName: string, variableType: string) => string;
     inject?: boolean;
@@ -25,6 +26,7 @@ export const DEFAULT_ANGULAR_OPTIONS: ToAngularOptions = {
   preserveImports: false,
   preserveFileExtensions: false,
   visuallyIgnoreHostElement: true,
+  defaultExportComponents: false,
 };
 
 export type AngularMetadata = {
@@ -39,7 +41,6 @@ export type AngularMetadata = {
    */
   nativeEvents?: string[];
   /**
-   * @deprecated Rename component in *.lite.tsx
    * Overwrite default selector for component. Default will be kebab case (MyComponent -> my-component)
    */
   selector?: string;
@@ -59,6 +60,12 @@ export type AngularMetadata = {
    * Can be used with `useTarget({angular: ()=> ...})` if needed.
    */
   outputs?: string[];
+
+  /**
+   * Skip hydration for the component.
+   * Adds `host: { ngSkipHydration: "true" }` to the component decorator.
+   */
+  skipHydration?: boolean;
 
   /**
    * Only for api=signals
