@@ -4,6 +4,7 @@ import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-st
 import { getTypedFunction } from '@/helpers/get-typed-function';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { prefixWithFunction, replaceGetterWithFunction } from '@/helpers/patterns';
+import { hasCss } from '@/helpers/styles/helpers';
 import { transformStateSetters } from '@/helpers/transform-state-setters';
 import { MitosisComponent, StateValue } from '@/types/mitosis-component';
 import { types } from '@babel/core';
@@ -172,6 +173,10 @@ export const getDefaultImport = (options: ToReactOptions, json: MitosisComponent
       }
     });
 
+    if (hasCss(json)) {
+      namesUsed.add('StyleSheet');
+    }
+
     traverse(json).forEach((node) => {
       if (!isMitosisNode(node)) {
         return;
@@ -180,6 +185,13 @@ export const getDefaultImport = (options: ToReactOptions, json: MitosisComponent
       // ReactNative has a special case for converting _text to Text
       if (node.properties._text?.trim().length || node.bindings._text?.code?.trim()?.length) {
         namesUsed.add('Text');
+      }
+
+      if (
+        node.name === 'TouchableOpacity' &&
+        ('href' in node.bindings || 'href' in node.properties)
+      ) {
+        namesUsed.add('Linking');
       }
 
       namesUsed.add(node.name);
