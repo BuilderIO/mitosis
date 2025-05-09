@@ -75,7 +75,7 @@ export const componentFunctionToJson = (
             const hookOptions = expression.arguments[1];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
               const code = processHookCode(firstArg);
-              let onSSR = false;
+              let onSSR = undefined;
 
               if (types.isObjectExpression(hookOptions)) {
                 const onSSRProp = hookOptions.properties.find(

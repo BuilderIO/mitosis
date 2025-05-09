@@ -130,6 +130,18 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
       injectables.push('protected sanitizer: DomSanitizer');
     }
 
+    // move all hooks that are not onSSR to ngAfterViewInit
+    const nonSSROnMounHooks = json.hooks.onMount.filter((hook) => hook.onSSR === false);
+    json.hooks.onMount = json.hooks.onMount.filter((hook) => hook.onSSR !== false);
+
+    if (nonSSROnMounHooks.length > 0) {
+      json.compileContext!.angular!.hooks!.ngAfterViewInit = {
+        code: `
+        ${nonSSROnMounHooks.map((hook) => hook.code).join('\n')}
+        `,
+      };
+    }
+
     // HTML
     let template = json.children
       .map((item) => {
