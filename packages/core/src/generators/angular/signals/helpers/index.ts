@@ -5,7 +5,6 @@ export const getAngularCoreImportsAsString = ({
   model,
   onPush,
   effect,
-  untracked,
   signal,
   computed,
   viewChild,
@@ -19,7 +18,6 @@ export const getAngularCoreImportsAsString = ({
   model: boolean;
   onPush: boolean;
   effect: boolean;
-  untracked: boolean;
   signal: boolean;
   computed: boolean;
   viewChild: boolean;
@@ -38,7 +36,6 @@ export const getAngularCoreImportsAsString = ({
     output,
     input,
     effect,
-    untracked,
     signal,
     computed,
     ChangeDetectionStrategy: onPush,

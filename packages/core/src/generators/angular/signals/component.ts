@@ -283,7 +283,6 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       output: events.length !== 0,
       model: writeableSignals.length !== 0,
       effect: json.hooks.onUpdate?.length !== 0,
-      untracked: json.hooks.onUpdate?.length !== 0,
       signal: dataString.length !== 0 || hasDynamicComponents,
       computed: gettersString.length !== 0,
       onPush,
@@ -380,7 +379,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
                       `
                           : ''
                       }
-                      ${depsArray?.length ? `untracked(() => {${code}});` : code}
+                      ${code}
                       },
                       {
                       allowSignalWrites: true, // Enable writing to signals inside effects
