@@ -135,7 +135,7 @@ const handleAssignmentExpression = (path: NodePath<AssignmentExpression | Binary
      * Handle any level of nested updates like state.store.something.nested = newVal
      * Example:
      * Input:  state.store.something.nested = newVal
-     * Output: state.store.update(obj => {
+     * Output: state.store.update(obj => ({
      *   ...obj,
      *   store: {
      *     ...obj.store,
@@ -144,7 +144,7 @@ const handleAssignmentExpression = (path: NodePath<AssignmentExpression | Binary
      *       nested: newVal
      *     }
      *   }
-     * })
+     * }))
      */
 
     const stateProp = getPropertyFromStateChain(path.node.left);
