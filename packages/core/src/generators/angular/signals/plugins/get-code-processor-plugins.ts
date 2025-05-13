@@ -22,9 +22,70 @@ import {
   isIfStatement,
   isMemberExpression,
   memberExpression,
+  objectExpression,
+  objectProperty,
   returnStatement,
+  spreadElement,
   updateExpression,
 } from '@babel/types';
+
+// Helper functions for handling nested state updates
+const getBaseObject = (node: any): any => {
+  if (!node) return null;
+  if (!isMemberExpression(node)) return node;
+  return getBaseObject(node.object);
+};
+
+const getPropertyFromStateChain = (node: any): string | null => {
+  // Start at the leftmost object and traverse up to find the first property after 'state'
+  let current = node;
+  while (isMemberExpression(current)) {
+    if (
+      isMemberExpression(current.object) &&
+      isIdentifier(current.object.object) &&
+      current.object.object.name === 'state' &&
+      isIdentifier(current.object.property)
+    ) {
+      return current.object.property.name;
+    }
+    current = current.object;
+  }
+  return null;
+};
+
+const getNestedPath = (node: any, topLevelProp: string): string[] => {
+  const path: string[] = [];
+  let current = node;
+
+  // Collect all property names starting after the top-level property
+  let foundTopLevel = false;
+  while (isMemberExpression(current)) {
+    if (isIdentifier(current.property)) {
+      path.unshift(current.property.name);
+    }
+
+    if (
+      isMemberExpression(current.object) &&
+      isIdentifier(current.object.object) &&
+      current.object.object.name === 'state' &&
+      isIdentifier(current.object.property) &&
+      current.object.property.name === topLevelProp
+    ) {
+      foundTopLevel = true;
+      break;
+    }
+
+    current = current.object;
+  }
+
+  return foundTopLevel ? path : [];
+};
+
+const buildPathAccess = (baseParam: any, propertyPath: string[]): any => {
+  return propertyPath.reduce((acc, prop) => {
+    return memberExpression(acc, identifier(prop));
+  }, baseParam);
+};
 
 const isStateOrPropsExpression = (path: NodePath) => {
   return (
@@ -63,6 +124,56 @@ const handleAssignmentExpression = (path: NodePath<AssignmentExpression | Binary
     const root = memberExpression(path.node.left, identifier('set'));
     root.extra = { ...root.extra, updateExpression: true };
     const call = callExpression(root, [path.node.right]);
+    path.replaceWith(call);
+  } else if (
+    isMemberExpression(path.node.left) &&
+    isMemberExpression(path.node.left.object) &&
+    isIdentifier(getBaseObject(path.node.left)) &&
+    getBaseObject(path.node.left).name === 'state'
+  ) {
+    /**
+     * Handle any level of nested updates like state.store.something.nested = newVal
+     * Example:
+     * Input:  state.store.something.nested = newVal
+     * Output: state.store.update(obj => {
+     *   ...obj,
+     *   store: {
+     *     ...obj.store,
+     *     something: {
+     *       ...obj.store.something,
+     *       nested: newVal
+     *     }
+     *   }
+     * })
+     */
+
+    const stateProp = getPropertyFromStateChain(path.node.left);
+    if (!stateProp) return;
+
+    const topLevelProp = memberExpression(identifier('state'), identifier(stateProp));
+
+    const nestedPaths = getNestedPath(path.node.left, stateProp);
+
+    const root = memberExpression(topLevelProp, identifier('update'));
+    root.extra = { ...root.extra, updateExpression: true };
+
+    const paramName = stateProp;
+    const param = identifier(paramName);
+
+    let innerValue = path.node.right;
+
+    for (let i = nestedPaths.length - 1; i >= 0; i--) {
+      const spreadTarget = i === 0 ? param : buildPathAccess(param, nestedPaths.slice(0, i));
+
+      innerValue = objectExpression([
+        spreadElement(spreadTarget),
+        objectProperty(identifier(nestedPaths[i]), innerValue, false, false),
+      ]);
+    }
+
+    const arrowFunction = arrowFunctionExpression([param], innerValue, false);
+
+    const call = callExpression(root, [arrowFunction]);
     path.replaceWith(call);
   }
 };
@@ -239,6 +350,72 @@ const transformHooksAndState = (
         ]);
 
         const arrowFunction = arrowFunctionExpression([argument], block);
+        const call = callExpression(root, [arrowFunction]);
+        path.replaceWith(call);
+      } else if (
+        isMemberExpression(path.node.argument) &&
+        isMemberExpression(path.node.argument.object) &&
+        isIdentifier(getBaseObject(path.node.argument)) &&
+        getBaseObject(path.node.argument).name === 'state'
+      ) {
+        // Handle nested update expressions like: state.obj.counter++
+        // Example:
+        // Input:  state.obj.counter++
+        // Output: state.obj.update(obj => {
+        //   Object.assign(obj, {
+        //     counter: obj.counter + 1
+        //   });
+        //   return obj;
+        // });
+        //
+        const stateProp = getPropertyFromStateChain(path.node.argument);
+        if (!stateProp) return;
+
+        const topLevelProp = memberExpression(identifier('state'), identifier(stateProp));
+
+        const nestedPaths = getNestedPath(path.node.argument, stateProp);
+
+        const root = memberExpression(topLevelProp, identifier('update'));
+        root.extra = { ...root.extra, updateExpression: true };
+
+        const paramName = stateProp;
+        const param = identifier(paramName);
+
+        const lastPropName = nestedPaths[nestedPaths.length - 1];
+        const innerParamName = lastPropName + '_value';
+
+        const nestedPathAccess = buildPathAccess(param, nestedPaths.slice(0, -1));
+
+        let innerValue = objectExpression([
+          spreadElement(nestedPathAccess),
+          objectProperty(
+            identifier(lastPropName),
+            updateExpression(path.node.operator, identifier(innerParamName), path.node.prefix),
+            false,
+            false,
+          ),
+        ]);
+
+        for (let i = nestedPaths.length - 2; i >= 0; i--) {
+          const spreadTarget = i === 0 ? param : buildPathAccess(param, nestedPaths.slice(0, i));
+
+          innerValue = objectExpression([
+            spreadElement(spreadTarget),
+            objectProperty(identifier(nestedPaths[i]), innerValue, false, false),
+          ]);
+        }
+
+        const block = blockStatement([
+          expressionStatement(
+            callExpression(memberExpression(identifier('Object'), identifier('assign')), [
+              param,
+              innerValue,
+            ]),
+          ),
+          returnStatement(param),
+        ]);
+
+        const arrowFunction = arrowFunctionExpression([param], block);
         const call = callExpression(root, [arrowFunction]);
         path.replaceWith(call);
       }
