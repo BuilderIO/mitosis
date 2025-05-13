@@ -13,6 +13,7 @@ import {
   MemberExpression,
   TemplateLiteral,
   arrowFunctionExpression,
+  assignmentExpression,
   blockStatement,
   callExpression,
   expressionStatement,
@@ -124,6 +125,61 @@ const handleAssignmentExpression = (path: NodePath<AssignmentExpression | Binary
     const root = memberExpression(path.node.left, identifier('set'));
     root.extra = { ...root.extra, updateExpression: true };
     const call = callExpression(root, [path.node.right]);
+    path.replaceWith(call);
+  } else if (
+    isMemberExpression(path.node.left) &&
+    path.node.left.computed &&
+    ((isMemberExpression(path.node.left.object) &&
+      isIdentifier(path.node.left.object.object) &&
+      path.node.left.object.object.name === 'state') ||
+      (isIdentifier(path.node.left.object) && path.node.left.object.name === 'state'))
+  ) {
+    /**
+     * Handle array element assignments like: state.arr[0] = '123'
+     * Example:
+     * Input:  state.arr[0] = '123'
+     * Output: state.arr.update(arr => {
+     *   arr[0] = '123';
+     *   return arr;
+     * })
+     */
+
+    let stateProp;
+    let baseObject;
+
+    if (isIdentifier(path.node.left.object) && path.node.left.object.name === 'state') {
+      stateProp = path.node.left.property;
+      baseObject = path.node.left.object;
+    } else {
+      stateProp = getPropertyFromStateChain(path.node.left);
+      if (!stateProp) return;
+      baseObject = memberExpression(identifier('state'), identifier(stateProp));
+    }
+
+    const root = memberExpression(baseObject, identifier('update'));
+    root.extra = { ...root.extra, updateExpression: true };
+
+    const paramName =
+      typeof stateProp === 'string' ? stateProp : isIdentifier(stateProp) ? stateProp.name : 'item';
+    const param = identifier(paramName);
+
+    let assignTarget;
+
+    if (isIdentifier(path.node.left.object) && path.node.left.object.name === 'state') {
+      // Direct state array: state[index] = value
+      assignTarget = memberExpression(param, path.node.left.property, true);
+    } else {
+      // Property array: state.arr[index] = value
+      assignTarget = memberExpression(param, path.node.left.property, true);
+    }
+
+    const block = blockStatement([
+      expressionStatement(assignmentExpression('=', assignTarget, path.node.right)),
+      returnStatement(param),
+    ]);
+
+    const arrowFunction = arrowFunctionExpression([param], block);
+    const call = callExpression(root, [arrowFunction]);
     path.replaceWith(call);
   } else if (
     isMemberExpression(path.node.left) &&
