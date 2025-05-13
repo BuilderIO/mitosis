@@ -5702,7 +5702,10 @@ export class SetState {
   n = signal([\\"123\\"]);
 
   someFn() {
-    this.n.update((n) => \\"123\\");
+    this.n.update((n) => {
+      n[0] = \\"123\\";
+      return n;
+    });
   }
 
   constructor() {}
@@ -12962,7 +12965,10 @@ export class SetState {
   n = signal([\\"123\\"]);
 
   someFn() {
-    this.n.update((n) => \\"123\\");
+    this.n.update((n) => {
+      n[0] = \\"123\\";
+      return n;
+    });
   }
 
   constructor() {}
