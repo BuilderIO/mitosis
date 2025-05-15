@@ -103,19 +103,21 @@ export class MyBasicRefComponent {
   }
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.inputRef();
-        this.inputNoArgRef();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.inputRef();
+          this.inputNoArgRef();
+          // ---
 
-        console.log(\\"Received an update\\");
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+          console.log(\\"Received an update\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -231,6 +233,9 @@ export class MyBasicComponent {
   ngOnInit() {
     const hi = this.myService.method(\\"hi\\");
     console.log(hi);
+  }
+
+  ngAfterViewInit() {
     const bye = this.myService.method(\\"hi\\");
     console.log(bye);
   }
@@ -262,6 +267,9 @@ export class MyBasicOnMountUpdateComponent {
 
   ngOnInit() {
     this.name.set(\\"PatrickJS onInit\\" + this.hi());
+  }
+
+  ngAfterViewInit() {
     this.name.set(\\"PatrickJS onMount\\" + this.bye());
   }
 }
@@ -290,7 +298,7 @@ export class MyBasicOutputsComponent {
 
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.messageChange.emit(this.name());
     this.event.emit(this.message());
   }
@@ -325,7 +333,7 @@ export class MyBasicOutputsComponent {
 
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.messageChange.emit(this.name());
     this.event.emit(this.message());
   }
@@ -469,7 +477,7 @@ export class MyBasicForComponent {
 
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     console.log(\\"onMount code\\");
   }
 }
@@ -597,18 +605,20 @@ export class MyPreviousComponent {
   count = signal(0);
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.count();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.count();
+          // ---
 
-        this._prevCount = this.count();
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+          this._prevCount = this.count();
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -683,22 +693,24 @@ export class Button {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -890,14 +902,16 @@ export class ContentSlotJsxCode {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -991,7 +1005,7 @@ export class CustomCode {
 
   constructor(protected sanitizer: DomSanitizer) {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.findAndRunScripts();
   }
 }
@@ -1076,7 +1090,7 @@ export class CustomCode {
 
   constructor(protected sanitizer: DomSanitizer) {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.findAndRunScripts();
   }
 }
@@ -1119,7 +1133,8 @@ import {
       #elRef0
     >
       @if(builderBlock() && builderBlock().children){ @for (block of
-      builderBlock()?.children;track trackByBlock0;let index = $index) {
+      builderBlock()?.children;track trackByBlock0(index, block);let index =
+      $index) {
       <builder-block-component
         [block]=\\"block\\"
         [index]=\\"index\\"
@@ -1427,14 +1442,16 @@ export class FormComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -1522,7 +1539,7 @@ export class Image {
 
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
@@ -1653,14 +1670,16 @@ export class ImgComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -1750,14 +1769,16 @@ export class FormInputComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -1915,14 +1936,16 @@ export class SectionComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -2002,14 +2025,16 @@ export class SectionStateComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -2097,14 +2122,16 @@ export class SelectComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -2242,7 +2269,8 @@ import { kebabCase, snakeCase } from \\"lodash\\";
       >
         Submit
       </button>
-      } @for (review of reviews();track trackByReview0;let index = $index) {
+      } @for (review of reviews();track trackByReview0(index, review);let index
+      = $index) {
       <div $name=\\"Review\\" class=\\"review\\">
         <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
         <div [class]=\\"showReviewPrompt() ? 'bg-primary' : 'bg-secondary'\\">
@@ -2300,7 +2328,7 @@ export class SmileReviews {
 
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     fetch(
       \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
         this.apiKey() || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
@@ -2442,14 +2470,16 @@ export class SubmitButton {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -2561,14 +2591,16 @@ export class Textarea {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -2612,16 +2644,18 @@ export class UseValueAndFnFromStore {
   }
 
   constructor() {
-    effect(
-      () => {
-        if (this._do.bind(this)) {
-          this._do(this._id());
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          if (this._do.bind(this)) {
+            this._do(this._id());
+          }
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
         }
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+      );
+    }
   }
 }
 "
@@ -2710,14 +2744,16 @@ export class Video {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -2800,44 +2836,46 @@ export class MyComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(
-          this.elRef0()?.nativeElement,
-          this.attrsUsingUseState()
-        );
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.properties());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, {
-          someOtherAttrs: this.accessHere(),
-          someStateAttrs: this.specifics(),
-        });
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(
+            this.elRef0()?.nativeElement,
+            this.attrsUsingUseState()
+          );
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.properties());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, {
+            someOtherAttrs: this.accessHere(),
+            someStateAttrs: this.specifics(),
+          });
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -2897,18 +2935,21 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
   template: \`
     <div>
-      @for (option of ['a', 'b', 'c'];track trackByOption0;let i = $index) {
+      @for (option of ['a', 'b', 'c'];track trackByOption0(i, option);let i =
+      $index) {
       <ng-container>
         <div>{{option}}</div>
       </ng-container>
-      } @for (option of ['a', 'b', 'c'];track trackByOption1;let i = $index) {
+      } @for (option of ['a', 'b', 'c'];track trackByOption1(i, option);let i =
+      $index) {
       <ng-container>
         <div>{{option}}</div>
       </ng-container>
       }
 
       <select>
-        @for (option of ['d', 'e', 'f'];track trackByOption2;let i = $index) {
+        @for (option of ['d', 'e', 'f'];track trackByOption2(i, option);let i =
+        $index) {
         <option [attr.value]=\\"option\\">{{option}}</option>
         }
       </select>
@@ -2984,7 +3025,7 @@ export class MyBasicForNoTagRefComponent {
 
   constructor(private viewContainer: ViewContainerRef) {}
 
-  ngAfterContentInit() {
+  _updateView() {
     this.myContent.set([
       this.viewContainer.createEmbeddedView(this.tagnamegetterTemplateRef())
         .rootNodes,
@@ -2993,6 +3034,10 @@ export class MyBasicForNoTagRefComponent {
         .rootNodes,
       this.viewContainer.createEmbeddedView(this.iconTemplateRef()).rootNodes,
     ]);
+  }
+
+  ngAfterContentInit() {
+    this._updateView();
   }
 }
 "
@@ -3044,7 +3089,6 @@ export class MyBasicForwardRefComponent {
 
 
   constructor() {
-
   }
 
 
@@ -3112,7 +3156,6 @@ export class MyBasicForwardRefComponent {
 
 
   constructor() {
-
   }
 
 
@@ -3145,31 +3188,33 @@ export class MyBasicOnUpdateReturnComponent {
   name = signal(\\"PatrickJS\\");
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.name();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.name();
+          // ---
 
-        const controller = new AbortController();
-        const signal = controller.signal;
-        fetch(\\"https://patrickjs.com/api/resource.json\\", {
-          signal,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            this.name.set(data.name);
-          });
-        return () => {
-          if (!signal.aborted) {
-            controller.abort();
-          }
-        };
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+          const controller = new AbortController();
+          const signal = controller.signal;
+          fetch(\\"https://patrickjs.com/api/resource.json\\", {
+            signal,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              this.name.set(data.name);
+            });
+          return () => {
+            if (!signal.aborted) {
+              controller.abort();
+            }
+          };
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -3728,22 +3773,24 @@ export class Button {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -3838,22 +3885,24 @@ export class Button {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -3957,10 +4006,14 @@ export class MyComponent {
 
   constructor(private viewContainer: ViewContainerRef) {}
 
-  ngAfterContentInit() {
+  _updateView() {
     this.myContent.set([
       this.viewContainer.createEmbeddedView(this.objTemplateRef()).rootNodes,
     ]);
+  }
+
+  ngAfterContentInit() {
+    this._updateView();
   }
 }
 "
@@ -4019,11 +4072,15 @@ export class MyComponent {
 
   constructor(private viewContainer: ViewContainerRef) {}
 
-  ngAfterContentInit() {
+  _updateView() {
     this.myContent.set([
       this.viewContainer.createEmbeddedView(this.componentTemplateRef())
         .rootNodes,
     ]);
+  }
+
+  ngAfterContentInit() {
+    this._updateView();
   }
 }
 "
@@ -4328,22 +4385,24 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export class MultipleOnUpdate {
   constructor() {
-    effect(
-      () => {
-        console.log(\\"Runs on every update/rerender\\");
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        console.log(\\"Runs on every update/rerender as well\\");
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender as well\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -4369,40 +4428,42 @@ export class MultipleOnUpdateWithDeps {
   d = signal(\\"d\\");
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.a();
-        this.b();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.a();
+          this.b();
+          // ---
 
-        console.log(\\"Runs when a or b changes\\", this.a(), this.b());
+          console.log(\\"Runs when a or b changes\\", this.a(), this.b());
 
-        if (this.a() === \\"a\\") {
-          this.a.set(\\"b\\");
+          if (this.a() === \\"a\\") {
+            this.a.set(\\"b\\");
+          }
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
         }
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.c();
-        this.d();
-        // ---
+      );
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.c();
+          this.d();
+          // ---
 
-        console.log(\\"Runs when c or d changes\\", this.c(), this.d());
+          console.log(\\"Runs when c or d changes\\", this.c(), this.d());
 
-        if (this.a() === \\"a\\") {
-          this.a.set(\\"b\\");
+          if (this.a() === \\"a\\") {
+            this.a.set(\\"b\\");
+          }
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
         }
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+      );
+    }
   }
 }
 "
@@ -4461,14 +4522,16 @@ export class MyBasicComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -4661,7 +4724,7 @@ export class Embed {
 
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.elem()?.nativeElement.dispatchEvent(
       new CustomEvent(\\"initEditingBldr\\")
     );
@@ -4688,6 +4751,9 @@ export class OnInit {
 
   ngOnInit() {
     console.log(\\"onInit\\");
+  }
+
+  ngAfterViewInit() {
     console.log(\\"onMount\\");
   }
 }
@@ -4765,7 +4831,7 @@ import { CommonModule } from \\"@angular/common\\";
 export class Comp {
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     console.log(\\"Runs on mount\\");
   }
 
@@ -4792,7 +4858,7 @@ import { CommonModule } from \\"@angular/common\\";
 export class Comp {
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     const onMountHook_0 = () => {
       console.log(\\"Runs on mount\\");
     };
@@ -4825,14 +4891,16 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export class OnUpdate {
   constructor() {
-    effect(
-      () => {
-        console.log(\\"Runs on every update/rerender\\");
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -4858,25 +4926,27 @@ export class OnUpdateWithDeps {
   b = signal(\\"b\\");
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.a();
-        this.b();
-        this.size();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.a();
+          this.b();
+          this.size();
+          // ---
 
-        console.log(
-          \\"Runs when a, b or size changes\\",
-          this.a(),
-          this.b(),
-          this.size()
-        );
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+          console.log(
+            \\"Runs when a, b or size changes\\",
+            this.a(),
+            this.b(),
+            this.size()
+          );
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -5055,16 +5125,18 @@ export class OnUpdate {
   }
 
   constructor() {
-    effect(
-      () => {
-        this.foo({
-          someOption: this.bar.bind(this),
-        });
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.foo({
+            someOption: this.bar.bind(this),
+          });
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -5114,7 +5186,7 @@ import { RenderRepeatedBlock } from \\"./render-repeated-block.lite\\";
               \\"
     ></ng-container>
     } @if(!isEmptyHtmlElement(tag()) && repeatItemData()){ @for (data of
-    repeatItemData();track trackByData0;let index = $index) {
+    repeatItemData();track trackByData0(index, data);let index = $index) {
     <render-repeated-block
       [repeatContext]=\\"data.context\\"
       [block]=\\"data.block\\"
@@ -5341,13 +5413,17 @@ export class RenderBlock {
 
   constructor(private viewContainer: ViewContainerRef) {}
 
-  ngAfterContentInit() {
+  _updateView() {
     this.myContent.set([
       this.viewContainer.createEmbeddedView(
         this.rendercomponenttagTemplateRef()
       ).rootNodes,
       this.viewContainer.createEmbeddedView(this.tagTemplateRef()).rootNodes,
     ]);
+  }
+
+  ngAfterContentInit() {
+    this._updateView();
   }
 }
 "
@@ -5388,21 +5464,23 @@ export class RenderContent {
   content = input<any>();
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.content();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.content();
+          // ---
 
-        dispatchNewContentToVisualEditor(this.content());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+          dispatchNewContentToVisualEditor(this.content());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     sendComponentsToVisualEditor(this.customComponents());
   }
 }
@@ -5478,22 +5556,24 @@ export class Button {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -5691,8 +5771,8 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`
-    @if(conditionA()){ @for (item of items();track trackByItem0;let idx =
-    $index) {
+    @if(conditionA()){ @for (item of items();track trackByItem0(idx, item);let
+    idx = $index) {
     <div>{{item}}</div>
     } }@else{
     <div>else-condition-A</div>
@@ -5825,23 +5905,25 @@ export class SignalsTestComponent {
   }
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this._counter();
-        this.buttonRef();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this._counter();
+          this.buttonRef();
+          // ---
 
-        console.log(this._counter(), this.buttonRef()?.nativeElement);
-        this.buttonRef()?.nativeElement?.setAttribute(
-          \\"data-counter\\",
-          this._counter().toString()
-        );
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+          console.log(this._counter(), this.buttonRef()?.nativeElement);
+          this.buttonRef()?.nativeElement?.setAttribute(
+            \\"data-counter\\",
+            this._counter().toString()
+          );
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -5869,22 +5951,24 @@ export class MyBasicComponent {
   foo = input<any>();
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.id();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.id();
+          // ---
 
-        console.log(\\"props.id changed\\", this.id());
-        console.log(
-          \\"props.foo.value.bar.baz changed\\",
-          this.foo().value.bar.baz
-        );
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+          console.log(\\"props.id changed\\", this.id());
+          console.log(
+            \\"props.foo.value.bar.baz changed\\",
+            this.foo().value.bar.baz
+          );
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -5940,14 +6024,16 @@ export class MyBasicComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, attrs);
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, attrs);
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -6016,14 +6102,16 @@ export class MyBasicComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.nested());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.nested());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -6175,7 +6263,6 @@ return Promise.resolve();
 
 
         constructor() {
-
         }
 
 
@@ -6247,7 +6334,6 @@ export class StringLiteralStore {
 
 
   constructor() {
-
   }
 
 
@@ -6394,9 +6480,9 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
   template: \`
     <div>
-      @for (item of items();track trackByItem0;let i = $index) {
+      @for (item of items();track trackByItem0(i, item);let i = $index) {
       <div>{{item}}</div>
-      } @for (item of items();track trackByItem1;let i = $index) {
+      } @for (item of items();track trackByItem1(i, item);let i = $index) {
       <div>{{item}}</div>
       }
     </div>
@@ -6689,7 +6775,7 @@ export class UseTargetComponent {
 
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     console.log(this.foo());
     this.foo.set(\\"bar\\");
   }
@@ -6856,19 +6942,21 @@ export class MyBasicRefComponent {
   }
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.inputRef();
-        this.inputNoArgRef();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.inputRef();
+          this.inputNoArgRef();
+          // ---
 
-        console.log(\\"Received an update\\");
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+          console.log(\\"Received an update\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -6988,6 +7076,9 @@ export class MyBasicComponent {
   ngOnInit() {
     const hi = this.myService.method(\\"hi\\");
     console.log(hi);
+  }
+
+  ngAfterViewInit() {
     const bye = this.myService.method(\\"hi\\");
     console.log(bye);
   }
@@ -7024,6 +7115,9 @@ export class MyBasicOnMountUpdateComponent {
 
   ngOnInit() {
     this.name.set(\\"PatrickJS onInit\\" + this.hi());
+  }
+
+  ngAfterViewInit() {
     this.name.set(\\"PatrickJS onMount\\" + this.bye());
   }
 }
@@ -7052,7 +7146,7 @@ export class MyBasicOutputsComponent {
 
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.messageChange.emit(this.name());
     this.event.emit(this.message());
   }
@@ -7087,7 +7181,7 @@ export class MyBasicOutputsComponent {
 
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.messageChange.emit(this.name());
     this.event.emit(this.message());
   }
@@ -7236,7 +7330,7 @@ export class MyBasicForComponent {
 
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     console.log(\\"onMount code\\");
   }
 }
@@ -7376,18 +7470,20 @@ export class MyPreviousComponent {
   count = signal(0);
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.count();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.count();
+          // ---
 
-        this._prevCount = this.count();
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+          this._prevCount = this.count();
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -7469,22 +7565,24 @@ export class Button {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -7703,14 +7801,16 @@ export class ContentSlotJsxCode {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -7809,7 +7909,7 @@ export class CustomCode {
 
   constructor(protected sanitizer: DomSanitizer) {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.findAndRunScripts();
   }
 }
@@ -7899,7 +7999,7 @@ export class CustomCode {
 
   constructor(protected sanitizer: DomSanitizer) {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.findAndRunScripts();
   }
 }
@@ -7966,7 +8066,8 @@ import {
       #elRef0
     >
       @if(builderBlock() && builderBlock().children){ @for (block of
-      builderBlock()?.children;track trackByBlock0;let index = $index) {
+      builderBlock()?.children;track trackByBlock0(index, block);let index =
+      $index) {
       <builder-block-component
         [block]=\\"block\\"
         [index]=\\"index\\"
@@ -8281,14 +8382,16 @@ export class FormComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -8395,7 +8498,7 @@ export class Image {
 
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
@@ -8543,14 +8646,16 @@ export class ImgComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -8653,14 +8758,16 @@ export class FormInputComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -8834,14 +8941,16 @@ export class SectionComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -8927,14 +9036,16 @@ export class SectionStateComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -9033,14 +9144,16 @@ export class SelectComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -9199,7 +9312,8 @@ import { kebabCase, snakeCase } from \\"lodash\\";
       >
         Submit
       </button>
-      } @for (review of reviews();track trackByReview0;let index = $index) {
+      } @for (review of reviews();track trackByReview0(index, review);let index
+      = $index) {
       <div $name=\\"Review\\" class=\\"review\\">
         <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
         <div [class]=\\"showReviewPrompt() ? 'bg-primary' : 'bg-secondary'\\">
@@ -9257,7 +9371,7 @@ export class SmileReviews {
 
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     fetch(
       \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
         this.apiKey() || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
@@ -9404,14 +9518,16 @@ export class SubmitButton {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -9539,14 +9655,16 @@ export class Textarea {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -9599,16 +9717,18 @@ export class UseValueAndFnFromStore {
   }
 
   constructor() {
-    effect(
-      () => {
-        if (this._do.bind(this)) {
-          this._do(this._id());
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          if (this._do.bind(this)) {
+            this._do(this._id());
+          }
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
         }
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+      );
+    }
   }
 }
 "
@@ -9723,14 +9843,16 @@ export class Video {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -9813,44 +9935,46 @@ export class MyComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(
-          this.elRef0()?.nativeElement,
-          this.attrsUsingUseState()
-        );
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.properties());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, {
-          someOtherAttrs: this.accessHere(),
-          someStateAttrs: this.specifics(),
-        });
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(
+            this.elRef0()?.nativeElement,
+            this.attrsUsingUseState()
+          );
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.properties());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, {
+            someOtherAttrs: this.accessHere(),
+            someStateAttrs: this.specifics(),
+          });
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -9910,18 +10034,21 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
   template: \`
     <div>
-      @for (option of ['a', 'b', 'c'];track trackByOption0;let i = $index) {
+      @for (option of ['a', 'b', 'c'];track trackByOption0(i, option);let i =
+      $index) {
       <ng-container>
         <div>{{option}}</div>
       </ng-container>
-      } @for (option of ['a', 'b', 'c'];track trackByOption1;let i = $index) {
+      } @for (option of ['a', 'b', 'c'];track trackByOption1(i, option);let i =
+      $index) {
       <ng-container>
         <div>{{option}}</div>
       </ng-container>
       }
 
       <select>
-        @for (option of ['d', 'e', 'f'];track trackByOption2;let i = $index) {
+        @for (option of ['d', 'e', 'f'];track trackByOption2(i, option);let i =
+        $index) {
         <option [attr.value]=\\"option\\">{{option}}</option>
         }
       </select>
@@ -9997,7 +10124,7 @@ export class MyBasicForNoTagRefComponent {
 
   constructor(private viewContainer: ViewContainerRef) {}
 
-  ngAfterContentInit() {
+  _updateView() {
     this.myContent.set([
       this.viewContainer.createEmbeddedView(this.tagnamegetterTemplateRef())
         .rootNodes,
@@ -10006,6 +10133,10 @@ export class MyBasicForNoTagRefComponent {
         .rootNodes,
       this.viewContainer.createEmbeddedView(this.iconTemplateRef()).rootNodes,
     ]);
+  }
+
+  ngAfterContentInit() {
+    this._updateView();
   }
 }
 "
@@ -10060,7 +10191,6 @@ inputRef: HTMLInputElement;
 
 
         constructor() {
-
         }
 
 
@@ -10131,7 +10261,6 @@ inputRef: HTMLInputElement;
 
 
         constructor() {
-
         }
 
 
@@ -10164,31 +10293,33 @@ export class MyBasicOnUpdateReturnComponent {
   name = signal(\\"PatrickJS\\");
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.name();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.name();
+          // ---
 
-        const controller = new AbortController();
-        const signal = controller.signal;
-        fetch(\\"https://patrickjs.com/api/resource.json\\", {
-          signal,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            this.name.set(data.name);
-          });
-        return () => {
-          if (!signal.aborted) {
-            controller.abort();
-          }
-        };
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+          const controller = new AbortController();
+          const signal = controller.signal;
+          fetch(\\"https://patrickjs.com/api/resource.json\\", {
+            signal,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              this.name.set(data.name);
+            });
+          return () => {
+            if (!signal.aborted) {
+              controller.abort();
+            }
+          };
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -10779,22 +10910,24 @@ export class Button {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -10898,22 +11031,24 @@ export class Button {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -11021,10 +11156,14 @@ export class MyComponent {
 
   constructor(private viewContainer: ViewContainerRef) {}
 
-  ngAfterContentInit() {
+  _updateView() {
     this.myContent.set([
       this.viewContainer.createEmbeddedView(this.objTemplateRef()).rootNodes,
     ]);
+  }
+
+  ngAfterContentInit() {
+    this._updateView();
   }
 }
 "
@@ -11083,11 +11222,15 @@ export class MyComponent {
 
   constructor(private viewContainer: ViewContainerRef) {}
 
-  ngAfterContentInit() {
+  _updateView() {
     this.myContent.set([
       this.viewContainer.createEmbeddedView(this.componentTemplateRef())
         .rootNodes,
     ]);
+  }
+
+  ngAfterContentInit() {
+    this._updateView();
   }
 }
 "
@@ -11411,22 +11554,24 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export class MultipleOnUpdate {
   constructor() {
-    effect(
-      () => {
-        console.log(\\"Runs on every update/rerender\\");
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        console.log(\\"Runs on every update/rerender as well\\");
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender as well\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -11452,40 +11597,42 @@ export class MultipleOnUpdateWithDeps {
   d = signal(\\"d\\");
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.a();
-        this.b();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.a();
+          this.b();
+          // ---
 
-        console.log(\\"Runs when a or b changes\\", this.a(), this.b());
+          console.log(\\"Runs when a or b changes\\", this.a(), this.b());
 
-        if (this.a() === \\"a\\") {
-          this.a.set(\\"b\\");
+          if (this.a() === \\"a\\") {
+            this.a.set(\\"b\\");
+          }
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
         }
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.c();
-        this.d();
-        // ---
+      );
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.c();
+          this.d();
+          // ---
 
-        console.log(\\"Runs when c or d changes\\", this.c(), this.d());
+          console.log(\\"Runs when c or d changes\\", this.c(), this.d());
 
-        if (this.a() === \\"a\\") {
-          this.a.set(\\"b\\");
+          if (this.a() === \\"a\\") {
+            this.a.set(\\"b\\");
+          }
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
         }
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+      );
+    }
   }
 }
 "
@@ -11544,14 +11691,16 @@ export class MyBasicComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -11753,7 +11902,7 @@ export class Embed {
 
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.elem()?.nativeElement.dispatchEvent(
       new CustomEvent(\\"initEditingBldr\\")
     );
@@ -11780,6 +11929,9 @@ export class OnInit {
 
   ngOnInit() {
     console.log(\\"onInit\\");
+  }
+
+  ngAfterViewInit() {
     console.log(\\"onMount\\");
   }
 }
@@ -11861,7 +12013,7 @@ import { CommonModule } from \\"@angular/common\\";
 export class Comp {
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     console.log(\\"Runs on mount\\");
   }
 
@@ -11888,7 +12040,7 @@ import { CommonModule } from \\"@angular/common\\";
 export class Comp {
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     const onMountHook_0 = () => {
       console.log(\\"Runs on mount\\");
     };
@@ -11921,14 +12073,16 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export class OnUpdate {
   constructor() {
-    effect(
-      () => {
-        console.log(\\"Runs on every update/rerender\\");
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -11958,25 +12112,27 @@ export class OnUpdateWithDeps {
   b = signal(\\"b\\");
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.a();
-        this.b();
-        this.size();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.a();
+          this.b();
+          this.size();
+          // ---
 
-        console.log(
-          \\"Runs when a, b or size changes\\",
-          this.a(),
-          this.b(),
-          this.size()
-        );
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+          console.log(
+            \\"Runs when a, b or size changes\\",
+            this.a(),
+            this.b(),
+            this.size()
+          );
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -12193,16 +12349,18 @@ export class OnUpdate {
   }
 
   constructor() {
-    effect(
-      () => {
-        this.foo({
-          someOption: this.bar.bind(this),
-        });
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.foo({
+            someOption: this.bar.bind(this),
+          });
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -12265,7 +12423,7 @@ import type { RepeatData } from \\"./types.js\\";
               \\"
     ></ng-container>
     } @if(!isEmptyHtmlElement(tag()) && repeatItemData()){ @for (data of
-    repeatItemData();track trackByData0;let index = $index) {
+    repeatItemData();track trackByData0(index, data);let index = $index) {
     <render-repeated-block
       [repeatContext]=\\"data.context\\"
       [block]=\\"data.block\\"
@@ -12492,13 +12650,17 @@ export class RenderBlock {
 
   constructor(private viewContainer: ViewContainerRef) {}
 
-  ngAfterContentInit() {
+  _updateView() {
     this.myContent.set([
       this.viewContainer.createEmbeddedView(
         this.rendercomponenttagTemplateRef()
       ).rootNodes,
       this.viewContainer.createEmbeddedView(this.tagTemplateRef()).rootNodes,
     ]);
+  }
+
+  ngAfterContentInit() {
+    this._updateView();
   }
 }
 "
@@ -12547,21 +12709,23 @@ export class RenderContent {
   content = input<Props[\\"content\\"]>();
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.content();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.content();
+          // ---
 
-        dispatchNewContentToVisualEditor(this.content());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+          dispatchNewContentToVisualEditor(this.content());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     sendComponentsToVisualEditor(this.customComponents());
   }
 }
@@ -12644,22 +12808,24 @@ export class Button {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
-    effect(
-      () => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -12871,8 +13037,8 @@ interface Props {
   standalone: true,
   imports: [CommonModule],
   template: \`
-    @if(conditionA()){ @for (item of items();track trackByItem0;let idx =
-    $index) {
+    @if(conditionA()){ @for (item of items();track trackByItem0(idx, item);let
+    idx = $index) {
     <div>{{item}}</div>
     } }@else{
     <div>else-condition-A</div>
@@ -13026,23 +13192,25 @@ export class SignalsTestComponent {
   }
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this._counter();
-        this.buttonRef();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this._counter();
+          this.buttonRef();
+          // ---
 
-        console.log(this._counter(), this.buttonRef()?.nativeElement);
-        this.buttonRef()?.nativeElement?.setAttribute(
-          \\"data-counter\\",
-          this._counter().toString()
-        );
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+          console.log(this._counter(), this.buttonRef()?.nativeElement);
+          this.buttonRef()?.nativeElement?.setAttribute(
+            \\"data-counter\\",
+            this._counter().toString()
+          );
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -13079,19 +13247,21 @@ export class MyBasicComponent {
   foo = input<Props[\\"foo\\"]>();
 
   constructor() {
-    effect(
-      () => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.id();
-        // ---
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.id();
+          // ---
 
-        console.log(\\"props.id changed\\", this.id());
-        console.log(\\"props.foo.value.bar.baz changed\\", this.foo().bar.baz);
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+          console.log(\\"props.id changed\\", this.id());
+          console.log(\\"props.foo.value.bar.baz changed\\", this.foo().bar.baz);
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -13147,14 +13317,16 @@ export class MyBasicComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, attrs);
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, attrs);
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -13223,14 +13395,16 @@ export class MyBasicComponent {
   }
 
   constructor(private renderer: Renderer2) {
-    effect(
-      () => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.nested());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.nested());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
   ngAfterViewInit() {
@@ -13382,7 +13556,6 @@ return Promise.resolve();
 
 
         constructor() {
-
         }
 
 
@@ -13454,7 +13627,6 @@ export class StringLiteralStore {
 
 
   constructor() {
-
   }
 
 
@@ -13601,9 +13773,9 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
   template: \`
     <div>
-      @for (item of items();track trackByItem0;let i = $index) {
+      @for (item of items();track trackByItem0(i, item);let i = $index) {
       <div>{{item}}</div>
-      } @for (item of items();track trackByItem1;let i = $index) {
+      } @for (item of items();track trackByItem1(i, item);let i = $index) {
       <div>{{item}}</div>
       }
     </div>
@@ -13914,7 +14086,7 @@ export class UseTargetComponent {
 
   constructor() {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     console.log(this.foo());
     this.foo.set(\\"bar\\");
   }
@@ -14263,17 +14435,19 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export class MyComponent {
   constructor() {
-    effect(
-      () => {
-        console.log(\\"onAfterUpdate\\");
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          console.log(\\"onAfterUpdate\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     console.log(\\"onMount\\");
   }
 
@@ -14349,14 +14523,16 @@ export class MyComponent {
   }
 
   constructor() {
-    effect(
-      () => {
-        this.calculateResult(this.a(), this.b());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.calculateResult(this.a(), this.b());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "
@@ -14753,17 +14929,19 @@ import { CommonModule } from \\"@angular/common\\";
 })
 export class MyComponent {
   constructor() {
-    effect(
-      () => {
-        console.log(\\"onAfterUpdate\\");
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          console.log(\\"onAfterUpdate\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     console.log(\\"onMount\\");
   }
 
@@ -14839,14 +15017,16 @@ export class MyComponent {
   }
 
   constructor() {
-    effect(
-      () => {
-        this.calculateResult(this.a(), this.b());
-      },
-      {
-        allowSignalWrites: true, // Enable writing to signals inside effects
-      }
-    );
+    if (typeof window !== \\"undefined\\") {
+      effect(
+        () => {
+          this.calculateResult(this.a(), this.b());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+    }
   }
 }
 "

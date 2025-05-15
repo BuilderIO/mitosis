@@ -83,7 +83,13 @@ ${children}
     const children = getChildren(root, json, options, blockOptions);
     const item = forName ?? '_';
     const of = forNode.bindings.each?.code;
-    const track = `track ${trackByFnName ? trackByFnName : indexName ? indexName : 'i'};`;
+    const track = `track ${
+      trackByFnName
+        ? `${trackByFnName}(${indexName ?? 'i'}, ${forName})`
+        : indexName
+        ? indexName
+        : 'i'
+    };`;
     const index = indexName ? `let ${indexName} = $index` : 'let i = $index';
 
     return `

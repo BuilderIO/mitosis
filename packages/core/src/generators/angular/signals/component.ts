@@ -63,6 +63,9 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
           ngAfterViewInit: {
             code: '',
           },
+          ngAfterContentInit: {
+            code: '',
+          },
         },
         extra: {
           importCalls: [],
@@ -130,14 +133,10 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
       injectables.push('protected sanitizer: DomSanitizer');
     }
 
-    // move all hooks that are not onSSR to ngAfterViewInit
-    const nonSSROnMounHooks = json.hooks.onMount.filter((hook) => hook.onSSR === false);
-    json.hooks.onMount = json.hooks.onMount.filter((hook) => hook.onSSR !== false);
-
-    if (nonSSROnMounHooks.length > 0) {
+    if (json.hooks.onMount.length > 0) {
       json.compileContext!.angular!.hooks!.ngAfterViewInit = {
         code: `
-        ${nonSSROnMounHooks.map((hook) => hook.code).join('\n')}
+        ${stringifySingleScopeOnMount(json)}
         `,
       };
     }
@@ -178,6 +177,8 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
     const hasDynamicComponents = dynamicComponents.size > 0;
     if (hasDynamicComponents) {
       injectables.push('private viewContainer: ViewContainerRef');
+      json.compileContext!.angular!.hooks!.ngAfterContentInit.code =
+        `this._updateView();` + json.compileContext!.angular!.hooks!.ngAfterContentInit.code;
     }
     // Angular component settings
     const componentsUsed = Array.from(getComponentsUsed(json)).filter(
@@ -359,10 +360,12 @@ Please add a initial value for every state property even if it's \`undefined\`.`
           ${gettersString}
           ${methodsString}
     
-          constructor(${injectables.join(',\n')}) {          
+          constructor(${injectables.join(',\n')}) {
           ${
-            json.hooks.onUpdate?.length
-              ? json.hooks.onUpdate
+            isHookEmpty(json.hooks.onUpdate)
+              ? ''
+              : `if (typeof window !== 'undefined') {
+                ${json.hooks.onUpdate
                   ?.map(
                     ({ code, depsArray }) =>
                       /**
@@ -386,26 +389,26 @@ Please add a initial value for every state property even if it's \`undefined\`.`
                       }
                       );`,
                   )
-                  .join('\n')
-              : ''
-          }
-          }
+                  .join('\n')}
+                  }
+                  `
+          }}
           
           ${withAttributePassing ? getAttributePassingString(options.typescript) : ''}
           
           ${
-            isHookEmpty(json.hooks.onMount) && isHookEmpty(json.hooks.onInit)
+            isHookEmpty(json.hooks.onInit)
               ? ''
               : `ngOnInit() {
                   ${!json.hooks?.onInit ? '' : json.hooks.onInit?.code}
-                  ${json.hooks.onMount.length > 0 ? stringifySingleScopeOnMount(json) : ''}
                 }`
           }
 
           ${
             !hasDynamicComponents
               ? ''
-              : `ngAfterContentInit() {
+              : `
+              _updateView() {
                 ${getInitEmbedViewCode(dynamicComponents)}
               }`
           }
