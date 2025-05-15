@@ -136,7 +136,9 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
     if (json.hooks.onMount.length > 0) {
       json.compileContext!.angular!.hooks!.ngAfterViewInit = {
         code: `
-        ${stringifySingleScopeOnMount(json)}
+        if (typeof window !== 'undefined') {
+          ${stringifySingleScopeOnMount(json)}
+        }
         `,
       };
     }
