@@ -1,3 +1,4 @@
+import { createObjectSpreadComputed } from '@/generators/angular/signals/helpers/get-computed';
 import { ToAngularOptions } from '@/generators/angular/types';
 import { babelTransformExpression } from '@/helpers/babel-transform';
 import { ProcessBindingOptions, processClassComponentBinding } from '@/helpers/class-components';
@@ -562,6 +563,12 @@ ${code}`);
       if (key === 'key') {
         return;
       }
+
+      // skip template literals in spread bindings
+      if (key && context?.node?.bindings?.[key]?.code.includes('...')) {
+        return;
+      }
+
       // When we encounter a template literal, convert it to a function
       const fnCall = handleTemplateLiteral(path, json, context);
       path.replaceWith(identifier(fnCall));
@@ -580,6 +587,60 @@ export const getCodeProcessorPlugins = (
       switch (codeType) {
         case 'bindings':
           return (code, key, context) => {
+            // Handle object spread expressions or TypeScript type assertions
+            if ((code.startsWith('{') && code.includes('...')) || code.includes(' as ')) {
+              if (context?.node?.bindings && key) {
+                const binding = context.node.bindings[key];
+
+                let isForContext = false;
+                let forName = '';
+                let indexName = '';
+
+                let currentContext = context;
+                while (currentContext?.parent) {
+                  if (currentContext.parent.node?.name === ForNodeName) {
+                    isForContext = true;
+                    const forNode = currentContext.parent.node;
+                    forName = forNode.scope.forName || '_';
+                    indexName = forNode.scope.indexName || '_';
+                    break;
+                  }
+                  currentContext = currentContext.parent;
+                }
+
+                const computedName = createObjectSpreadComputed(
+                  json,
+                  binding,
+                  key,
+                  isForContext,
+                  forName,
+                  indexName,
+                );
+
+                if (isForContext) {
+                  const params = [];
+                  if (forName) params.push(forName);
+                  if (indexName) params.push(indexName);
+
+                  if (params.length > 0) {
+                    return processClassComponentBinding(
+                      json,
+                      `${computedName}(${params.join(', ')})`,
+                      {
+                        ...processBindingOptions,
+                        replaceWith: 'this.',
+                      },
+                    );
+                  }
+                }
+
+                return processClassComponentBinding(json, `${computedName}()`, {
+                  ...processBindingOptions,
+                  replaceWith: 'this.',
+                });
+              }
+            }
+
             const needsToReplaceWithThis =
               (code.startsWith('{') && code.includes('...')) ||
               code.includes(' as ') ||

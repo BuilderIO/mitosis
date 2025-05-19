@@ -236,8 +236,10 @@ export class MyBasicComponent {
   }
 
   ngAfterViewInit() {
-    const bye = this.myService.method(\\"hi\\");
-    console.log(bye);
+    if (typeof window !== \\"undefined\\") {
+      const bye = this.myService.method(\\"hi\\");
+      console.log(bye);
+    }
   }
 }
 "
@@ -270,7 +272,9 @@ export class MyBasicOnMountUpdateComponent {
   }
 
   ngAfterViewInit() {
-    this.name.set(\\"PatrickJS onMount\\" + this.bye());
+    if (typeof window !== \\"undefined\\") {
+      this.name.set(\\"PatrickJS onMount\\" + this.bye());
+    }
   }
 }
 "
@@ -299,8 +303,10 @@ export class MyBasicOutputsComponent {
   constructor() {}
 
   ngAfterViewInit() {
-    this.messageChange.emit(this.name());
-    this.event.emit(this.message());
+    if (typeof window !== \\"undefined\\") {
+      this.messageChange.emit(this.name());
+      this.event.emit(this.message());
+    }
   }
 }
 "
@@ -334,8 +340,10 @@ export class MyBasicOutputsComponent {
   constructor() {}
 
   ngAfterViewInit() {
-    this.messageChange.emit(this.name());
-    this.event.emit(this.message());
+    if (typeof window !== \\"undefined\\") {
+      this.messageChange.emit(this.name());
+      this.event.emit(this.message());
+    }
   }
 }
 "
@@ -478,7 +486,9 @@ export class MyBasicForComponent {
   constructor() {}
 
   ngAfterViewInit() {
-    console.log(\\"onMount code\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount code\\");
+    }
   }
 }
 "
@@ -1006,7 +1016,9 @@ export class CustomCode {
   constructor(protected sanitizer: DomSanitizer) {}
 
   ngAfterViewInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 "
@@ -1091,7 +1103,9 @@ export class CustomCode {
   constructor(protected sanitizer: DomSanitizer) {}
 
   ngAfterViewInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 "
@@ -1540,27 +1554,30 @@ export class Image {
   constructor() {}
 
   ngAfterViewInit() {
-    if (this.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (this.pictureRef()?.nativeElement) {
-          const rect = this.pictureRef()?.nativeElement.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
+    if (typeof window !== \\"undefined\\") {
+      if (this.useLazyLoading()) {
+        // throttled scroll capture listener
+        const listener = () => {
+          if (this.pictureRef()?.nativeElement) {
+            const rect =
+              this.pictureRef()?.nativeElement.getBoundingClientRect();
+            const buffer = window.innerHeight / 2;
 
-          if (rect.top < window.innerHeight + buffer) {
-            this.load.set(true);
-            this.scrollListener.set(null);
-            window.removeEventListener(\\"scroll\\", listener);
+            if (rect.top < window.innerHeight + buffer) {
+              this.load.set(true);
+              this.scrollListener.set(null);
+              window.removeEventListener(\\"scroll\\", listener);
+            }
           }
-        }
-      };
+        };
 
-      this.scrollListener.set(listener);
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
+        this.scrollListener.set(listener);
+        window.addEventListener(\\"scroll\\", listener, {
+          capture: true,
+          passive: true,
+        });
+        listener();
+      }
     }
   }
 
@@ -2329,15 +2346,17 @@ export class SmileReviews {
   constructor() {}
 
   ngAfterViewInit() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey() || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId() || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews.set(data.data);
-      });
+    if (typeof window !== \\"undefined\\") {
+      fetch(
+        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+          this.apiKey() || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+        }&productId=\${this.productId() || \\"2410511106127\\"}\`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.reviews.set(data.data);
+        });
+    }
   }
 }
 "
@@ -2682,7 +2701,7 @@ import { CommonModule } from \\"@angular/common\\";
     <video
       preload=\\"none\\"
       #elRef0
-      [ngStyle]=\\"objSpread_style_yxyiqh()\\"
+      [ngStyle]=\\"objSpread_style_hq5qrw()\\"
       [attr.poster]=\\"posterImage()\\"
       [attr.autoplay]=\\"autoPlay()\\"
       [attr.muted]=\\"muted()\\"
@@ -2707,7 +2726,7 @@ export class Video {
 
   _listenerFns = new Map();
 
-  objSpread_style_yxyiqh = computed(() => {
+  objSpread_style_hq5qrw = computed(() => {
     return {
       width: \\"100%\\",
       height: \\"100%\\",
@@ -4725,9 +4744,11 @@ export class Embed {
   constructor() {}
 
   ngAfterViewInit() {
-    this.elem()?.nativeElement.dispatchEvent(
-      new CustomEvent(\\"initEditingBldr\\")
-    );
+    if (typeof window !== \\"undefined\\") {
+      this.elem()?.nativeElement.dispatchEvent(
+        new CustomEvent(\\"initEditingBldr\\")
+      );
+    }
   }
 }
 "
@@ -4754,7 +4775,9 @@ export class OnInit {
   }
 
   ngAfterViewInit() {
-    console.log(\\"onMount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 }
 "
@@ -4832,7 +4855,9 @@ export class Comp {
   constructor() {}
 
   ngAfterViewInit() {
-    console.log(\\"Runs on mount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on mount\\");
+    }
   }
 
   ngOnDestroy() {
@@ -4859,18 +4884,20 @@ export class Comp {
   constructor() {}
 
   ngAfterViewInit() {
-    const onMountHook_0 = () => {
-      console.log(\\"Runs on mount\\");
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      console.log(\\"Another one runs on Mount\\");
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      console.log(\\"SSR runs on Mount\\");
-    };
-    onMountHook_2();
+    if (typeof window !== \\"undefined\\") {
+      const onMountHook_0 = () => {
+        console.log(\\"Runs on mount\\");
+      };
+      onMountHook_0();
+      const onMountHook_1 = () => {
+        console.log(\\"Another one runs on Mount\\");
+      };
+      onMountHook_1();
+      const onMountHook_2 = () => {
+        console.log(\\"SSR runs on Mount\\");
+      };
+      onMountHook_2();
+    }
   }
 }
 "
@@ -5481,7 +5508,9 @@ export class RenderContent {
   }
 
   ngAfterViewInit() {
-    sendComponentsToVisualEditor(this.customComponents());
+    if (typeof window !== \\"undefined\\") {
+      sendComponentsToVisualEditor(this.customComponents());
+    }
   }
 }
 "
@@ -6198,7 +6227,7 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule, Comp],
   template: \`
-    <Comp [val]=\\"objSpread_val_6y525v()\\">{{val()}}</Comp>
+    <Comp [val]=\\"objSpread_val_yy75n1()\\">{{val()}}</Comp>
   \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -6207,7 +6236,7 @@ export class MyComponent {
 
   val = signal(undefined);
 
-  objSpread_val_6y525v = computed(() => {
+  objSpread_val_yy75n1 = computed(() => {
     return { ...this.val() };
   });
 
@@ -6691,11 +6720,11 @@ import { CommonModule } from \\"@angular/common\\";
   template: \`
     <div>
       <Comp
-        [val1]=\\"objSpread_val1_1ndsmf()\\"
-        [val2]=\\"objSpread_val2_yxuigh()\\"
-        [val3]=\\"objSpread_val3_x5ar0q()\\"
-        [val4]=\\"objSpread_val4_4xuou0()\\"
-        [val5]=\\"objSpread_val5_qgyhyp()\\"
+        [val1]=\\"objSpread_val1_i10b3b()\\"
+        [val2]=\\"objSpread_val2_dcdfhf()\\"
+        [val3]=\\"objSpread_val3_2cisei()\\"
+        [val4]=\\"objSpread_val4_wb8314()\\"
+        [val5]=\\"objSpread_val5_1ruo5o()\\"
         [val6]=\\"{
           anything: [1, 2, 3]
         }\\"
@@ -6717,16 +6746,16 @@ export class MyComponent {
     id3: 1,
   });
 
-  objSpread_val1_1ndsmf = computed(() => {
+  objSpread_val1_i10b3b = computed(() => {
     return { ...this.attributes2() };
   });
-  objSpread_val2_yxuigh = computed(() => {
+  objSpread_val2_dcdfhf = computed(() => {
     return { ...this.attributes(), ...this.attributes2() };
   });
-  objSpread_val3_x5ar0q = computed(() => {
+  objSpread_val3_2cisei = computed(() => {
     return { ...this.something(), anything: \\"hello\\", hello: \\"world\\" };
   });
-  objSpread_val4_4xuou0 = computed(() => {
+  objSpread_val4_wb8314 = computed(() => {
     return {
       ...this.attributes(),
       ...this.something(),
@@ -6735,7 +6764,7 @@ export class MyComponent {
       ...this.attributes2(),
     };
   });
-  objSpread_val5_qgyhyp = computed(() => {
+  objSpread_val5_1ruo5o = computed(() => {
     return {
       ...this.attributes(),
       ...this.something(),
@@ -6776,8 +6805,10 @@ export class UseTargetComponent {
   constructor() {}
 
   ngAfterViewInit() {
-    console.log(this.foo());
-    this.foo.set(\\"bar\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(this.foo());
+      this.foo.set(\\"bar\\");
+    }
   }
 }
 "
@@ -7079,8 +7110,10 @@ export class MyBasicComponent {
   }
 
   ngAfterViewInit() {
-    const bye = this.myService.method(\\"hi\\");
-    console.log(bye);
+    if (typeof window !== \\"undefined\\") {
+      const bye = this.myService.method(\\"hi\\");
+      console.log(bye);
+    }
   }
 }
 "
@@ -7118,7 +7151,9 @@ export class MyBasicOnMountUpdateComponent {
   }
 
   ngAfterViewInit() {
-    this.name.set(\\"PatrickJS onMount\\" + this.bye());
+    if (typeof window !== \\"undefined\\") {
+      this.name.set(\\"PatrickJS onMount\\" + this.bye());
+    }
   }
 }
 "
@@ -7147,8 +7182,10 @@ export class MyBasicOutputsComponent {
   constructor() {}
 
   ngAfterViewInit() {
-    this.messageChange.emit(this.name());
-    this.event.emit(this.message());
+    if (typeof window !== \\"undefined\\") {
+      this.messageChange.emit(this.name());
+      this.event.emit(this.message());
+    }
   }
 }
 "
@@ -7182,8 +7219,10 @@ export class MyBasicOutputsComponent {
   constructor() {}
 
   ngAfterViewInit() {
-    this.messageChange.emit(this.name());
-    this.event.emit(this.message());
+    if (typeof window !== \\"undefined\\") {
+      this.messageChange.emit(this.name());
+      this.event.emit(this.message());
+    }
   }
 }
 "
@@ -7331,7 +7370,9 @@ export class MyBasicForComponent {
   constructor() {}
 
   ngAfterViewInit() {
-    console.log(\\"onMount code\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount code\\");
+    }
   }
 }
 "
@@ -7910,7 +7951,9 @@ export class CustomCode {
   constructor(protected sanitizer: DomSanitizer) {}
 
   ngAfterViewInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 "
@@ -8000,7 +8043,9 @@ export class CustomCode {
   constructor(protected sanitizer: DomSanitizer) {}
 
   ngAfterViewInit() {
-    this.findAndRunScripts();
+    if (typeof window !== \\"undefined\\") {
+      this.findAndRunScripts();
+    }
   }
 }
 "
@@ -8499,27 +8544,30 @@ export class Image {
   constructor() {}
 
   ngAfterViewInit() {
-    if (this.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (this.pictureRef()?.nativeElement) {
-          const rect = this.pictureRef()?.nativeElement.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
+    if (typeof window !== \\"undefined\\") {
+      if (this.useLazyLoading()) {
+        // throttled scroll capture listener
+        const listener = () => {
+          if (this.pictureRef()?.nativeElement) {
+            const rect =
+              this.pictureRef()?.nativeElement.getBoundingClientRect();
+            const buffer = window.innerHeight / 2;
 
-          if (rect.top < window.innerHeight + buffer) {
-            this.load.set(true);
-            this.scrollListener.set(null);
-            window.removeEventListener(\\"scroll\\", listener);
+            if (rect.top < window.innerHeight + buffer) {
+              this.load.set(true);
+              this.scrollListener.set(null);
+              window.removeEventListener(\\"scroll\\", listener);
+            }
           }
-        }
-      };
+        };
 
-      this.scrollListener.set(listener);
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
+        this.scrollListener.set(listener);
+        window.addEventListener(\\"scroll\\", listener, {
+          capture: true,
+          passive: true,
+        });
+        listener();
+      }
     }
   }
 
@@ -9372,15 +9420,17 @@ export class SmileReviews {
   constructor() {}
 
   ngAfterViewInit() {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        this.apiKey() || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${this.productId() || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        this.reviews.set(data.data);
-      });
+    if (typeof window !== \\"undefined\\") {
+      fetch(
+        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+          this.apiKey() || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+        }&productId=\${this.productId() || \\"2410511106127\\"}\`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.reviews.set(data.data);
+        });
+    }
   }
 }
 "
@@ -9781,7 +9831,7 @@ export interface VideoProps {
     <video
       preload=\\"none\\"
       #elRef0
-      [ngStyle]=\\"objSpread_style_yxyiqh()\\"
+      [ngStyle]=\\"objSpread_style_hq5qrw()\\"
       [attr.poster]=\\"posterImage()\\"
       [attr.autoplay]=\\"autoPlay()\\"
       [attr.muted]=\\"muted()\\"
@@ -9806,7 +9856,7 @@ export class Video {
 
   _listenerFns = new Map();
 
-  objSpread_style_yxyiqh = computed(() => {
+  objSpread_style_hq5qrw = computed(() => {
     return {
       width: \\"100%\\",
       height: \\"100%\\",
@@ -11903,9 +11953,11 @@ export class Embed {
   constructor() {}
 
   ngAfterViewInit() {
-    this.elem()?.nativeElement.dispatchEvent(
-      new CustomEvent(\\"initEditingBldr\\")
-    );
+    if (typeof window !== \\"undefined\\") {
+      this.elem()?.nativeElement.dispatchEvent(
+        new CustomEvent(\\"initEditingBldr\\")
+      );
+    }
   }
 }
 "
@@ -11932,7 +11984,9 @@ export class OnInit {
   }
 
   ngAfterViewInit() {
-    console.log(\\"onMount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 }
 "
@@ -12014,7 +12068,9 @@ export class Comp {
   constructor() {}
 
   ngAfterViewInit() {
-    console.log(\\"Runs on mount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"Runs on mount\\");
+    }
   }
 
   ngOnDestroy() {
@@ -12041,18 +12097,20 @@ export class Comp {
   constructor() {}
 
   ngAfterViewInit() {
-    const onMountHook_0 = () => {
-      console.log(\\"Runs on mount\\");
-    };
-    onMountHook_0();
-    const onMountHook_1 = () => {
-      console.log(\\"Another one runs on Mount\\");
-    };
-    onMountHook_1();
-    const onMountHook_2 = () => {
-      console.log(\\"SSR runs on Mount\\");
-    };
-    onMountHook_2();
+    if (typeof window !== \\"undefined\\") {
+      const onMountHook_0 = () => {
+        console.log(\\"Runs on mount\\");
+      };
+      onMountHook_0();
+      const onMountHook_1 = () => {
+        console.log(\\"Another one runs on Mount\\");
+      };
+      onMountHook_1();
+      const onMountHook_2 = () => {
+        console.log(\\"SSR runs on Mount\\");
+      };
+      onMountHook_2();
+    }
   }
 }
 "
@@ -12726,7 +12784,9 @@ export class RenderContent {
   }
 
   ngAfterViewInit() {
-    sendComponentsToVisualEditor(this.customComponents());
+    if (typeof window !== \\"undefined\\") {
+      sendComponentsToVisualEditor(this.customComponents());
+    }
   }
 }
 "
@@ -13491,7 +13551,7 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule, Comp],
   template: \`
-    <Comp [val]=\\"objSpread_val_6y525v()\\">{{val()}}</Comp>
+    <Comp [val]=\\"objSpread_val_yy75n1()\\">{{val()}}</Comp>
   \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -13500,7 +13560,7 @@ export class MyComponent {
 
   val = signal(undefined);
 
-  objSpread_val_6y525v = computed(() => {
+  objSpread_val_yy75n1 = computed(() => {
     return { ...this.val() };
   });
 
@@ -14002,11 +14062,11 @@ import { CommonModule } from \\"@angular/common\\";
   template: \`
     <div>
       <Comp
-        [val1]=\\"objSpread_val1_1ndsmf()\\"
-        [val2]=\\"objSpread_val2_yxuigh()\\"
-        [val3]=\\"objSpread_val3_x5ar0q()\\"
-        [val4]=\\"objSpread_val4_4xuou0()\\"
-        [val5]=\\"objSpread_val5_qgyhyp()\\"
+        [val1]=\\"objSpread_val1_i10b3b()\\"
+        [val2]=\\"objSpread_val2_dcdfhf()\\"
+        [val3]=\\"objSpread_val3_2cisei()\\"
+        [val4]=\\"objSpread_val4_wb8314()\\"
+        [val5]=\\"objSpread_val5_1ruo5o()\\"
         [val6]=\\"{
           anything: [1, 2, 3]
         }\\"
@@ -14028,16 +14088,16 @@ export class MyComponent {
     id3: 1,
   });
 
-  objSpread_val1_1ndsmf = computed(() => {
+  objSpread_val1_i10b3b = computed(() => {
     return { ...this.attributes2() };
   });
-  objSpread_val2_yxuigh = computed(() => {
+  objSpread_val2_dcdfhf = computed(() => {
     return { ...this.attributes(), ...this.attributes2() };
   });
-  objSpread_val3_x5ar0q = computed(() => {
+  objSpread_val3_2cisei = computed(() => {
     return { ...this.something(), anything: \\"hello\\", hello: \\"world\\" };
   });
-  objSpread_val4_4xuou0 = computed(() => {
+  objSpread_val4_wb8314 = computed(() => {
     return {
       ...this.attributes(),
       ...this.something(),
@@ -14046,7 +14106,7 @@ export class MyComponent {
       ...this.attributes2(),
     };
   });
-  objSpread_val5_qgyhyp = computed(() => {
+  objSpread_val5_1ruo5o = computed(() => {
     return {
       ...this.attributes(),
       ...this.something(),
@@ -14087,8 +14147,10 @@ export class UseTargetComponent {
   constructor() {}
 
   ngAfterViewInit() {
-    console.log(this.foo());
-    this.foo.set(\\"bar\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(this.foo());
+      this.foo.set(\\"bar\\");
+    }
   }
 }
 "
@@ -14448,7 +14510,9 @@ export class MyComponent {
   }
 
   ngAfterViewInit() {
-    console.log(\\"onMount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 
   ngOnDestroy() {
@@ -14942,7 +15006,9 @@ export class MyComponent {
   }
 
   ngAfterViewInit() {
-    console.log(\\"onMount\\");
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
   }
 
   ngOnDestroy() {

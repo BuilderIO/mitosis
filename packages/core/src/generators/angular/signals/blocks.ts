@@ -1,7 +1,6 @@
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '@/constants/html_tags';
 import { HELPER_FUNCTIONS, hasFirstChildKeyAttribute } from '@/generators/angular/helpers';
 import { parseSelector } from '@/generators/angular/helpers/parse-selector';
-import { createObjectSpreadComputed } from '@/generators/angular/signals/helpers/get-computed';
 import { AngularBlockOptions, ToAngularOptions } from '@/generators/angular/types';
 import { babelTransformExpression } from '@/helpers/babel-transform';
 import { createSingleBinding } from '@/helpers/bindings';
@@ -325,10 +324,6 @@ Please create a new function with the EventTarget and use e.g:
         ? ` [innerHTML]="${code}" `
         : ` [innerHTML]="sanitizer.bypassSecurityTrustHtml(${code})" `;
     } else {
-      if ((code.startsWith('{') && code.includes('...')) || code.includes(' as ')) {
-        const computedName = createObjectSpreadComputed(root, binding, key);
-        return `[${keyToUse}]="${computedName}()"`;
-      }
       return `[${keyToUse}]="${code}"`;
     }
   };
