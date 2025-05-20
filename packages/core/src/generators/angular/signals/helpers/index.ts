@@ -39,6 +39,8 @@ export const getAngularCoreImportsAsString = ({
     signal,
     computed,
     ChangeDetectionStrategy: onPush,
+    InputSignal: input,
+    ModelSignal: model,
   };
   return Object.entries(angularCoreImports)
     .map(([key, bool]) => (bool ? key : ''))
