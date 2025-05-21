@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.10.0
+
+### Minor Changes
+
+- dee8a62: add flag for serializing and parsing deeply nested nodes
+
+## 0.9.5
+
+### Patch Changes
+
+- df7c51b: Addresses issue in the swift string format generator
+
 ## 0.9.4
 
 ### Patch Changes
