@@ -1,5 +1,17 @@
 # @builder.io/mitosis-cli
 
+## 0.11.0
+
+### Minor Changes
+
+- 3baeefe: [cli] add `cosmiconfig` to load different configs:
+
+  - `mitosis.config.js`
+  - `mitosis.config.ts`
+  - `mitosis.config.mjs`
+  - `mitosis.config.cjs`
+  - `mitosis.config.json`
+
 ## 0.10.0
 
 ### Patch Changes
