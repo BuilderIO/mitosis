@@ -160,7 +160,7 @@ describe('Builder Personalization Container/Variants', () => {
 
       export default function MyComponent(props) {
         return (
-          <PersonalizationContainer variants={}>
+          <PersonalizationContainer variants={[]}>
             <Variant default=\\"\\" />
           </PersonalizationContainer>
         );
