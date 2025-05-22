@@ -138,4 +138,34 @@ describe('Builder Personalization Container/Variants', () => {
     });
     expect(mitosis.trim()).toEqual(code.trim());
   });
+  
+  test('do not generate empty variant expression', () => {
+    const builderJson = {
+      "@type": "@builder.io/sdk:Element" as const,
+      "@version": 2,
+      "id": "builder-a12265b5892b4d6e8e37873369218409",
+      "component": {
+        "name": "PersonalizationContainer",
+        "options": {
+          "variants": []
+        }
+      }
+    }
+    const backToMitosis = builderContentToMitosisComponent({ data: { blocks: [builderJson] } });    
+    const mitosis = componentToMitosis()({
+      component: backToMitosis,
+    });
+    expect(mitosis).toMatchInlineSnapshot(`
+      "import { PersonalizationContainer, Variant } from \\"@components\\";
+
+      export default function MyComponent(props) {
+        return (
+          <PersonalizationContainer variants={}>
+            <Variant default=\\"\\" />
+          </PersonalizationContainer>
+        );
+      }
+      "
+    `);
+  });
 });
