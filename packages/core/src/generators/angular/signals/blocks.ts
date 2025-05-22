@@ -260,7 +260,7 @@ const handleSpreadBinding = (node: MitosisNode, binding: Binding, root: MitosisC
 const stringifyBinding =
   (node: MitosisNode, blockOptions: AngularBlockOptions, root: MitosisComponent) =>
   ([key, binding]: [string, Binding | undefined]) => {
-    if (key.startsWith('$') || key.startsWith('"') || key === 'key') {
+    if (key.startsWith('$') || key === 'key') {
       return;
     }
     if (binding?.type === 'spread') {
