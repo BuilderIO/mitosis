@@ -1,9 +1,9 @@
 import { componentToBuilder } from '@/generators/builder';
 import { componentToMitosis } from '@/generators/mitosis';
+import { dedent } from '@/helpers/dedent';
 import { builderContentToMitosisComponent } from '@/parsers/builder';
 import { parseJsx } from '@/parsers/jsx';
 import { describe, test } from 'vitest';
-import { dedent } from '@/helpers/dedent';
 
 describe('Builder Personalization Container/Variants', () => {
   test('Snapshot PersonalizedContainer', () => {
@@ -46,15 +46,15 @@ describe('Builder Personalization Container/Variants', () => {
         );
       }
     `;
-  
+
     const component = parseJsx(code);
     const builderJson = componentToBuilder()({ component });
     expect(builderJson.data?.blocks?.[0]).toMatchSnapshot();
-  
+
     const backToMitosis = builderContentToMitosisComponent(builderJson);
     const mitosis = componentToMitosis({
-        format: 'legacy',
-      })({
+      format: 'legacy',
+    })({
       component: backToMitosis,
     });
     expect(mitosis.trim()).toMatchInlineSnapshot(`
@@ -98,7 +98,7 @@ describe('Builder Personalization Container/Variants', () => {
       }"
     `);
   });
-  
+
   test('Regenerate PersonalizedContainer', () => {
     const code = dedent`
       import { PersonalizationContainer, Variant } from "@components";
@@ -127,31 +127,31 @@ describe('Builder Personalization Container/Variants', () => {
         );
       }
     `;
-  
+
     const component = parseJsx(code);
     const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
     const mitosis = componentToMitosis({
-        format: 'legacy',
-      })({
+      format: 'legacy',
+    })({
       component: backToMitosis,
     });
     expect(mitosis.trim()).toEqual(code.trim());
   });
-  
+
   test('do not generate empty variant expression', () => {
     const builderJson = {
-      "@type": "@builder.io/sdk:Element" as const,
-      "@version": 2,
-      "id": "builder-a12265b5892b4d6e8e37873369218409",
-      "component": {
-        "name": "PersonalizationContainer",
-        "options": {
-          "variants": []
-        }
-      }
-    }
-    const backToMitosis = builderContentToMitosisComponent({ data: { blocks: [builderJson] } });    
+      '@type': '@builder.io/sdk:Element' as const,
+      '@version': 2,
+      id: 'builder-a12265b5892b4d6e8e37873369218409',
+      component: {
+        name: 'PersonalizationContainer',
+        options: {
+          variants: [],
+        },
+      },
+    };
+    const backToMitosis = builderContentToMitosisComponent({ data: { blocks: [builderJson] } });
     const mitosis = componentToMitosis()({
       component: backToMitosis,
     });
