@@ -2,7 +2,7 @@
 '@builder.io/mitosis': minor
 ---
 
-revamp of the angular signals generator
+[Angular] revamp of the angular signals generator
 
 ### New
 
