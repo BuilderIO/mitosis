@@ -13,6 +13,7 @@ import { MitosisNode } from '@/types/mitosis-node';
 import * as babel from '@babel/core';
 import { pipe } from 'fp-ts/function';
 import traverse from 'neotraverse/legacy';
+import { blockToAngularSignals } from '../signals/blocks';
 
 export const HELPER_FUNCTIONS = (
   isTs?: boolean,
@@ -147,13 +148,18 @@ export const traverseToGetAllDynamicComponents = (
   json: MitosisComponent,
   options: ToAngularOptions,
   blockOptions: AngularBlockOptions,
+  api: 'signals' | 'classic' = 'classic',
 ) => {
   const components: Set<string> = new Set();
   let dynamicTemplate = '';
   traverse(json).forEach((item) => {
-    if (isMitosisNode(item) && item.name.includes('.') && item.name.split('.').length === 2) {
+    if (isMitosisNode(item) && item.name.includes('.')) {
       const children = item.children
-        .map((child) => blockToAngular({ root: json, json: child, options, blockOptions }))
+        .map((child) =>
+          api === 'classic'
+            ? blockToAngular({ root: json, json: child, options, blockOptions })
+            : blockToAngularSignals({ root: json, json: child, options, blockOptions }),
+        )
         .join('\n');
       dynamicTemplate = `<ng-template #${
         item.name.split('.')[1].toLowerCase() + 'Template'
