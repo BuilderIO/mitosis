@@ -215,7 +215,14 @@ export const blockToMitosis = (
   for (const key in json.slots) {
     const value = json.slots[key];
     str += ` ${key}={`;
-    if (value.length > 1) {
+
+    /**
+     * Pass the empty array as foo={[]} could be treated differently than not
+     * passing the prop at all.
+     */
+    if (value.length === 0) {
+      str += '[]';
+    } else if (value.length > 1) {
       str += '<>';
     }
     str += json.slots[key]
