@@ -101,14 +101,19 @@ export class MyBasicRefComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.inputRef();
-        this.inputNoArgRef();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.inputRef();
+          this.inputNoArgRef();
+          // ---
 
-        console.log(\\"Received an update\\");
-      });
+          console.log(\\"Received an update\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -612,13 +617,18 @@ export class MyPreviousComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.count();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.count();
+          // ---
 
-        this._prevCount = this.count();
-      });
+          this._prevCount = this.count();
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -695,12 +705,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -892,9 +912,14 @@ export class ContentSlotJsxCode implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -1433,9 +1458,14 @@ export class FormComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -1658,9 +1688,14 @@ export class ImgComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -1754,9 +1789,14 @@ export class FormInputComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -1912,9 +1952,14 @@ export class SectionComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -1998,9 +2043,14 @@ export class SectionStateComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -2092,9 +2142,14 @@ export class SelectComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -2430,9 +2485,14 @@ export class SubmitButton implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -2546,9 +2606,14 @@ export class Textarea implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -2594,11 +2659,16 @@ export class UseValueAndFnFromStore {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        if (this._do.bind(this)) {
-          this._do(this._id());
+      effect(
+        () => {
+          if (this._do.bind(this)) {
+            this._do(this._id());
+          }
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
         }
-      });
+      );
     }
   }
 }
@@ -2689,9 +2759,14 @@ export class Video implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -2778,24 +2853,44 @@ export class MyComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(
-          this.elRef0()?.nativeElement,
-          this.attrsUsingUseState()
-        );
-      });
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.properties());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, {
-          someOtherAttrs: this.accessHere(),
-          someStateAttrs: this.specifics(),
-        });
-      });
+      effect(
+        () => {
+          this.setAttributes(
+            this.elRef0()?.nativeElement,
+            this.attrsUsingUseState()
+          );
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.properties());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, {
+            someOtherAttrs: this.accessHere(),
+            someStateAttrs: this.specifics(),
+          });
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -2958,7 +3053,9 @@ export class MyBasicForNoTagRefComponent {
   }
 
   ngAfterContentInit() {
-    this._updateView();
+    if (typeof window !== \\"undefined\\") {
+      this._updateView();
+    }
   }
 }
 "
@@ -3108,26 +3205,31 @@ export class MyBasicOnUpdateReturnComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.name();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.name();
+          // ---
 
-        const controller = new AbortController();
-        const signal = controller.signal;
-        fetch(\\"https://patrickjs.com/api/resource.json\\", {
-          signal,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            this.name.set(data.name);
-          });
-        return () => {
-          if (!signal.aborted) {
-            controller.abort();
-          }
-        };
-      });
+          const controller = new AbortController();
+          const signal = controller.signal;
+          fetch(\\"https://patrickjs.com/api/resource.json\\", {
+            signal,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              this.name.set(data.name);
+            });
+          return () => {
+            if (!signal.aborted) {
+              controller.abort();
+            }
+          };
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -3682,12 +3784,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -3788,12 +3900,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -3903,7 +4025,9 @@ export class MyComponent {
   }
 
   ngAfterContentInit() {
-    this._updateView();
+    if (typeof window !== \\"undefined\\") {
+      this._updateView();
+    }
   }
 }
 "
@@ -3969,7 +4093,9 @@ export class MyComponent {
   }
 
   ngAfterContentInit() {
-    this._updateView();
+    if (typeof window !== \\"undefined\\") {
+      this._updateView();
+    }
   }
 }
 "
@@ -4255,12 +4381,22 @@ import { CommonModule } from \\"@angular/common\\";
 export class MultipleOnUpdate {
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        console.log(\\"Runs on every update/rerender\\");
-      });
-      effect(() => {
-        console.log(\\"Runs on every update/rerender as well\\");
-      });
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender as well\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -4286,30 +4422,40 @@ export class MultipleOnUpdateWithDeps {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.a();
-        this.b();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.a();
+          this.b();
+          // ---
 
-        console.log(\\"Runs when a or b changes\\", this.a(), this.b());
+          console.log(\\"Runs when a or b changes\\", this.a(), this.b());
 
-        if (this.a() === \\"a\\") {
-          this.a.set(\\"b\\");
+          if (this.a() === \\"a\\") {
+            this.a.set(\\"b\\");
+          }
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
         }
-      });
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.c();
-        this.d();
-        // ---
+      );
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.c();
+          this.d();
+          // ---
 
-        console.log(\\"Runs when c or d changes\\", this.c(), this.d());
+          console.log(\\"Runs when c or d changes\\", this.c(), this.d());
 
-        if (this.a() === \\"a\\") {
-          this.a.set(\\"b\\");
+          if (this.a() === \\"a\\") {
+            this.a.set(\\"b\\");
+          }
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
         }
-      });
+      );
     }
   }
 }
@@ -4369,9 +4515,14 @@ export class MyBasicComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -4718,9 +4869,14 @@ import { CommonModule } from \\"@angular/common\\";
 export class OnUpdate {
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        console.log(\\"Runs on every update/rerender\\");
-      });
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -4746,20 +4902,25 @@ export class OnUpdateWithDeps {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.a();
-        this.b();
-        this.size();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.a();
+          this.b();
+          this.size();
+          // ---
 
-        console.log(
-          \\"Runs when a, b or size changes\\",
-          this.a(),
-          this.b(),
-          this.size()
-        );
-      });
+          console.log(
+            \\"Runs when a, b or size changes\\",
+            this.a(),
+            this.b(),
+            this.size()
+          );
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -4956,11 +5117,16 @@ export class OnUpdate {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.foo({
-          someOption: this.bar.bind(this),
-        });
-      });
+      effect(
+        () => {
+          this.foo({
+            someOption: this.bar.bind(this),
+          });
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -5247,7 +5413,9 @@ export class RenderBlock {
   }
 
   ngAfterContentInit() {
-    this._updateView();
+    if (typeof window !== \\"undefined\\") {
+      this._updateView();
+    }
   }
 }
 "
@@ -5293,13 +5461,18 @@ export class RenderContent implements AfterViewInit {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.content();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.content();
+          // ---
 
-        dispatchNewContentToVisualEditor(this.content());
-      });
+          dispatchNewContentToVisualEditor(this.content());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -5382,12 +5555,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -5703,18 +5886,23 @@ export class SignalsTestComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this._counter();
-        this.buttonRef();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this._counter();
+          this.buttonRef();
+          // ---
 
-        console.log(this._counter(), this.buttonRef()?.nativeElement);
-        this.buttonRef()?.nativeElement?.setAttribute(
-          \\"data-counter\\",
-          this._counter().toString()
-        );
-      });
+          console.log(this._counter(), this.buttonRef()?.nativeElement);
+          this.buttonRef()?.nativeElement?.setAttribute(
+            \\"data-counter\\",
+            this._counter().toString()
+          );
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -5742,17 +5930,22 @@ export class MyBasicComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.id();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.id();
+          // ---
 
-        console.log(\\"props.id changed\\", this.id());
-        console.log(
-          \\"props.foo.value.bar.baz changed\\",
-          this.foo().value.bar.baz
-        );
-      });
+          console.log(\\"props.id changed\\", this.id());
+          console.log(
+            \\"props.foo.value.bar.baz changed\\",
+            this.foo().value.bar.baz
+          );
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -5809,9 +6002,14 @@ export class MyBasicComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, attrs);
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, attrs);
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -5884,9 +6082,14 @@ export class MyBasicComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.nested());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.nested());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -6704,14 +6907,19 @@ export class MyBasicRefComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.inputRef();
-        this.inputNoArgRef();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.inputRef();
+          this.inputNoArgRef();
+          // ---
 
-        console.log(\\"Received an update\\");
-      });
+          console.log(\\"Received an update\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -7241,13 +7449,18 @@ export class MyPreviousComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.count();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.count();
+          // ---
 
-        this._prevCount = this.count();
-      });
+          this._prevCount = this.count();
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -7333,12 +7546,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -7565,9 +7788,14 @@ export class ContentSlotJsxCode implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -8163,9 +8391,14 @@ export class FormComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -8427,9 +8660,14 @@ export class ImgComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -8541,9 +8779,14 @@ export class FormInputComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -8718,9 +8961,14 @@ export class SectionComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -8811,9 +9059,14 @@ export class SectionStateComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -8920,9 +9173,14 @@ export class SelectComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -9287,9 +9545,14 @@ export class SubmitButton implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -9422,9 +9685,14 @@ export class Textarea implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -9479,11 +9747,16 @@ export class UseValueAndFnFromStore {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        if (this._do.bind(this)) {
-          this._do(this._id());
+      effect(
+        () => {
+          if (this._do.bind(this)) {
+            this._do(this._id());
+          }
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
         }
-      });
+      );
     }
   }
 }
@@ -9605,9 +9878,14 @@ export class Video implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -9694,24 +9972,44 @@ export class MyComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(
-          this.elRef0()?.nativeElement,
-          this.attrsUsingUseState()
-        );
-      });
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.properties());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, {
-          someOtherAttrs: this.accessHere(),
-          someStateAttrs: this.specifics(),
-        });
-      });
+      effect(
+        () => {
+          this.setAttributes(
+            this.elRef0()?.nativeElement,
+            this.attrsUsingUseState()
+          );
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.properties());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, {
+            someOtherAttrs: this.accessHere(),
+            someStateAttrs: this.specifics(),
+          });
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -9874,7 +10172,9 @@ export class MyBasicForNoTagRefComponent {
   }
 
   ngAfterContentInit() {
-    this._updateView();
+    if (typeof window !== \\"undefined\\") {
+      this._updateView();
+    }
   }
 }
 "
@@ -10030,26 +10330,31 @@ export class MyBasicOnUpdateReturnComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.name();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.name();
+          // ---
 
-        const controller = new AbortController();
-        const signal = controller.signal;
-        fetch(\\"https://patrickjs.com/api/resource.json\\", {
-          signal,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            this.name.set(data.name);
-          });
-        return () => {
-          if (!signal.aborted) {
-            controller.abort();
-          }
-        };
-      });
+          const controller = new AbortController();
+          const signal = controller.signal;
+          fetch(\\"https://patrickjs.com/api/resource.json\\", {
+            signal,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              this.name.set(data.name);
+            });
+          return () => {
+            if (!signal.aborted) {
+              controller.abort();
+            }
+          };
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -10642,12 +10947,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -10760,12 +11075,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -10879,7 +11204,9 @@ export class MyComponent {
   }
 
   ngAfterContentInit() {
-    this._updateView();
+    if (typeof window !== \\"undefined\\") {
+      this._updateView();
+    }
   }
 }
 "
@@ -10945,7 +11272,9 @@ export class MyComponent {
   }
 
   ngAfterContentInit() {
-    this._updateView();
+    if (typeof window !== \\"undefined\\") {
+      this._updateView();
+    }
   }
 }
 "
@@ -11251,12 +11580,22 @@ import { CommonModule } from \\"@angular/common\\";
 export class MultipleOnUpdate {
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        console.log(\\"Runs on every update/rerender\\");
-      });
-      effect(() => {
-        console.log(\\"Runs on every update/rerender as well\\");
-      });
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender as well\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -11282,30 +11621,40 @@ export class MultipleOnUpdateWithDeps {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.a();
-        this.b();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.a();
+          this.b();
+          // ---
 
-        console.log(\\"Runs when a or b changes\\", this.a(), this.b());
+          console.log(\\"Runs when a or b changes\\", this.a(), this.b());
 
-        if (this.a() === \\"a\\") {
-          this.a.set(\\"b\\");
+          if (this.a() === \\"a\\") {
+            this.a.set(\\"b\\");
+          }
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
         }
-      });
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.c();
-        this.d();
-        // ---
+      );
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.c();
+          this.d();
+          // ---
 
-        console.log(\\"Runs when c or d changes\\", this.c(), this.d());
+          console.log(\\"Runs when c or d changes\\", this.c(), this.d());
 
-        if (this.a() === \\"a\\") {
-          this.a.set(\\"b\\");
+          if (this.a() === \\"a\\") {
+            this.a.set(\\"b\\");
+          }
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
         }
-      });
+      );
     }
   }
 }
@@ -11365,9 +11714,14 @@ export class MyBasicComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -11727,9 +12081,14 @@ import { CommonModule } from \\"@angular/common\\";
 export class OnUpdate {
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        console.log(\\"Runs on every update/rerender\\");
-      });
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -11759,20 +12118,25 @@ export class OnUpdateWithDeps {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.a();
-        this.b();
-        this.size();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.a();
+          this.b();
+          this.size();
+          // ---
 
-        console.log(
-          \\"Runs when a, b or size changes\\",
-          this.a(),
-          this.b(),
-          this.size()
-        );
-      });
+          console.log(
+            \\"Runs when a, b or size changes\\",
+            this.a(),
+            this.b(),
+            this.size()
+          );
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -12008,11 +12372,16 @@ export class OnUpdate {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.foo({
-          someOption: this.bar.bind(this),
-        });
-      });
+      effect(
+        () => {
+          this.foo({
+            someOption: this.bar.bind(this),
+          });
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -12314,7 +12683,9 @@ export class RenderBlock {
   }
 
   ngAfterContentInit() {
-    this._updateView();
+    if (typeof window !== \\"undefined\\") {
+      this._updateView();
+    }
   }
 }
 "
@@ -12369,13 +12740,18 @@ export class RenderContent implements AfterViewInit {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.content();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.content();
+          // ---
 
-        dispatchNewContentToVisualEditor(this.content());
-      });
+          dispatchNewContentToVisualEditor(this.content());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -12467,12 +12843,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -12828,18 +13214,23 @@ export class SignalsTestComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this._counter();
-        this.buttonRef();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this._counter();
+          this.buttonRef();
+          // ---
 
-        console.log(this._counter(), this.buttonRef()?.nativeElement);
-        this.buttonRef()?.nativeElement?.setAttribute(
-          \\"data-counter\\",
-          this._counter().toString()
-        );
-      });
+          console.log(this._counter(), this.buttonRef()?.nativeElement);
+          this.buttonRef()?.nativeElement?.setAttribute(
+            \\"data-counter\\",
+            this._counter().toString()
+          );
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -12876,14 +13267,19 @@ export class MyBasicComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.id();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.id();
+          // ---
 
-        console.log(\\"props.id changed\\", this.id());
-        console.log(\\"props.foo.value.bar.baz changed\\", this.foo().bar.baz);
-      });
+          console.log(\\"props.id changed\\", this.id());
+          console.log(\\"props.foo.value.bar.baz changed\\", this.foo().bar.baz);
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -12940,9 +13336,14 @@ export class MyBasicComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, attrs);
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, attrs);
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -13015,9 +13416,14 @@ export class MyBasicComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.nested());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.nested());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -14021,9 +14427,14 @@ import { CommonModule } from \\"@angular/common\\";
 export class MyComponent implements AfterViewInit, OnDestroy {
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        console.log(\\"onAfterUpdate\\");
-      });
+      effect(
+        () => {
+          console.log(\\"onAfterUpdate\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -14102,9 +14513,14 @@ export class MyComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.calculateResult(this.a(), this.b());
-      });
+      effect(
+        () => {
+          this.calculateResult(this.a(), this.b());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
@@ -14477,9 +14893,14 @@ import { CommonModule } from \\"@angular/common\\";
 export class MyComponent implements AfterViewInit, OnDestroy {
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        console.log(\\"onAfterUpdate\\");
-      });
+      effect(
+        () => {
+          console.log(\\"onAfterUpdate\\");
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 
@@ -14558,9 +14979,14 @@ export class MyComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.calculateResult(this.a(), this.b());
-      });
+      effect(
+        () => {
+          this.calculateResult(this.a(), this.b());
+        },
+        {
+          allowSignalWrites: true, // Enable writing to signals inside effects
+        }
+      );
     }
   }
 }
