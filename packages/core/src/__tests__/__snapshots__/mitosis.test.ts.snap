@@ -1806,6 +1806,10 @@ export default function BasicRefAttributePassingComponent(props) {
   const buttonRef = useRef(null);
   const buttonRef = useRef(null);
 
+  onMount(() => {
+    console.log(\\"onMount\\");
+  });
+
   return [<button ref={buttonRef}>Attribute Passing</button>];
 }
 "
@@ -5467,6 +5471,10 @@ useMetadata({ attributePassing: { enabled: true } });
 export default function BasicRefAttributePassingComponent(props) {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  onMount(() => {
+    console.log(\\"onMount\\");
+  });
 
   return [<button ref={buttonRef}>Attribute Passing</button>];
 }
@@ -9751,6 +9759,10 @@ export default function BasicRefAttributePassingComponent(props) {
   const buttonRef = useRef(null);
   const buttonRef = useRef(null);
 
+  onMount(() => {
+    console.log(\\"onMount\\");
+  });
+
   return <button ref={buttonRef}>Attribute Passing</button>;
 }
 "
@@ -13473,6 +13485,10 @@ useMetadata({ attributePassing: { enabled: true } });
 export default function BasicRefAttributePassingComponent(props) {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  onMount(() => {
+    console.log(\\"onMount\\");
+  });
 
   return <button ref={buttonRef}>Attribute Passing</button>;
 }
@@ -17925,10 +17941,14 @@ export default MyBasicOnUpdateReturnComponent;
 exports[`Mitosis, format: react > jsx > Javascript Test > basicRefAttributePassing 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useRef } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function BasicRefAttributePassingComponent(props) {
   const buttonRef = useRef(null);
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
 
   return <button ref={buttonRef}>Attribute Passing</button>;
 }
@@ -21848,10 +21868,14 @@ export default MyBasicOnUpdateReturnComponent;
 exports[`Mitosis, format: react > jsx > Typescript Test > basicRefAttributePassing 1`] = `
 "\\"use client\\";
 import * as React from \\"react\\";
-import { useRef } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function BasicRefAttributePassingComponent(props) {
   const buttonRef = useRef(null);
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
 
   return <button ref={buttonRef}>Attribute Passing</button>;
 }

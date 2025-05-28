@@ -30,6 +30,7 @@ import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-st
 import { isHookEmpty } from '@/helpers/is-hook-empty';
 import { isUpperCase } from '@/helpers/is-upper-case';
 import { initializeOptions } from '@/helpers/merge-options';
+
 import { ImportValues, renderPreComponent } from '@/helpers/render-imports';
 import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import {
@@ -133,16 +134,6 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
       injectables.push('protected sanitizer: DomSanitizer');
     }
 
-    if (json.hooks.onMount.length > 0) {
-      json.compileContext!.angular!.hooks!.ngAfterViewInit = {
-        code: `
-        if (typeof window !== 'undefined') {
-          ${stringifySingleScopeOnMount(json)}
-        }
-        `,
-      };
-    }
-
     // HTML
     let template = json.children
       .map((item) => {
@@ -163,7 +154,7 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
 
     if (options.prettier !== false) {
       // We need to use 'strict' mode for Angular otherwise it could add spaces around some content
-      template = tryFormat(template, 'html', 'strict');
+      template = tryFormat(template, 'html', 'ignore');
     }
 
     const { components: dynamicComponents, dynamicTemplate } = traverseToGetAllDynamicComponents(
@@ -281,6 +272,11 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       json.compileContext?.angular?.extra?.spreadRefs?.length > 0;
 
     // Imports
+    const emptyOnMount = isHookEmpty(json.hooks.onMount);
+    const emptyOnUnMount = isHookEmpty(json.hooks.onUnMount);
+    const AfterViewInit = Boolean(!emptyOnMount || withAttributePassing);
+    const OnDestroy = !emptyOnUnMount;
+
     const coreImports = getAngularCoreImportsAsString({
       refs: domRefs.size !== 0,
       input: props.length !== 0,
@@ -290,7 +286,8 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       signal: dataString.length !== 0 || hasDynamicComponents,
       computed: gettersString.length !== 0,
       onPush,
-      OnDestroy: Boolean(json.hooks.onUnMount),
+      AfterViewInit,
+      OnDestroy,
       viewChild: importsViewChild,
       viewContainerRef: hasDynamicComponents,
       templateRef: hasDynamicComponents,
@@ -298,13 +295,28 @@ Please add a initial value for every state property even if it's \`undefined\`.`
     });
 
     // Hooks
-    if (json.hooks.onMount.length) {
+
+    if (!emptyOnMount) {
       addCodeNgAfterViewInit(json, json.hooks.onMount.map((onMount) => onMount.code).join('\n'));
     }
 
+    // Wrap ngAfterViewInit to validate that is only running in DOM
+    if (json.compileContext!.angular!.hooks!.ngAfterViewInit.code.length) {
+      json.compileContext!.angular!.hooks!.ngAfterViewInit = {
+        code: `
+        if (typeof window !== 'undefined') {
+          ${json.compileContext!.angular!.hooks!.ngAfterViewInit.code}
+        }
+        `,
+      };
+    }
+
     // Angular interfaces
-    const angularInterfaces = ['AfterViewInit'];
-    if (json.hooks.onUnMount) {
+    const angularInterfaces = [];
+    if (AfterViewInit) {
+      angularInterfaces.push('AfterViewInit');
+    }
+    if (OnDestroy) {
       angularInterfaces.push('OnDestroy');
     }
 
@@ -345,7 +357,9 @@ Please add a initial value for every state property even if it's \`undefined\`.`
             .map(([k, v]) => `${k}: ${v}`)
             .join(',')}
         })
-        export ${options.defaultExportComponents ? 'default ' : ''}class ${json.name} implements ${angularInterfaces.join(',')} {   
+        export ${options.defaultExportComponents ? 'default ' : ''}class ${json.name} ${
+      angularInterfaces.length ? ` implements ${angularInterfaces.join(',')}` : ''
+    } {   
           ${uniq<string>(json.compileContext!.angular!.extra!.importCalls)
             .map((importCall: string) => `protected readonly ${importCall} = ${importCall};`)
             .join('\n')}
@@ -383,10 +397,6 @@ Please add a initial value for every state property even if it's \`undefined\`.`
                 ${json.hooks.onUpdate
                   ?.map(
                     ({ code, depsArray }) =>
-                      /**
-                       * We need allowSignalWrites only for Angular 17 https://angular.dev/api/core/CreateEffectOptions#allowSignalWrites
-                       * TODO: remove on 2025-05-15 https://angular.dev/reference/releases#actively-supported-versions
-                       */
                       `effect(() => {
                       ${
                         depsArray?.length
@@ -398,11 +408,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
                           : ''
                       }
                       ${code}
-                      },
-                      {
-                      allowSignalWrites: true, // Enable writing to signals inside effects
-                      }
-                      );`,
+                      });`,
                   )
                   .join('\n')}
                   }
@@ -443,11 +449,11 @@ Please add a initial value for every state property even if it's \`undefined\`.`
           }
     
           ${
-            json.hooks.onUnMount
-              ? `ngOnDestroy() {
+            emptyOnUnMount
+              ? ''
+              : `ngOnDestroy() {
                   ${json.hooks.onUnMount?.code || ''}
                 }`
-              : ''
           }
     
         }

@@ -3,7 +3,7 @@ import { format } from 'prettier/standalone';
 export const tryFormat = (
   str: string,
   parser: string,
-  htmlWhitespaceSensitivity: 'css' | 'strict' | 'ignore' = 'ignore',
+  htmlWhitespaceSensitivity: 'css' | 'strict' | 'ignore' = 'css',
 ) => {
   try {
     return format(str, {

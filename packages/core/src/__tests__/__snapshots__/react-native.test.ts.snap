@@ -1918,10 +1918,14 @@ exports[`React Native > jsx > Javascript Test > basicRefAttributePassing 1`] = `
 
 import * as React from \\"react\\";
 import { View, Text, Button } from \\"react-native\\";
-import { useRef } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function BasicRefAttributePassingComponent(props) {
   const buttonRef = useRef(null);
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
 
   return (
     <Button ref={buttonRef}>
@@ -6332,10 +6336,14 @@ exports[`React Native > jsx > Typescript Test > basicRefAttributePassing 1`] = `
 
 import * as React from \\"react\\";
 import { View, Text, Button } from \\"react-native\\";
-import { useRef } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function BasicRefAttributePassingComponent(props: any) {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
 
   return (
     <Button ref={buttonRef}>

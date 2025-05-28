@@ -635,9 +635,7 @@ describe('Builder', () => {
 
       @Component({
         selector: \\"my-component\\",
-        template: \`
-          <progress-bar [num]=\\"10\\"><counter></counter></progress-bar>
-        \`,
+        template: \` <progress-bar [num]=\\"10\\"><counter></counter></progress-bar> \`,
         styles: [
           \`
             :host {

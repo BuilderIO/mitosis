@@ -1881,11 +1881,15 @@ exports[`Taro > jsx > Javascript Test > basicRefAttributePassing 1`] = `
 
 \\"use client\\";
 import * as React from \\"react\\";
-import { useRef } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 import { Button, View, Text } from \\"@tarojs/components\\";
 
 function BasicRefAttributePassingComponent(props) {
   const buttonRef = useRef(null);
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
 
   return <Button ref={buttonRef}>Attribute Passing</Button>;
 }
@@ -6122,11 +6126,15 @@ exports[`Taro > jsx > Typescript Test > basicRefAttributePassing 1`] = `
 
 \\"use client\\";
 import * as React from \\"react\\";
-import { useRef } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 import { Button, View, Text } from \\"@tarojs/components\\";
 
 function BasicRefAttributePassingComponent(props: any) {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
 
   return <Button ref={buttonRef}>Attribute Passing</Button>;
 }
