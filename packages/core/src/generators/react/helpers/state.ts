@@ -4,7 +4,6 @@ import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-st
 import { getTypedFunction } from '@/helpers/get-typed-function';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { prefixWithFunction, replaceGetterWithFunction } from '@/helpers/patterns';
-import { hasCss } from '@/helpers/styles/helpers';
 import { transformStateSetters } from '@/helpers/transform-state-setters';
 import { MitosisComponent, StateValue } from '@/types/mitosis-component';
 import { types } from '@babel/core';
@@ -172,10 +171,6 @@ export const getDefaultImport = (options: ToReactOptions, json: MitosisComponent
         });
       }
     });
-
-    if (hasCss(json)) {
-      namesUsed.add('StyleSheet');
-    }
 
     traverse(json).forEach((node) => {
       if (!isMitosisNode(node)) {
