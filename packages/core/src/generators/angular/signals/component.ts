@@ -154,7 +154,7 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
 
     if (options.prettier !== false) {
       // We need to use 'strict' mode for Angular otherwise it could add spaces around some content
-      template = tryFormat(template, 'html', 'ignore');
+      template = tryFormat(template, 'html', 'strict');
     }
 
     const { components: dynamicComponents, dynamicTemplate } = traverseToGetAllDynamicComponents(
