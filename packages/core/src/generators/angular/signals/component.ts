@@ -300,17 +300,6 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       addCodeNgAfterViewInit(json, json.hooks.onMount.map((onMount) => onMount.code).join('\n'));
     }
 
-    // Wrap ngAfterViewInit to validate that is only running in DOM
-    if (json.compileContext!.angular!.hooks!.ngAfterViewInit.code.length) {
-      json.compileContext!.angular!.hooks!.ngAfterViewInit = {
-        code: `
-        if (typeof window !== 'undefined') {
-          ${json.compileContext!.angular!.hooks!.ngAfterViewInit.code}
-        }
-        `,
-      };
-    }
-
     // Angular interfaces
     const angularInterfaces = [];
     if (AfterViewInit) {
@@ -397,6 +386,10 @@ Please add a initial value for every state property even if it's \`undefined\`.`
                 ${json.hooks.onUpdate
                   ?.map(
                     ({ code, depsArray }) =>
+                      /**
+                       * We need allowSignalWrites only for Angular 17 https://angular.dev/api/core/CreateEffectOptions#allowSignalWrites
+                       * TODO: remove on 2025-05-15 https://angular.dev/reference/releases#actively-supported-versions
+                       */
                       `effect(() => {
                       ${
                         depsArray?.length
@@ -408,7 +401,11 @@ Please add a initial value for every state property even if it's \`undefined\`.`
                           : ''
                       }
                       ${code}
-                      });`,
+                      },
+                      {
+                      allowSignalWrites: true, // Enable writing to signals inside effects
+                      }
+                      );`,
                   )
                   .join('\n')}
                   }
@@ -441,7 +438,9 @@ Please add a initial value for every state property even if it's \`undefined\`.`
                   .filter(([_, value]) => !isHookEmpty(value))
                   .map(([key, value]) => {
                     return `${key}() {
+                    if (typeof window !== 'undefined') {
                 ${value.code}
+                }
               }`;
                   })
                   .join('\n')
