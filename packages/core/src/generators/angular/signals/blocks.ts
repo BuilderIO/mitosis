@@ -69,7 +69,7 @@ ${children}
       const fnIndex = (root.meta?._trackByForIndex as number) || 0;
       trackByFnName = `trackBy${
         forName ? forName.charAt(0).toUpperCase() + forName.slice(1) : ''
-      }${fnIndex}(${indexName ? indexName : 'i'}, ${forName})`;
+      }${fnIndex}`;
       root.meta._trackByForIndex = fnIndex + 1;
       let code = forNode.children[0].bindings.key?.code;
 
