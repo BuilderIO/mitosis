@@ -60,20 +60,20 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
   template: \`<div>
     @if(showInput()){
-    <ng-container>
-      <input
+    <ng-container
+      ><input
         class=\\"input\\"
         #inputRef
         [attr.value]=\\"name()\\"
         (blur)=\\"onBlur()\\"
         (change)=\\"name.set($event.target.value)\\"
       />
-      <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+      <label for=\\"cars\\" #inputNoArgRef> Choose a car: </label>
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
-      </select>
-    </ng-container>
+      </select></ng-container
+    >
     } Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
     Component!
   </div> \`,
@@ -468,8 +468,8 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
   template: \`<div>
     @for (person of names();track i;let i = $index) {
-    <ng-container>
-      <input
+    <ng-container
+      ><input
         [attr.value]=\\"name()\\"
         (change)=\\"{
           name.set($event.target.value + ' and ' + person);
@@ -516,20 +516,20 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
   template: \`<div>
     @if(showInput()){
-    <ng-container>
-      <input
+    <ng-container
+      ><input
         class=\\"input\\"
         #inputRef
         [attr.value]=\\"name()\\"
         (blur)=\\"onBlur()\\"
         (change)=\\"name.set($event.target.value)\\"
       />
-      <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+      <label for=\\"cars\\" #inputNoArgRef> Choose a car: </label>
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
-      </select>
-    </ng-container>
+      </select></ng-container
+    >
     } Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
     Component!
   </div> \`,
@@ -659,9 +659,8 @@ import { CommonModule } from \\"@angular/common\\";
       #elRef0
       [attr.href]=\\"link()\\"
       [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
+      >{{text()}}</a
     >
-      {{text()}}
-    </a>
     } @if(!link()){
     <button type=\\"button\\" #elRef1>{{text()}}</button>
     }
@@ -810,9 +809,9 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`<div>
-    <ng-content select=\\"[testing]\\"></ng-content>
+    <ng-content select=\\"[testing]\\"> </ng-content>
     <div><hr /></div>
-    <div><ng-content></ng-content></div>
+    <div><ng-content> </ng-content></div>
   </div> \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -858,7 +857,7 @@ const defaultProps: any = {
       [class]=\\"cls()\\"
     >
       @if(showContent() && slotContent()){
-      <ng-content select=\\"[content]\\">{{content()}}</ng-content>
+      <ng-content select=\\"[content]\\"> {{content()}} </ng-content>
       }
       <div><hr /></div>
       <div><ng-content></ng-content></div>
@@ -1503,8 +1502,8 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`<div>
-    <picture #pictureRef>
-      @if(!useLazyLoading() || load()){
+    <picture #pictureRef
+      >@if(!useLazyLoading() || load()){
       <img
         [attr.alt]=\\"altText()\\"
         [attr.aria-role]=\\"altText() ? 'presentation' : undefined\\"
@@ -1512,11 +1511,10 @@ import { CommonModule } from \\"@angular/common\\";
         [attr.src]=\\"image()\\"
         (load)=\\"setLoaded()\\"
         [attr.srcset]=\\"srcset()\\"
-        [attr.sizes]=\\"sizes()\\"
-      />
+        [attr.sizes]=\\"sizes()\\" />
       }
-      <source [attr.srcset]=\\"srcset()\\" />
-    </picture>
+      <source [attr.srcset]=\\"srcset()\\"
+    /></picture>
     <ng-content></ng-content>
   </div> \`,
   styles: \`:host { display: contents; }
@@ -2200,7 +2198,7 @@ import { ContentSlotCode } from \\"./content-slot-jsx.raw\\";
   standalone: true,
   imports: [CommonModule, ContentSlotCode],
   template: \`<div>
-    <content-slot-code><ng-content></ng-content></content-slot-code>
+    <content-slot-code><ng-content> </ng-content></content-slot-code>
   </div> \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -2240,10 +2238,10 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`<div>
-    <ng-content select=\\"[my-awesome-slot]\\"></ng-content>
-    <ng-content select=\\"[top]\\"></ng-content>
-    <ng-content select=\\"[left]\\">Default left</ng-content>
-    <ng-content>Default Child</ng-content>
+    <ng-content select=\\"[my-awesome-slot]\\"> </ng-content>
+    <ng-content select=\\"[top]\\"> </ng-content>
+    <ng-content select=\\"[left]\\"> Default left </ng-content>
+    <ng-content> Default Child </ng-content>
   </div> \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -3017,7 +3015,8 @@ import { CommonModule } from \\"@angular/common\\";
               TagNameGetter();
               content: myContent();
               \\"
-    ></ng-container> \`,
+    >
+    </ng-container> \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyBasicForNoTagRefComponent {
@@ -3077,14 +3076,13 @@ import { CommonModule } from '@angular/common';
 
 
 @Component({
-  selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div>
-          <input
+  selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div
+          ><input
             class=\\"input\\"
             #inputRef()
             [attr.value]=\\"name()\\"
             (change)=\\"name.set($event.target.value)\\"
-          />
-        </div>
+        /></div>
 \`,styles: \`:host { display: contents; }
         .input {
           color: red;
@@ -3144,14 +3142,13 @@ import { CommonModule } from '@angular/common';
 
 
 @Component({
-  selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div>
-          <input
+  selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div
+          ><input
             class=\\"input\\"
             #inputRef()
             [attr.value]=\\"name()\\"
             (change)=\\"name.set($event.target.value)\\"
-          />
-        </div>
+        /></div>
 \`,styles: \`:host { display: contents; }
         .input {
           color: red;
@@ -3571,8 +3568,8 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`<div [class]=\\"className()\\">
-    <ng-content></ng-content>
-    {{type()}} Hello! I can run in React, Vue, Solid, or Liquid!
+    <ng-content></ng-content> {{type()}} Hello! I can run in React, Vue, Solid,
+    or Liquid!
   </div> \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -3642,10 +3639,10 @@ import Context2 from \\"@dummy/2\\";
   selector: \\"component-with-context\\",
   standalone: true,
   imports: [CommonModule],
-  template: \`<ng-container>
-    <ng-container>{{foo.value}}</ng-container>
-    <div>other</div>
-  </ng-container> \`,
+  template: \`<ng-container
+    ><ng-container>{{foo.value}}</ng-container>
+    <div>other</div></ng-container
+  > \`,
   styles: \`:host { display: contents; }\`,
 })
 export class ComponentWithContext {
@@ -3734,9 +3731,8 @@ const defaultProps: any = {
       #elRef0
       [attr.href]=\\"link()\\"
       [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
+      >{{text()}}</a
     >
-      {{text()}}
-    </a>
     } @if(!link()){
     <button type=\\"button\\" #elRef1 (click)=\\"click()\\">{{buttonText()}}</button>
     }
@@ -3851,9 +3847,8 @@ const defaultProps: any = {
       #elRef0
       [attr.href]=\\"link()\\"
       [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
+      >{{text()}}</a
     >
-      {{text()}}
-    </a>
     } @if(!link()){
     <button type=\\"button\\" #elRef1 (click)=\\"click($event)\\">{{text()}}</button>
     }
@@ -3989,7 +3984,8 @@ import { CommonModule } from \\"@angular/common\\";
         inputs: dynamicProps_37i2pk();
               content: myContent();
               \\"
-    ></ng-container> \`,
+    >
+    </ng-container> \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyComponent {
@@ -4059,7 +4055,8 @@ import { CommonModule } from \\"@angular/common\\";
         inputs: dynamicProps_37i2pk();
               content: myContent();
               \\"
-    ></ng-container> \`,
+    >
+    </ng-container> \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyComponent {
@@ -5014,9 +5011,9 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`<div>
-    <span class=\\"dolorum atque aspernatur\\">
-      Est molestiae sunt facilis qui rem.
-    </span>
+    <span class=\\"dolorum atque aspernatur\\"
+      >Est molestiae sunt facilis qui rem.</span
+    >
     <div class=\\"voluptatem architecto at\\">
       Architecto rerum architecto incidunt sint.
     </div>
@@ -5038,8 +5035,8 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`<div>
-    <ng-content></ng-content>
-    {{type()}} Hello! I can run in React, Vue, Solid, or Liquid!
+    <ng-content></ng-content> {{type()}} Hello! I can run in React, Vue, Solid,
+    or Liquid!
   </div> \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -5175,7 +5172,8 @@ import { RenderRepeatedBlock } from \\"./render-repeated-block.lite\\";
         inputs: dynamicProps_ya7n4j();
               content: myContent();
               \\"
-    ></ng-container>
+    >
+    </ng-container>
     } @if(!isEmptyHtmlElement(tag()) && repeatItemData()){ @for (data of
     repeatItemData();track trackByData0(index, data);let index = $index) {
     <render-repeated-block
@@ -5189,7 +5187,8 @@ import { RenderRepeatedBlock } from \\"./render-repeated-block.lite\\";
         inputs: dynamicProps_ya7n4j();
               content: myContent();
               \\"
-    ></ng-container>
+    >
+    </ng-container>
     } }@else{
     <ng-container
       *ngComponentOutlet=\\"
@@ -5197,7 +5196,8 @@ import { RenderRepeatedBlock } from \\"./render-repeated-block.lite\\";
         inputs: dynamicProps_emn6k5();
               content: myContent();
               \\"
-    ></ng-container>
+    >
+    </ng-container>
     } \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -5503,19 +5503,18 @@ import { CommonModule } from \\"@angular/common\\";
   selector: \\"button\\",
   standalone: true,
   imports: [CommonModule],
-  template: \`<ng-container>
-    @if(link()){
+  template: \`<ng-container
+    >@if(link()){
     <a
       #elRef0
       [attr.href]=\\"link()\\"
       [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
+      >{{text()}}</a
     >
-      {{text()}}
-    </a>
     } @if(!link()){
     <button type=\\"button\\" #elRef1>{{text()}}</button>
-    }
-  </ng-container> \`,
+    }</ng-container
+  > \`,
   styles: \`:host { display: contents; }\`,
 })
 export class Button implements OnDestroy {
@@ -6764,11 +6763,10 @@ import { register } from \\"swiper/element/bundle\\";
     slides-per-view=\\"3\\"
     navigation=\\"true\\"
     pagination=\\"true\\"
-  >
-    <swiper-slide>Slide 1</swiper-slide>
+    ><swiper-slide>Slide 1</swiper-slide>
     <swiper-slide>Slide 2</swiper-slide>
-    <swiper-slide>Slide 3</swiper-slide>
-  </swiper-container> \`,
+    <swiper-slide>Slide 3</swiper-slide></swiper-container
+  > \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyBasicWebComponent {
@@ -6866,20 +6864,20 @@ export interface Props {
   imports: [CommonModule],
   template: \`<div>
     @if(showInput()){
-    <ng-container>
-      <input
+    <ng-container
+      ><input
         class=\\"input\\"
         #inputRef
         [attr.value]=\\"name()\\"
         (blur)=\\"onBlur()\\"
         (change)=\\"name.set($event.target.value)\\"
       />
-      <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+      <label for=\\"cars\\" #inputNoArgRef> Choose a car: </label>
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
-      </select>
-    </ng-container>
+      </select></ng-container
+    >
     } Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
     Component!
   </div> \`,
@@ -7288,8 +7286,8 @@ import { CommonModule } from \\"@angular/common\\";
   imports: [CommonModule],
   template: \`<div>
     @for (person of names();track i;let i = $index) {
-    <ng-container>
-      <input
+    <ng-container
+      ><input
         [attr.value]=\\"name()\\"
         (change)=\\"{
           name.set($event.target.value + ' and ' + person);
@@ -7340,20 +7338,20 @@ export interface Props {
   imports: [CommonModule],
   template: \`<div>
     @if(showInput()){
-    <ng-container>
-      <input
+    <ng-container
+      ><input
         class=\\"input\\"
         #inputRef
         [attr.value]=\\"name()\\"
         (blur)=\\"onBlur()\\"
         (change)=\\"name.set($event.target.value)\\"
       />
-      <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+      <label for=\\"cars\\" #inputNoArgRef> Choose a car: </label>
       <select name=\\"cars\\" id=\\"cars\\">
         <option value=\\"supra\\">GR Supra</option>
         <option value=\\"86\\">GR 86</option>
-      </select>
-    </ng-container>
+      </select></ng-container
+    >
     } Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
     Component!
   </div> \`,
@@ -7498,9 +7496,8 @@ export interface ButtonProps {
       #elRef0
       [attr.href]=\\"link()\\"
       [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
+      >{{text()}}</a
     >
-      {{text()}}
-    </a>
     } @if(!link()){
     <button type=\\"button\\" #elRef1>{{text()}}</button>
     }
@@ -7674,9 +7671,9 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
   standalone: true,
   imports: [CommonModule],
   template: \`<div>
-    <ng-content select=\\"[testing]\\"></ng-content>
+    <ng-content select=\\"[testing]\\"> </ng-content>
     <div><hr /></div>
-    <div><ng-content></ng-content></div>
+    <div><ng-content> </ng-content></div>
   </div> \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -7728,7 +7725,7 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
       [class]=\\"cls()\\"
     >
       @if(showContent() && slotContent()){
-      <ng-content select=\\"[content]\\">{{content()}}</ng-content>
+      <ng-content select=\\"[content]\\"> {{content()}} </ng-content>
       }
       <div><hr /></div>
       <div><ng-content></ng-content></div>
@@ -8455,8 +8452,8 @@ export interface ImageProps {
   standalone: true,
   imports: [CommonModule],
   template: \`<div>
-    <picture #pictureRef>
-      @if(!useLazyLoading() || load()){
+    <picture #pictureRef
+      >@if(!useLazyLoading() || load()){
       <img
         [attr.alt]=\\"altText()\\"
         [attr.aria-role]=\\"altText() ? 'presentation' : undefined\\"
@@ -8464,11 +8461,10 @@ export interface ImageProps {
         [attr.src]=\\"image()\\"
         (load)=\\"setLoaded()\\"
         [attr.srcset]=\\"srcset()\\"
-        [attr.sizes]=\\"sizes()\\"
-      />
+        [attr.sizes]=\\"sizes()\\" />
       }
-      <source [attr.srcset]=\\"srcset()\\" />
-    </picture>
+      <source [attr.srcset]=\\"srcset()\\"
+    /></picture>
     <ng-content></ng-content>
   </div> \`,
   styles: \`:host { display: contents; }
@@ -9239,7 +9235,7 @@ import { ContentSlotCode } from \\"./content-slot-jsx.raw\\";
   standalone: true,
   imports: [CommonModule, ContentSlotCode],
   template: \`<div>
-    <content-slot-code><ng-content></ng-content></content-slot-code>
+    <content-slot-code><ng-content> </ng-content></content-slot-code>
   </div> \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -9287,10 +9283,10 @@ type Props = {
   standalone: true,
   imports: [CommonModule],
   template: \`<div>
-    <ng-content select=\\"[my-awesome-slot]\\"></ng-content>
-    <ng-content select=\\"[top]\\"></ng-content>
-    <ng-content select=\\"[left]\\">Default left</ng-content>
-    <ng-content>Default Child</ng-content>
+    <ng-content select=\\"[my-awesome-slot]\\"> </ng-content>
+    <ng-content select=\\"[top]\\"> </ng-content>
+    <ng-content select=\\"[left]\\"> Default left </ng-content>
+    <ng-content> Default Child </ng-content>
   </div> \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -10136,7 +10132,8 @@ import { CommonModule } from \\"@angular/common\\";
               TagNameGetter();
               content: myContent();
               \\"
-    ></ng-container> \`,
+    >
+    </ng-container> \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyBasicForNoTagRefComponent {
@@ -10199,14 +10196,13 @@ inputRef: HTMLInputElement;
 
 
       @Component({
-        selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div>
-          <input
+        selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div
+          ><input
             class=\\"input\\"
             #inputRef()
             [attr.value]=\\"name()\\"
             (change)=\\"name.set($event.target.value)\\"
-          />
-        </div>
+        /></div>
 \`,styles: \`:host { display: contents; }
         .input {
           color: red;
@@ -10269,14 +10265,13 @@ inputRef: HTMLInputElement;
 
 
       @Component({
-        selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div>
-          <input
+        selector: 'my-basic-forward-ref-component',standalone: true,imports: [CommonModule],template: \`<div
+          ><input
             class=\\"input\\"
             #inputRef()
             [attr.value]=\\"name()\\"
             (change)=\\"name.set($event.target.value)\\"
-          />
-        </div>
+        /></div>
 \`,styles: \`:host { display: contents; }
         .input {
           color: red;
@@ -10709,8 +10704,8 @@ type Props = {
   standalone: true,
   imports: [CommonModule],
   template: \`<div [class]=\\"className()\\">
-    <ng-content></ng-content>
-    {{type()}} Hello! I can run in React, Vue, Solid, or Liquid!
+    <ng-content></ng-content> {{type()}} Hello! I can run in React, Vue, Solid,
+    or Liquid!
   </div> \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -10789,10 +10784,10 @@ import Context2 from \\"@dummy/2\\";
   selector: \\"component-with-context\\",
   standalone: true,
   imports: [CommonModule],
-  template: \`<ng-container>
-    <ng-container>{{foo.value}}</ng-container>
-    <div>other</div>
-  </ng-container> \`,
+  template: \`<ng-container
+    ><ng-container>{{foo.value}}</ng-container>
+    <div>other</div></ng-container
+  > \`,
   styles: \`:host { display: contents; }\`,
 })
 export class ComponentWithContext {
@@ -10891,9 +10886,8 @@ const defaultProps: any = {
       #elRef0
       [attr.href]=\\"link()\\"
       [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
+      >{{text()}}</a
     >
-      {{text()}}
-    </a>
     } @if(!link()){
     <button type=\\"button\\" #elRef1 (click)=\\"click()\\">{{buttonText()}}</button>
     }
@@ -11021,9 +11015,8 @@ const defaultProps: any = {
       #elRef0
       [attr.href]=\\"link()\\"
       [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
+      >{{text()}}</a
     >
-      {{text()}}
-    </a>
     } @if(!link()){
     <button type=\\"button\\" #elRef1 (click)=\\"click($event)\\">{{text()}}</button>
     }
@@ -11168,7 +11161,8 @@ import { CommonModule } from \\"@angular/common\\";
         inputs: dynamicProps_37i2pk();
               content: myContent();
               \\"
-    ></ng-container> \`,
+    >
+    </ng-container> \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyComponent {
@@ -11238,7 +11232,8 @@ import { CommonModule } from \\"@angular/common\\";
         inputs: dynamicProps_37i2pk();
               content: myContent();
               \\"
-    ></ng-container> \`,
+    >
+    </ng-container> \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyComponent {
@@ -12254,9 +12249,9 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`<div>
-    <span class=\\"dolorum atque aspernatur\\">
-      Est molestiae sunt facilis qui rem.
-    </span>
+    <span class=\\"dolorum atque aspernatur\\"
+      >Est molestiae sunt facilis qui rem.</span
+    >
     <div class=\\"voluptatem architecto at\\">
       Architecto rerum architecto incidunt sint.
     </div>
@@ -12283,8 +12278,8 @@ type Props = {
   standalone: true,
   imports: [CommonModule],
   template: \`<div>
-    <ng-content></ng-content>
-    {{type()}} Hello! I can run in React, Vue, Solid, or Liquid!
+    <ng-content></ng-content> {{type()}} Hello! I can run in React, Vue, Solid,
+    or Liquid!
   </div> \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -12443,7 +12438,8 @@ import type { RepeatData } from \\"./types.js\\";
         inputs: dynamicProps_ya7n4j();
               content: myContent();
               \\"
-    ></ng-container>
+    >
+    </ng-container>
     } @if(!isEmptyHtmlElement(tag()) && repeatItemData()){ @for (data of
     repeatItemData();track trackByData0(index, data);let index = $index) {
     <render-repeated-block
@@ -12457,7 +12453,8 @@ import type { RepeatData } from \\"./types.js\\";
         inputs: dynamicProps_ya7n4j();
               content: myContent();
               \\"
-    ></ng-container>
+    >
+    </ng-container>
     } }@else{
     <ng-container
       *ngComponentOutlet=\\"
@@ -12465,7 +12462,8 @@ import type { RepeatData } from \\"./types.js\\";
         inputs: dynamicProps_emn6k5();
               content: myContent();
               \\"
-    ></ng-container>
+    >
+    </ng-container>
     } \`,
   styles: \`:host { display: contents; }\`,
 })
@@ -12789,19 +12787,18 @@ export interface ButtonProps {
   selector: \\"button\\",
   standalone: true,
   imports: [CommonModule],
-  template: \`<ng-container>
-    @if(link()){
+  template: \`<ng-container
+    >@if(link()){
     <a
       #elRef0
       [attr.href]=\\"link()\\"
       [attr.target]=\\"openLinkInNewTab() ? '_blank' : undefined\\"
+      >{{text()}}</a
     >
-      {{text()}}
-    </a>
     } @if(!link()){
     <button type=\\"button\\" #elRef1>{{text()}}</button>
-    }
-  </ng-container> \`,
+    }</ng-container
+  > \`,
   styles: \`:host { display: contents; }\`,
 })
 export class Button implements OnDestroy {
@@ -14117,11 +14114,10 @@ import { register } from \\"swiper/element/bundle\\";
     slides-per-view=\\"3\\"
     navigation=\\"true\\"
     pagination=\\"true\\"
-  >
-    <swiper-slide>Slide 1</swiper-slide>
+    ><swiper-slide>Slide 1</swiper-slide>
     <swiper-slide>Slide 2</swiper-slide>
-    <swiper-slide>Slide 3</swiper-slide>
-  </swiper-container> \`,
+    <swiper-slide>Slide 3</swiper-slide></swiper-container
+  > \`,
   styles: \`:host { display: contents; }\`,
 })
 export class MyBasicWebComponent {
@@ -14400,7 +14396,7 @@ import { Button } from \\"./Button.lite\\";
   imports: [CommonModule, Button],
   template: \`<div>
     <button type=\\"button\\" [disabled]=\\"disabled()\\">
-      <ng-content></ng-content>
+      <ng-content> </ng-content>
     </button>
   </div> \`,
   styles: \`:host { display: contents; }\`,
@@ -14536,7 +14532,7 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`<div>
-    <ng-content>default</ng-content>
+    <ng-content> default </ng-content>
     <ng-content select=\\"[test]\\">
       <div>default</div>
     </ng-content>
@@ -14866,7 +14862,7 @@ import { Button } from \\"./Button.lite\\";
   imports: [CommonModule, Button],
   template: \`<div>
     <button type=\\"button\\" [disabled]=\\"disabled()\\">
-      <ng-content></ng-content>
+      <ng-content> </ng-content>
     </button>
   </div> \`,
   styles: \`:host { display: contents; }\`,
@@ -15002,7 +14998,7 @@ import { CommonModule } from \\"@angular/common\\";
   standalone: true,
   imports: [CommonModule],
   template: \`<div>
-    <ng-content>default</ng-content>
+    <ng-content> default </ng-content>
     <ng-content select=\\"[test]\\">
       <div>default</div>
     </ng-content>
