@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.11.1
+
+### Patch Changes
+
+- 9052eb6: [React Native] Fix: import `StyleSheet` from React Native when styles are used
+
 ## 0.11.0
 
 ### Minor Changes
