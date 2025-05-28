@@ -187,6 +187,10 @@ export const getDefaultImport = (options: ToReactOptions, json: MitosisComponent
         namesUsed.add('Text');
       }
 
+      if (node.properties.style || node.bindings.style) {
+        namesUsed.add('StyleSheet');
+      }
+
       if (
         node.name === 'TouchableOpacity' &&
         ('href' in node.bindings || 'href' in node.properties)
