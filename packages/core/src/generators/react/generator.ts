@@ -458,7 +458,7 @@ const _componentToReact = (
 
   const str = dedent`
   ${shouldAddUseClientDirective ? `'use client';` : ''}
-  ${getDefaultImport(options)}
+  ${getDefaultImport(options, json)}
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
   ${
     reactLibImports.size

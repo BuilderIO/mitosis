@@ -50,7 +50,7 @@ const command: GluegunCommand = {
       plugins.push(compileAwayBuilderComponents());
     }
 
-    const mitosisConfig = getMitosisConfig(configRelPath);
+    const mitosisConfig = await getMitosisConfig(configRelPath);
     const generatorOptions = mitosisConfig?.options?.[to as keyof GeneratorOptions];
 
     const generatorOpts = {

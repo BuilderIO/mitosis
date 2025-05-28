@@ -1,5 +1,38 @@
 # @builder.io/mitosis-cli
 
+## 0.11.0
+
+### Minor Changes
+
+- 3baeefe: [cli] add `cosmiconfig` to load different configs:
+
+  - `mitosis.config.js`
+  - `mitosis.config.ts`
+  - `mitosis.config.mjs`
+  - `mitosis.config.cjs`
+  - `mitosis.config.json`
+
+### Patch Changes
+
+- 843814f: fix: do not generate empty expressions with slots
+- Updated dependencies [843814f]
+- Updated dependencies [3ac5f63]
+  - @builder.io/mitosis@0.11.0
+
+## 0.10.0
+
+### Patch Changes
+
+- Updated dependencies [dee8a62]
+  - @builder.io/mitosis@0.10.0
+
+## 0.9.5
+
+### Patch Changes
+
+- Updated dependencies [df7c51b]
+  - @builder.io/mitosis@0.9.5
+
 ## 0.9.4
 
 ### Patch Changes

@@ -156,7 +156,7 @@ const StoreComment = getRawFile('./data/store/store-comment.raw.tsx');
 
 // Swift
 const SwiftPlainComponent = getRawFile('./data/swift/plain-component-export.raw.tsx');
-
+const SwiftSingleQuotesReplacement = getRawFile('./data/swift/single-quotes-replacement.raw.tsx');
 /**
  * Use TestsWithFailFor when you want to write a test that you know will fail
  * on certain targets. This is useful in test driven development when you want
@@ -194,6 +194,7 @@ const REACT_NATIVE_TESTS: Tests = {
 
 const SWIFT_TESTS: Tests = {
   SwiftPlainComponent,
+  SwiftSingleQuotesReplacement,
 };
 
 const BASIC_TESTS: Tests = {
