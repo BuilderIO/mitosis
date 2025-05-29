@@ -674,6 +674,12 @@ export const blockToBuilder = (
         responsiveStyles,
       }),
       layerName: json.properties.$name,
+      ...(json.properties.layerLocked !== undefined && {
+        layerLocked: json.properties.layerLocked === 'true',
+      }),
+      ...(json.properties.groupLocked !== undefined && {
+        groupLocked: json.properties.groupLocked === 'true',
+      }),
       ...(thisIsComponent && {
         component: {
           name: mapComponentName(json.name),

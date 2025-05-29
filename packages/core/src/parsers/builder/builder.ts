@@ -529,6 +529,14 @@ const componentMappers: {
       properties.$name = block.layerName;
     }
 
+    if (block.layerLocked !== undefined) {
+      properties.layerLocked = String(block.layerLocked);
+    }
+
+    if (block.groupLocked !== undefined) {
+      properties.groupLocked = String(block.groupLocked);
+    }
+
     const innerBindings: MitosisNode['bindings'] = {};
     const componentOptionsText = blockBindings['component.options.text'];
     if (componentOptionsText) {
@@ -808,6 +816,14 @@ export const builderElementToMitosisNode = (
 
   if (block.layerName) {
     properties.$name = block.layerName;
+  }
+
+  if (block.layerLocked !== undefined) {
+    properties.layerLocked = String(block.layerLocked);
+  }
+
+  if (block.groupLocked !== undefined) {
+    properties.groupLocked = String(block.groupLocked);
   }
 
   const linkUrl = (block as any).linkUrl;
