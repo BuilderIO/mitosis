@@ -4,7 +4,7 @@ import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
-import { mapKeys, merge, omit, sortBy, upperFirst } from 'lodash';
+import { mapKeys, omit, sortBy, upperFirst } from 'lodash';
 import traverse from 'neotraverse/legacy';
 import { Size, sizeNames, sizes } from '../../constants/media-sizes';
 import { createSingleBinding } from '../../helpers/bindings';
@@ -788,38 +788,6 @@ export const builderElementToMitosisNode = (
     meta: getMetaFromBlock(block, options),
     ...(Object.keys(localizedValues).length && { localizedValues }),
   });
-
-  // Has single text node child
-  const firstChild = block.children?.[0];
-  if (
-    block.children?.length === 1 &&
-    firstChild?.component?.name === 'Text' &&
-    !options.preserveTextBlocks
-  ) {
-    const textProperties = builderElementToMitosisNode(firstChild, options);
-    const parsedNodeCss = json5.parse(node.bindings.css?.code || '{}');
-    const parsedTextCss = json5.parse(textProperties.bindings.css?.code || '{}');
-    const mergedCss = combineStyles(parsedNodeCss, parsedTextCss);
-
-    // Don't merge if text has styling that matters
-    const doNotMerge =
-      // Text has flex alignment
-      ['end', 'right', 'center'].includes(parsedTextCss.alignSelf) ||
-      // Text has specific styling
-      parsedTextCss.backgroundColor ||
-      parsedTextCss.opacity ||
-      parsedTextCss.background;
-
-    if (!doNotMerge) {
-      return merge({}, textProperties, node, {
-        bindings: {
-          ...(Object.keys(mergedCss).length && {
-            css: { code: json5.stringify(mergedCss) },
-          }),
-        },
-      });
-    }
-  }
 
   node.children = children.concat(
     (block.children || []).map((item) => builderElementToMitosisNode(item, options)),
