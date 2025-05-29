@@ -241,7 +241,7 @@ describe('Builder Text node', () => {
       }
     `);
   });
-  test.only('create Text node from jsx', () => {
+  test('create Text node from jsx', () => {
     const code = dedent`
     export default function MyComponent(props) {
       return (
