@@ -1,5 +1,6 @@
 import { componentToBuilder } from '@/generators/builder';
 import { componentToMitosis } from '@/generators/mitosis';
+import { dedent } from '@/helpers/dedent';
 import { builderContentToMitosisComponent } from '@/parsers/builder';
 import { parseJsx } from '@/parsers/jsx';
 import {
@@ -238,6 +239,85 @@ describe('Builder Text node', () => {
         },
         "tagName": "div",
       }
+    `);
+  });
+  test.only('create Text node from jsx', () => {
+    const code = dedent`
+    export default function MyComponent(props) {
+      return (
+        <p>Hello World</p>
+      )
+    }
+    `;
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
+    expect(builderJson.data!.blocks![0]).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {},
+        "children": [
+          {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": {},
+            "component": {
+              "name": "Text",
+              "options": {
+                "text": "Hello World",
+              },
+            },
+          },
+        ],
+        "code": {
+          "actions": {},
+          "bindings": {},
+        },
+        "properties": {},
+        "tagName": "p",
+      }
+    `);
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    expect(backToMitosis.children[0]).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/node",
+        "bindings": {},
+        "children": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {},
+            "children": [],
+            "meta": {},
+            "name": "Text",
+            "properties": {
+              "$tagName": undefined,
+              "text": "Hello World",
+            },
+            "scope": {},
+            "slots": {},
+          },
+        ],
+        "meta": {},
+        "name": "p",
+        "properties": {},
+        "scope": {},
+        "slots": {},
+      }
+    `);
+
+    const backToJSX = componentToMitosis()({
+      component: backToMitosis,
+    });
+    expect(backToJSX).toMatchInlineSnapshot(`
+      "import { Text } from \\"@components\\";
+
+      export default function MyComponent(props) {
+        return (
+          <p>
+            <Text text=\\"Hello World\\" />
+          </p>
+        );
+      }
+      "
     `);
   });
 });
