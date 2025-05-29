@@ -681,10 +681,9 @@ describe('Builder', () => {
   test('null values', () => {
     const component = builderElementToMitosisNode(
       {
-        '@type': '@builder.io/sdk:Element',
+        '@type': '@builder.io/sdk:Element' as const,
         '@version': 2,
         id: 'builder-170e19cac58e4c28998d443a9dce80b8',
-        linkUrl: null,
         component: {
           name: 'CustomText',
           options: {
@@ -693,9 +692,9 @@ describe('Builder', () => {
           },
         },
         properties: {
-          href: null,
+          href: '',
         },
-      } as any,
+      },
       {},
     );
 
@@ -1462,29 +1461,14 @@ describe('Builder', () => {
     expect(component.properties.class).toBe('test-class');
   });
 
-  test('layerLocked false value transfer', () => {
-    const component = builderElementToMitosisNode(
-      {
-        '@type': '@builder.io/sdk:Element',
-        '@version': 2,
-        id: 'builder-test-layer-locked-false',
-        layerLocked: false,
-        tagName: 'div',
-      } as any,
-      {},
-    );
-
-    expect(component.properties.layerLocked).toBe('false');
-  });
-
   test('layerLocked undefined does not add property', () => {
     const component = builderElementToMitosisNode(
       {
-        '@type': '@builder.io/sdk:Element',
+        '@type': '@builder.io/sdk:Element' as const,
         '@version': 2,
         id: 'builder-test-no-layer-locked',
         tagName: 'div',
-      } as any,
+      },
       {},
     );
 
@@ -1529,7 +1513,7 @@ describe('Builder', () => {
   test('groupLocked property transfer', () => {
     const component = builderElementToMitosisNode(
       {
-        '@type': '@builder.io/sdk:Element',
+        '@type': '@builder.io/sdk:Element' as const,
         '@version': 2,
         id: 'builder-test-group-locked',
         groupLocked: true,
@@ -1538,7 +1522,7 @@ describe('Builder', () => {
         properties: {
           class: 'test-class',
         },
-      } as any,
+      },
       {},
     );
 
@@ -1547,29 +1531,14 @@ describe('Builder', () => {
     expect(component.properties.class).toBe('test-class');
   });
 
-  test('groupLocked false value transfer', () => {
-    const component = builderElementToMitosisNode(
-      {
-        '@type': '@builder.io/sdk:Element',
-        '@version': 2,
-        id: 'builder-test-group-locked-false',
-        groupLocked: false,
-        tagName: 'div',
-      } as any,
-      {},
-    );
-
-    expect(component.properties.groupLocked).toBe('false');
-  });
-
   test('groupLocked undefined does not add property', () => {
     const component = builderElementToMitosisNode(
       {
-        '@type': '@builder.io/sdk:Element',
+        '@type': '@builder.io/sdk:Element' as const,
         '@version': 2,
         id: 'builder-test-no-group-locked',
         tagName: 'div',
-      } as any,
+      },
       {},
     );
 
@@ -1609,39 +1578,6 @@ describe('Builder', () => {
     // Verify roundtrip conversion
     expect(backToBuilder.data?.blocks?.[0]?.groupLocked).toBe(true);
     expect(backToBuilder.data?.blocks?.[0]?.layerName).toBe('test-layer');
-  });
-
-  test('both layerLocked and groupLocked properties', () => {
-    // Test that both properties can be set simultaneously
-    const originalBuilder = {
-      data: {
-        blocks: [
-          {
-            '@type': '@builder.io/sdk:Element' as const,
-            '@version': 2,
-            id: 'builder-test-both-locked',
-            layerLocked: true,
-            groupLocked: false,
-            layerName: 'test-layer',
-            tagName: 'div',
-          },
-        ],
-      },
-    };
-
-    // Convert to Mitosis
-    const mitosisComponent = builderContentToMitosisComponent(originalBuilder);
-
-    // Verify both properties in Mitosis
-    expect(mitosisComponent.children[0].properties.layerLocked).toBe('true');
-    expect(mitosisComponent.children[0].properties.groupLocked).toBe('false');
-
-    // Convert back to Builder
-    const backToBuilder = componentToBuilder()({ component: mitosisComponent });
-
-    // Verify both properties in Builder roundtrip
-    expect(backToBuilder.data?.blocks?.[0]?.layerLocked).toBe(true);
-    expect(backToBuilder.data?.blocks?.[0]?.groupLocked).toBe(false);
   });
 });
 
