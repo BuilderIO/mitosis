@@ -1456,7 +1456,7 @@ describe('Builder', () => {
       {},
     );
 
-    expect(component.properties.layerLocked).toBe('true');
+    expect(component.properties['data-builder-layerLocked']).toBe('true');
     expect(component.properties.$name).toBe('test-layer');
     expect(component.properties.class).toBe('test-class');
   });
@@ -1472,7 +1472,7 @@ describe('Builder', () => {
       {},
     );
 
-    expect(component.properties.layerLocked).toBeUndefined();
+    expect(component.properties['data-builder-layerLocked']).toBeUndefined();
   });
 
   test('layerLocked roundtrip conversion', () => {
@@ -1499,7 +1499,7 @@ describe('Builder', () => {
     const mitosisComponent = builderContentToMitosisComponent(originalBuilder);
 
     // Verify Mitosis conversion
-    expect(mitosisComponent.children[0].properties.layerLocked).toBe('true');
+    expect(mitosisComponent.children[0].properties['data-builder-layerLocked']).toBe('true');
     expect(mitosisComponent.children[0].properties.$name).toBe('test-layer');
 
     // Convert back to Builder
@@ -1526,7 +1526,7 @@ describe('Builder', () => {
       {},
     );
 
-    expect(component.properties.groupLocked).toBe('true');
+    expect(component.properties['data-builder-groupLocked']).toBe('true');
     expect(component.properties.$name).toBe('test-layer');
     expect(component.properties.class).toBe('test-class');
   });
@@ -1542,7 +1542,7 @@ describe('Builder', () => {
       {},
     );
 
-    expect(component.properties.groupLocked).toBeUndefined();
+    expect(component.properties['data-builder-groupLocked']).toBeUndefined();
   });
 
   test('groupLocked roundtrip conversion', () => {
@@ -1569,7 +1569,7 @@ describe('Builder', () => {
     const mitosisComponent = builderContentToMitosisComponent(originalBuilder);
 
     // Verify Mitosis conversion
-    expect(mitosisComponent.children[0].properties.groupLocked).toBe('true');
+    expect(mitosisComponent.children[0].properties['data-builder-groupLocked']).toBe('true');
     expect(mitosisComponent.children[0].properties.$name).toBe('test-layer');
 
     // Convert back to Builder
