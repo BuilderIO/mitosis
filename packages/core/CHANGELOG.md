@@ -1,5 +1,75 @@
 # Change Log
 
+## 0.11.2
+
+### Patch Changes
+
+- 9d47e1a: feat: add `layerLocked` and `groupLocked` attribute support for builder json
+
+## 0.11.1
+
+### Patch Changes
+
+- 9052eb6: [React Native] Fix: import `StyleSheet` from React Native when styles are used
+
+## 0.11.0
+
+### Minor Changes
+
+- 3ac5f63: [Angular] revamp of the angular signals generator
+
+  ### New
+
+  - Support for template strings inside templates (converted to computed values)
+  - Support for spread values inside templates (converted to computed values)
+  - Support for TS `as X` expressions inside templates (converted to computed values)
+  - `export default class` component support using `defaultExportComponents` option
+  - Support dynamic component rendering (`ngComponentOutlet`)
+  - Dependent signals initialization via `onInit`
+  - `onMount` hook code to run only in the browser after view initialization
+  - `ngSkipHydration` support using `useMetadata`
+  - Helper utilities to set attributes and events on elements from arbitrary spread props
+  - Fully typed component inputs
+  - Dual-mode `computed()` handling:
+    - In a `For` context with index and forName, uses plain functions
+    - Otherwise, uses Angular’s `computed`
+  - Binding functions when passed as props
+
+  ### Fixes
+
+  - Functions erroneously passed as `fn()` in callable expressions
+  - Callable-expression arguments not updating `state.x` or `props.x` to `x()`
+
+### Patch Changes
+
+- 843814f: fix: do not generate empty expressions with slots
+
+## 0.10.0
+
+### Minor Changes
+
+- dee8a62: add flag for serializing and parsing deeply nested nodes
+
+## 0.9.5
+
+### Patch Changes
+
+- df7c51b: Addresses issue in the swift string format generator
+
+## 0.9.4
+
+### Patch Changes
+
+- dc3de1e: Update experimental swift output
+
+## 0.9.3
+
+### Patch Changes
+
+- ada6d73: [all]: update jsx-runtime.d.ts
+- de198af: expressions in action bindings are converted to call expressions
+- 1eb4d28: Builder: Symbol information is preserved
+
 ## 0.9.2
 
 ### Patch Changes

@@ -487,7 +487,7 @@ import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
       {{myService.method('hello') + name}} Hello! I can run in React, Vue,
       Solid, or Liquid!
 
-      <input (change)=\\"onChange\\" />
+      <input (change)=\\"onChange()\\" />
     </div>
   \`,
   styles: [
@@ -541,7 +541,7 @@ import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
       {{myService.method('hello') + name}} Hello! I can run in React, Vue,
       Solid, or Liquid!
 
-      <input (change)=\\"onChange\\" />
+      <input (change)=\\"onChange()\\" />
     </div>
   \`,
   styles: [
@@ -8792,11 +8792,23 @@ exports[`Angular > jsx > Javascript Test > dynamicComponent 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
+    <ng-template #objTemplate>
+      hello
+
+      <ng-content></ng-content>
+    </ng-template>
     <ng-container
       *ngComponentOutlet=\\"
               obj.Component;
@@ -8817,6 +8829,10 @@ export default class MyComponent {
   @Input() attributes;
   @Input() something;
 
+  @ViewChild(\\"objTemplate\\", { static: true }) objTemplateRef;
+
+  myContent;
+
   obj = {
     name: \\"foo\\",
     Component: FooComponent,
@@ -8824,6 +8840,14 @@ export default class MyComponent {
   onClick = function onClick() {
     console.log(\\"hello\\");
   };
+
+  constructor(private vcRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.objTemplateRef).rootNodes,
+    ];
+  }
 }
 
 @NgModule({
@@ -8836,13 +8860,25 @@ export class MyComponentModule {}
 `;
 
 exports[`Angular > jsx > Javascript Test > dynamicComponent 2`] = `
-"import { Component, Input } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
 
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
+    <ng-template #objTemplate>
+      hello
+
+      <ng-content></ng-content>
+    </ng-template>
     <ng-container
       *ngComponentOutlet=\\"
               obj.Component;
@@ -8865,6 +8901,10 @@ export default class MyComponent {
   @Input() attributes;
   @Input() something;
 
+  @ViewChild(\\"objTemplate\\", { static: true }) objTemplateRef;
+
+  myContent;
+
   obj = {
     name: \\"foo\\",
     Component: FooComponent,
@@ -8872,6 +8912,14 @@ export default class MyComponent {
   onClick = function onClick() {
     console.log(\\"hello\\");
   };
+
+  constructor(private vcRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.objTemplateRef).rootNodes,
+    ];
+  }
 }
 "
 `;
@@ -15907,7 +15955,7 @@ import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
       {{myService.method('hello') + name}} Hello! I can run in React, Vue,
       Solid, or Liquid!
 
-      <input (change)=\\"onChange\\" />
+      <input (change)=\\"onChange()\\" />
     </div>
   \`,
   styles: [
@@ -15961,7 +16009,7 @@ import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
       {{myService.method('hello') + name}} Hello! I can run in React, Vue,
       Solid, or Liquid!
 
-      <input (change)=\\"onChange\\" />
+      <input (change)=\\"onChange()\\" />
     </div>
   \`,
   styles: [
@@ -24872,11 +24920,23 @@ exports[`Angular > jsx > Typescript Test > dynamicComponent 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
+    <ng-template #objTemplate>
+      hello
+
+      <ng-content></ng-content>
+    </ng-template>
     <ng-container
       *ngComponentOutlet=\\"
               obj.Component;
@@ -24897,6 +24957,10 @@ export default class MyComponent {
   @Input() attributes!: any;
   @Input() something!: any;
 
+  @ViewChild(\\"objTemplate\\", { static: true }) objTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
+
   obj = {
     name: \\"foo\\",
     Component: FooComponent,
@@ -24904,6 +24968,14 @@ export default class MyComponent {
   onClick = function onClick() {
     console.log(\\"hello\\");
   };
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.objTemplateRef).rootNodes,
+    ];
+  }
 }
 
 @NgModule({
@@ -24916,13 +24988,25 @@ export class MyComponentModule {}
 `;
 
 exports[`Angular > jsx > Typescript Test > dynamicComponent 2`] = `
-"import { Component, Input } from \\"@angular/core\\";
+"import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Input,
+  ViewContainerRef,
+  TemplateRef,
+} from \\"@angular/core\\";
 
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
   selector: \\"my-component\\",
   template: \`
+    <ng-template #objTemplate>
+      hello
+
+      <ng-content></ng-content>
+    </ng-template>
     <ng-container
       *ngComponentOutlet=\\"
               obj.Component;
@@ -24945,6 +25029,10 @@ export default class MyComponent {
   @Input() attributes!: any;
   @Input() something!: any;
 
+  @ViewChild(\\"objTemplate\\", { static: true }) objTemplateRef!: TemplateRef<any>;
+
+  myContent?: any[][];
+
   obj = {
     name: \\"foo\\",
     Component: FooComponent,
@@ -24952,6 +25040,14 @@ export default class MyComponent {
   onClick = function onClick() {
     console.log(\\"hello\\");
   };
+
+  constructor(private vcRef: ViewContainerRef) {}
+
+  ngOnInit() {
+    this.myContent = [
+      this.vcRef.createEmbeddedView(this.objTemplateRef).rootNodes,
+    ];
+  }
 }
 "
 `;
