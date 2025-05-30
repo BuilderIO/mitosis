@@ -489,7 +489,7 @@ const _componentToReact = (
   }${isForwardRef ? ')' : ''}
 
     ${
-      reactNativeStyles
+      reactNativeStyles && Object.keys(reactNativeStyles).length > 0
         ? `const styles = StyleSheet.create(${json5.stringify(reactNativeStyles)});`
         : ''
     }
