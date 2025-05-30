@@ -39,39 +39,8 @@ const component = {
 };
 
 describe('Angular tag name output', () => {
-  test('ngmodule', () => {
-    const angular = componentToAngular()({ component });
-    expect(angular).toMatchInlineSnapshot(`
-      "import { NgModule } from \\"@angular/core\\";
-      import { CommonModule } from \\"@angular/common\\";
-
-      import { Component } from \\"@angular/core\\";
-
-      @Component({
-        selector: \\"my-component\\",
-        template: \`
-          <input placeholder=\\"placeholder text\\" />
-        \`,
-        styles: [
-          \`
-            :host {
-              display: contents;
-            }
-          \`,
-        ],
-      })
-      export default class MyComponent {}
-
-      @NgModule({
-        declarations: [MyComponent],
-        imports: [CommonModule, CustomComponentModule],
-        exports: [MyComponent],
-      })
-      export class MyComponentModule {}
-      "
-    `);
-  });
-  test('standalone', () => {
+  test('self closing tags are handled correctly', () => {
+    // ngmodule and standalone have the same code path here
     const angular = componentToAngular({ standalone: true })({ component });
     expect(angular).toMatchInlineSnapshot(`
       "import { Component } from \\"@angular/core\\";
