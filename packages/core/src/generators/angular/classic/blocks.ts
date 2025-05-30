@@ -478,7 +478,7 @@ export const blockToAngular = ({
       str += `#${rootRef}`;
     }
 
-    if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
+    if (SELF_CLOSING_HTML_TAGS.has(element)) {
       return str + ' />';
     }
     str += '>';
