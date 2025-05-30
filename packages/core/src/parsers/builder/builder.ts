@@ -529,6 +529,15 @@ const componentMappers: {
       properties.$name = block.layerName;
     }
 
+    // Add data attributes for Builder layer properties
+    const dataAttributes: Record<string, string> = {};
+    if (block.layerLocked !== undefined) {
+      dataAttributes['data-builder-layerLocked'] = String(block.layerLocked);
+    }
+    if (block.groupLocked !== undefined) {
+      dataAttributes['data-builder-groupLocked'] = String(block.groupLocked);
+    }
+
     const innerBindings: MitosisNode['bindings'] = {};
     const componentOptionsText = blockBindings['component.options.text'];
     if (componentOptionsText) {
@@ -560,7 +569,10 @@ const componentMappers: {
       return createMitosisNode({
         name: block.tagName || 'div',
         bindings,
-        properties,
+        properties: {
+          ...properties,
+          ...dataAttributes,
+        },
         meta: getMetaFromBlock(block, options),
         ...(Object.keys(localizedValues).length && { localizedValues }),
         children: [
@@ -586,6 +598,7 @@ const componentMappers: {
           }
         : {}),
       ...properties,
+      ...dataAttributes,
     };
     const finalTagname = block.tagName || (assumeLink ? 'a' : 'div');
 
@@ -907,6 +920,15 @@ export const builderElementToMitosisNode = (
     }
   }
 
+  // Add data attributes for Builder layer properties
+  const dataAttributes: Record<string, string> = {};
+  if (block.layerLocked !== undefined) {
+    dataAttributes['data-builder-layerLocked'] = String(block.layerLocked);
+  }
+  if (block.groupLocked !== undefined) {
+    dataAttributes['data-builder-groupLocked'] = String(block.groupLocked);
+  }
+
   const node = createMitosisNode({
     name:
       block.component?.name?.replace(/[^a-z0-9]/gi, '') ||
@@ -916,6 +938,7 @@ export const builderElementToMitosisNode = (
       ...(block.component && includeSpecialBindings && { $tagName: block.tagName }),
       ...(block.class && { class: block.class }),
       ...properties,
+      ...dataAttributes,
     },
     bindings: {
       ...bindings,
