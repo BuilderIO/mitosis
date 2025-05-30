@@ -43,6 +43,7 @@ export * from './helpers/is-mitosis-node';
 export { checkShouldOutputTypeScript } from './helpers/output';
 export * from './helpers/signals';
 export * from './helpers/typescript-project';
+export * from './parsers/alpine';
 export * from './parsers/angular';
 export * from './parsers/builder';
 export * from './parsers/context';
