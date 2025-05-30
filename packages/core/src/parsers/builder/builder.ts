@@ -760,6 +760,15 @@ export const builderElementToMitosisNode = (
     }
   }
 
+  // Add data attributes for Builder layer properties
+  const dataAttributes: Record<string, string> = {};
+  if (block.layerLocked !== undefined) {
+    dataAttributes['data-builder-layerLocked'] = String(block.layerLocked);
+  }
+  if (block.groupLocked !== undefined) {
+    dataAttributes['data-builder-groupLocked'] = String(block.groupLocked);
+  }
+
   const node = createMitosisNode({
     name:
       block.component?.name?.replace(/[^a-z0-9]/gi, '') ||
@@ -769,6 +778,7 @@ export const builderElementToMitosisNode = (
       ...(block.component && includeSpecialBindings && { $tagName: block.tagName }),
       ...(block.class && { class: block.class }),
       ...properties,
+      ...dataAttributes,
     },
     bindings: {
       ...bindings,
