@@ -7,7 +7,7 @@ const component = {
       bindings: {},
       children: [],
       meta: {},
-      name: 'BoxedInputDirective',
+      name: 'CustomComponent',
       properties: {
         $tagName: 'input',
         placeholder: 'placeholder text',
@@ -64,7 +64,7 @@ describe('Angular tag name output', () => {
 
       @NgModule({
         declarations: [MyComponent],
-        imports: [CommonModule, BoxedInputDirectiveModule],
+        imports: [CommonModule, CustomComponentModule],
         exports: [MyComponent],
       })
       export class MyComponentModule {}
@@ -91,7 +91,7 @@ describe('Angular tag name output', () => {
           \`,
         ],
         standalone: true,
-        imports: [CommonModule, BoxedInputDirective],
+        imports: [CommonModule, CustomComponent],
       })
       export default class MyComponent {}
       "
