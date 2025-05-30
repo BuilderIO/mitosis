@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.11.2
+
+### Patch Changes
+
+- 9d47e1a: feat: add `layerLocked` and `groupLocked` attribute support for builder json
+
 ## 0.11.1
 
 ### Patch Changes
