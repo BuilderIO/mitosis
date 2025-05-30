@@ -1879,10 +1879,14 @@ exports[`Preact > jsx > Javascript Test > basicRefAttributePassing 1`] = `
 
 /** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useRef } from \\"preact/hooks\\";
+import { useRef, useEffect } from \\"preact/hooks\\";
 
 function BasicRefAttributePassingComponent(props) {
   const buttonRef = useRef(null);
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
 
   return <button ref={buttonRef}>Attribute Passing</button>;
 }
@@ -6132,10 +6136,14 @@ exports[`Preact > jsx > Typescript Test > basicRefAttributePassing 1`] = `
 
 /** @jsx h */
 import { h, Fragment } from \\"preact\\";
-import { useRef } from \\"preact/hooks\\";
+import { useRef, useEffect } from \\"preact/hooks\\";
 
 function BasicRefAttributePassingComponent(props: any) {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
 
   return <button ref={buttonRef}>Attribute Passing</button>;
 }
