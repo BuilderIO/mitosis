@@ -66,7 +66,7 @@ describe('Angular tag name output', () => {
       "
     `);
   });
-  test.only('self closing tags are handled correctly - signals', () => {
+  test('self closing tags are handled correctly - signals', () => {
     // signals API uses standalone but has a different codepath than standalone: true
     const angular = componentToAngular({ api: 'signals' })({ component });
     expect(angular).toMatchInlineSnapshot(`
