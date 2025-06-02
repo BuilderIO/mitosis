@@ -15,6 +15,10 @@ import { compileAwayBuilderComponents } from '@/plugins/compile-away-builder-com
 import { BuilderContent } from '@builder.io/sdk';
 
 import { componentToAngular } from '@/generators/angular';
+import {
+  compileAwayBuilderComponentsFromTree,
+  components as compileAwayComponents,
+} from '@/plugins/compile-away-builder-components';
 import columns from '../data/blocks/columns.raw.tsx?raw';
 import customCode from '../data/blocks/custom-code.raw.tsx?raw';
 import embed from '../data/blocks/embed.raw.tsx?raw';
@@ -234,6 +238,9 @@ describe('Builder', () => {
     const component = parseJsx(code);
     const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
+
+    compileAwayBuilderComponentsFromTree(backToMitosis, compileAwayComponents);
+
     const mitosis = componentToMitosis(mitosisOptions)({
       component: backToMitosis,
     });
@@ -292,6 +299,7 @@ describe('Builder', () => {
     const component = parseJsx(code);
     const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
+    compileAwayBuilderComponentsFromTree(backToMitosis, compileAwayComponents);
     const mitosis = componentToMitosis(mitosisOptions)({
       component: backToMitosis,
     });
@@ -765,7 +773,7 @@ describe('Builder', () => {
       {
         "css": {
           "bindingType": "expression",
-          "code": "{background:'blue',zIndex:'0'}",
+          "code": "{\\"background\\":\\"blue\\",\\"zIndex\\":\\"0\\"}",
           "type": "single",
         },
       }
