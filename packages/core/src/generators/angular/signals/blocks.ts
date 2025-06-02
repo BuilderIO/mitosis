@@ -9,6 +9,7 @@ import {
   checkIsEvent,
   getEventNameWithoutOn,
 } from '@/helpers/event-handlers';
+import { getBuilderTagName } from '@/helpers/get-tag-name';
 import isChildren from '@/helpers/is-children';
 import { isMitosisNode } from '@/helpers/is-mitosis-node';
 import { stripSlotPrefix } from '@/helpers/slots';
@@ -335,19 +336,21 @@ const getElementTag = (json: MitosisNode, blockOptions?: AngularBlockOptions) =>
     attributes;
 
   const isComponent = childComponents.find((impName) => impName === json.name);
-  if (isComponent) {
-    const selector = json.meta.selector;
-    if (selector) {
-      try {
-        ({ element, classNames, attributes } = parseSelector(`${selector}`));
-      } catch {
-        element = kebabCase(json.name);
-      }
-    } else {
-      element = kebabCase(json.name);
+  const tagName = getBuilderTagName(json);
+  const selector = json.meta.selector || blockOptions?.selector;
+  if (selector) {
+    try {
+      ({ element, classNames, attributes } = parseSelector(`${selector}`));
+    } catch {
+      element = tagName ?? kebabCase(json.name);
     }
-  } else {
-    element = json.name;
+  }
+  if (!element) {
+    if (isComponent) {
+      element = tagName ?? kebabCase(json.name);
+    } else {
+      element = tagName ?? json.name;
+    }
   }
 
   let additionalString = '';
@@ -456,7 +459,7 @@ export const blockToAngularSignals = ({
     str += `#${rootRef}`;
   }
 
-  if (SELF_CLOSING_HTML_TAGS.has(json.name)) {
+  if (SELF_CLOSING_HTML_TAGS.has(element)) {
     return str + ' />';
   }
   str += '>';
