@@ -112,22 +112,12 @@ describe('Builder Text node', () => {
             "type": "single",
           },
         },
-        "children": [
-          {
-            "@type": "@builder.io/mitosis/node",
-            "bindings": {},
-            "children": [],
-            "meta": {},
-            "name": "div",
-            "properties": {
-              "_text": "<h1>Hello World</h1>",
-            },
-            "scope": {},
-          },
-        ],
+        "children": [],
         "meta": {},
         "name": "div",
-        "properties": {},
+        "properties": {
+          "_text": "<h1>Hello World</h1>",
+        },
         "scope": {},
         "slots": {},
       }
@@ -139,13 +129,9 @@ describe('Builder Text node', () => {
     expect(mitosis).toMatchInlineSnapshot(`
       "export default function MyComponent(props) {
         return (
-          <div
-            css={{
-              color: \\"red\\",
-            }}
-          >
+          <>
             <h1>Hello World</h1>
-          </div>
+          </>
         );
       }
       "
@@ -155,15 +141,7 @@ describe('Builder Text node', () => {
     expect(backToMitosis.children[0]).toMatchInlineSnapshot(`
       {
         "@type": "@builder.io/mitosis/node",
-        "bindings": {
-          "css": {
-            "bindingType": "expression",
-            "code": "{
-        color: \\"red\\"
-      }",
-            "type": "single",
-          },
-        },
+        "bindings": {},
         "children": [
           {
             "@type": "@builder.io/mitosis/node",
@@ -188,7 +166,7 @@ describe('Builder Text node', () => {
           },
         ],
         "meta": {},
-        "name": "div",
+        "name": "Fragment",
         "properties": {},
         "scope": {},
       }
@@ -230,13 +208,9 @@ describe('Builder Text node', () => {
           "actions": {},
           "bindings": {},
         },
-        "properties": {},
-        "responsiveStyles": {
-          "large": {
-            "color": "red",
-          },
+        "component": {
+          "name": "Core:Fragment",
         },
-        "tagName": "div",
       }
     `);
   });
@@ -244,7 +218,7 @@ describe('Builder Text node', () => {
     const code = dedent`
     export default function MyComponent(props) {
       return (
-        <p>Hello World</p>
+        <p><Text text="hello world" /></p>
       )
     }
     `;
@@ -258,11 +232,17 @@ describe('Builder Text node', () => {
         "children": [
           {
             "@type": "@builder.io/sdk:Element",
+            "actions": {},
             "bindings": {},
+            "children": [],
+            "code": {
+              "actions": {},
+              "bindings": {},
+            },
             "component": {
               "name": "Text",
               "options": {
-                "text": "Hello World",
+                "text": "hello world",
               },
             },
           },
@@ -289,7 +269,7 @@ describe('Builder Text node', () => {
             "name": "Text",
             "properties": {
               "$tagName": undefined,
-              "text": "Hello World",
+              "text": "hello world",
             },
             "scope": {},
             "slots": {},
@@ -303,6 +283,60 @@ describe('Builder Text node', () => {
       }
     `);
 
+    //compileAwayBuilderComponentsFromTree(backToMitosis, compileAwayComponents);
+
+    expect(backToMitosis).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/component",
+        "children": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {},
+            "children": [
+              {
+                "@type": "@builder.io/mitosis/node",
+                "bindings": {},
+                "children": [],
+                "meta": {},
+                "name": "Text",
+                "properties": {
+                  "$tagName": undefined,
+                  "text": "hello world",
+                },
+                "scope": {},
+                "slots": {},
+              },
+            ],
+            "meta": {},
+            "name": "p",
+            "properties": {},
+            "scope": {},
+            "slots": {},
+          },
+        ],
+        "context": {
+          "get": {},
+          "set": {},
+        },
+        "exports": {},
+        "hooks": {
+          "onEvent": [],
+          "onMount": [],
+        },
+        "imports": [],
+        "inputs": undefined,
+        "meta": {
+          "useMetadata": {
+            "httpRequests": undefined,
+          },
+        },
+        "name": "MyComponent",
+        "refs": {},
+        "state": {},
+        "subComponents": [],
+      }
+    `);
+
     const backToJSX = componentToMitosis()({
       component: backToMitosis,
     });
@@ -312,7 +346,7 @@ describe('Builder Text node', () => {
       export default function MyComponent(props) {
         return (
           <p>
-            <Text text=\\"Hello World\\" />
+            <Text text=\\"hello world\\" />
           </p>
         );
       }

@@ -564,15 +564,9 @@ export const components: CompileAwayComponentsMap = {
     return createMitosisNode({
       ...node,
       name: node.properties.$tagName ?? 'div',
-      properties: {},
-      children: [
-        createMitosisNode({
-          name: 'div',
-          properties: {
-            _text: node.properties.text,
-          },
-        }),
-      ],
+      properties: {
+        _text: node.properties.text,
+      },
     });
   },
 };
