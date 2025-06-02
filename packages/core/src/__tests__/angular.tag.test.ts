@@ -66,4 +66,26 @@ describe('Angular tag name output', () => {
       "
     `);
   });
+  test.only('self closing tags are handled correctly - signals', () => {
+    // signals API uses standalone but has a different codepath than standalone: true
+    const angular = componentToAngular({ api: 'signals' })({ component });
+    expect(angular).toMatchInlineSnapshot(`
+      "import { Component, effect } from \\"@angular/core\\";
+      import { CommonModule } from \\"@angular/common\\";
+
+      @Component({
+        selector: \\"my-component\\",
+        standalone: true,
+        imports: [CommonModule, CustomComponent],
+        template: \`
+          <input $tagName=\\"input\\" placeholder=\\"placeholder text\\" />
+        \`,
+        styles: \`:host { display: contents; }\`,
+      })
+      export class MyComponent {
+        constructor() {}
+      }
+      "
+    `);
+  });
 });
