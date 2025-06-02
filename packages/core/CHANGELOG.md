@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.11.3
+
+### Patch Changes
+
+- 95cf7e0: Angular: generator handles self closing tags with components properly
+
 ## 0.11.2
 
 ### Patch Changes
