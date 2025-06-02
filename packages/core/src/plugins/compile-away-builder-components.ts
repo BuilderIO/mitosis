@@ -561,12 +561,19 @@ export const components: CompileAwayComponentsMap = {
     return wrapOutput(node, videoContainer, components);
   },
   Text: (node: MitosisNode) => {
+    if (node.properties.text) {
+      node.properties._text = node.properties.text;
+      delete node.properties.text;
+    }
+
+    if (node.bindings.text) {
+      node.bindings._text = node.bindings.text;
+      delete node.bindings.text;
+    }
+
     return createMitosisNode({
       ...node,
       name: node.properties.$tagName ?? 'div',
-      properties: {
-        _text: node.properties.text,
-      },
     });
   },
 };
