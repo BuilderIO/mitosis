@@ -116,6 +116,7 @@ describe('Builder Text node', () => {
         "meta": {},
         "name": "div",
         "properties": {
+          "$tagName": undefined,
           "_text": "<h1>Hello World</h1>",
         },
         "scope": {},
