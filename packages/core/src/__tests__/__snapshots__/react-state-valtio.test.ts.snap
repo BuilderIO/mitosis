@@ -1891,10 +1891,14 @@ exports[`React - stateType: valtio > jsx > Javascript Test > basicRefAttributePa
 
 \\"use client\\";
 import * as React from \\"react\\";
-import { useRef } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function BasicRefAttributePassingComponent(props) {
   const buttonRef = useRef(null);
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
 
   return <button ref={buttonRef}>Attribute Passing</button>;
 }
@@ -6040,10 +6044,14 @@ exports[`React - stateType: valtio > jsx > Typescript Test > basicRefAttributePa
 
 \\"use client\\";
 import * as React from \\"react\\";
-import { useRef } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function BasicRefAttributePassingComponent(props: any) {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
 
   return <button ref={buttonRef}>Attribute Passing</button>;
 }

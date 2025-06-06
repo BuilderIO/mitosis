@@ -3765,10 +3765,19 @@ exports[`qwik > jsx > Javascript Test > basicRefAttributePassing 1`] = `
           {\\"attributePassing\\":{\\"enabled\\":true}}
           */
 
-          import { Fragment, component$, h, useSignal } from \\"@builder.io/qwik\\";
+          import {
+  Fragment,
+  component$,
+  h,
+  useSignal,
+  useVisibleTask$,
+} from \\"@builder.io/qwik\\";
 
 export const BasicRefAttributePassingComponent = component$((props) => {
   const buttonRef = useSignal();
+  useVisibleTask$(() => {
+    console.log(\\"onMount\\");
+  });
 
   return <button ref={buttonRef}>Attribute Passing</button>;
 });
@@ -7966,10 +7975,19 @@ exports[`qwik > jsx > Typescript Test > basicRefAttributePassing 1`] = `
           {\\"attributePassing\\":{\\"enabled\\":true}}
           */
 
-          import { Fragment, component$, h, useSignal } from \\"@builder.io/qwik\\";
+          import {
+  Fragment,
+  component$,
+  h,
+  useSignal,
+  useVisibleTask$,
+} from \\"@builder.io/qwik\\";
 
 export const BasicRefAttributePassingComponent = component$((props: any) => {
   const buttonRef = useSignal<Element>();
+  useVisibleTask$(() => {
+    console.log(\\"onMount\\");
+  });
 
   return <button ref={buttonRef}>Attribute Passing</button>;
 });

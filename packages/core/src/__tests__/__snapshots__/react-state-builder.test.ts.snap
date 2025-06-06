@@ -1891,11 +1891,15 @@ exports[`React - stateType: builder > jsx > Javascript Test > basicRefAttributeP
 
 \\"use client\\";
 import * as React from \\"react\\";
-import { useRef } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function BasicRefAttributePassingComponent(props) {
   const buttonRef = useRef(null);
   const state = useBuilderState({});
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
 
   return <button ref={buttonRef}>Attribute Passing</button>;
 }
@@ -6138,11 +6142,15 @@ exports[`React - stateType: builder > jsx > Typescript Test > basicRefAttributeP
 
 \\"use client\\";
 import * as React from \\"react\\";
-import { useRef } from \\"react\\";
+import { useRef, useEffect } from \\"react\\";
 
 function BasicRefAttributePassingComponent(props: any) {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const state = useBuilderState({});
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
 
   return <button ref={buttonRef}>Attribute Passing</button>;
 }
