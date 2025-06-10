@@ -146,7 +146,6 @@ export const getStyleStringFromBlock = (
          * }
          */
       } else if (key.includes('responsiveStyles')) {
-        // const [_, size, prop] = key.split('.');
         const parts = key.split('.');
         const size = parts[parts.length - 2];
         const prop = parts[parts.length - 1];
