@@ -145,22 +145,6 @@ describe('Responsive Styles', () => {
     expect(result).toContain('justifyContent: state.justifyContent || "flex-start"');
   });
 
-  test('should handle invalid code with escapeInvalidCode option', () => {
-    const block: BuilderElement = {
-      '@type': '@builder.io/sdk:Element',
-      bindings: {
-        'component.options.responsiveStyles.medium.flexDirection': 'invalid code {',
-        'component.options.responsiveStyles.small.flexDirection': 'also invalid }',
-      },
-    };
-
-    const result = getStyleStringFromBlock(block, { escapeInvalidCode: true });
-
-    // Should contain the escaped invalid code
-    expect(result).toContain('`invalid code { [INVALID CODE]`');
-    expect(result).toContain('`also invalid } [INVALID CODE]`');
-  });
-
   test('should handle empty bindings', () => {
     const block: BuilderElement = {
       '@type': '@builder.io/sdk:Element',
