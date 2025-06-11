@@ -9,6 +9,90 @@ const options = {
 };
 
 describe('Responsive Styles', () => {
+  test('preserve bound media query styles when converting to mitosis', () => {
+    const content = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            bindings: {
+              'responsiveStyles.small.left': 'state.left',
+              'responsiveStyles.small.top': 'state.top',
+              'responsiveStyles.large.color': 'state.color',
+              'style.fontSize': 'state.fontSize',
+              'style.background': '"red"',
+              'responsiveStyles.large.background': '"green"',
+            },
+          },
+        ],
+      },
+    };
+
+    const mitosis = builderContentToMitosisComponent(content);
+    expect(mitosis.children[0].bindings).toMatchInlineSnapshot(`
+      {
+        "style": {
+          "bindingType": "expression",
+          "code": "{ fontSize: state.fontSize, background: \\"red\\", \\"@media (max-width: 640px)\\": { left: state.left, top: state.top }, \\"@media (max-width: 1200px)\\": { color: state.color, background: \\"green\\" }, }",
+          "type": "single",
+        },
+      }
+    `);
+
+    const jsx = componentToMitosis()({ component: mitosis });
+    expect(jsx).toMatchInlineSnapshot(`
+          "export default function MyComponent(props) {
+            return (
+              <div
+                style={{
+                  fontSize: state.fontSize,
+                  background: \\"red\\",
+                  \\"@media (max-width: 640px)\\": {
+                    left: state.left,
+                    top: state.top,
+                  },
+                  \\"@media (max-width: 1200px)\\": {
+                    color: state.color,
+                    background: \\"green\\",
+                  },
+                }}
+              />
+            );
+          }
+          "
+        `);
+
+    const json = componentToBuilder()({ component: mitosis });
+    expect(json).toMatchInlineSnapshot(`
+          {
+            "data": {
+              "blocks": [
+                {
+                  "@type": "@builder.io/sdk:Element",
+                  "actions": {},
+                  "bindings": {
+                    "responsiveStyles.large.background": "\\"green\\"",
+                    "responsiveStyles.large.color": "state.color",
+                    "responsiveStyles.small.left": "state.left",
+                    "responsiveStyles.small.top": "state.top",
+                    "style.background": "\\"red\\"",
+                    "style.fontSize": "state.fontSize",
+                  },
+                  "children": [],
+                  "code": {
+                    "actions": {},
+                    "bindings": {},
+                  },
+                  "properties": {},
+                  "tagName": "div",
+                },
+              ],
+              "jsCode": "",
+              "tsCode": "",
+            },
+          }
+        `);
+  });
   test('should handle component.options.responsiveStyles correctly', () => {
     const block: BuilderElement = {
       '@type': '@builder.io/sdk:Element',
