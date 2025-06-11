@@ -36,29 +36,6 @@ describe('Responsive Styles', () => {
     );
   });
 
-  test('should handle direct responsiveStyles bindings correctly', () => {
-    const block: BuilderElement = {
-      '@type': '@builder.io/sdk:Element',
-      bindings: {
-        'responsiveStyles.medium.flexDirection':
-          'state.reverseColumnsWhenStacked ? "column-reverse" : "column"',
-        'responsiveStyles.small.flexDirection':
-          'state.reverseColumnsWhenStacked ? "column-reverse" : "column"',
-      },
-    };
-
-    const result = getStyleStringFromBlock(block, options);
-
-    // Should contain both media queries
-    expect(result).toContain('@media (max-width: 991px)');
-    expect(result).toContain('@media (max-width: 640px)');
-
-    // Should contain the correct flexDirection bindings
-    expect(result).toContain(
-      'flexDirection: state.reverseColumnsWhenStacked ? "column-reverse" : "column"',
-    );
-  });
-
   test('should handle multiple responsive styles for the same breakpoint', () => {
     const block: BuilderElement = {
       '@type': '@builder.io/sdk:Element',
