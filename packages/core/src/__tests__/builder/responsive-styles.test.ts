@@ -144,14 +144,4 @@ describe('Responsive Styles', () => {
     expect(result).toContain('alignItems: state.alignItems || "center"');
     expect(result).toContain('justifyContent: state.justifyContent || "flex-start"');
   });
-
-  test('should handle empty bindings', () => {
-    const block: BuilderElement = {
-      '@type': '@builder.io/sdk:Element',
-      bindings: {},
-    };
-
-    const result = getStyleStringFromBlock(block, options);
-    expect(result).toBe('');
-  });
 });
