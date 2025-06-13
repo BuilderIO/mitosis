@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.11.4
+
+### Patch Changes
+
+- b405755: fix issue where bindings' responsiveStyles keys (when destructured) aren't well accessed.
+
 ## 0.11.3
 
 ### Patch Changes
