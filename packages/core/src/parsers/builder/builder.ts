@@ -106,7 +106,10 @@ const getActionBindingsFromBlock = (
   return bindings;
 };
 
-const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosisOptions) => {
+export const getStyleStringFromBlock = (
+  block: BuilderElement,
+  options: BuilderToMitosisOptions,
+) => {
   const styleBindings: any = {};
   const responsiveStyles: Record<string, Record<string, string>> = {};
   let styleString = '';
@@ -143,7 +146,10 @@ const getStyleStringFromBlock = (block: BuilderElement, options: BuilderToMitosi
          * }
          */
       } else if (key.includes('responsiveStyles')) {
-        const [_, size, prop] = key.split('.');
+        const parts = key.split('.');
+        const size = parts[parts.length - 2];
+        const prop = parts[parts.length - 1];
+
         const mediaKey = `@media (max-width: ${sizes[size as Size].max}px)`;
 
         /**
