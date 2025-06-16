@@ -818,6 +818,44 @@ export const blockToBuilder = (
   return processLocalizedValues(element, json);
 };
 
+const recursivelyCheckForChildrenWithSameComponent = (
+  builderContent: BuilderContent,
+  componentName: string,
+  path: string = '',
+): string => {
+  if (builderContent.data?.blocks) {
+    return (
+      builderContent.data.blocks
+        .map((block, index) =>
+          recursivelyCheckForChildrenWithSameComponent(
+            block,
+            componentName,
+            `${path ? `${path}.` : ''}data.blocks[${index}]`,
+          ),
+        )
+        .find(Boolean) || ''
+    );
+  } else if (isBuilderElement(builderContent)) {
+    if (builderContent.component?.name === componentName) {
+      return path;
+    }
+    if (builderContent.children) {
+      return (
+        builderContent.children
+          .map((child, index) =>
+            recursivelyCheckForChildrenWithSameComponent(
+              child,
+              componentName,
+              `${path}.children[${index}]`,
+            ),
+          )
+          .find(Boolean) || ''
+      );
+    }
+  }
+  return '';
+};
+
 export const componentToBuilder =
   (options: ToBuilderOptions = {}) =>
   ({ component }: TranspilerArgs): BuilderContent => {
@@ -884,7 +922,18 @@ export const componentToBuilder =
       if (isBuilderElement(el)) {
         const value = subComponentMap[el.component?.name!];
         if (value) {
-          set(el, 'component.options.symbol.content', value);
+          if (options.removeCircularReferences) {
+            const path = recursivelyCheckForChildrenWithSameComponent(value, el.component?.name!);
+            if (path) {
+              const newValue = { ...value };
+              set(newValue, path, `[Circular Reference: ${el.component?.name!}]`);
+              set(el, 'component.options.symbol.content', newValue);
+            } else {
+              set(el, 'component.options.symbol.content', value);
+            }
+          } else {
+            set(el, 'component.options.symbol.content', value);
+          }
         }
         if (el.bindings) {
           for (const [key, value] of Object.entries(el.bindings)) {

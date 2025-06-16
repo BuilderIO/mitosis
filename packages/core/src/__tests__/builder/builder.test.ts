@@ -16,6 +16,7 @@ import { BuilderContent } from '@builder.io/sdk';
 
 import { componentToAngular } from '@/generators/angular';
 import { MitosisComponent } from '@/types/mitosis-component';
+import { get } from 'lodash';
 import columns from '../data/blocks/columns.raw.tsx?raw';
 import customCode from '../data/blocks/custom-code.raw.tsx?raw';
 import embed from '../data/blocks/embed.raw.tsx?raw';
@@ -1494,6 +1495,125 @@ describe('Builder', () => {
     // Verify roundtrip conversion
     expect(backToBuilder.data?.blocks?.[0]?.groupLocked).toBe(true);
     expect(backToBuilder.data?.blocks?.[0]?.layerName).toBe('test-layer');
+  });
+
+  test('handles recursive component structure', () => {
+    const mitosisComponent: MitosisComponent = {
+      '@type': '@builder.io/mitosis/component' as const,
+      imports: [],
+      exports: {
+        LocationTree: {
+          code: 'function LocationTree(location) {\n  return <>\n      {location.child && <LocationTree location={location.child} />}\n    </>;\n}',
+          isFunction: true,
+          usedInLocal: false,
+        },
+      },
+      inputs: [],
+      meta: {},
+      refs: {},
+      state: {},
+      children: [
+        {
+          '@type': '@builder.io/mitosis/node',
+          name: 'LocationTree',
+          meta: {},
+          scope: {},
+          properties: {},
+          bindings: {},
+          children: [],
+        },
+      ],
+      context: {
+        get: {},
+        set: {},
+      },
+      subComponents: [
+        {
+          '@type': '@builder.io/mitosis/component',
+          imports: [],
+          exports: {},
+          inputs: [],
+          meta: {},
+          refs: {},
+          state: {},
+          children: [
+            {
+              '@type': '@builder.io/mitosis/node',
+              name: 'Fragment',
+              meta: {},
+              scope: {},
+              properties: {},
+              bindings: {},
+              children: [
+                {
+                  '@type': '@builder.io/mitosis/node',
+                  name: 'Show',
+                  meta: {},
+                  scope: {},
+                  properties: {},
+                  bindings: {
+                    when: {
+                      code: 'location.child',
+                      bindingType: 'expression',
+                      type: 'single',
+                    },
+                  },
+                  children: [
+                    {
+                      '@type': '@builder.io/mitosis/node',
+                      name: 'LocationTree',
+                      meta: {},
+                      scope: {},
+                      properties: {},
+                      bindings: {
+                        location: {
+                          code: 'location.child',
+                          bindingType: 'expression',
+                          type: 'single',
+                        },
+                      },
+                      children: [],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          context: {
+            get: {},
+            set: {},
+          },
+          subComponents: [],
+          name: 'LocationTree',
+          hooks: {
+            onMount: [],
+            onEvent: [],
+          },
+        },
+      ],
+      name: 'ExploreKaryakar',
+      hooks: {
+        onMount: [],
+        onEvent: [],
+      },
+    };
+
+    const builderJson = componentToBuilder({})({
+      component: mitosisComponent,
+    });
+    expect(builderJson.data?.blocks?.[0]?.component?.name).toBe('LocationTree');
+    let tempElement = builderJson.data?.blocks?.[0];
+    for (let i = 0; i < 5; i++) {
+      expect(tempElement?.component?.name).toBe('LocationTree');
+      tempElement = get(
+        tempElement,
+        'component.options.symbol.content.data.blocks[0].children[0].children[0]',
+      );
+    }
+    expect(tempElement).toBeUndefined();
+    expect(builderJson).toMatchSnapshot();
+
+    expect(() => builderContentToMitosisComponent(builderJson)).not.toThrow();
   });
 
   test('converts <For> loop to Builder format', () => {
