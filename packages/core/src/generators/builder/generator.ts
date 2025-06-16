@@ -623,6 +623,16 @@ export const blockToBuilder = (
     componentOptions[key] = json.slots[key].map((node) => blockToBuilder(node, options));
   }
 
+  for (const key in json.blocksSlots) {
+    const value = json.blocksSlots[key];
+    traverse(value).forEach(function (v) {
+      if (isMitosisNode(v)) {
+        this.update(blockToBuilder(v, options, _internalOptions));
+      }
+    });
+    componentOptions[key] = value;
+  }
+
   const hasCss = !!bindings.css?.code;
 
   let responsiveStyles: {
@@ -664,6 +674,12 @@ export const blockToBuilder = (
         responsiveStyles,
       }),
       layerName: json.properties.$name,
+      ...(json.properties['data-builder-layerLocked'] !== undefined && {
+        layerLocked: json.properties['data-builder-layerLocked'] === 'true',
+      }),
+      ...(json.properties['data-builder-groupLocked'] !== undefined && {
+        groupLocked: json.properties['data-builder-groupLocked'] === 'true',
+      }),
       ...(thisIsComponent && {
         component: {
           name: mapComponentName(json.name),

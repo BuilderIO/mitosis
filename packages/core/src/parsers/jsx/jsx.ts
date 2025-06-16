@@ -133,7 +133,9 @@ export function parseJsx(
               };
             },
           });
-          path.replaceWith(jsonToAst(componentFunctionToJson(node, context, stateToScope)));
+          path.replaceWith(
+            jsonToAst(componentFunctionToJson(node, context, stateToScope, options)),
+          );
         }
       }
     },
@@ -145,7 +147,7 @@ export function parseJsx(
     },
     JSXElement(path) {
       const { node } = path;
-      path.replaceWith(jsonToAst(jsxElementToJson(node)));
+      path.replaceWith(jsonToAst(jsxElementToJson(node, _options)));
     },
     ExportNamedDeclaration(path, context) {
       const { node } = path;

@@ -458,7 +458,7 @@ const _componentToReact = (
 
   const str = dedent`
   ${shouldAddUseClientDirective ? `'use client';` : ''}
-  ${getDefaultImport(options)}
+  ${getDefaultImport(options, json)}
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
   ${
     reactLibImports.size
@@ -489,7 +489,7 @@ const _componentToReact = (
   }${isForwardRef ? ')' : ''}
 
     ${
-      reactNativeStyles
+      reactNativeStyles && Object.keys(reactNativeStyles).length > 0
         ? `const styles = StyleSheet.create(${json5.stringify(reactNativeStyles)});`
         : ''
     }
