@@ -2,6 +2,8 @@ import { hashCodeAsString } from '@/symbols/symbol-processor';
 import { MitosisComponent, MitosisState } from '@/types/mitosis-component';
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
+import babelTraverse from '@babel/traverse';
+import * as t from '@babel/types';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { mapKeys, merge, omit, omitBy, sortBy, upperFirst } from 'lodash';
@@ -121,8 +123,11 @@ export const getStyleStringFromBlock = (
       }
 
       let code = block.code?.bindings?.[key] || block.bindings[key];
+
       const verifyCode = verifyIsValid(code);
-      if (!verifyCode.valid) {
+      if (verifyCode.valid) {
+        code = processBoundLogic(code);
+      } else {
         if (options.escapeInvalidCode) {
           code = '`' + code + ' [INVALID CODE]`';
         } else {
@@ -492,8 +497,8 @@ const componentMappers: {
     const localizedValues: MitosisNode['localizedValues'] = {};
 
     const blockBindings: MitosisNode['bindings'] = {
-      ...mapBuilderBindingsToMitosisBindingWithCode(block.bindings),
-      ...mapBuilderBindingsToMitosisBindingWithCode(block.code?.bindings),
+      ...mapBuilderBindingsToMitosisBindingWithCode(block.bindings, options),
+      ...mapBuilderBindingsToMitosisBindingWithCode(block.code?.bindings, options),
     };
 
     const bindings: any = {
@@ -668,6 +673,28 @@ type BuilderToMitosisOptions = {
    */
   enableBlocksSlots?: boolean;
 };
+const processBoundLogic = (code: string) => {
+  const ast = babel.parse(code);
+  if (!ast) return code;
+
+  let replacedWithReturn = false;
+  babelTraverse(ast, {
+    ExportDefaultDeclaration(path) {
+      const exportedNode = path.node.declaration;
+      if (t.isExpression(exportedNode)) {
+        const returnStatement = t.returnStatement(exportedNode);
+        path.replaceWith(returnStatement);
+        replacedWithReturn = true;
+      }
+    },
+  });
+
+  if (replacedWithReturn) {
+    return generate(ast).code;
+  }
+
+  return code;
+};
 
 export const builderElementToMitosisNode = (
   block: BuilderElement,
@@ -779,12 +806,15 @@ export const builderElementToMitosisNode = (
       if (key === 'css') {
         continue;
       }
+
       const useKey = key.replace(/^(component\.)?options\./, '');
       if (!useKey.includes('.')) {
         let code = (blockBindings[key] as any).code || blockBindings[key];
-
         const verifyCode = verifyIsValid(code);
-        if (!verifyCode.valid) {
+
+        if (verifyCode.valid) {
+          code = processBoundLogic(code);
+        } else {
           if (options.escapeInvalidCode) {
             code = '`' + code + ' [INVALID CODE]`';
           } else {
@@ -1324,18 +1354,34 @@ export const builderContentToMitosisComponent = (
 
 function mapBuilderBindingsToMitosisBindingWithCode(
   bindings: { [key: string]: string } | undefined,
+  options?: BuilderToMitosisOptions,
 ): MitosisNode['bindings'] {
   const result: MitosisNode['bindings'] = {};
   bindings &&
     Object.keys(bindings).forEach((key) => {
       const value: string | { code: string } = bindings[key] as any;
+      let code = '';
       if (typeof value === 'string') {
-        result[key] = createSingleBinding({ code: value });
+        code = value;
       } else if (value && typeof value === 'object' && value.code) {
-        result[key] = createSingleBinding({ code: value.code });
+        code = value.code;
       } else {
         throw new Error('Unexpected binding value: ' + JSON.stringify(value));
       }
+
+      const verifyCode = verifyIsValid(code);
+      if (verifyCode.valid) {
+        code = processBoundLogic(code);
+      } else {
+        if (options?.escapeInvalidCode) {
+          code = '`' + code + ' [INVALID CODE]`';
+        } else {
+          console.warn(`Dropping binding "${key}" due to invalid code: ${code}`);
+          return;
+        }
+      }
+
+      result[key] = createSingleBinding({ code });
     });
   return result;
 }
