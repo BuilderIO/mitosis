@@ -15,6 +15,7 @@ import { compileAwayBuilderComponents } from '@/plugins/compile-away-builder-com
 import { BuilderContent } from '@builder.io/sdk';
 
 import { componentToAngular } from '@/generators/angular';
+import { MitosisComponent } from '@/types/mitosis-component';
 import columns from '../data/blocks/columns.raw.tsx?raw';
 import customCode from '../data/blocks/custom-code.raw.tsx?raw';
 import embed from '../data/blocks/embed.raw.tsx?raw';
@@ -1493,6 +1494,200 @@ describe('Builder', () => {
     // Verify roundtrip conversion
     expect(backToBuilder.data?.blocks?.[0]?.groupLocked).toBe(true);
     expect(backToBuilder.data?.blocks?.[0]?.layerName).toBe('test-layer');
+  });
+
+  test('handles recursive component structure', () => {
+    const mitosisComponent: MitosisComponent = {
+      '@type': '@builder.io/mitosis/component' as const,
+      imports: [],
+      exports: {
+        LocationTree: {
+          code: 'function LocationTree(location) {\n  return <>\n      Stub\n      {location.child && <LocationTree location={location.child} />}\n    </>;\n}',
+          isFunction: true,
+          usedInLocal: false,
+        },
+      },
+      inputs: [],
+      meta: {},
+      refs: {},
+      state: {},
+      children: [
+        {
+          '@type': '@builder.io/mitosis/node',
+          name: 'LocationTree',
+          meta: {},
+          scope: {},
+          properties: {},
+          bindings: {},
+          children: [],
+        },
+      ],
+      context: {
+        get: {},
+        set: {},
+      },
+      subComponents: [
+        {
+          '@type': '@builder.io/mitosis/component',
+          imports: [],
+          exports: {},
+          inputs: [],
+          meta: {},
+          refs: {},
+          state: {},
+          children: [
+            {
+              '@type': '@builder.io/mitosis/node',
+              name: 'Fragment',
+              meta: {},
+              scope: {},
+              properties: {},
+              bindings: {},
+              children: [
+                {
+                  '@type': '@builder.io/mitosis/node',
+                  name: 'div',
+                  meta: {},
+                  scope: {},
+                  properties: {
+                    _text: '\n      Stub\n      ',
+                  },
+                  bindings: {},
+                  children: [],
+                },
+                {
+                  '@type': '@builder.io/mitosis/node',
+                  name: 'Show',
+                  meta: {},
+                  scope: {},
+                  properties: {},
+                  bindings: {
+                    when: {
+                      code: 'location.child',
+                      bindingType: 'expression',
+                      type: 'single',
+                    },
+                  },
+                  children: [
+                    {
+                      '@type': '@builder.io/mitosis/node',
+                      name: 'LocationTree',
+                      meta: {},
+                      scope: {},
+                      properties: {},
+                      bindings: {
+                        location: {
+                          code: 'location.child',
+                          bindingType: 'expression',
+                          type: 'single',
+                        },
+                      },
+                      children: [],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          context: {
+            get: {},
+            set: {},
+          },
+          subComponents: [],
+          name: 'LocationTree',
+          hooks: {
+            onMount: [],
+            onEvent: [],
+          },
+        },
+      ],
+      name: 'ExploreKaryakar',
+      hooks: {
+        onMount: [],
+        onEvent: [],
+      },
+    };
+
+    const builderJson = componentToBuilder({ removeCircularReferences: true })({
+      component: mitosisComponent,
+    });
+
+    expect(builderJson).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "blocks": [
+            {
+              "@type": "@builder.io/sdk:Element",
+              "actions": {},
+              "bindings": {},
+              "children": [],
+              "code": {
+                "actions": {},
+                "bindings": {},
+              },
+              "component": {
+                "name": "LocationTree",
+                "options": {
+                  "symbol": {
+                    "content": {
+                      "data": {
+                        "blocks": [
+                          {
+                            "@type": "@builder.io/sdk:Element",
+                            "actions": {},
+                            "bindings": {},
+                            "children": [
+                              {
+                                "@type": "@builder.io/sdk:Element",
+                                "bindings": {},
+                                "component": {
+                                  "name": "Text",
+                                  "options": {
+                                    "text": "
+            Stub
+            ",
+                                  },
+                                },
+                                "tagName": "span",
+                              },
+                              {
+                                "@type": "@builder.io/sdk:Element",
+                                "bindings": {
+                                  "show": "location.child",
+                                },
+                                "children": [
+                                  "[Circular Reference: LocationTree]",
+                                ],
+                                "component": {
+                                  "name": "Core:Fragment",
+                                },
+                              },
+                            ],
+                            "code": {
+                              "actions": {},
+                              "bindings": {},
+                            },
+                            "component": {
+                              "name": "Core:Fragment",
+                            },
+                          },
+                        ],
+                        "jsCode": "",
+                        "tsCode": "",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          ],
+          "jsCode": "",
+          "tsCode": "",
+        },
+      }
+    `);
+
+    expect(() => builderContentToMitosisComponent(builderJson)).not.toThrow();
   });
 });
 
