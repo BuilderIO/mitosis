@@ -1597,7 +1597,7 @@ describe('Builder', () => {
       },
     };
 
-    const builderJson = componentToBuilder({ removeCircularReferences: true })({
+    const builderJson = componentToBuilder({})({
       component: mitosisComponent,
     });
 
