@@ -930,15 +930,11 @@ export const componentToBuilder =
       if (isBuilderElement(el)) {
         const value = subComponentMap[el.component?.name!];
         if (value) {
-          if (options.removeCircularReferences) {
-            const path = recursivelyCheckForChildrenWithSameComponent(value, el.component?.name!);
-            if (path) {
-              const arrayPath = path.replace(/\[\d+\]$/, '');
-              const newValue = removeItem(value, arrayPath, Number(path.match(/\[(\d+)\]$/)?.[1]));
-              set(el, 'component.options.symbol.content', newValue);
-            } else {
-              set(el, 'component.options.symbol.content', value);
-            }
+          const path = recursivelyCheckForChildrenWithSameComponent(value, el.component?.name!);
+          if (path) {
+            const arrayPath = path.replace(/\[\d+\]$/, '');
+            const newValue = removeItem(value, arrayPath, Number(path.match(/\[(\d+)\]$/)?.[1]));
+            set(el, 'component.options.symbol.content', newValue);
           } else {
             set(el, 'component.options.symbol.content', value);
           }
