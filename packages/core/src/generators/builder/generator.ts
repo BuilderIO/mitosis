@@ -24,7 +24,7 @@ import { parseExpression } from '@babel/parser';
 import type { Node } from '@babel/types';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
-import { attempt, mapValues, omit, omitBy, set } from 'lodash';
+import { attempt, cloneDeep, filter, get, mapValues, omit, omitBy, set } from 'lodash';
 import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
@@ -856,6 +856,14 @@ const recursivelyCheckForChildrenWithSameComponent = (
   return '';
 };
 
+function removeItem(obj: any, path: string, indexToRemove: number) {
+  return set(
+    cloneDeep(obj), // Clone to ensure immutability
+    path,
+    filter(get(obj, path), (item: any, index: number) => index !== indexToRemove),
+  );
+}
+
 export const componentToBuilder =
   (options: ToBuilderOptions = {}) =>
   ({ component }: TranspilerArgs): BuilderContent => {
@@ -925,8 +933,8 @@ export const componentToBuilder =
           if (options.removeCircularReferences) {
             const path = recursivelyCheckForChildrenWithSameComponent(value, el.component?.name!);
             if (path) {
-              const newValue = { ...value };
-              set(newValue, path, `[Circular Reference: ${el.component?.name!}]`);
+              const arrayPath = path.replace(/\[\d+\]$/, '');
+              const newValue = removeItem(value, arrayPath, Number(path.match(/\[(\d+)\]$/)?.[1]));
               set(el, 'component.options.symbol.content', newValue);
             } else {
               set(el, 'component.options.symbol.content', value);
