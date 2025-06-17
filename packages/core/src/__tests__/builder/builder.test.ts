@@ -1631,9 +1631,7 @@ describe('Builder', () => {
                                 "bindings": {
                                   "show": "location.child",
                                 },
-                                "children": [
-                                  "[Circular Reference: LocationTree]",
-                                ],
+                                "children": [],
                                 "component": {
                                   "name": "Core:Fragment",
                                 },
