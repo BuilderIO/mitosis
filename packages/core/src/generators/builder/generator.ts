@@ -823,9 +823,28 @@ const recursivelyCheckForChildrenWithSameComponent = (
   componentName: string,
   path: string = '',
 ): string => {
-  if ((elementOrContent as BuilderContent).data?.blocks) {
+  if (isBuilderElement(elementOrContent)) {
+    if (elementOrContent.component?.name === componentName) {
+      return path;
+    }
+
     return (
-      (elementOrContent as BuilderContent).data?.blocks
+      elementOrContent.children
+        ?.map((child, index) =>
+          recursivelyCheckForChildrenWithSameComponent(
+            child,
+            componentName,
+            `${path}.children[${index}]`,
+          ),
+        )
+        .find(Boolean) || ''
+    );
+  }
+
+  // do your builder content specific stuff)
+  if (elementOrContent.data?.blocks) {
+    return (
+      elementOrContent.data?.blocks
         ?.map((block, index) =>
           recursivelyCheckForChildrenWithSameComponent(
             block,
@@ -835,23 +854,6 @@ const recursivelyCheckForChildrenWithSameComponent = (
         )
         .find(Boolean) || ''
     );
-  } else {
-    if ((elementOrContent as BuilderElement).component?.name === componentName) {
-      return path;
-    }
-    if ((elementOrContent as BuilderElement).children) {
-      return (
-        (elementOrContent as BuilderElement).children
-          ?.map((child, index) =>
-            recursivelyCheckForChildrenWithSameComponent(
-              child,
-              componentName,
-              `${path}.children[${index}]`,
-            ),
-          )
-          .find(Boolean) || ''
-      );
-    }
   }
   return '';
 };
