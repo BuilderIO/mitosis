@@ -819,14 +819,14 @@ export const blockToBuilder = (
 };
 
 const recursivelyCheckForChildrenWithSameComponent = (
-  builderContent: BuilderContent,
+  elementOrContent: BuilderContent | BuilderElement,
   componentName: string,
   path: string = '',
 ): string => {
-  if (builderContent.data?.blocks) {
+  if ((elementOrContent as BuilderContent).data?.blocks) {
     return (
-      builderContent.data.blocks
-        .map((block, index) =>
+      (elementOrContent as BuilderContent).data?.blocks
+        ?.map((block, index) =>
           recursivelyCheckForChildrenWithSameComponent(
             block,
             componentName,
@@ -835,14 +835,14 @@ const recursivelyCheckForChildrenWithSameComponent = (
         )
         .find(Boolean) || ''
     );
-  } else if (isBuilderElement(builderContent)) {
-    if (builderContent.component?.name === componentName) {
+  } else {
+    if ((elementOrContent as BuilderElement).component?.name === componentName) {
       return path;
     }
-    if (builderContent.children) {
+    if ((elementOrContent as BuilderElement).children) {
       return (
-        builderContent.children
-          .map((child, index) =>
+        (elementOrContent as BuilderElement).children
+          ?.map((child, index) =>
             recursivelyCheckForChildrenWithSameComponent(
               child,
               componentName,
