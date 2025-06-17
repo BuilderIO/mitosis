@@ -1502,7 +1502,7 @@ describe('Builder', () => {
       imports: [],
       exports: {
         LocationTree: {
-          code: 'function LocationTree(location) {\n  return <>\n      Stub\n      {location.child && <LocationTree location={location.child} />}\n    </>;\n}',
+          code: 'function LocationTree(location) {\n  return <>\n      {location.child && <LocationTree location={location.child} />}\n    </>;\n}',
           isFunction: true,
           usedInLocal: false,
         },
@@ -1544,17 +1544,6 @@ describe('Builder', () => {
               properties: {},
               bindings: {},
               children: [
-                {
-                  '@type': '@builder.io/mitosis/node',
-                  name: 'div',
-                  meta: {},
-                  scope: {},
-                  properties: {
-                    _text: '\n      Stub\n      ',
-                  },
-                  bindings: {},
-                  children: [],
-                },
                 {
                   '@type': '@builder.io/mitosis/node',
                   name: 'Show',
@@ -1637,19 +1626,6 @@ describe('Builder', () => {
                             "actions": {},
                             "bindings": {},
                             "children": [
-                              {
-                                "@type": "@builder.io/sdk:Element",
-                                "bindings": {},
-                                "component": {
-                                  "name": "Text",
-                                  "options": {
-                                    "text": "
-            Stub
-            ",
-                                  },
-                                },
-                                "tagName": "span",
-                              },
                               {
                                 "@type": "@builder.io/sdk:Element",
                                 "bindings": {
