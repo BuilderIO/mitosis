@@ -20,8 +20,7 @@ describe('Angular', () => {
     target: 'angular',
     generator: componentToAngular,
     only: [
-      // 'basicRefAttributePassing',
-      'basicRefAttributePassingCustomRef'
+      'prettierInline'
     ],
     logOutput: true,
   });
