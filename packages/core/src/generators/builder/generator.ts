@@ -23,7 +23,7 @@ import { parseExpression } from '@babel/parser';
 import type { Node } from '@babel/types';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
-import { attempt, mapValues, omit, omitBy, set } from 'lodash';
+import { attempt, cloneDeep, filter, get, mapValues, omit, omitBy, set } from 'lodash';
 import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
@@ -708,6 +708,54 @@ export const blockToBuilder = (
   return processLocalizedValues(element, json);
 };
 
+const recursivelyCheckForChildrenWithSameComponent = (
+  elementOrContent: BuilderContent | BuilderElement,
+  componentName: string,
+  path: string = '',
+): string => {
+  if (isBuilderElement(elementOrContent)) {
+    if (elementOrContent.component?.name === componentName) {
+      return path;
+    }
+
+    return (
+      elementOrContent.children
+        ?.map((child, index) =>
+          recursivelyCheckForChildrenWithSameComponent(
+            child,
+            componentName,
+            `${path}.children[${index}]`,
+          ),
+        )
+        .find(Boolean) || ''
+    );
+  }
+
+  // do your builder content specific stuff)
+  if (elementOrContent.data?.blocks) {
+    return (
+      elementOrContent.data?.blocks
+        ?.map((block, index) =>
+          recursivelyCheckForChildrenWithSameComponent(
+            block,
+            componentName,
+            `${path ? `${path}.` : ''}data.blocks[${index}]`,
+          ),
+        )
+        .find(Boolean) || ''
+    );
+  }
+  return '';
+};
+
+function removeItem(obj: any, path: string, indexToRemove: number) {
+  return set(
+    cloneDeep(obj), // Clone to ensure immutability
+    path,
+    filter(get(obj, path), (item: any, index: number) => index !== indexToRemove),
+  );
+}
+
 export const componentToBuilder =
   (options: ToBuilderOptions = {}) =>
   ({ component }: TranspilerArgs): BuilderContent => {
@@ -756,7 +804,14 @@ export const componentToBuilder =
       if (isBuilderElement(el)) {
         const value = subComponentMap[el.component?.name!];
         if (value) {
-          set(el, 'component.options.symbol.content', value);
+          const path = recursivelyCheckForChildrenWithSameComponent(value, el.component?.name!);
+          if (path) {
+            const arrayPath = path.replace(/\[\d+\]$/, '');
+            const newValue = removeItem(value, arrayPath, Number(path.match(/\[(\d+)\]$/)?.[1]));
+            set(el, 'component.options.symbol.content', newValue);
+          } else {
+            set(el, 'component.options.symbol.content', value);
+          }
         }
         if (el.bindings) {
           for (const [key, value] of Object.entries(el.bindings)) {
