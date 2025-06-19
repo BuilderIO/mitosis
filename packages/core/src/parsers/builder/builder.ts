@@ -1098,6 +1098,30 @@ export function extractStateHook(code: string): {
   return { code: newCode, state };
 }
 
+/**
+ * Extracts Mitosis state from Builder state.
+ * @param code
+ * @returns
+ */
+export function extractMitosisStateFromBuilderState(state: MitosisState, builderState: any) {
+  if (!builderState) return;
+  for (const key in builderState) {
+    if (['function', 'object'].includes(typeof builderState[key])) {
+      continue;
+    }
+
+    let value = builderState[key];
+
+    if (!state[key]) {
+      state[key] = {
+        type: 'property',
+        propertyType: 'normal',
+        code: JSON.stringify(value),
+      };
+    }
+  }
+}
+
 export function convertExportDefaultToReturn(code: string) {
   try {
     const { types } = babel;
@@ -1266,7 +1290,7 @@ const builderContentPartToMitosisComponent = (
           ...state,
           ...mapBuilderContentStateToMitosisState(builderContent.data?.state || {}),
         };
-
+  extractMitosisStateFromBuilderState(mitosisState, builderContent.data?.state);
   const componentJson = createMitosisComponent({
     meta: {
       useMetadata: {
