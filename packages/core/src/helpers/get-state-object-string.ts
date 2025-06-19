@@ -35,6 +35,10 @@ const DEFAULT_OPTIONS: RequiredOptions = {
   withType: false,
 };
 
+const quoteKeyIfNeeded = (key: string): string => {
+  return key.includes('-') ? `"${key}"` : key;
+};
+
 const convertStateMemberToString =
   ({
     data,
@@ -68,7 +72,7 @@ const convertStateMemberToString =
           return mapper;
         }
 
-        return `${keyPrefix} ${key} ${keyValueDelimiter} ${mapper}`;
+        return `${keyPrefix} ${quoteKeyIfNeeded(key)} ${keyValueDelimiter} ${mapper}`;
       }
       case 'method': {
         if (!functions) {
@@ -105,7 +109,7 @@ const convertStateMemberToString =
           return mapper;
         }
 
-        return `${keyPrefix} ${key}${type}${keyValueDelimiter} ${mapper}`;
+        return `${keyPrefix} ${quoteKeyIfNeeded(key)}${type}${keyValueDelimiter} ${mapper}`;
       }
       default:
         break;
