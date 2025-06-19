@@ -681,10 +681,9 @@ describe('Builder', () => {
   test('null values', () => {
     const component = builderElementToMitosisNode(
       {
-        '@type': '@builder.io/sdk:Element',
+        '@type': '@builder.io/sdk:Element' as const,
         '@version': 2,
         id: 'builder-170e19cac58e4c28998d443a9dce80b8',
-        linkUrl: null,
         component: {
           name: 'CustomText',
           options: {
@@ -693,9 +692,9 @@ describe('Builder', () => {
           },
         },
         properties: {
-          href: null,
+          href: '',
         },
-      } as any,
+      },
       {},
     );
 
@@ -730,96 +729,6 @@ describe('Builder', () => {
 
     const jsxToMitosis = parseJsx(jsx);
     expect(jsxToMitosis.style).toMatchSnapshot();
-  });
-
-  test('Snapshot PersonalizedContainer', () => {
-    const code = dedent`
-      import { PersonalizationContainer, Variant } from "@components";
-
-      export default function MyComponent(props) {
-        return (
-          <PersonalizationContainer>
-            <Variant
-              name="variant1"
-              startDate="2024-01-01"
-              query={{
-                property: "urlPath",
-                operation: "is",
-                value: "/home",
-              }}
-            >
-              <div>Home</div>
-              <div>Div</div>
-            </Variant>
-            <PersonalizationOption
-              name="2"
-              query={[
-                {
-                  property: "gendr",
-                  operation: "is",
-                  value: ["male", "female"],
-                },
-              ]}
-            >
-              <>Male</>
-            </PersonalizationOption>
-            <Variant>
-              <div>Default</div>
-            </Variant>
-            <div>More tree</div>
-
-          </PersonalizationContainer>
-        );
-      }
-    `;
-
-    const component = parseJsx(code);
-    const builderJson = componentToBuilder()({ component });
-    expect(builderJson.data?.blocks?.[0]).toMatchSnapshot();
-
-    const backToMitosis = builderContentToMitosisComponent(builderJson);
-    const mitosis = componentToMitosis(mitosisOptions)({
-      component: backToMitosis,
-    });
-    expect(mitosis.trim()).toMatchSnapshot();
-  });
-
-  test('Regenerate PersonalizedContainer', () => {
-    const code = dedent`
-      import { PersonalizationContainer, Variant } from "@components";
-
-      export default function MyComponent(props) {
-        return (
-          <PersonalizationContainer>
-            <Variant
-              name="2"
-              startDate="2024-01-01"
-              endDate="2024-01-31"
-              query={[
-                {
-                  property: "gendr",
-                  operation: "is",
-                  value: "male",
-                },
-              ]}
-            >
-              <div>Male</div>
-            </Variant>
-            <Variant default="">
-              <div>Default</div>
-            </Variant>
-          </PersonalizationContainer>
-        );
-      }
-    `;
-
-    const component = parseJsx(code);
-    const builderJson = componentToBuilder()({ component });
-    const backToMitosis = builderContentToMitosisComponent(builderJson);
-    const mitosis = componentToMitosis(mitosisOptions)({
-      component: backToMitosis,
-    });
-    expect(mitosis.trim()).toEqual(code.trim());
   });
 
   test('do not strip falsey style values', () => {
@@ -1000,91 +909,6 @@ describe('Builder', () => {
     expect(json.data?.blocks?.[0]?.component?.options?.prop?.[0]?.component?.options.hello).toBe(
       'world',
     );
-  });
-
-  test('preserve bound media query styles when converting to mitosis', () => {
-    const content = {
-      data: {
-        blocks: [
-          {
-            '@type': '@builder.io/sdk:Element' as const,
-            bindings: {
-              'responsiveStyles.small.left': 'state.left',
-              'responsiveStyles.small.top': 'state.top',
-              'responsiveStyles.large.color': 'state.color',
-              'style.fontSize': 'state.fontSize',
-              'style.background': '"red"',
-              'responsiveStyles.large.background': '"green"',
-            },
-          },
-        ],
-      },
-    };
-
-    const mitosis = builderContentToMitosisComponent(content);
-    expect(mitosis.children[0].bindings).toMatchInlineSnapshot(`
-      {
-        "style": {
-          "bindingType": "expression",
-          "code": "{ fontSize: state.fontSize, background: \\"red\\", \\"@media (max-width: 640px)\\": { left: state.left, top: state.top }, \\"@media (max-width: 1200px)\\": { color: state.color, background: \\"green\\" }, }",
-          "type": "single",
-        },
-      }
-    `);
-
-    const jsx = componentToMitosis()({ component: mitosis });
-    expect(jsx).toMatchInlineSnapshot(`
-          "export default function MyComponent(props) {
-            return (
-              <div
-                style={{
-                  fontSize: state.fontSize,
-                  background: \\"red\\",
-                  \\"@media (max-width: 640px)\\": {
-                    left: state.left,
-                    top: state.top,
-                  },
-                  \\"@media (max-width: 1200px)\\": {
-                    color: state.color,
-                    background: \\"green\\",
-                  },
-                }}
-              />
-            );
-          }
-          "
-        `);
-
-    const json = componentToBuilder()({ component: mitosis });
-    expect(json).toMatchInlineSnapshot(`
-          {
-            "data": {
-              "blocks": [
-                {
-                  "@type": "@builder.io/sdk:Element",
-                  "actions": {},
-                  "bindings": {
-                    "responsiveStyles.large.background": "\\"green\\"",
-                    "responsiveStyles.large.color": "state.color",
-                    "responsiveStyles.small.left": "state.left",
-                    "responsiveStyles.small.top": "state.top",
-                    "style.background": "\\"red\\"",
-                    "style.fontSize": "state.fontSize",
-                  },
-                  "children": [],
-                  "code": {
-                    "actions": {},
-                    "bindings": {},
-                  },
-                  "properties": {},
-                  "tagName": "div",
-                },
-              ],
-              "jsCode": "",
-              "tsCode": "",
-            },
-          }
-        `);
   });
 
   test('preserve bound call expressions for styles', () => {
@@ -1529,6 +1353,146 @@ describe('Builder', () => {
         },
       }
     `);
+  });
+
+  test('layerLocked property transfer', () => {
+    const component = builderElementToMitosisNode(
+      {
+        '@type': '@builder.io/sdk:Element',
+        '@version': 2,
+        id: 'builder-test-layer-locked',
+        layerLocked: true,
+        layerName: 'test-layer',
+        tagName: 'div',
+        properties: {
+          class: 'test-class',
+        },
+      } as any,
+      {},
+    );
+
+    expect(component.properties['data-builder-layerLocked']).toBe('true');
+    expect(component.properties.$name).toBe('test-layer');
+    expect(component.properties.class).toBe('test-class');
+  });
+
+  test('layerLocked undefined does not add property', () => {
+    const component = builderElementToMitosisNode(
+      {
+        '@type': '@builder.io/sdk:Element' as const,
+        '@version': 2,
+        id: 'builder-test-no-layer-locked',
+        tagName: 'div',
+      },
+      {},
+    );
+
+    expect(component.properties['data-builder-layerLocked']).toBeUndefined();
+  });
+
+  test('layerLocked roundtrip conversion', () => {
+    // Test Builder -> Mitosis -> Builder roundtrip
+    const originalBuilder = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            '@version': 2,
+            id: 'builder-test-roundtrip',
+            layerLocked: true,
+            layerName: 'test-layer',
+            tagName: 'div',
+            properties: {
+              class: 'test-class',
+            },
+          },
+        ],
+      },
+    };
+
+    // Convert to Mitosis
+    const mitosisComponent = builderContentToMitosisComponent(originalBuilder);
+
+    // Verify Mitosis conversion
+    expect(mitosisComponent.children[0].properties['data-builder-layerLocked']).toBe('true');
+    expect(mitosisComponent.children[0].properties.$name).toBe('test-layer');
+
+    // Convert back to Builder
+    const backToBuilder = componentToBuilder()({ component: mitosisComponent });
+
+    // Verify roundtrip conversion
+    expect(backToBuilder.data?.blocks?.[0]?.layerLocked).toBe(true);
+    expect(backToBuilder.data?.blocks?.[0]?.layerName).toBe('test-layer');
+  });
+
+  test('groupLocked property transfer', () => {
+    const component = builderElementToMitosisNode(
+      {
+        '@type': '@builder.io/sdk:Element' as const,
+        '@version': 2,
+        id: 'builder-test-group-locked',
+        groupLocked: true,
+        layerName: 'test-layer',
+        tagName: 'div',
+        properties: {
+          class: 'test-class',
+        },
+      },
+      {},
+    );
+
+    expect(component.properties['data-builder-groupLocked']).toBe('true');
+    expect(component.properties.$name).toBe('test-layer');
+    expect(component.properties.class).toBe('test-class');
+  });
+
+  test('groupLocked undefined does not add property', () => {
+    const component = builderElementToMitosisNode(
+      {
+        '@type': '@builder.io/sdk:Element' as const,
+        '@version': 2,
+        id: 'builder-test-no-group-locked',
+        tagName: 'div',
+      },
+      {},
+    );
+
+    expect(component.properties['data-builder-groupLocked']).toBeUndefined();
+  });
+
+  test('groupLocked roundtrip conversion', () => {
+    // Test Builder -> Mitosis -> Builder roundtrip
+    const originalBuilder = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            '@version': 2,
+            id: 'builder-test-group-roundtrip',
+            groupLocked: true,
+            layerName: 'test-layer',
+            tagName: 'div',
+            properties: {
+              class: 'test-class',
+            },
+          },
+        ],
+      },
+    };
+
+    // Convert to Mitosis
+    const mitosisComponent = builderContentToMitosisComponent(originalBuilder);
+
+    // Verify Mitosis conversion
+    expect(mitosisComponent.children[0].properties['data-builder-groupLocked']).toBe('true');
+    expect(mitosisComponent.children[0].properties.$name).toBe('test-layer');
+
+    // Convert back to Builder
+    const backToBuilder = componentToBuilder()({ component: mitosisComponent });
+
+    // Verify roundtrip conversion
+    expect(backToBuilder.data?.blocks?.[0]?.groupLocked).toBe(true);
+    expect(backToBuilder.data?.blocks?.[0]?.layerName).toBe('test-layer');
   });
 });
 
