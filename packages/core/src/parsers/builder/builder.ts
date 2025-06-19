@@ -1116,10 +1116,8 @@ export function extractMitosisStateFromBuilderState(state: MitosisState, builder
       state[key] = {
         type: 'property',
         propertyType: 'normal',
-        code: value,
+        code: JSON.stringify(value),
       };
-    } else {
-      state[key].code = value;
     }
   }
 }
