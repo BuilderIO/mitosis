@@ -102,7 +102,9 @@ const findStateWithinMitosisNode = (
 const findStateWithinMitosisComponent = (
   component: MitosisComponent,
   options: ToBuilderOptions,
-  state: any,
+  state: {
+    [key: string]: any;
+  },
   stateMap: Map<string, string>,
 ) => {
   component.children.forEach((child) =>
