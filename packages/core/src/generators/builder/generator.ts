@@ -841,7 +841,6 @@ const recursivelyCheckForChildrenWithSameComponent = (
     );
   }
 
-  // do your builder content specific stuff)
   if (elementOrContent.data?.blocks) {
     return (
       elementOrContent.data?.blocks
