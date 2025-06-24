@@ -3,4 +3,4 @@
 '@builder.io/mitosis-cli': patch
 ---
 
-add `removeCircularReferences` option for `componentToBuilder` generator
+remove Circular References for `componentToBuilder` generator

@@ -932,9 +932,14 @@ export const componentToBuilder =
       if (isBuilderElement(el) && !el.meta?.preventRecursion) {
         const value = subComponentMap[el.component?.name!];
         if (value) {
+          // Recursive Components are handled in the following steps :
+          // 1. Find out the path in which the component is self-referenced ( where that component reoccurs within it’s tree ).
+          // 2. We populate that component recursively for 4 times in a row.
+          // 3. Finally remove the recursive part from the last component which was populated.
+          // Also note that it doesn’t mean that component will render that many times, the rendering logic depends on the logic in it's parent. (Eg. show property binding)
+
           const path = recursivelyCheckForChildrenWithSameComponent(value, el.component?.name!);
           if (path) {
-            // recursively set the value at the path 4 times.
             let tempElement = el;
             for (let i = 0; i < 4; i++) {
               const tempValue = cloneDeep(value);
