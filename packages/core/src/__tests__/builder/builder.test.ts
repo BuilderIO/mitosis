@@ -15,6 +15,7 @@ import { compileAwayBuilderComponents } from '@/plugins/compile-away-builder-com
 import { BuilderContent } from '@builder.io/sdk';
 
 import { componentToAngular } from '@/generators/angular';
+import { MitosisComponent } from '@/types/mitosis-component';
 import columns from '../data/blocks/columns.raw.tsx?raw';
 import customCode from '../data/blocks/custom-code.raw.tsx?raw';
 import embed from '../data/blocks/embed.raw.tsx?raw';
@@ -1493,6 +1494,376 @@ describe('Builder', () => {
     // Verify roundtrip conversion
     expect(backToBuilder.data?.blocks?.[0]?.groupLocked).toBe(true);
     expect(backToBuilder.data?.blocks?.[0]?.layerName).toBe('test-layer');
+  });
+
+  test('converts <For> loop to Builder format', () => {
+    const mitosisComponent: MitosisComponent = {
+      '@type': '@builder.io/mitosis/component' as const,
+      imports: [],
+      exports: {},
+      inputs: [],
+      meta: {},
+      refs: {},
+      state: {
+        dataBuilderList1: {
+          // Should not use this key
+          type: 'property',
+          code: '[1,2,3,4,5]',
+          propertyType: 'normal',
+        },
+      },
+      children: [
+        {
+          '@type': '@builder.io/mitosis/node',
+          name: 'For',
+          meta: {},
+          scope: {},
+          properties: {},
+          bindings: {
+            each: {
+              code: '[1, 2, 3]',
+              bindingType: 'expression',
+              type: 'single',
+            },
+          },
+          children: [
+            {
+              '@type': '@builder.io/mitosis/node',
+              name: 'div',
+              meta: {},
+              scope: {},
+              properties: {},
+              bindings: {},
+              children: [],
+            },
+          ],
+        },
+      ],
+      context: {
+        get: {},
+        set: {},
+      },
+      subComponents: [],
+      name: 'MyComponent',
+      hooks: {
+        onMount: [],
+        onEvent: [],
+      },
+    };
+
+    const builderJson = componentToBuilder()({ component: mitosisComponent });
+
+    expect(builderJson).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "blocks": [
+            {
+              "@type": "@builder.io/sdk:Element",
+              "children": [
+                {
+                  "@type": "@builder.io/sdk:Element",
+                  "actions": {},
+                  "bindings": {},
+                  "children": [],
+                  "code": {
+                    "actions": {},
+                    "bindings": {},
+                  },
+                  "properties": {},
+                  "tagName": "div",
+                },
+              ],
+              "component": {
+                "name": "Core:Fragment",
+              },
+              "repeat": {
+                "collection": "state.dataBuilderList2",
+              },
+            },
+          ],
+          "jsCode": "Object.assign(state, { dataBuilderList1: [1, 2, 3, 4, 5] });
+      ",
+          "state": {
+            "dataBuilderList1": [
+              1,
+              2,
+              3,
+              4,
+              5,
+            ],
+            "dataBuilderList2": [
+              1,
+              2,
+              3,
+            ],
+          },
+          "tsCode": "useStore({ dataBuilderList1: [1, 2, 3, 4, 5] });
+      ",
+        },
+      }
+    `);
+
+    // Test roundtrip conversion
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    expect(backToMitosis).toMatchInlineSnapshot(`
+      {
+        "@type": "@builder.io/mitosis/component",
+        "children": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {
+              "each": {
+                "bindingType": "expression",
+                "code": "state.dataBuilderList2",
+                "type": "single",
+              },
+            },
+            "children": [
+              {
+                "@type": "@builder.io/mitosis/node",
+                "bindings": {},
+                "children": [],
+                "meta": {},
+                "name": "div",
+                "properties": {},
+                "scope": {},
+                "slots": {},
+              },
+            ],
+            "meta": {},
+            "name": "For",
+            "properties": {},
+            "scope": {
+              "forName": "item",
+            },
+          },
+        ],
+        "context": {
+          "get": {},
+          "set": {},
+        },
+        "exports": {},
+        "hooks": {
+          "onEvent": [],
+          "onMount": [],
+        },
+        "imports": [],
+        "inputs": undefined,
+        "meta": {
+          "useMetadata": {
+            "httpRequests": undefined,
+          },
+        },
+        "name": "MyComponent",
+        "refs": {},
+        "state": {
+          "dataBuilderList1": {
+            "code": "[1, 2, 3, 4, 5]",
+            "propertyType": "normal",
+            "type": "property",
+          },
+          "dataBuilderList2": {
+            "code": "[1,2,3]",
+            "propertyType": "normal",
+            "type": "property",
+          },
+        },
+        "subComponents": [],
+      }
+    `);
+  });
+
+  test('converts mitosis component with state to builder json and back', () => {
+    const mitosisComponent: MitosisComponent = {
+      '@type': '@builder.io/mitosis/component',
+      imports: [],
+      exports: {},
+      meta: {
+        useMetadata: {},
+      },
+      refs: {},
+      state: {
+        dataBuilderList1: {
+          type: 'property',
+          code: '[1,2,3]',
+          propertyType: 'normal',
+        },
+        stringValue: {
+          type: 'property',
+          code: 'hello',
+          propertyType: 'normal',
+        },
+        numberValue: {
+          type: 'property',
+          code: '1',
+          propertyType: 'normal',
+        },
+        booleanValue: {
+          type: 'property',
+          code: 'true',
+          propertyType: 'normal',
+        },
+        nullValue: {
+          type: 'property',
+          code: 'null',
+          propertyType: 'normal',
+        },
+        undefinedValue: {
+          type: 'property',
+          code: 'undefined',
+          propertyType: 'normal',
+        },
+        fn: {
+          code: 'function () {\n  console.log("fn");\n}',
+          type: 'function',
+        },
+      },
+      children: [
+        {
+          '@type': '@builder.io/mitosis/node',
+          name: 'For',
+          meta: {},
+          scope: {
+            forName: 'item',
+          },
+          properties: {},
+          bindings: {
+            each: {
+              code: 'state.dataBuilderList1',
+              bindingType: 'expression',
+              type: 'single',
+            },
+          },
+          children: [
+            {
+              '@type': '@builder.io/mitosis/node',
+              name: 'div',
+              meta: {},
+              scope: {},
+              properties: {},
+              bindings: {},
+              children: [
+                {
+                  '@type': '@builder.io/mitosis/node',
+                  name: 'div',
+                  meta: {},
+                  scope: {},
+                  properties: {
+                    _text: 'Hello',
+                  },
+                  bindings: {},
+                  children: [],
+                },
+              ],
+              slots: {},
+            },
+          ],
+        },
+      ],
+      context: {
+        get: {},
+        set: {},
+      },
+      inputs: [],
+      subComponents: [],
+      name: 'MyComponent',
+      hooks: {
+        onMount: [],
+        onEvent: [],
+      },
+    };
+
+    const builderJson = componentToBuilder()({ component: mitosisComponent });
+    expect(builderJson).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "blocks": [
+            {
+              "@type": "@builder.io/sdk:Element",
+              "children": [
+                {
+                  "@type": "@builder.io/sdk:Element",
+                  "actions": {},
+                  "bindings": {},
+                  "children": [
+                    {
+                      "@type": "@builder.io/sdk:Element",
+                      "bindings": {},
+                      "component": {
+                        "name": "Text",
+                        "options": {
+                          "text": "Hello",
+                        },
+                      },
+                      "tagName": "span",
+                    },
+                  ],
+                  "code": {
+                    "actions": {},
+                    "bindings": {},
+                  },
+                  "properties": {},
+                  "tagName": "div",
+                },
+              ],
+              "component": {
+                "name": "Core:Fragment",
+              },
+              "repeat": {
+                "collection": "state.dataBuilderList1",
+                "itemName": "item",
+              },
+            },
+          ],
+          "jsCode": "Object.assign(state, {
+        dataBuilderList1: [1, 2, 3],
+        stringValue: hello,
+        numberValue: 1,
+        booleanValue: true,
+        nullValue: null,
+        undefinedValue: undefined,
+        fn: function () {
+          console.log(\\"fn\\");
+        },
+      });
+      ",
+          "state": {
+            "booleanValue": true,
+            "dataBuilderList1": [
+              1,
+              2,
+              3,
+            ],
+            "nullValue": null,
+            "numberValue": 1,
+            "stringValue": "hello",
+          },
+          "tsCode": "useStore({
+        dataBuilderList1: [1, 2, 3],
+        stringValue: hello,
+        numberValue: 1,
+        booleanValue: true,
+        nullValue: null,
+        undefinedValue: undefined,
+        fn: function () {
+          console.log(\\"fn\\");
+        },
+      });
+      ",
+        },
+      }
+    `);
+
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    expect(backToMitosis.children[0].name).toBe('For');
+    expect(backToMitosis.children[0].bindings.each?.code).toBe('state.dataBuilderList1');
+    expect(backToMitosis.state?.dataBuilderList1?.code).toBe('[1, 2, 3]');
+    expect(backToMitosis.state?.fn?.code).toBe('function () {\n  console.log("fn");\n}');
+    expect(backToMitosis.state?.stringValue?.code).toBe('hello');
+    expect(backToMitosis.state?.numberValue?.code).toBe('1');
+    expect(backToMitosis.state?.booleanValue?.code).toBe('true');
+    expect(backToMitosis.state?.nullValue?.code).toBe('null');
+    expect(backToMitosis.state?.undefinedValue?.code).toBe('undefined');
   });
 });
 

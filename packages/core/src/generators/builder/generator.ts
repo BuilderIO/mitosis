@@ -14,7 +14,8 @@ import { replaceNodes } from '@/helpers/replace-identifiers';
 import { checkHasState } from '@/helpers/state';
 import { isBuilderElement, symbolBlocksAsChildren } from '@/parsers/builder';
 import { hashCodeAsString } from '@/symbols/symbol-processor';
-import { Binding, ForNode, MitosisNode } from '@/types/mitosis-node';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { Binding, ForNode, MitosisNode, checkIsForNode } from '@/types/mitosis-node';
 import { MitosisStyles } from '@/types/mitosis-styles';
 import { TranspilerArgs } from '@/types/transpiler';
 import { traverse as babelTraverse, types } from '@babel/core';
@@ -27,6 +28,112 @@ import { attempt, mapValues, omit, omitBy, set } from 'lodash';
 import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
+
+const isValidCollection = (code: string) => {
+  if (!code || typeof code !== 'string') {
+    return false;
+  }
+
+  // Pattern: Array.from({ length: number })
+  // Examples: "Array.from({ length: 10 })", "Array.from({ length: 5 })"
+  const arrayFromPattern = /^Array\.from\(\{\s*length\s*:\s*\d+\s*\}\)$/;
+  if (arrayFromPattern.test(code)) {
+    return false;
+  }
+
+  // Pattern: alphanumeric strings separated by dots
+  // Examples: "abc.def", "state.list1", "data.items"
+  const dotPattern = /^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*$/;
+  return dotPattern.test(code);
+};
+
+const replaceWithStateVariable = (code: string, stateMap?: Map<string, string>): string => {
+  if (!code) {
+    return '';
+  }
+
+  if (stateMap?.has(code)) {
+    return 'state.' + (stateMap.get(code) || '');
+  }
+
+  return code;
+};
+
+const generateUniqueKey = (state: Record<string, string>) => {
+  let newKeyPrefix = 'dataBuilderList';
+  let counter = 1;
+  while (state[newKeyPrefix + counter]) {
+    counter++;
+  }
+  return newKeyPrefix + counter;
+};
+
+const convertMitosisStateToBuilderState = (state: MitosisComponent['state']) => {
+  return Object.entries(state).reduce((acc: any, [key, value]) => {
+    if (value?.type === 'property' && value?.code) {
+      if (value.code === 'true' || value.code === 'false') {
+        acc[key] = value.code === 'true';
+      } else if (value.code === 'null') {
+        acc[key] = null;
+      } else if (value.code === 'undefined') {
+        acc[key] = undefined;
+      } else if (!Number.isNaN(Number(value.code))) {
+        acc[key] = Number(value.code);
+      } else {
+        try {
+          acc[key] = JSON.parse(value.code);
+        } catch (e) {
+          acc[key] = value.code;
+        }
+      }
+    }
+    return acc;
+  }, {});
+};
+
+const findStateWithinMitosisNode = (
+  node: MitosisNode,
+  options: ToBuilderOptions,
+  state: {
+    [key: string]: any;
+  },
+  stateMap: Map<string, string>,
+) => {
+  if (checkIsForNode(node)) {
+    if (
+      !isValidCollection(node.bindings.each?.code as string) &&
+      !stateMap.has(node.bindings.each?.code as string)
+    ) {
+      const newKey = generateUniqueKey(state);
+      const code = node.bindings.each?.code as string;
+      try {
+        state[newKey] = JSON.parse(code);
+        stateMap.set(code, newKey);
+      } catch (parseError) {
+        // The parsing error happens when `code` is a function or expression
+        // We would need `eval` to parse the code and then set the state. But because
+        // of security concerns we are not handling this case right now.
+        // Will revisit this if we need to support this.
+        console.log('Failed to parse:', code, parseError);
+      }
+    }
+  }
+  node.children.forEach((child) => findStateWithinMitosisNode(child, options, state, stateMap));
+};
+
+const findStateWithinMitosisComponent = (
+  component: MitosisComponent,
+  options: ToBuilderOptions,
+  state: {
+    [key: string]: any;
+  },
+  stateMap: Map<string, string>,
+) => {
+  component.children.forEach((child) =>
+    findStateWithinMitosisNode(child, options, state, stateMap),
+  );
+  return state;
+};
 
 const omitMetaProperties = (obj: Record<string, any>) =>
   omitBy(obj, (_value, key) => key.startsWith('$'));
@@ -153,7 +260,7 @@ const componentMappers: {
   },
   For(_node, options) {
     const node = _node as any as ForNode;
-
+    const stateMap = options.stateMap;
     const replaceIndexNode = (str: string) =>
       replaceNodes({
         code: str,
@@ -224,7 +331,9 @@ const componentMappers: {
           name: 'Core:Fragment',
         },
         repeat: {
-          collection: node.bindings.each?.code as string,
+          collection: isValidCollection(node.bindings.each?.code as string)
+            ? (node.bindings.each?.code as string) || ''
+            : replaceWithStateVariable(node.bindings.each?.code as string, stateMap),
           itemName: node.scope.forName,
         },
         children: node.children
@@ -331,6 +440,7 @@ function tryFormat(code: string) {
 
 type InternalOptions = {
   skipMapper?: boolean;
+  includeStateMap?: boolean;
 };
 
 const processLocalizedValues = (element: BuilderElement, node: MitosisNode) => {
@@ -713,6 +823,10 @@ export const componentToBuilder =
   ({ component }: TranspilerArgs): BuilderContent => {
     const hasState = checkHasState(component);
 
+    if (!options.stateMap) {
+      options.stateMap = new Map<string, string>();
+    }
+
     const result: BuilderContent = fastClone({
       data: {
         httpRequests: component?.meta?.useMetadata?.httpRequests,
@@ -737,11 +851,25 @@ export const componentToBuilder =
         }
       `),
         cssCode: component?.style,
+        ...(() => {
+          const stateData = findStateWithinMitosisComponent(
+            component,
+            options,
+            { ...convertMitosisStateToBuilderState(component.state) },
+            options.stateMap,
+          );
+          console.log('stateData', stateData);
+          return { state: stateData };
+        })(),
         blocks: component.children
           .filter(filterEmptyTextNodes)
           .map((child) => blockToBuilder(child, options)),
       },
     });
+
+    if (result.data?.state && Object.keys(result.data.state).length === 0) {
+      delete result.data.state;
+    }
 
     const subComponentMap: Record<string, BuilderContent> = {};
 
