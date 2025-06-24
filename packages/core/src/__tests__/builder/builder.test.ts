@@ -1688,6 +1688,31 @@ describe('Builder', () => {
           code: '[1,2,3]',
           propertyType: 'normal',
         },
+        stringValue: {
+          type: 'property',
+          code: 'hello',
+          propertyType: 'normal',
+        },
+        numberValue: {
+          type: 'property',
+          code: '1',
+          propertyType: 'normal',
+        },
+        booleanValue: {
+          type: 'property',
+          code: 'true',
+          propertyType: 'normal',
+        },
+        nullValue: {
+          type: 'property',
+          code: 'null',
+          propertyType: 'normal',
+        },
+        undefinedValue: {
+          type: 'property',
+          code: 'undefined',
+          propertyType: 'normal',
+        },
         fn: {
           code: 'function () {\n  console.log("fn");\n}',
           type: 'function',
@@ -1792,20 +1817,34 @@ describe('Builder', () => {
           ],
           "jsCode": "Object.assign(state, {
         dataBuilderList1: [1, 2, 3],
+        stringValue: hello,
+        numberValue: 1,
+        booleanValue: true,
+        nullValue: null,
+        undefinedValue: undefined,
         fn: function () {
           console.log(\\"fn\\");
         },
       });
       ",
           "state": {
+            "booleanValue": true,
             "dataBuilderList1": [
               1,
               2,
               3,
             ],
+            "nullValue": null,
+            "numberValue": 1,
+            "stringValue": "hello",
           },
           "tsCode": "useStore({
         dataBuilderList1: [1, 2, 3],
+        stringValue: hello,
+        numberValue: 1,
+        booleanValue: true,
+        nullValue: null,
+        undefinedValue: undefined,
         fn: function () {
           console.log(\\"fn\\");
         },
@@ -1820,6 +1859,11 @@ describe('Builder', () => {
     expect(backToMitosis.children[0].bindings.each?.code).toBe('state.dataBuilderList1');
     expect(backToMitosis.state?.dataBuilderList1?.code).toBe('[1, 2, 3]');
     expect(backToMitosis.state?.fn?.code).toBe('function () {\n  console.log("fn");\n}');
+    expect(backToMitosis.state?.stringValue?.code).toBe('hello');
+    expect(backToMitosis.state?.numberValue?.code).toBe('1');
+    expect(backToMitosis.state?.booleanValue?.code).toBe('true');
+    expect(backToMitosis.state?.nullValue?.code).toBe('null');
+    expect(backToMitosis.state?.undefinedValue?.code).toBe('undefined');
   });
 });
 

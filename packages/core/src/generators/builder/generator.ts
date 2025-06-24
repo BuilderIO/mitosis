@@ -73,10 +73,12 @@ const convertMitosisStateToBuilderState = (state: MitosisComponent['state']) => 
     if (value?.type === 'property' && value?.code) {
       if (value.code === 'true' || value.code === 'false') {
         acc[key] = value.code === 'true';
-      } else if (!Number.isNaN(Number(value.code))) {
-        acc[key] = Number(value.code);
       } else if (value.code === 'null') {
         acc[key] = null;
+      } else if (value.code === 'undefined') {
+        acc[key] = undefined;
+      } else if (!Number.isNaN(Number(value.code))) {
+        acc[key] = Number(value.code);
       } else {
         try {
           acc[key] = JSON.parse(value.code);
@@ -857,6 +859,7 @@ export const componentToBuilder =
             { ...convertMitosisStateToBuilderState(component.state) },
             options.stateMap,
           );
+          console.log('stateData', stateData);
           return { state: stateData };
         })(),
         blocks: component.children
