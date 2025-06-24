@@ -86,7 +86,9 @@ const convertMitosisStateToBuilderState = (state: MitosisComponent['state']) => 
 const findStateWithinMitosisNode = (
   node: MitosisNode,
   options: ToBuilderOptions,
-  state: any,
+  state: {
+    [key: string]: any;
+  },
   stateMap: Map<string, string>,
 ) => {
   if (checkIsForNode(node)) {
