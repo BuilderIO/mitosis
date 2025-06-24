@@ -858,7 +858,7 @@ const recursivelyCheckForChildrenWithSameComponent = (
   return '';
 };
 
-function removeItem(obj: any, path: string, indexToRemove: number) {
+function removeItem(obj: BuilderContent, path: string, indexToRemove: number) {
   return set(
     cloneDeep(obj), // Clone to ensure immutability
     path,
@@ -929,14 +929,25 @@ export const componentToBuilder =
     }
 
     traverse([result, subComponentMap]).forEach(function (el) {
-      if (isBuilderElement(el)) {
+      if (isBuilderElement(el) && !el.meta?.preventRecursion) {
         const value = subComponentMap[el.component?.name!];
         if (value) {
           const path = recursivelyCheckForChildrenWithSameComponent(value, el.component?.name!);
           if (path) {
+            // recursively set the value at the path 4 times.
+            let tempElement = el;
+            for (let i = 0; i < 4; i++) {
+              const tempValue = cloneDeep(value);
+              set(tempElement, 'component.options.symbol.content', tempValue);
+              set(tempElement, 'meta.preventRecursion', true);
+              tempElement = get(tempValue, path) as BuilderElement;
+            }
+
+            // Finally remove the recursive part.
             const arrayPath = path.replace(/\[\d+\]$/, '');
             const newValue = removeItem(value, arrayPath, Number(path.match(/\[(\d+)\]$/)?.[1]));
-            set(el, 'component.options.symbol.content', newValue);
+            set(tempElement, 'component.options.symbol.content', newValue);
+            set(tempElement, 'meta.preventRecursion', true);
           } else {
             set(el, 'component.options.symbol.content', value);
           }
@@ -954,6 +965,12 @@ export const componentToBuilder =
               el.bindings[key] = ` return ${value}`;
             }
           }
+        }
+      }
+      if (isBuilderElement(el) && el.meta?.preventRecursion) {
+        delete el.meta.preventRecursion;
+        if (el.meta && Object.keys(el.meta).length === 0) {
+          delete el.meta;
         }
       }
     });
