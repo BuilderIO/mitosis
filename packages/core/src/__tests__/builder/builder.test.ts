@@ -1688,6 +1688,10 @@ describe('Builder', () => {
           code: '[1,2,3]',
           propertyType: 'normal',
         },
+        fn: {
+          code: 'function () {\n  console.log("fn");\n}',
+          type: 'function',
+        },
       },
       children: [
         {
@@ -1786,7 +1790,12 @@ describe('Builder', () => {
               },
             },
           ],
-          "jsCode": "Object.assign(state, { dataBuilderList1: [1, 2, 3] });
+          "jsCode": "Object.assign(state, {
+        dataBuilderList1: [1, 2, 3],
+        fn: function () {
+          console.log(\\"fn\\");
+        },
+      });
       ",
           "state": {
             "dataBuilderList1": [
@@ -1795,7 +1804,12 @@ describe('Builder', () => {
               3,
             ],
           },
-          "tsCode": "useStore({ dataBuilderList1: [1, 2, 3] });
+          "tsCode": "useStore({
+        dataBuilderList1: [1, 2, 3],
+        fn: function () {
+          console.log(\\"fn\\");
+        },
+      });
       ",
         },
       }
@@ -1805,6 +1819,7 @@ describe('Builder', () => {
     expect(backToMitosis.children[0].name).toBe('For');
     expect(backToMitosis.children[0].bindings.each?.code).toBe('state.dataBuilderList1');
     expect(backToMitosis.state?.dataBuilderList1?.code).toBe('[1, 2, 3]');
+    expect(backToMitosis.state?.fn?.code).toBe('function () {\n  console.log("fn");\n}');
   });
 });
 

@@ -1112,11 +1112,15 @@ export function extractMitosisStateFromBuilderState(
 ) {
   if (!builderState) return;
   for (const key in builderState) {
-    if (['function'].includes(typeof builderState[key])) {
+    let value = builderState[key];
+    if (typeof value === 'function' && !mitosisState[key]) {
+      mitosisState[key] = {
+        type: 'function',
+        code: value.toString(),
+      };
       continue;
     }
 
-    let value = builderState[key];
     if (!mitosisState[key]) {
       mitosisState[key] = {
         type: 'property',
