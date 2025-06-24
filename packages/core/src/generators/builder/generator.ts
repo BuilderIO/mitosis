@@ -24,7 +24,7 @@ import { parseExpression } from '@babel/parser';
 import type { Node } from '@babel/types';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
-import { attempt, mapValues, omit, omitBy, set } from 'lodash';
+import { attempt, cloneDeep, filter, get, mapValues, omit, omitBy, set } from 'lodash';
 import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
@@ -818,6 +818,53 @@ export const blockToBuilder = (
   return processLocalizedValues(element, json);
 };
 
+const recursivelyCheckForChildrenWithSameComponent = (
+  elementOrContent: BuilderContent | BuilderElement,
+  componentName: string,
+  path: string = '',
+): string => {
+  if (isBuilderElement(elementOrContent)) {
+    if (elementOrContent.component?.name === componentName) {
+      return path;
+    }
+
+    return (
+      elementOrContent.children
+        ?.map((child, index) =>
+          recursivelyCheckForChildrenWithSameComponent(
+            child,
+            componentName,
+            `${path}.children[${index}]`,
+          ),
+        )
+        .find(Boolean) || ''
+    );
+  }
+
+  if (elementOrContent.data?.blocks) {
+    return (
+      elementOrContent.data?.blocks
+        ?.map((block, index) =>
+          recursivelyCheckForChildrenWithSameComponent(
+            block,
+            componentName,
+            `${path ? `${path}.` : ''}data.blocks[${index}]`,
+          ),
+        )
+        .find(Boolean) || ''
+    );
+  }
+  return '';
+};
+
+function removeItem(obj: BuilderContent, path: string, indexToRemove: number) {
+  return set(
+    cloneDeep(obj), // Clone to ensure immutability
+    path,
+    filter(get(obj, path), (item: any, index: number) => index !== indexToRemove),
+  );
+}
+
 export const componentToBuilder =
   (options: ToBuilderOptions = {}) =>
   ({ component }: TranspilerArgs): BuilderContent => {
@@ -881,10 +928,33 @@ export const componentToBuilder =
     }
 
     traverse([result, subComponentMap]).forEach(function (el) {
-      if (isBuilderElement(el)) {
+      if (isBuilderElement(el) && !el.meta?.preventRecursion) {
         const value = subComponentMap[el.component?.name!];
         if (value) {
-          set(el, 'component.options.symbol.content', value);
+          // Recursive Components are handled in the following steps :
+          // 1. Find out the path in which the component is self-referenced ( where that component reoccurs within it’s tree ).
+          // 2. We populate that component recursively for 4 times in a row.
+          // 3. Finally remove the recursive part from the last component which was populated.
+          // Also note that it doesn’t mean that component will render that many times, the rendering logic depends on the logic in it's parent. (Eg. show property binding)
+
+          const path = recursivelyCheckForChildrenWithSameComponent(value, el.component?.name!);
+          if (path) {
+            let tempElement = el;
+            for (let i = 0; i < 4; i++) {
+              const tempValue = cloneDeep(value);
+              set(tempElement, 'component.options.symbol.content', tempValue);
+              set(tempElement, 'meta.preventRecursion', true);
+              tempElement = get(tempValue, path) as BuilderElement;
+            }
+
+            // Finally remove the recursive part.
+            const arrayPath = path.replace(/\[\d+\]$/, '');
+            const newValue = removeItem(value, arrayPath, Number(path.match(/\[(\d+)\]$/)?.[1]));
+            set(tempElement, 'component.options.symbol.content', newValue);
+            set(tempElement, 'meta.preventRecursion', true);
+          } else {
+            set(el, 'component.options.symbol.content', value);
+          }
         }
         if (el.bindings) {
           for (const [key, value] of Object.entries(el.bindings)) {
@@ -899,6 +969,12 @@ export const componentToBuilder =
               el.bindings[key] = ` return ${value}`;
             }
           }
+        }
+      }
+      if (isBuilderElement(el) && el.meta?.preventRecursion) {
+        delete el.meta.preventRecursion;
+        if (el.meta && Object.keys(el.meta).length === 0) {
+          delete el.meta;
         }
       }
     });
