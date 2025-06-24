@@ -34,11 +34,17 @@ const isValidCollection = (code: string) => {
     return false;
   }
 
+  // Pattern: Array.from({ length: number })
+  // Examples: "Array.from({ length: 10 })", "Array.from({ length: 5 })"
+  const arrayFromPattern = /^Array\.from\(\{\s*length\s*:\s*\d+\s*\}\)$/;
+  if (arrayFromPattern.test(code)) {
+    return false;
+  }
+
   // Pattern: alphanumeric strings separated by dots
   // Examples: "abc.def", "state.list1", "data.items"
-  const pattern = /^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*$/;
-
-  return pattern.test(code);
+  const dotPattern = /^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*$/;
+  return dotPattern.test(code);
 };
 
 const replaceWithStateVariable = (code: string, stateMap?: Map<string, string>): string => {
@@ -92,13 +98,26 @@ const findStateWithinMitosisNode = (
   stateMap: Map<string, string>,
 ) => {
   if (checkIsForNode(node)) {
-    if (!isValidCollection(node.bindings.each?.code as string)) {
+    if (
+      !isValidCollection(node.bindings.each?.code as string) &&
+      !stateMap.has(node.bindings.each?.code as string)
+    ) {
       const newKey = generateUniqueKey(state);
-      state[newKey] = JSON.parse(node.bindings.each?.code as string);
-      stateMap.set(node.bindings.each?.code as string, newKey);
+      const code = node.bindings.each?.code as string;
+      try {
+        state[newKey] = JSON.parse(code);
+      } catch (parseError) {
+        try {
+          state[newKey] = eval(code);
+        } catch (evalError) {
+          console.log('Failed to evaluate:', code, evalError);
+        }
+      }
+
+      stateMap.set(code, newKey);
     }
-    node.children.forEach((child) => findStateWithinMitosisNode(child, options, state, stateMap));
   }
+  node.children.forEach((child) => findStateWithinMitosisNode(child, options, state, stateMap));
 };
 
 const findStateWithinMitosisComponent = (
