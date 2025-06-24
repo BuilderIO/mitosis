@@ -106,15 +106,15 @@ const findStateWithinMitosisNode = (
       const code = node.bindings.each?.code as string;
       try {
         state[newKey] = JSON.parse(code);
+        stateMap.set(code, newKey);
       } catch (parseError) {
         try {
           state[newKey] = eval(code);
+          stateMap.set(code, newKey);
         } catch (evalError) {
           console.log('Failed to evaluate:', code, evalError);
         }
       }
-
-      stateMap.set(code, newKey);
     }
   }
   node.children.forEach((child) => findStateWithinMitosisNode(child, options, state, stateMap));
