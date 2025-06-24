@@ -857,17 +857,7 @@ export const componentToBuilder =
             { ...convertMitosisStateToBuilderState(component.state) },
             options.stateMap,
           );
-          // Only include state if it has meaningful data (not just default values)
-          const hasMeaningfulState =
-            Object.keys(stateData).length > 0 &&
-            Object.values(stateData).some(
-              (value) =>
-                value !== null &&
-                value !== undefined &&
-                !(Array.isArray(value) && value.length === 0) &&
-                !(typeof value === 'object' && Object.keys(value).length === 0),
-            );
-          return hasMeaningfulState ? { state: stateData } : {};
+          return { state: stateData };
         })(),
         blocks: component.children
           .filter(filterEmptyTextNodes)
