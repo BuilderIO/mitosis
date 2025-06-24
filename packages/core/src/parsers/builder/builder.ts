@@ -1100,20 +1100,25 @@ export function extractStateHook(code: string): {
 
 /**
  * Extracts Mitosis state from Builder state.
- * @param code
+ * @param mitosisState Mitosis state to update
+ * @param builderState Builder state to extract from
  * @returns
  */
-export function extractMitosisStateFromBuilderState(state: MitosisState, builderState: any) {
+export function extractMitosisStateFromBuilderState(
+  mitosisState: MitosisState,
+  builderState?: {
+    [key: string]: any;
+  },
+) {
   if (!builderState) return;
   for (const key in builderState) {
-    if (['function', 'object'].includes(typeof builderState[key])) {
+    if (['function'].includes(typeof builderState[key])) {
       continue;
     }
 
     let value = builderState[key];
-
-    if (!state[key]) {
-      state[key] = {
+    if (!mitosisState[key]) {
+      mitosisState[key] = {
         type: 'property',
         propertyType: 'normal',
         code: JSON.stringify(value),

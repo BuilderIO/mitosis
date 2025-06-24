@@ -1662,6 +1662,11 @@ describe('Builder', () => {
             "propertyType": "normal",
             "type": "property",
           },
+          "dataBuilderList2": {
+            "code": "[1,2,3]",
+            "propertyType": "normal",
+            "type": "property",
+          },
         },
         "subComponents": [],
       }
