@@ -110,12 +110,11 @@ const findStateWithinMitosisNode = (
         state[newKey] = JSON.parse(code);
         stateMap.set(code, newKey);
       } catch (parseError) {
-        try {
-          state[newKey] = eval(code);
-          stateMap.set(code, newKey);
-        } catch (evalError) {
-          console.log('Failed to evaluate:', code, evalError);
-        }
+        // The parsing error happens when `code` is a function or expression
+        // We would need `eval` to parse the code and then set the state. But because
+        // of security concerns we are not handling this case right now.
+        // Will revisit this if we need to support this.
+        console.log('Failed to parse:', code, parseError);
       }
     }
   }

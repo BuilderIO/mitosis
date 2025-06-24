@@ -158,7 +158,9 @@ exports[`Builder > Advanced For 1`] = `
               "name": "Core:Fragment",
             },
             "repeat": {
-              "collection": "state.dataBuilderList1",
+              "collection": "Array.from({
+  length: 10
+})",
               "itemName": "_",
             },
           },
@@ -194,7 +196,9 @@ exports[`Builder > Advanced For 1`] = `
               "name": "Core:Fragment",
             },
             "repeat": {
-              "collection": "state.dataBuilderList1",
+              "collection": "Array.from({
+  length: 10
+})",
             },
           },
           {
@@ -287,7 +291,9 @@ exports[`Builder > Advanced For 1`] = `
               "name": "Core:Fragment",
             },
             "repeat": {
-              "collection": "state.dataBuilderList1",
+              "collection": "Array.from({
+  length: 10
+})",
               "itemName": "person",
             },
           },
@@ -381,7 +387,9 @@ exports[`Builder > Advanced For 1`] = `
               "name": "Core:Fragment",
             },
             "repeat": {
-              "collection": "state.dataBuilderList1",
+              "collection": "Array.from({
+  length: 10
+})",
               "itemName": "person",
             },
           },
@@ -397,18 +405,6 @@ exports[`Builder > Advanced For 1`] = `
     "jsCode": "Object.assign(state, { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
 ",
     "state": {
-      "dataBuilderList1": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-      ],
       "name": "'PatrickJS'",
       "names": "['Steve', 'PatrickJS']",
     },
@@ -422,22 +418,7 @@ exports[`Builder > Advanced For 2`] = `
 "import { useStore, For } from \\"@builder.io/mitosis\\";
 
 export default function MyComponent(props) {
-  const state = useStore({
-    name: \\"PatrickJS\\",
-    names: [\\"Steve\\", \\"PatrickJS\\"],
-    dataBuilderList1: [
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-    ],
-  });
+  const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
 
   return (
     <main>
@@ -452,25 +433,19 @@ export default function MyComponent(props) {
       </For>
       <For each={state.names}>{(person, index) => <span>{person}</span>}</For>
       <For each={state.names}>{(item, index) => <br />}</For>
-      <For each={state.dataBuilderList1}>
+      <For
+        each={Array.from({
+          length: 10,
+        })}
+      >
         {(_, index) => <pre>{index}</pre>}
       </For>
-      <For each={state.dataBuilderList1}>{(item, index) => <p>{index}</p>}</For>
-      <For each={state.names}>
-        {(person, index) => (
-          <span>
-            <span>{person}</span>
-            <span>{index}</span>
-          </span>
-        )}
-      </For>
-      <For each={state.dataBuilderList1}>
-        {(person, index) => (
-          <span>
-            <span>{person}</span>
-            <span>{index}</span>
-          </span>
-        )}
+      <For
+        each={Array.from({
+          length: 10,
+        })}
+      >
+        {(item, index) => <p>{index}</p>}
       </For>
       <For each={state.names}>
         {(person, index) => (
@@ -480,7 +455,31 @@ export default function MyComponent(props) {
           </span>
         )}
       </For>
-      <For each={state.dataBuilderList1}>
+      <For
+        each={Array.from({
+          length: 10,
+        })}
+      >
+        {(person, index) => (
+          <span>
+            <span>{person}</span>
+            <span>{index}</span>
+          </span>
+        )}
+      </For>
+      <For each={state.names}>
+        {(person, index) => (
+          <span>
+            <span>{person}</span>
+            <span>{index}</span>
+          </span>
+        )}
+      </For>
+      <For
+        each={Array.from({
+          length: 10,
+        })}
+      >
         {(person, index) => (
           <span>
             <span>{person}</span>
