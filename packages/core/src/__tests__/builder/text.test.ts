@@ -311,8 +311,6 @@ describe('Builder Text node', () => {
       }
     `);
 
-    //compileAwayBuilderComponentsFromTree(backToMitosis, compileAwayComponents);
-
     expect(backToMitosis).toMatchInlineSnapshot(`
       {
         "@type": "@builder.io/mitosis/component",
