@@ -4,7 +4,6 @@ import { DEFAULT_TEST_TIMEOUT, cli } from '../utils';
 
 // TODO refactor commands/compile.ts to not have side effects (like calling
 // process.exit) so that this can be unit tested instead.
-// TODO styles are missing in the react generator on the Text nodes
 test(
   'strips out builder components by default',
   async () => {
