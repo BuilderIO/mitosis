@@ -656,6 +656,7 @@ export const blockToBuilder = (
   if (json.properties._text || json.bindings._text?.code) {
     const element = el(
       {
+        tagName: 'span',
         bindings: {
           ...(json.bindings._text?.code
             ? {

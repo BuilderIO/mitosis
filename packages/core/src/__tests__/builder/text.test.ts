@@ -195,6 +195,7 @@ describe('Builder Text node', () => {
                     "text": "Hello World",
                   },
                 },
+                "tagName": "span",
               },
             ],
             "code": {
