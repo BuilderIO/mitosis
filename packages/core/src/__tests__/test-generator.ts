@@ -372,6 +372,7 @@ const IMPORT_TEST: Tests = {
 };
 
 const ANGULAR_TESTS: Tests = {
+  prettierInline: getRawFile('./data/angular/prettier-inline.raw.tsx'),
   customSelector: getRawFile('./data/angular/custom-selector.raw.tsx'),
   nativeAttributes: getRawFile('./data/angular/native-attributes.raw.tsx'),
   outputEventBinding: getRawFile('./data/angular/output-event-bindings.raw.tsx'),
@@ -765,7 +766,7 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
       },
     ];
     for (const { name, parser, testsArray } of parsers) {
-      if (testsArray && Object.keys(testsArray[0]).length > 0) {
+      if (testsArray && (only || Object.keys(testsArray[0]).length > 0)) {
         describe(name, () => {
           if (!only) {
             if (name === 'jsx' && options.typescript === false) {
