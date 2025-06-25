@@ -961,7 +961,18 @@ export const builderElementToMitosisNode = (
       ...slots,
     },
     ...(Object.keys(blocksSlots).length > 0 && { blocksSlots }),
-    meta: getMetaFromBlock(block, options),
+    meta: {
+      ...getMetaFromBlock(block, options),
+      ...(() => {
+        const originalNameMeta: {
+          originalName?: string;
+        } = {};
+        if (block.component?.name && /:/.test(block.component?.name)) {
+          originalNameMeta.originalName = block.component?.name;
+        }
+        return originalNameMeta;
+      })(),
+    },
     ...(Object.keys(localizedValues).length && { localizedValues }),
   });
 

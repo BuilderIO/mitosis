@@ -139,7 +139,10 @@ const omitMetaProperties = (obj: Record<string, any>) =>
   omitBy(obj, (_value, key) => key.startsWith('$'));
 
 const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
-const mapComponentName = (name: string) => {
+const mapComponentName = (name: string, meta?: { originalName?: string }) => {
+  if (meta?.originalName) {
+    return meta.originalName;
+  }
   if (name === 'CustomCode') {
     return 'Custom Code';
   }
@@ -792,7 +795,7 @@ export const blockToBuilder = (
       }),
       ...(thisIsComponent && {
         component: {
-          name: mapComponentName(json.name),
+          name: mapComponentName(json.name, json.meta),
           options: componentOptions,
         },
       }),
