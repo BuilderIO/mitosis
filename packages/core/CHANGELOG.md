@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.11.5
+
+### Patch Changes
+
+- 7ca7290: remove Circular References for `componentToBuilder` generator
+- 22ba7c0: Correct the conversion of MitosisJSX `For` component to Builder JSON `repeat.collection`
+
 ## 0.11.4
 
 ### Patch Changes
