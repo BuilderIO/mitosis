@@ -905,7 +905,6 @@ export const componentToBuilder =
             { ...convertMitosisStateToBuilderState(component.state) },
             options.stateMap,
           );
-          console.log('stateData', stateData);
           return { state: stateData };
         })(),
         blocks: component.children
