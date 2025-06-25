@@ -571,10 +571,26 @@ export const components: CompileAwayComponentsMap = {
       delete node.bindings.text;
     }
 
-    return createMitosisNode({
-      ...node,
+    const { bindings, ...rest } = node;
+
+    const textNode = createMitosisNode({
+      ...rest,
       name: node.properties.$tagName ?? 'div',
     });
+
+    /**
+     * If there are things we need to reflect on the text then we must
+     * render a wrapper div so we can put it on that element.
+     */
+    if (Object.keys(bindings).length > 0) {
+      return createMitosisNode({
+        name: 'div',
+        bindings,
+        children: [textNode],
+      });
+    }
+
+    return textNode;
   },
 };
 

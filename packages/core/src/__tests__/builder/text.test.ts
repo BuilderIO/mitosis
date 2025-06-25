@@ -112,15 +112,25 @@ describe('Builder Text node', () => {
             "type": "single",
           },
         },
-        "children": [],
+        "children": [
+          {
+            "@type": "@builder.io/mitosis/node",
+            "bindings": {},
+            "children": [],
+            "meta": {},
+            "name": "div",
+            "properties": {
+              "$tagName": undefined,
+              "_text": "<h1>Hello World</h1>",
+            },
+            "scope": {},
+            "slots": {},
+          },
+        ],
         "meta": {},
         "name": "div",
-        "properties": {
-          "$tagName": undefined,
-          "_text": "<h1>Hello World</h1>",
-        },
+        "properties": {},
         "scope": {},
-        "slots": {},
       }
     `);
 
@@ -130,9 +140,13 @@ describe('Builder Text node', () => {
     expect(mitosis).toMatchInlineSnapshot(`
       "export default function MyComponent(props) {
         return (
-          <>
+          <div
+            css={{
+              color: \\"red\\",
+            }}
+          >
             <h1>Hello World</h1>
-          </>
+          </div>
         );
       }
       "
@@ -142,7 +156,15 @@ describe('Builder Text node', () => {
     expect(backToMitosis.children[0]).toMatchInlineSnapshot(`
       {
         "@type": "@builder.io/mitosis/node",
-        "bindings": {},
+        "bindings": {
+          "css": {
+            "bindingType": "expression",
+            "code": "{
+        color: \\"red\\"
+      }",
+            "type": "single",
+          },
+        },
         "children": [
           {
             "@type": "@builder.io/mitosis/node",
@@ -167,7 +189,7 @@ describe('Builder Text node', () => {
           },
         ],
         "meta": {},
-        "name": "Fragment",
+        "name": "div",
         "properties": {},
         "scope": {},
       }
@@ -210,9 +232,13 @@ describe('Builder Text node', () => {
           "actions": {},
           "bindings": {},
         },
-        "component": {
-          "name": "Core:Fragment",
+        "properties": {},
+        "responsiveStyles": {
+          "large": {
+            "color": "red",
+          },
         },
+        "tagName": "div",
       }
     `);
   });
