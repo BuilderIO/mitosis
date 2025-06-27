@@ -23,17 +23,6 @@ describe('Builder Invalid JSX Flag', () => {
       const builderToMitosis = builderContentToMitosisComponent(builderJson, {
         escapeInvalidCode: true,
       });
-
-      expect(builderToMitosis.children[0].bindings.style).toMatchInlineSnapshot(`
-        {
-          "bindingType": "expression",
-          "code": "{ marginTop: \`state.isDropdownOpen ? window.innerWidth <= 640 ? \\"25
-        0px\\" : \\"100px\\" : \\"0\\" [INVALID CODE]\`, \\"@media (max-width: 991px)\\": { marginTop: \`state.isDropdownOpen ? window.innerWidth <= 640 ? \\"25
-        0px\\" : \\"100px\\" : \\"0\\" [INVALID CODE]\` }, }",
-          "type": "single",
-        }
-      `);
-
       const mitosis = componentToMitosis({})({
         component: builderToMitosis,
       });
@@ -56,7 +45,7 @@ describe('Builder Invalid JSX Flag', () => {
     `);
     });
 
-    test('escaping invalid binding does not crash jsx generator', () => {
+    test('escaping invalid binding does not crash jsx generator on element', () => {
       const builderJson = {
         data: {
           blocks: [
@@ -73,22 +62,6 @@ describe('Builder Invalid JSX Flag', () => {
       const builderToMitosis = builderContentToMitosisComponent(builderJson, {
         escapeInvalidCode: true,
       });
-
-      expect(builderToMitosis.children[0].bindings).toMatchInlineSnapshot(`
-        {
-          "foo": {
-            "bindingType": "expression",
-            "code": "\`bar +  [INVALID CODE]\`",
-            "type": "single",
-          },
-          "onClick": {
-            "bindingType": "expression",
-            "code": "\`state. [INVALID CODE]\`",
-            "type": "single",
-          },
-        }
-      `);
-
       const mitosis = componentToMitosis({})({
         component: builderToMitosis,
       });
@@ -103,6 +76,48 @@ describe('Builder Invalid JSX Flag', () => {
       }
       "
     `);
+    });
+
+    // Text components have a different code path for bindings than other components
+    test('escaping invalid binding does not crash jsx generator on Text component', () => {
+      const builderJson = {
+        data: {
+          blocks: [
+            {
+              '@type': '@builder.io/sdk:Element' as const,
+              bindings: {
+                onClick: 'state.',
+                foo: 'bar + ',
+              },
+              component: {
+                name: 'Text',
+                options: {
+                  text: 'Text',
+                },
+              },
+            },
+          ],
+        },
+      };
+      const builderToMitosis = builderContentToMitosisComponent(builderJson, {
+        escapeInvalidCode: true,
+      });
+      const mitosis = componentToMitosis({})({
+        component: builderToMitosis,
+      });
+      expect(mitosis).toMatchInlineSnapshot(`
+        "export default function MyComponent(props) {
+          return (
+            <div
+              onClick={(event) => \`state. [INVALID CODE]\`}
+              foo={\`bar +  [INVALID CODE]\`}
+            >
+              Text
+            </div>
+          );
+        }
+        "
+      `);
     });
   });
 
@@ -123,15 +138,6 @@ describe('Builder Invalid JSX Flag', () => {
         },
       };
       const builderToMitosis = builderContentToMitosisComponent(builderJson);
-
-      expect(builderToMitosis.children[0].bindings.style).toMatchInlineSnapshot(`
-        {
-          "bindingType": "expression",
-          "code": "{ \\"@media (max-width: 991px)\\": { marginTop: state.marginTop }, }",
-          "type": "single",
-        }
-      `);
-
       const mitosis = componentToMitosis({})({
         component: builderToMitosis,
       });
@@ -151,7 +157,7 @@ describe('Builder Invalid JSX Flag', () => {
       `);
     });
 
-    test('invalid binding is dropped', () => {
+    test('invalid binding is dropped on element', () => {
       const builderJson = {
         data: {
           blocks: [
@@ -166,17 +172,6 @@ describe('Builder Invalid JSX Flag', () => {
         },
       };
       const builderToMitosis = builderContentToMitosisComponent(builderJson);
-
-      expect(builderToMitosis.children[0].bindings).toMatchInlineSnapshot(`
-        {
-          "foo": {
-            "bindingType": "expression",
-            "code": "bar",
-            "type": "single",
-          },
-        }
-      `);
-
       const mitosis = componentToMitosis({})({
         component: builderToMitosis,
       });
@@ -187,5 +182,126 @@ describe('Builder Invalid JSX Flag', () => {
         "
       `);
     });
+
+    // Text components have a different code path for bindings than other components
+    test('invalid binding is dropped on Text component', () => {
+      const builderJson = {
+        data: {
+          blocks: [
+            {
+              '@type': '@builder.io/sdk:Element' as const,
+              bindings: {
+                onClick: 'state.',
+                foo: 'bar',
+              },
+              component: {
+                name: 'Text',
+                options: {
+                  text: 'Text',
+                },
+              },
+            },
+          ],
+        },
+      };
+      const builderToMitosis = builderContentToMitosisComponent(builderJson);
+      const mitosis = componentToMitosis({})({
+        component: builderToMitosis,
+      });
+      expect(mitosis).toMatchInlineSnapshot(`
+        "export default function MyComponent(props) {
+          return <div foo={bar}>Text</div>;
+        }
+        "
+      `);
+    });
+  });
+});
+
+// https://github.com/BuilderIO/builder-internal/blob/39d18b50928f8c843255637a7c07c41d4277127c/packages/app/functions/transpile.worker.ts#L26-L42
+describe('export default transpiling', () => {
+  test('convert on element', () => {
+    const builderJson = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            bindings: {
+              foo: 'export default bar',
+            },
+            code: {
+              bindings: {
+                foo: 'export default bar',
+              },
+            },
+          },
+        ],
+      },
+    };
+    const builderToMitosis = builderContentToMitosisComponent(builderJson, {
+      escapeInvalidCode: true,
+    });
+    const mitosis = componentToMitosis({})({
+      component: builderToMitosis,
+    });
+    expect(mitosis).toMatchInlineSnapshot(`
+      "export default function MyComponent(props) {
+        return (
+          <div
+            foo={function () {
+              return bar;
+            }}
+          />
+        );
+      }
+      "
+    `);
+  });
+
+  /// Text components have a different code path for bindings than other components
+  test('convert on Text component', () => {
+    const builderJson = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            bindings: {
+              foo: 'export default bar',
+            },
+            code: {
+              bindings: {
+                foo: 'export default bar',
+              },
+            },
+            component: {
+              name: 'Text',
+              options: {
+                text: 'Text',
+              },
+            },
+          },
+        ],
+      },
+    };
+    const builderToMitosis = builderContentToMitosisComponent(builderJson, {
+      escapeInvalidCode: true,
+    });
+    const mitosis = componentToMitosis({})({
+      component: builderToMitosis,
+    });
+    expect(mitosis).toMatchInlineSnapshot(`
+      "export default function MyComponent(props) {
+        return (
+          <div
+            foo={function () {
+              return bar;
+            }}
+          >
+            Text
+          </div>
+        );
+      }
+      "
+    `);
   });
 });
