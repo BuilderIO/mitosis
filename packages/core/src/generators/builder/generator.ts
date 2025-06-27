@@ -138,10 +138,10 @@ const findStateWithinMitosisComponent = (
 const omitMetaProperties = (obj: Record<string, any>) =>
   omitBy(obj, (_value, key) => key.startsWith('$'));
 
-const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
-const mapComponentName = (name: string, meta?: { originalName?: string }) => {
-  if (meta?.originalName) {
-    return meta.originalName;
+export const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
+const mapComponentName = (name: string, properties?: { [key: string]: string | undefined }) => {
+  if (properties?.['data-builder-originalName']) {
+    return properties['data-builder-originalName'];
   }
   if (name === 'CustomCode') {
     return 'Custom Code';
@@ -795,7 +795,7 @@ export const blockToBuilder = (
       }),
       ...(thisIsComponent && {
         component: {
-          name: mapComponentName(json.name, json.meta),
+          name: mapComponentName(json.name, json.properties),
           options: componentOptions,
         },
       }),
@@ -908,7 +908,6 @@ export const componentToBuilder =
             { ...convertMitosisStateToBuilderState(component.state) },
             options.stateMap,
           );
-          console.log('stateData', stateData);
           return { state: stateData };
         })(),
         blocks: component.children
