@@ -1,5 +1,15 @@
 # @builder.io/mitosis-cli
 
+## 0.11.6
+
+### Patch Changes
+
+- 314b396: Builder: improve accuracy of invalid binding detection
+- f442a8c: fix: support for builder custom component with a colon in their name
+- Updated dependencies [314b396]
+- Updated dependencies [f442a8c]
+  - @builder.io/mitosis@0.11.6
+
 ## 0.11.5
 
 ### Patch Changes
