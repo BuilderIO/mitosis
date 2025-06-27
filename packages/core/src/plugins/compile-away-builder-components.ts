@@ -577,7 +577,7 @@ export const components: CompileAwayComponentsMap = {
      * If there are things we need to reflect on the text then we must
      * render a wrapper div so we can put it on that element.
      */
-    if (hasBindings || innerProperties) {
+    if (hasBindings || hasProperties) {
       /**
        * Text binding needs to be on the inner text node. Some generators
        * will skip rendering other bindings if they see a _text binding,
