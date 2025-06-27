@@ -571,26 +571,50 @@ export const components: CompileAwayComponentsMap = {
       delete node.bindings.text;
     }
 
-    const { bindings, ...rest } = node;
-
-    const textNode = createMitosisNode({
-      ...rest,
-      name: node.properties.$tagName ?? 'div',
-    });
-
+    const hasBindings = Object.keys(node.bindings).length > 0;
+    const hasProperties = Object.keys(node.properties).length > 0;
     /**
      * If there are things we need to reflect on the text then we must
      * render a wrapper div so we can put it on that element.
      */
-    if (Object.keys(bindings).length > 0) {
+    if (hasBindings || innerProperties) {
+      /**
+       * Text binding needs to be on the inner text node. Some generators
+       * will skip rendering other bindings if they see a _text binding,
+       * so the _text binding needs to go on the inner text node, and all
+       * other bindings need to go on the wrapper div so they get generated.
+       */
+
+      const { _text: propText, $tagName: nodeTagName, ...restOfProperties } = node.properties;
+      const { _text: bindingText, ...restOfBindings } = node.bindings;
+
       return createMitosisNode({
         name: 'div',
-        bindings,
-        children: [textNode],
+        bindings: restOfBindings,
+        properties: restOfProperties,
+        children: [
+          createMitosisNode({
+            ...node,
+            ...(propText && {
+              properties: {
+                _text: propText,
+              },
+            }),
+            ...(bindingText && {
+              bindings: {
+                _text: bindingText,
+              },
+            }),
+            name: nodeTagName ?? 'div',
+          }),
+        ],
       });
     }
 
-    return textNode;
+    return createMitosisNode({
+      ...node,
+      name: node.properties.$tagName ?? 'div',
+    });
   },
 };
 
