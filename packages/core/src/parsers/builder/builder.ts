@@ -1,3 +1,4 @@
+import { builderBlockPrefixes } from '@/generators/builder/generator';
 import { hashCodeAsString } from '@/symbols/symbol-processor';
 import { MitosisComponent, MitosisState } from '@/types/mitosis-component';
 import * as babel from '@babel/core';
@@ -934,6 +935,13 @@ export const builderElementToMitosisNode = (
   if (block.groupLocked !== undefined) {
     dataAttributes['data-builder-groupLocked'] = String(block.groupLocked);
   }
+  if (
+    block.component?.name &&
+    /:/.test(block.component?.name) &&
+    !builderBlockPrefixes.includes(block.component?.name.split(':')[0])
+  ) {
+    dataAttributes['data-builder-originalName'] = block.component?.name;
+  }
 
   const node = createMitosisNode({
     name:
@@ -961,7 +969,9 @@ export const builderElementToMitosisNode = (
       ...slots,
     },
     ...(Object.keys(blocksSlots).length > 0 && { blocksSlots }),
-    meta: getMetaFromBlock(block, options),
+    meta: {
+      ...getMetaFromBlock(block, options),
+    },
     ...(Object.keys(localizedValues).length && { localizedValues }),
   });
 
