@@ -796,7 +796,7 @@ export const blockToBuilder = (
       ...(thisIsComponent && {
         component: {
           name: mapComponentName(json.name, json.properties),
-          options: componentOptions,
+          options: omit(componentOptions, ['data-builder-originalName']),
         },
       }),
       code: {

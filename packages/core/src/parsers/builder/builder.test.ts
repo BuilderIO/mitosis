@@ -132,5 +132,8 @@ describe('Unpaired Surrogates', () => {
     // Convert back Mitosis JSON to Builder JSON
     const backToBuilder = componentToBuilder()({ component: backToMitosisCmp });
     expect(backToBuilder?.data?.blocks?.[0]?.component?.name).toBe('Text:123');
+    expect(backToBuilder?.data?.blocks?.[0]?.component?.options).not.toHaveProperty(
+      'data-builder-originalName',
+    );
   });
 });
