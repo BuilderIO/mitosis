@@ -14,7 +14,8 @@ import { replaceNodes } from '@/helpers/replace-identifiers';
 import { checkHasState } from '@/helpers/state';
 import { isBuilderElement, symbolBlocksAsChildren } from '@/parsers/builder';
 import { hashCodeAsString } from '@/symbols/symbol-processor';
-import { Binding, ForNode, MitosisNode } from '@/types/mitosis-node';
+import { MitosisComponent } from '@/types/mitosis-component';
+import { Binding, ForNode, MitosisNode, checkIsForNode } from '@/types/mitosis-node';
 import { MitosisStyles } from '@/types/mitosis-styles';
 import { TranspilerArgs } from '@/types/transpiler';
 import { traverse as babelTraverse, types } from '@babel/core';
@@ -23,16 +24,125 @@ import { parseExpression } from '@babel/parser';
 import type { Node } from '@babel/types';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
-import { attempt, mapValues, omit, omitBy, set } from 'lodash';
+import { attempt, cloneDeep, filter, get, mapValues, omit, omitBy, set } from 'lodash';
 import traverse from 'neotraverse/legacy';
 import { format } from 'prettier/standalone';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 
+const isValidCollection = (code: string) => {
+  if (!code || typeof code !== 'string') {
+    return false;
+  }
+
+  // Pattern: Array.from({ length: number })
+  // Examples: "Array.from({ length: 10 })", "Array.from({ length: 5 })"
+  const arrayFromPattern = /^Array\.from\(\{\s*length\s*:\s*\d+\s*\}\)$/;
+  if (arrayFromPattern.test(code)) {
+    return false;
+  }
+
+  // Pattern: alphanumeric strings separated by dots
+  // Examples: "abc.def", "state.list1", "data.items"
+  const dotPattern = /^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*$/;
+  return dotPattern.test(code);
+};
+
+const replaceWithStateVariable = (code: string, stateMap?: Map<string, string>): string => {
+  if (!code) {
+    return '';
+  }
+
+  if (stateMap?.has(code)) {
+    return 'state.' + (stateMap.get(code) || '');
+  }
+
+  return code;
+};
+
+const generateUniqueKey = (state: Record<string, string>) => {
+  let newKeyPrefix = 'dataBuilderList';
+  let counter = 1;
+  while (state[newKeyPrefix + counter]) {
+    counter++;
+  }
+  return newKeyPrefix + counter;
+};
+
+const convertMitosisStateToBuilderState = (state: MitosisComponent['state']) => {
+  return Object.entries(state).reduce((acc: any, [key, value]) => {
+    if (value?.type === 'property' && value?.code) {
+      if (value.code === 'true' || value.code === 'false') {
+        acc[key] = value.code === 'true';
+      } else if (value.code === 'null') {
+        acc[key] = null;
+      } else if (value.code === 'undefined') {
+        acc[key] = undefined;
+      } else if (!Number.isNaN(Number(value.code))) {
+        acc[key] = Number(value.code);
+      } else {
+        try {
+          acc[key] = JSON.parse(value.code);
+        } catch (e) {
+          acc[key] = value.code;
+        }
+      }
+    }
+    return acc;
+  }, {});
+};
+
+const findStateWithinMitosisNode = (
+  node: MitosisNode,
+  options: ToBuilderOptions,
+  state: {
+    [key: string]: any;
+  },
+  stateMap: Map<string, string>,
+) => {
+  if (checkIsForNode(node)) {
+    if (
+      !isValidCollection(node.bindings.each?.code as string) &&
+      !stateMap.has(node.bindings.each?.code as string)
+    ) {
+      const newKey = generateUniqueKey(state);
+      const code = node.bindings.each?.code as string;
+      try {
+        state[newKey] = JSON.parse(code);
+        stateMap.set(code, newKey);
+      } catch (parseError) {
+        // The parsing error happens when `code` is a function or expression
+        // We would need `eval` to parse the code and then set the state. But because
+        // of security concerns we are not handling this case right now.
+        // Will revisit this if we need to support this.
+        console.log('Failed to parse:', code, parseError);
+      }
+    }
+  }
+  node.children.forEach((child) => findStateWithinMitosisNode(child, options, state, stateMap));
+};
+
+const findStateWithinMitosisComponent = (
+  component: MitosisComponent,
+  options: ToBuilderOptions,
+  state: {
+    [key: string]: any;
+  },
+  stateMap: Map<string, string>,
+) => {
+  component.children.forEach((child) =>
+    findStateWithinMitosisNode(child, options, state, stateMap),
+  );
+  return state;
+};
+
 const omitMetaProperties = (obj: Record<string, any>) =>
   omitBy(obj, (_value, key) => key.startsWith('$'));
 
-const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
-const mapComponentName = (name: string) => {
+export const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
+const mapComponentName = (name: string, properties?: { [key: string]: string | undefined }) => {
+  if (properties?.['data-builder-originalName']) {
+    return properties['data-builder-originalName'];
+  }
   if (name === 'CustomCode') {
     return 'Custom Code';
   }
@@ -153,7 +263,7 @@ const componentMappers: {
   },
   For(_node, options) {
     const node = _node as any as ForNode;
-
+    const stateMap = options.stateMap;
     const replaceIndexNode = (str: string) =>
       replaceNodes({
         code: str,
@@ -224,7 +334,9 @@ const componentMappers: {
           name: 'Core:Fragment',
         },
         repeat: {
-          collection: node.bindings.each?.code as string,
+          collection: isValidCollection(node.bindings.each?.code as string)
+            ? (node.bindings.each?.code as string) || ''
+            : replaceWithStateVariable(node.bindings.each?.code as string, stateMap),
           itemName: node.scope.forName,
         },
         children: node.children
@@ -331,6 +443,7 @@ function tryFormat(code: string) {
 
 type InternalOptions = {
   skipMapper?: boolean;
+  includeStateMap?: boolean;
 };
 
 const processLocalizedValues = (element: BuilderElement, node: MitosisNode) => {
@@ -682,8 +795,8 @@ export const blockToBuilder = (
       }),
       ...(thisIsComponent && {
         component: {
-          name: mapComponentName(json.name),
-          options: componentOptions,
+          name: mapComponentName(json.name, json.properties),
+          options: omit(componentOptions, ['data-builder-originalName']),
         },
       }),
       code: {
@@ -708,10 +821,61 @@ export const blockToBuilder = (
   return processLocalizedValues(element, json);
 };
 
+const recursivelyCheckForChildrenWithSameComponent = (
+  elementOrContent: BuilderContent | BuilderElement,
+  componentName: string,
+  path: string = '',
+): string => {
+  if (isBuilderElement(elementOrContent)) {
+    if (elementOrContent.component?.name === componentName) {
+      return path;
+    }
+
+    return (
+      elementOrContent.children
+        ?.map((child, index) =>
+          recursivelyCheckForChildrenWithSameComponent(
+            child,
+            componentName,
+            `${path}.children[${index}]`,
+          ),
+        )
+        .find(Boolean) || ''
+    );
+  }
+
+  if (elementOrContent.data?.blocks) {
+    return (
+      elementOrContent.data?.blocks
+        ?.map((block, index) =>
+          recursivelyCheckForChildrenWithSameComponent(
+            block,
+            componentName,
+            `${path ? `${path}.` : ''}data.blocks[${index}]`,
+          ),
+        )
+        .find(Boolean) || ''
+    );
+  }
+  return '';
+};
+
+function removeItem(obj: BuilderContent, path: string, indexToRemove: number) {
+  return set(
+    cloneDeep(obj), // Clone to ensure immutability
+    path,
+    filter(get(obj, path), (item: any, index: number) => index !== indexToRemove),
+  );
+}
+
 export const componentToBuilder =
   (options: ToBuilderOptions = {}) =>
   ({ component }: TranspilerArgs): BuilderContent => {
     const hasState = checkHasState(component);
+
+    if (!options.stateMap) {
+      options.stateMap = new Map<string, string>();
+    }
 
     const result: BuilderContent = fastClone({
       data: {
@@ -737,11 +901,24 @@ export const componentToBuilder =
         }
       `),
         cssCode: component?.style,
+        ...(() => {
+          const stateData = findStateWithinMitosisComponent(
+            component,
+            options,
+            { ...convertMitosisStateToBuilderState(component.state) },
+            options.stateMap,
+          );
+          return { state: stateData };
+        })(),
         blocks: component.children
           .filter(filterEmptyTextNodes)
           .map((child) => blockToBuilder(child, options)),
       },
     });
+
+    if (result.data?.state && Object.keys(result.data.state).length === 0) {
+      delete result.data.state;
+    }
 
     const subComponentMap: Record<string, BuilderContent> = {};
 
@@ -753,10 +930,33 @@ export const componentToBuilder =
     }
 
     traverse([result, subComponentMap]).forEach(function (el) {
-      if (isBuilderElement(el)) {
+      if (isBuilderElement(el) && !el.meta?.preventRecursion) {
         const value = subComponentMap[el.component?.name!];
         if (value) {
-          set(el, 'component.options.symbol.content', value);
+          // Recursive Components are handled in the following steps :
+          // 1. Find out the path in which the component is self-referenced ( where that component reoccurs within it’s tree ).
+          // 2. We populate that component recursively for 4 times in a row.
+          // 3. Finally remove the recursive part from the last component which was populated.
+          // Also note that it doesn’t mean that component will render that many times, the rendering logic depends on the logic in it's parent. (Eg. show property binding)
+
+          const path = recursivelyCheckForChildrenWithSameComponent(value, el.component?.name!);
+          if (path) {
+            let tempElement = el;
+            for (let i = 0; i < 4; i++) {
+              const tempValue = cloneDeep(value);
+              set(tempElement, 'component.options.symbol.content', tempValue);
+              set(tempElement, 'meta.preventRecursion', true);
+              tempElement = get(tempValue, path) as BuilderElement;
+            }
+
+            // Finally remove the recursive part.
+            const arrayPath = path.replace(/\[\d+\]$/, '');
+            const newValue = removeItem(value, arrayPath, Number(path.match(/\[(\d+)\]$/)?.[1]));
+            set(tempElement, 'component.options.symbol.content', newValue);
+            set(tempElement, 'meta.preventRecursion', true);
+          } else {
+            set(el, 'component.options.symbol.content', value);
+          }
         }
         if (el.bindings) {
           for (const [key, value] of Object.entries(el.bindings)) {
@@ -771,6 +971,12 @@ export const componentToBuilder =
               el.bindings[key] = ` return ${value}`;
             }
           }
+        }
+      }
+      if (isBuilderElement(el) && el.meta?.preventRecursion) {
+        delete el.meta.preventRecursion;
+        if (el.meta && Object.keys(el.meta).length === 0) {
+          delete el.meta;
         }
       }
     });

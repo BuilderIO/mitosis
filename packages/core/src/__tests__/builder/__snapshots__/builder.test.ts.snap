@@ -404,6 +404,10 @@ exports[`Builder > Advanced For 1`] = `
     ],
     "jsCode": "Object.assign(state, { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
 ",
+    "state": {
+      "name": "'PatrickJS'",
+      "names": "['Steve', 'PatrickJS']",
+    },
     "tsCode": "useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
 ",
   },
@@ -783,6 +787,10 @@ Object.assign(state, {
 
 state.findAndRunScripts();
 ",
+    "state": {
+      "scriptsInserted": [],
+      "scriptsRun": [],
+    },
     "tsCode": "var props = state;
 
 useStore({
@@ -980,6 +988,10 @@ Object.assign(state, {
 
 state.findAndRunScripts();
 ",
+    "state": {
+      "scriptsInserted": [],
+      "scriptsRun": [],
+    },
     "tsCode": "var props = state;
 
 useStore({
@@ -1131,6 +1143,12 @@ exports[`Builder > Fragment 1`] = `
     ],
     "jsCode": "Object.assign(state, { people: [\\"Steve\\", \\"Sewell\\"] });
 ",
+    "state": {
+      "people": [
+        "Steve",
+        "Sewell",
+      ],
+    },
     "tsCode": "useStore({ people: [\\"Steve\\", \\"Sewell\\"] });
 ",
   },
@@ -1280,6 +1298,11 @@ if (state.useLazyLoading()) {
   listener();
 }
 ",
+    "state": {
+      "imageLoaded": false,
+      "load": false,
+      "scrollListener": null,
+    },
     "tsCode": "var props = state;
 
 useStore({
@@ -3167,6 +3190,11 @@ fetch(
     state.reviews = data.data;
   });
 ",
+    "state": {
+      "name": "'test'",
+      "reviews": [],
+      "showReviewPrompt": false,
+    },
     "tsCode": "var props = state;
 
 useStore({
@@ -3882,6 +3910,282 @@ exports[`Builder > extractStateHook 1`] = `
 });
 alert('hi');",
   "state": {},
+}
+`;
+
+exports[`Builder > handles recursive component structure 1`] = `
+{
+  "data": {
+    "blocks": [
+      {
+        "@type": "@builder.io/sdk:Element",
+        "actions": {},
+        "bindings": {},
+        "children": [],
+        "code": {
+          "actions": {},
+          "bindings": {},
+        },
+        "component": {
+          "name": "LocationTree",
+          "options": {
+            "symbol": {
+              "content": {
+                "data": {
+                  "blocks": [
+                    {
+                      "@type": "@builder.io/sdk:Element",
+                      "actions": {},
+                      "bindings": {},
+                      "children": [
+                        {
+                          "@type": "@builder.io/sdk:Element",
+                          "bindings": {
+                            "show": "location.child",
+                          },
+                          "children": [
+                            {
+                              "@type": "@builder.io/sdk:Element",
+                              "actions": {},
+                              "bindings": {
+                                "component.options.location": "location.child",
+                              },
+                              "children": [],
+                              "code": {
+                                "actions": {},
+                                "bindings": {
+                                  "component.options.location": "location.child",
+                                },
+                              },
+                              "component": {
+                                "name": "LocationTree",
+                                "options": {
+                                  "symbol": {
+                                    "content": {
+                                      "data": {
+                                        "blocks": [
+                                          {
+                                            "@type": "@builder.io/sdk:Element",
+                                            "actions": {},
+                                            "bindings": {},
+                                            "children": [
+                                              {
+                                                "@type": "@builder.io/sdk:Element",
+                                                "bindings": {
+                                                  "show": "location.child",
+                                                },
+                                                "children": [
+                                                  {
+                                                    "@type": "@builder.io/sdk:Element",
+                                                    "actions": {},
+                                                    "bindings": {
+                                                      "component.options.location": "location.child",
+                                                    },
+                                                    "children": [],
+                                                    "code": {
+                                                      "actions": {},
+                                                      "bindings": {
+                                                        "component.options.location": "location.child",
+                                                      },
+                                                    },
+                                                    "component": {
+                                                      "name": "LocationTree",
+                                                      "options": {
+                                                        "symbol": {
+                                                          "content": {
+                                                            "data": {
+                                                              "blocks": [
+                                                                {
+                                                                  "@type": "@builder.io/sdk:Element",
+                                                                  "actions": {},
+                                                                  "bindings": {},
+                                                                  "children": [
+                                                                    {
+                                                                      "@type": "@builder.io/sdk:Element",
+                                                                      "bindings": {
+                                                                        "show": "location.child",
+                                                                      },
+                                                                      "children": [
+                                                                        {
+                                                                          "@type": "@builder.io/sdk:Element",
+                                                                          "actions": {},
+                                                                          "bindings": {
+                                                                            "component.options.location": "location.child",
+                                                                          },
+                                                                          "children": [],
+                                                                          "code": {
+                                                                            "actions": {},
+                                                                            "bindings": {
+                                                                              "component.options.location": "location.child",
+                                                                            },
+                                                                          },
+                                                                          "component": {
+                                                                            "name": "LocationTree",
+                                                                            "options": {
+                                                                              "symbol": {
+                                                                                "content": {
+                                                                                  "data": {
+                                                                                    "blocks": [
+                                                                                      {
+                                                                                        "@type": "@builder.io/sdk:Element",
+                                                                                        "actions": {},
+                                                                                        "bindings": {},
+                                                                                        "children": [
+                                                                                          {
+                                                                                            "@type": "@builder.io/sdk:Element",
+                                                                                            "bindings": {
+                                                                                              "show": "location.child",
+                                                                                            },
+                                                                                            "children": [
+                                                                                              {
+                                                                                                "@type": "@builder.io/sdk:Element",
+                                                                                                "actions": {},
+                                                                                                "bindings": {
+                                                                                                  "component.options.location": "location.child",
+                                                                                                },
+                                                                                                "children": [],
+                                                                                                "code": {
+                                                                                                  "actions": {},
+                                                                                                  "bindings": {
+                                                                                                    "component.options.location": "location.child",
+                                                                                                  },
+                                                                                                },
+                                                                                                "component": {
+                                                                                                  "name": "LocationTree",
+                                                                                                  "options": {
+                                                                                                    "symbol": {
+                                                                                                      "content": {
+                                                                                                        "data": {
+                                                                                                          "blocks": [
+                                                                                                            {
+                                                                                                              "@type": "@builder.io/sdk:Element",
+                                                                                                              "actions": {},
+                                                                                                              "bindings": {},
+                                                                                                              "children": [
+                                                                                                                {
+                                                                                                                  "@type": "@builder.io/sdk:Element",
+                                                                                                                  "bindings": {
+                                                                                                                    "show": "location.child",
+                                                                                                                  },
+                                                                                                                  "children": [],
+                                                                                                                  "component": {
+                                                                                                                    "name": "Core:Fragment",
+                                                                                                                  },
+                                                                                                                },
+                                                                                                              ],
+                                                                                                              "code": {
+                                                                                                                "actions": {},
+                                                                                                                "bindings": {},
+                                                                                                              },
+                                                                                                              "component": {
+                                                                                                                "name": "Core:Fragment",
+                                                                                                              },
+                                                                                                            },
+                                                                                                          ],
+                                                                                                          "jsCode": "",
+                                                                                                          "tsCode": "",
+                                                                                                        },
+                                                                                                      },
+                                                                                                    },
+                                                                                                  },
+                                                                                                },
+                                                                                              },
+                                                                                            ],
+                                                                                            "component": {
+                                                                                              "name": "Core:Fragment",
+                                                                                            },
+                                                                                          },
+                                                                                        ],
+                                                                                        "code": {
+                                                                                          "actions": {},
+                                                                                          "bindings": {},
+                                                                                        },
+                                                                                        "component": {
+                                                                                          "name": "Core:Fragment",
+                                                                                        },
+                                                                                      },
+                                                                                    ],
+                                                                                    "jsCode": "",
+                                                                                    "tsCode": "",
+                                                                                  },
+                                                                                },
+                                                                              },
+                                                                            },
+                                                                          },
+                                                                        },
+                                                                      ],
+                                                                      "component": {
+                                                                        "name": "Core:Fragment",
+                                                                      },
+                                                                    },
+                                                                  ],
+                                                                  "code": {
+                                                                    "actions": {},
+                                                                    "bindings": {},
+                                                                  },
+                                                                  "component": {
+                                                                    "name": "Core:Fragment",
+                                                                  },
+                                                                },
+                                                              ],
+                                                              "jsCode": "",
+                                                              "tsCode": "",
+                                                            },
+                                                          },
+                                                        },
+                                                      },
+                                                    },
+                                                  },
+                                                ],
+                                                "component": {
+                                                  "name": "Core:Fragment",
+                                                },
+                                              },
+                                            ],
+                                            "code": {
+                                              "actions": {},
+                                              "bindings": {},
+                                            },
+                                            "component": {
+                                              "name": "Core:Fragment",
+                                            },
+                                          },
+                                        ],
+                                        "jsCode": "",
+                                        "tsCode": "",
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          ],
+                          "component": {
+                            "name": "Core:Fragment",
+                          },
+                        },
+                      ],
+                      "code": {
+                        "actions": {},
+                        "bindings": {},
+                      },
+                      "component": {
+                        "name": "Core:Fragment",
+                      },
+                    },
+                  ],
+                  "jsCode": "",
+                  "tsCode": "",
+                },
+              },
+            },
+          },
+        },
+      },
+    ],
+    "jsCode": "",
+    "tsCode": "",
+  },
 }
 `;
 

@@ -1,3 +1,4 @@
+import { builderBlockPrefixes } from '@/generators/builder/generator';
 import { hashCodeAsString } from '@/symbols/symbol-processor';
 import { MitosisComponent, MitosisState } from '@/types/mitosis-component';
 import * as babel from '@babel/core';
@@ -964,6 +965,13 @@ export const builderElementToMitosisNode = (
   if (block.groupLocked !== undefined) {
     dataAttributes['data-builder-groupLocked'] = String(block.groupLocked);
   }
+  if (
+    block.component?.name &&
+    /:/.test(block.component?.name) &&
+    !builderBlockPrefixes.includes(block.component?.name.split(':')[0])
+  ) {
+    dataAttributes['data-builder-originalName'] = block.component?.name;
+  }
 
   const node = createMitosisNode({
     name:
@@ -991,7 +999,9 @@ export const builderElementToMitosisNode = (
       ...slots,
     },
     ...(Object.keys(blocksSlots).length > 0 && { blocksSlots }),
-    meta: getMetaFromBlock(block, options),
+    meta: {
+      ...getMetaFromBlock(block, options),
+    },
     ...(Object.keys(localizedValues).length && { localizedValues }),
   });
 
@@ -1126,6 +1136,39 @@ export function extractStateHook(code: string): {
   const newCode = generate(types.program(newBody)).code || '';
 
   return { code: newCode, state };
+}
+
+/**
+ * Extracts Mitosis state from Builder state.
+ * @param mitosisState Mitosis state to update
+ * @param builderState Builder state to extract from
+ * @returns
+ */
+export function extractMitosisStateFromBuilderState(
+  mitosisState: MitosisState,
+  builderState?: {
+    [key: string]: any;
+  },
+) {
+  if (!builderState) return;
+  for (const key in builderState) {
+    let value = builderState[key];
+    if (typeof value === 'function' && !mitosisState[key]) {
+      mitosisState[key] = {
+        type: 'function',
+        code: value.toString(),
+      };
+      continue;
+    }
+
+    if (!mitosisState[key]) {
+      mitosisState[key] = {
+        type: 'property',
+        propertyType: 'normal',
+        code: JSON.stringify(value),
+      };
+    }
+  }
 }
 
 export function convertExportDefaultToReturn(code: string) {
@@ -1296,7 +1339,7 @@ const builderContentPartToMitosisComponent = (
           ...state,
           ...mapBuilderContentStateToMitosisState(builderContent.data?.state || {}),
         };
-
+  extractMitosisStateFromBuilderState(mitosisState, builderContent.data?.state);
   const componentJson = createMitosisComponent({
     meta: {
       useMetadata: {
