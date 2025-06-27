@@ -83,31 +83,6 @@ describe('Unpaired Surrogates', () => {
       },
     };
 
-    const el = {
-      '@type': '@builder.io/mitosis/node' as const,
-      bindings: {},
-      blocksSlots: {
-        items: [
-          {
-            '@type': '@builder.io/mitosis/node' as const,
-            bindings: {},
-            children: [],
-            meta: {},
-            name: 'br',
-            properties: {},
-            scope: {},
-            slots: {},
-          },
-        ],
-      },
-      children: [],
-      meta: {},
-      name: 'Text123',
-      properties: {},
-      scope: {},
-      slots: {},
-    };
-
     // Convert Builder JSON to Mitosis JSON
     const mitosisCmp = builderContentToMitosisComponent(builderContent);
     expect(mitosisCmp.children[0].name).toBe('Text123');
