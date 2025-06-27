@@ -571,8 +571,11 @@ export const components: CompileAwayComponentsMap = {
       delete node.bindings.text;
     }
 
-    const hasBindings = Object.keys(node.bindings).length > 0;
-    const hasProperties = Object.keys(node.properties).length > 0;
+    const { _text: propText, $tagName: nodeTagName, ...outerProps } = node.properties;
+    const { _text: bindingText, ...outerBindings } = node.bindings;
+
+    const hasBindings = Object.keys(outerProps).length > 0;
+    const hasProperties = Object.keys(outerBindings).length > 0;
     /**
      * If there are things we need to reflect on the text then we must
      * render a wrapper div so we can put it on that element.
@@ -585,26 +588,18 @@ export const components: CompileAwayComponentsMap = {
        * other bindings need to go on the wrapper div so they get generated.
        */
 
-      const { _text: propText, $tagName: nodeTagName, ...restOfProperties } = node.properties;
-      const { _text: bindingText, ...restOfBindings } = node.bindings;
-
       return createMitosisNode({
         name: 'div',
-        bindings: restOfBindings,
-        properties: restOfProperties,
+        bindings: outerBindings,
+        properties: outerProps,
         children: [
           createMitosisNode({
             ...node,
-            ...(propText && {
-              properties: {
-                _text: propText,
-              },
-            }),
-            ...(bindingText && {
-              bindings: {
-                _text: bindingText,
-              },
-            }),
+            properties: {
+              $tagName: nodeTagName,
+              ...(propText ? { _text: propText } : {}),
+            },
+            bindings: bindingText ? { _text: bindingText } : {},
             name: nodeTagName ?? 'div',
           }),
         ],
@@ -613,7 +608,7 @@ export const components: CompileAwayComponentsMap = {
 
     return createMitosisNode({
       ...node,
-      name: node.properties.$tagName ?? 'div',
+      name: nodeTagName ?? 'div',
     });
   },
 };
