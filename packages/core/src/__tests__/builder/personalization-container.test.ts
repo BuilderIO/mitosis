@@ -3,6 +3,10 @@ import { componentToMitosis } from '@/generators/mitosis';
 import { dedent } from '@/helpers/dedent';
 import { builderContentToMitosisComponent } from '@/parsers/builder';
 import { parseJsx } from '@/parsers/jsx';
+import {
+  compileAwayBuilderComponentsFromTree,
+  components as compileAwayComponents,
+} from '@/plugins/compile-away-builder-components';
 import { describe, test } from 'vitest';
 
 describe('Builder Personalization Container/Variants', () => {
@@ -52,6 +56,9 @@ describe('Builder Personalization Container/Variants', () => {
     expect(builderJson.data?.blocks?.[0]).toMatchSnapshot();
 
     const backToMitosis = builderContentToMitosisComponent(builderJson);
+
+    compileAwayBuilderComponentsFromTree(backToMitosis, compileAwayComponents);
+
     const mitosis = componentToMitosis({
       format: 'legacy',
     })({
@@ -131,6 +138,9 @@ describe('Builder Personalization Container/Variants', () => {
     const component = parseJsx(code);
     const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
+
+    compileAwayBuilderComponentsFromTree(backToMitosis, compileAwayComponents);
+
     const mitosis = componentToMitosis({
       format: 'legacy',
     })({

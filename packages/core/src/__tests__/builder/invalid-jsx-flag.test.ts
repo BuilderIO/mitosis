@@ -106,14 +106,15 @@ describe('Builder Invalid JSX Flag', () => {
         component: builderToMitosis,
       });
       expect(mitosis).toMatchInlineSnapshot(`
-        "export default function MyComponent(props) {
+        "import { Text } from \\"@components\\";
+
+        export default function MyComponent(props) {
           return (
-            <div
+            <Text
+              text=\\"Text\\"
               onClick={(event) => \`state. [INVALID CODE]\`}
               foo={\`bar +  [INVALID CODE]\`}
-            >
-              Text
-            </div>
+            />
           );
         }
         "
@@ -209,8 +210,10 @@ describe('Builder Invalid JSX Flag', () => {
         component: builderToMitosis,
       });
       expect(mitosis).toMatchInlineSnapshot(`
-        "export default function MyComponent(props) {
-          return <div foo={bar}>Text</div>;
+        "import { Text } from \\"@components\\";
+
+        export default function MyComponent(props) {
+          return <Text text=\\"Text\\" foo={bar} />;
         }
         "
       `);
@@ -290,15 +293,16 @@ describe('export default transpiling', () => {
       component: builderToMitosis,
     });
     expect(mitosis).toMatchInlineSnapshot(`
-      "export default function MyComponent(props) {
+      "import { Text } from \\"@components\\";
+
+      export default function MyComponent(props) {
         return (
-          <div
+          <Text
+            text=\\"Text\\"
             foo={function () {
               return bar;
             }}
-          >
-            Text
-          </div>
+          />
         );
       }
       "
