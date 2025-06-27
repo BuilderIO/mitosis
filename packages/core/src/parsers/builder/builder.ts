@@ -811,23 +811,9 @@ export const builderElementToMitosisNode = (
       if (!useKey.includes('.')) {
         let code = (blockBindings[key] as any).code || blockBindings[key];
         const verifyCode = verifyIsValid(code);
-        if (!verifyCode.valid) {
-          console.log(`Dropping binding "${key}" due to invalid code: ${code}`);
-        }
 
         if (verifyCode.valid) {
-          if (options.escapeInvalidCode) {
-            // When escapeInvalidCode is true, process the code first, then wrap in new Function()
-            let processedCode = processBoundLogic(code);
-            processedCode = processedCode.trim();
-            if (processedCode.startsWith('return ')) {
-              processedCode = processedCode.slice(7).trim();
-            }
-            processedCode = processedCode.replace(/^;+|;+$/g, '');
-            code = `new Function(\`return ${processedCode};\`)()`;
-          } else {
-            code = processBoundLogic(code);
-          }
+          code = processBoundLogic(code);
         } else {
           if (options.escapeInvalidCode) {
             code = '`' + code + ' [INVALID CODE]`';
@@ -1385,18 +1371,7 @@ function mapBuilderBindingsToMitosisBindingWithCode(
 
       const verifyCode = verifyIsValid(code);
       if (verifyCode.valid) {
-        if (options?.escapeInvalidCode) {
-          // When escapeInvalidCode is true, process the code first, then wrap in new Function()
-          let processedCode = processBoundLogic(code);
-          processedCode = processedCode.trim();
-          if (processedCode.startsWith('return ')) {
-            processedCode = processedCode.slice(7).trim();
-          }
-          processedCode = processedCode.replace(/^;+|;+$/g, '');
-          code = `new Function(\`return ${processedCode};\`)()`;
-        } else {
-          code = processBoundLogic(code);
-        }
+        code = processBoundLogic(code);
       } else {
         if (options?.escapeInvalidCode) {
           code = '`' + code + ' [INVALID CODE]`';
