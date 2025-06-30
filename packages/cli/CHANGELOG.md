@@ -1,5 +1,16 @@
 # @builder.io/mitosis-cli
 
+## 0.12.0
+
+### Minor Changes
+
+- 2bd0070: feat: Builder Text node is no longer stripped away by default when converting to Mitosis
+
+### Patch Changes
+
+- Updated dependencies [2bd0070]
+  - @builder.io/mitosis@0.12.0
+
 ## 0.11.6
 
 ### Patch Changes

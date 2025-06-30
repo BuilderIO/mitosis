@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- 2bd0070: feat: Builder Text node is no longer stripped away by default when converting to Mitosis
+
 ## 0.11.6
 
 ### Patch Changes
