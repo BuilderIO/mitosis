@@ -24,12 +24,10 @@ describe('Unpaired Surrogates', () => {
 
     const output = builderContentToMitosisComponent(builderContent);
     // Text should be cleaned of unpaired surrogates
-    expect(output.children[0].children[0].properties._text).toBe(
-      'Hello  World. Welcome to section',
-    );
+    expect(output.children[0].properties.text).toBe('Hello  World. Welcome to section');
     // Verify unpaired surrogates are removed
-    expect(output.children[0].children[0].properties._text).not.toContain('\uD800');
-    expect(output.children[0].children[0].properties._text).not.toContain('\uDFFF');
+    expect(output.children[0].properties.text).not.toContain('\uD800');
+    expect(output.children[0].properties.text).not.toContain('\uDFFF');
   });
 
   test('should handle builder component with/without a colon in the name', () => {
