@@ -560,6 +560,57 @@ export const components: CompileAwayComponentsMap = {
     });
     return wrapOutput(node, videoContainer, components);
   },
+  Text: (node: MitosisNode) => {
+    if (node.properties.text) {
+      node.properties._text = node.properties.text;
+      delete node.properties.text;
+    }
+
+    if (node.bindings.text) {
+      node.bindings._text = node.bindings.text;
+      delete node.bindings.text;
+    }
+
+    const { _text: propText, $tagName: nodeTagName, ...outerProps } = node.properties;
+    const { _text: bindingText, ...outerBindings } = node.bindings;
+
+    const hasBindings = Object.keys(outerProps).length > 0;
+    const hasProperties = Object.keys(outerBindings).length > 0;
+    /**
+     * If there are things we need to reflect on the text then we must
+     * render a wrapper div so we can put it on that element.
+     */
+    if (hasBindings || hasProperties) {
+      /**
+       * Text binding needs to be on the inner text node. Some generators
+       * will skip rendering other bindings if they see a _text binding,
+       * so the _text binding needs to go on the inner text node, and all
+       * other bindings need to go on the wrapper div so they get generated.
+       */
+
+      return createMitosisNode({
+        name: 'div',
+        bindings: outerBindings,
+        properties: outerProps,
+        children: [
+          createMitosisNode({
+            ...node,
+            properties: {
+              $tagName: nodeTagName,
+              ...(propText ? { _text: propText } : {}),
+            },
+            bindings: bindingText ? { _text: bindingText } : {},
+            name: nodeTagName ?? 'div',
+          }),
+        ],
+      });
+    }
+
+    return createMitosisNode({
+      ...node,
+      name: nodeTagName ?? 'div',
+    });
+  },
 };
 
 type CompileAwayBuilderComponentsOptions = {

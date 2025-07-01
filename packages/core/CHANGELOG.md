@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- 2bd0070: feat: Builder Text node is no longer stripped away by default when converting to Mitosis
+
+## 0.11.6
+
+### Patch Changes
+
+- 314b396: Builder: improve accuracy of invalid binding detection
+- f442a8c: fix: support for builder custom component with a colon in their name
+
 ## 0.11.5
 
 ### Patch Changes
