@@ -10,12 +10,12 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-basic-for-show-component\\",
   template: \`
     <main>
-      <ng-container *ngFor=\\"let person of names; index as i\\">
-        <div>{{i}} : {{person}}</div>
-      </ng-container>
-      <ng-container *ngFor=\\"let person of names\\">
-        <span>{{person}}</span>
-      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as i\\"
+        ><div>{{i}} : {{person}}</div></ng-container
+      >
+      <ng-container *ngFor=\\"let person of names\\"
+        ><span>{{person}}</span></ng-container
+      >
       <ng-container *ngFor=\\"let _ of names\\"><br /></ng-container>
       <ng-container
         *ngFor=\\"let _ of Array.from({
@@ -28,29 +28,26 @@ import { Component } from \\"@angular/core\\";
         *ngFor=\\"let _ of Array.from({
           length: 10
         })\\"
+        ><p>{{index}}</p></ng-container
       >
-        <p>{{index}}</p>
-      </ng-container>
-      <ng-container *ngFor=\\"let person of names; index as index\\">
-        <span>{{person}} {{index}}</span>
-      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as index\\"
+        ><span>{{person}} {{index}}</span></ng-container
+      >
       <ng-container
         *ngFor=\\"let person of Array.from({
           length: 10
         }); index as count\\"
+        ><span>{{person}} {{count}}</span></ng-container
       >
-        <span>{{person}} {{count}}</span>
-      </ng-container>
-      <ng-container *ngFor=\\"let person of names; index as i\\">
-        <span>{{person}} {{i}}</span>
-      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as i\\"
+        ><span>{{person}} {{i}}</span></ng-container
+      >
       <ng-container
         *ngFor=\\"let person of Array.from({
           length: 10
         }); index as index\\"
+        ><span>{{person}} {{index}}</span></ng-container
       >
-        <span>{{person}} {{index}}</span>
-      </ng-container>
     </main>
   \`,
 })
@@ -78,22 +75,22 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
   selector: \\"my-basic-ref-component\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"showInput\\">
-        <ng-container>
-          <input
+      <ng-container *ngIf=\\"showInput\\"
+        ><ng-container
+          ><input
             class=\\"input\\"
             #inputRef
             [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
             (change)=\\"name = $event.target.value\\"
           />
-          <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+          <label for=\\"cars\\" #inputNoArgRef> Choose a car: </label>
           <select name=\\"cars\\" id=\\"cars\\">
             <option value=\\"supra\\">GR Supra</option>
             <option value=\\"86\\">GR 86</option>
-          </select>
-        </ng-container>
-      </ng-container>
+          </select></ng-container
+        ></ng-container
+      >
 
       Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
       Component!
@@ -198,9 +195,9 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-basic-for-show-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let person of names\\">
-        <ng-container *ngIf=\\"person === name\\">
-          <input
+      <ng-container *ngFor=\\"let person of names\\"
+        ><ng-container *ngIf=\\"person === name\\"
+          ><input
             [attr.value]=\\"name\\"
             (change)=\\"
           name = $event.target.value + ' and ' + person;
@@ -209,8 +206,8 @@ import { Component } from \\"@angular/core\\";
 
           Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
           Solid, or Liquid!
-        </ng-container>
-      </ng-container>
+        </ng-container></ng-container
+      >
     </div>
   \`,
 })
@@ -284,9 +281,7 @@ import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-on-mount-update-component\\",
-  template: \`
-    <div>Hello {{name}}</div>
-  \`,
+  template: \` <div>Hello {{name}}</div> \`,
 })
 export default class MyBasicOnMountUpdateComponent {
   @Input() bye;
@@ -321,9 +316,7 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-outputs-component\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class MyBasicOutputsComponent {
   @Input() message;
@@ -362,9 +355,7 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-outputs-component\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class MyBasicOutputsComponent {
   @Input() message;
@@ -426,10 +417,9 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
   selector: \\"my-boolean-attribute\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"children\\">
-        <ng-content></ng-content>
-        {{type}}
-      </ng-container>
+      <ng-container *ngIf=\\"children\\"
+        ><ng-content></ng-content> {{type}}</ng-container
+      >
       <my-boolean-attribute-component
         [toggle]=\\"true\\"
       ></my-boolean-attribute-component>
@@ -516,9 +506,9 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-basic-for-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let person of names\\">
-        <ng-container>
-          <input
+      <ng-container *ngFor=\\"let person of names\\"
+        ><ng-container
+          ><input
             [attr.value]=\\"name\\"
             (change)=\\"
           name = $event.target.value + ' and ' + person;
@@ -527,8 +517,8 @@ import { Component } from \\"@angular/core\\";
 
           Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
           Solid, or Liquid!
-        </ng-container>
-      </ng-container>
+        </ng-container></ng-container
+      >
     </div>
   \`,
 })
@@ -562,22 +552,22 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
   selector: \\"my-basic-ref-component\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"showInput\\">
-        <ng-container>
-          <input
+      <ng-container *ngIf=\\"showInput\\"
+        ><ng-container
+          ><input
             class=\\"input\\"
             #inputRef
             [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
             (change)=\\"name = $event.target.value\\"
           />
-          <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+          <label for=\\"cars\\" #inputNoArgRef> Choose a car: </label>
           <select name=\\"cars\\" id=\\"cars\\">
             <option value=\\"supra\\">GR Supra</option>
             <option value=\\"86\\">GR 86</option>
-          </select>
-        </ng-container>
-      </ng-container>
+          </select></ng-container
+        ></ng-container
+      >
 
       Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
       Component!
@@ -712,18 +702,17 @@ import {
   selector: \\"button\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"link\\">
-        <a
+      <ng-container *ngIf=\\"link\\"
+        ><a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
           #elRef0
-        >
-          {{text}}
-        </a>
-      </ng-container>
-      <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" #elRef1>{{text}}</button>
-      </ng-container>
+          >{{text}}</a
+        ></ng-container
+      >
+      <ng-container *ngIf=\\"!link\\"
+        ><button type=\\"button\\" #elRef1>{{text}}</button></ng-container
+      >
     </div>
   \`,
 })
@@ -812,9 +801,11 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"column\\",
   template: \`
     <div class=\\"builder-columns div\\">
-      <ng-container *ngFor=\\"let column of columns; index as index\\">
-        <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
-      </ng-container>
+      <ng-container *ngFor=\\"let column of columns; index as index\\"
+        ><div class=\\"builder-column div-2\\">
+          {{column.content}} {{index}}
+        </div></ng-container
+      >
     </div>
   \`,
   styles: [
@@ -922,21 +913,20 @@ const defaultProps: any = {
 @Component({
   selector: \\"content-slot-jsx-code\\",
   template: \`
-    <ng-container *ngIf=\\"slotReference\\">
-      <div
+    <ng-container *ngIf=\\"slotReference\\"
+      ><div
         [attr.name]=\\"slotContent ? 'name1' : 'name2'\\"
         [attr.title]=\\"slotContent ? 'title1' : 'title2'\\"
         (click)=\\"show()\\"
         [class]=\\"cls\\"
         #elRef0
       >
-        <ng-container *ngIf=\\"showContent && slotContent\\">
-          <ng-content select=\\"[content]\\">{{content}}</ng-content>
-        </ng-container>
+        <ng-container *ngIf=\\"showContent && slotContent\\"
+          ><ng-content select=\\"[content]\\">{{content}}</ng-content></ng-container
+        >
         <div><hr /></div>
-        <div><ng-content></ng-content></div>
-      </div>
-    </ng-container>
+        <div><ng-content></ng-content></div></div
+    ></ng-container>
   \`,
 })
 export default class ContentSlotJsxCode {
@@ -1217,37 +1207,35 @@ import {
       (submit)=\\"onSubmit($event)\\"
       #elRef0
     >
-      <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
-        <ng-container
+      <ng-container *ngIf=\\"builderBlock && builderBlock.children\\"
+        ><ng-container
           *ngFor=\\"let block of builderBlock?.children; index as index; trackBy: trackByBlock0\\"
-        >
-          <builder-block-component
+          ><builder-block-component
             [block]=\\"block\\"
             [index]=\\"index\\"
-          ></builder-block-component>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf=\\"submissionState === 'error'\\">
-        <builder-blocks
+          ></builder-block-component></ng-container
+      ></ng-container>
+      <ng-container *ngIf=\\"submissionState === 'error'\\"
+        ><builder-blocks
           dataPath=\\"errorMessage\\"
           [blocks]=\\"errorMessage\\"
-        ></builder-blocks>
-      </ng-container>
-      <ng-container *ngIf=\\"submissionState === 'sending'\\">
-        <builder-blocks
+        ></builder-blocks
+      ></ng-container>
+      <ng-container *ngIf=\\"submissionState === 'sending'\\"
+        ><builder-blocks
           dataPath=\\"sendingMessage\\"
           [blocks]=\\"sendingMessage\\"
-        ></builder-blocks>
-      </ng-container>
+        ></builder-blocks
+      ></ng-container>
       <ng-container *ngIf=\\"submissionState === 'error' && responseData\\">
         <pre class=\\"builder-form-error-text pre\\">{{responseData | json}}</pre>
       </ng-container>
-      <ng-container *ngIf=\\"submissionState === 'success'\\">
-        <builder-blocks
+      <ng-container *ngIf=\\"submissionState === 'success'\\"
+        ><builder-blocks
           dataPath=\\"successMessage\\"
           [blocks]=\\"successMessage\\"
-        ></builder-blocks>
-      </ng-container>
+        ></builder-blocks
+      ></ng-container>
     </form>
   \`,
   styles: [
@@ -1577,9 +1565,9 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
   selector: \\"image\\",
   template: \`
     <div>
-      <picture #pictureRef>
-        <ng-container *ngIf=\\"!useLazyLoading() || load\\">
-          <img
+      <picture #pictureRef
+        ><ng-container *ngIf=\\"!useLazyLoading() || load\\"
+          ><img
             [attr.alt]=\\"altText\\"
             [attr.aria-role]=\\"altText ? 'presentation' : undefined\\"
             [class]=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
@@ -1587,10 +1575,9 @@ import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
             (load)=\\"setLoaded()\\"
             [attr.srcset]=\\"srcset\\"
             [attr.sizes]=\\"sizes\\"
-          />
-        </ng-container>
-        <source [attr.srcset]=\\"srcset\\" />
-      </picture>
+        /></ng-container>
+        <source [attr.srcset]=\\"srcset\\"
+      /></picture>
       <ng-content></ng-content>
     </div>
   \`,
@@ -1684,11 +1671,10 @@ import { Component } from \\"@angular/core\\";
   selector: \\"img-state-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let item of images; index as itemIndex\\">
-        <ng-container>
-          <img class=\\"custom-class\\" [attr.src]=\\"item\\" />
-        </ng-container>
-      </ng-container>
+      <ng-container *ngFor=\\"let item of images; index as itemIndex\\"
+        ><ng-container
+          ><img class=\\"custom-class\\" [attr.src]=\\"item\\" /></ng-container
+      ></ng-container>
     </div>
   \`,
 })
@@ -2109,18 +2095,16 @@ import {
 @Component({
   selector: \\"section-state-component\\",
   template: \`
-    <ng-container *ngIf=\\"max\\">
-      <ng-container *ngFor=\\"let item of items\\">
-        <section
+    <ng-container *ngIf=\\"max\\"
+      ><ng-container *ngFor=\\"let item of items\\"
+        ><section
           [ngStyle]=\\"{
           maxWidth: item + max
         }\\"
           #elRef0
         >
-          <ng-content></ng-content>
-        </section>
-      </ng-container>
-    </ng-container>
+          <ng-content></ng-content></section></ng-container
+    ></ng-container>
   \`,
 })
 export default class SectionStateComponent {
@@ -2213,11 +2197,11 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.name]=\\"name\\"
       #elRef0
     >
-      <ng-container *ngFor=\\"let option of options; index as index\\">
-        <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
+      <ng-container *ngFor=\\"let option of options; index as index\\"
+        ><option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
-        </option>
-      </ng-container>
+        </option></ng-container
+      >
     </select>
   \`,
 })
@@ -2327,9 +2311,9 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
   selector: \\"slot-code\\",
   template: \`
     <div>
-      <content-slot-code>
-        <ng-content><div>Hello</div></ng-content>
-      </content-slot-code>
+      <content-slot-code
+        ><ng-content><div>Hello</div></ng-content></content-slot-code
+      >
     </div>
   \`,
 })
@@ -2412,8 +2396,8 @@ import { kebabCase, snakeCase } from \\"lodash\\";
   template: \`
     <div [attr.data-user]=\\"name\\">
       <button (click)=\\"showReviewPrompt = true\\">Write a review</button>
-      <ng-container *ngIf=\\"showReviewPrompt || 'asdf'\\">
-        <input placeholder=\\"Email\\" />
+      <ng-container *ngIf=\\"showReviewPrompt || 'asdf'\\"
+        ><input placeholder=\\"Email\\" />
         <input placeholder=\\"Title\\" class=\\"input\\" />
         <textarea
           placeholder=\\"How was your experience?\\"
@@ -2427,20 +2411,19 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         \\"
         >
           Submit
-        </button>
-      </ng-container>
+        </button></ng-container
+      >
       <ng-container
         *ngFor=\\"let review of reviews; index as index; trackBy: trackByReview0\\"
-      >
-        <div class=\\"review\\">
+        ><div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
             <div>N: {{index}}</div>
             <div>{{review.author}}</div>
             <div>{{review.reviewMessage}}</div>
           </div>
-        </div>
-      </ng-container>
+        </div></ng-container
+      >
     </div>
   \`,
   styles: [
@@ -2520,9 +2503,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"string-literal-store\\",
-  template: \`
-    <ng-container>{{foo}}</ng-container>
-  \`,
+  template: \` <ng-container>{{foo}}</ng-container> \`,
 })
 export default class StringLiteralStore {
   foo = true;
@@ -2546,9 +2527,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <ng-container>{{foo(errors)}}</ng-container>
-  \`,
+  template: \` <ng-container>{{foo(errors)}}</ng-container> \`,
 })
 export default class MyComponent {
   errors = {};
@@ -2574,9 +2553,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <ng-container>{{bar()}}</ng-container>
-  \`,
+  template: \` <ng-container>{{bar()}}</ng-container> \`,
 })
 export default class MyComponent {
   foo = false;
@@ -2608,9 +2585,7 @@ import {
 
 @Component({
   selector: \\"submit-button\\",
-  template: \`
-    <button type=\\"submit\\" #elRef0>{{text}}</button>
-  \`,
+  template: \` <button type=\\"submit\\" #elRef0>{{text}}</button> \`,
 })
 export default class SubmitButton {
   @Input() attributes;
@@ -2818,9 +2793,7 @@ import { Output, EventEmitter, Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"use-value-and-fn-from-store\\",
-  template: \`
-    <div>Test</div>
-  \`,
+  template: \` <div>Test</div> \`,
 })
 export default class UseValueAndFnFromStore {
   @Output() onChange = new EventEmitter<any>();
@@ -3102,9 +3075,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <div>Hello {{name}}</div>
-  \`,
+  template: \` <div>Hello {{name}}</div> \`,
 })
 export default class MyComponent {
   name = \\"steve\\";
@@ -3137,24 +3108,21 @@ import { Component } from \\"@angular/core\\";
     <div>
       <ng-container
         *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
+        ><ng-container
+          ><div>{{option}}</div></ng-container
+        ></ng-container
       >
-        <ng-container>
-          <div>{{option}}</div>
-        </ng-container>
-      </ng-container>
       <ng-container
         *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption1\\"
+        ><ng-container
+          ><div>{{option}}</div></ng-container
+        ></ng-container
       >
-        <ng-container>
-          <div>{{option}}</div>
-        </ng-container>
-      </ng-container>
       <select>
         <ng-container
           *ngFor=\\"let option of ['d', 'e', 'f']; trackBy: trackByOption2\\"
+          ><option [attr.value]=\\"option\\">{{option}}</option></ng-container
         >
-          <option [attr.value]=\\"option\\">{{option}}</option>
-        </ng-container>
       </select>
     </div>
   \`,
@@ -3204,7 +3172,8 @@ import {
               inputs: {  };
               content: myContent;
               \\"
-    ></ng-container>
+    >
+    </ng-container>
   \`,
 })
 export default class MyBasicForNoTagRefComponent {
@@ -3335,9 +3304,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-on-update-return-component\\",
-  template: \`
-    <div>Hello! {{name}}</div>
-  \`,
+  template: \` <div>Hello! {{name}}</div> \`,
 })
 export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
@@ -3384,9 +3351,7 @@ import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
 
 @Component({
   selector: \\"basic-ref-attribute-passing-component\\",
-  template: \`
-    <button #buttonRef #_root>Attribute Passing</button>
-  \`,
+  template: \` <button #buttonRef #_root>Attribute Passing</button> \`,
 })
 export default class BasicRefAttributePassingComponent {
   @ViewChild(\\"buttonRef\\") buttonRef;
@@ -3429,6 +3394,12 @@ export default class BasicRefAttributePassingComponent {
     }
   }
 
+  ngOnInit() {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
+  }
+
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root?.nativeElement;
     this.enableAttributePassing(
@@ -3460,9 +3431,7 @@ import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
 
 @Component({
   selector: \\"basic-ref-attribute-passing-custom-ref-component\\",
-  template: \`
-    <div><button #buttonRef>Attribute Passing</button></div>
-  \`,
+  template: \` <div><button #buttonRef>Attribute Passing</button></div> \`,
 })
 export default class BasicRefAttributePassingCustomRefComponent {
   @ViewChild(\\"buttonRef\\") buttonRef;
@@ -3535,9 +3504,7 @@ import { Component, Input, ChangeDetectionStrategy } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <div>{{count}}</div>
-  \`,
+  template: \` <div>{{count}}</div> \`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class MyComponent {
@@ -3766,9 +3733,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"complex-meta-raw\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class ComplexMetaRaw {}
 
@@ -3793,9 +3758,9 @@ import Context2 from \\"@dummy/2\\";
 @Component({
   selector: \\"component-with-context\\",
   template: \`
-    <ng-container>
-      <ng-container>{{foo.value}}</ng-container>
-    </ng-container>
+    <ng-container
+      ><ng-container>{{foo.value}}</ng-container></ng-container
+    >
   \`,
 })
 export default class ComponentWithContext {
@@ -3825,10 +3790,10 @@ import Context2 from \\"@dummy/2\\";
 @Component({
   selector: \\"component-with-context\\",
   template: \`
-    <ng-container>
-      <ng-container>{{foo.value}}</ng-container>
-      <div>other</div>
-    </ng-container>
+    <ng-container
+      ><ng-container>{{foo.value}}</ng-container>
+      <div>other</div></ng-container
+    >
   \`,
 })
 export default class ComponentWithContext {
@@ -3854,9 +3819,7 @@ import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"render-content\\",
-  template: \`
-    <div>setting context</div>
-  \`,
+  template: \` <div>setting context</div> \`,
 })
 export default class RenderContent {
   @Input() content;
@@ -3885,9 +3848,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"not-my-component\\",
-  template: \`
-    <span>My selector shouldn't be my-component!</span>
-  \`,
+  template: \` <span>My selector shouldn't be my-component!</span> \`,
 })
 export default class MyComponent {}
 
@@ -3927,20 +3888,19 @@ const defaultProps: any = {
   selector: \\"button\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"link\\">
-        <a
+      <ng-container *ngIf=\\"link\\"
+        ><a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
           #elRef0
-        >
-          {{text}}
-        </a>
-      </ng-container>
-      <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" (click)=\\"this.onClick.emit()\\" #elRef1>
+          >{{text}}</a
+        ></ng-container
+      >
+      <ng-container *ngIf=\\"!link\\"
+        ><button type=\\"button\\" (click)=\\"this.onClick.emit()\\" #elRef1>
           {{buttonText}}
-        </button>
-      </ng-container>
+        </button></ng-container
+      >
     </div>
   \`,
 })
@@ -4046,20 +4006,19 @@ const defaultProps: any = {
   selector: \\"button\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"link\\">
-        <a
+      <ng-container *ngIf=\\"link\\"
+        ><a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
           #elRef0
-        >
+          >{{text}}</a
+        ></ng-container
+      >
+      <ng-container *ngIf=\\"!link\\"
+        ><button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\" #elRef1>
           {{text}}
-        </a>
-      </ng-container>
-      <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\" #elRef1>
-          {{text}}
-        </button>
-      </ng-container>
+        </button></ng-container
+      >
     </div>
   \`,
 })
@@ -4151,9 +4110,7 @@ const DEFAULT_VALUES = {
 
 @Component({
   selector: \\"component-with-types\\",
-  template: \`
-    <div>Hello {{name || DEFAULT_VALUES.name}}</div>
-  \`,
+  template: \` <div>Hello {{name || DEFAULT_VALUES.name}}</div> \`,
 })
 export default class ComponentWithTypes {
   DEFAULT_VALUES = DEFAULT_VALUES;
@@ -4189,15 +4146,16 @@ import {
     <ng-template #objTemplate>
       hello
 
-      <ng-content></ng-content>
-    </ng-template>
+      <ng-content></ng-content
+    ></ng-template>
     <ng-container
       *ngComponentOutlet=\\"
               obj.Component;
               inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, something: something };
               content: myContent;
               \\"
-    ></ng-container>
+    >
+    </ng-container>
   \`,
 })
 export default class MyComponent {
@@ -4250,14 +4208,15 @@ import {
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <ng-template #componentTemplate>hello</ng-template>
+    <ng-template #componentTemplate> hello </ng-template>
     <ng-container
       *ngComponentOutlet=\\"
               Component;
               inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, something: something };
               content: myContent;
               \\"
-    ></ng-container>
+    >
+    </ng-container>
   \`,
 })
 export default class MyComponent {
@@ -4340,9 +4299,7 @@ import { Output, EventEmitter, Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"event-props-component\\",
-  template: \`
-    <button (click)=\\"handleClick()\\">Test</button>
-  \`,
+  template: \` <button (click)=\\"handleClick()\\">Test</button> \`,
 })
 export default class EventPropsComponent {
   @Output() onGetVoid = new EventEmitter<any>();
@@ -4381,9 +4338,7 @@ import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <div>{{refToUse}}</div>
-  \`,
+  template: \` <div>{{refToUse}}</div> \`,
 })
 export default class MyComponent {
   @Input() componentRef;
@@ -4536,9 +4491,7 @@ import RenderBlock from \\"./builder-render-block.raw\\";
 
 @Component({
   selector: \\"render-content\\",
-  template: \`
-    <render-block></render-block>
-  \`,
+  template: \` <render-block></render-block> \`,
 })
 export default class RenderContent {
   @Input() renderContentProps;
@@ -4568,9 +4521,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-import-component\\",
-  template: \`
-    <div>Testing which imports get excluded!</div>
-  \`,
+  template: \` <div>Testing which imports get excluded!</div> \`,
 })
 export default class MyImportComponent {}
 
@@ -4625,9 +4576,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"multiple-on-update\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class MultipleOnUpdate {
   ngOnChanges(changes) {
@@ -4655,9 +4604,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"multiple-on-update-with-deps\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class MultipleOnUpdateWithDeps {
   a = \\"a\\";
@@ -4698,9 +4645,7 @@ import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component\\",
-  template: \`
-    <input #elRef0 />
-  \`,
+  template: \` <input #elRef0 /> \`,
 })
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0;
@@ -4812,17 +4757,15 @@ import { Component, Input } from \\"@angular/core\\";
 @Component({
   selector: \\"nested-show\\",
   template: \`
-    <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngIf=\\"!conditionB\\">
-        <div>if condition A and condition B</div>
-      </ng-container>
-      <ng-container *ngIf=\\"!(!conditionB)\\">
-        <div>else-condition-B</div>
-      </ng-container>
-    </ng-container>
-    <ng-container *ngIf=\\"!(conditionA)\\">
-      <div>else-condition-A</div>
-    </ng-container>
+    <ng-container *ngIf=\\"conditionA\\"
+      ><ng-container *ngIf=\\"!conditionB\\"
+        ><div>if condition A and condition B</div></ng-container
+      ><ng-container *ngIf=\\"!(!conditionB)\\"
+        ><div>else-condition-B</div></ng-container
+      ></ng-container
+    ><ng-container *ngIf=\\"!(conditionA)\\"
+      ><div>else-condition-A</div></ng-container
+    >
   \`,
 })
 export default class NestedShow {
@@ -4847,9 +4790,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"nested-styles\\",
-  template: \`
-    <div class=\\"div\\">Hello world</div>
-  \`,
+  template: \` <div class=\\"div\\">Hello world</div> \`,
   styles: [
     \`
       .div {
@@ -4957,9 +4898,7 @@ import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
 
 @Component({
   selector: \\"embed\\",
-  template: \`
-    <div class=\\"builder-embed\\" #elem><div>Test</div></div>
-  \`,
+  template: \` <div class=\\"builder-embed\\" #elem><div>Test</div></div> \`,
 })
 export default class Embed {
   @ViewChild(\\"elem\\") elem;
@@ -4994,9 +4933,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-init\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class OnInit {
   ngOnInit() {
@@ -5029,9 +4966,7 @@ export const defaultValues = {
 
 @Component({
   selector: \\"on-init\\",
-  template: \`
-    <div>Default name defined by parent {{name}}</div>
-  \`,
+  template: \` <div>Default name defined by parent {{name}}</div> \`,
 })
 export default class OnInit {
   @Input() name;
@@ -5061,9 +4996,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-init-plain\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class OnInitPlain {
   ngOnInit() {
@@ -5088,9 +5021,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"comp\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class Comp {
   ngOnInit() {
@@ -5121,9 +5052,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"comp\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class Comp {
   ngOnInit() {
@@ -5161,9 +5090,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-update\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class OnUpdate {
   ngOnChanges(changes) {
@@ -5190,9 +5117,7 @@ import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-update-with-deps\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class OnUpdateWithDeps {
   @Input() size;
@@ -5270,9 +5195,7 @@ export function run(value) {}
 
 @Component({
   selector: \\"my-basic-component\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class MyBasicComponent {}
 
@@ -5307,6 +5230,36 @@ export default class MyBasicComponent {
   exports: [MyBasicComponent],
 })
 export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Javascript Test > prettierInline 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"prettier-inline\\",
+  template: \`
+    <div>
+      <span class=\\"dolorum atque aspernatur\\"
+        >Est molestiae sunt facilis qui rem.</span
+      >
+      <div class=\\"voluptatem architecto at\\">
+        Architecto rerum architecto incidunt sint.
+      </div>
+    </div>
+  \`,
+})
+export default class PrettierInline {}
+
+@NgModule({
+  declarations: [PrettierInline],
+  imports: [CommonModule],
+  exports: [PrettierInline],
+})
+export class PrettierInlineModule {}
 "
 `;
 
@@ -5398,9 +5351,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-update\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class OnUpdate {
   foo = function foo(params) {};
@@ -5457,45 +5408,44 @@ import { isEmptyHtmlElement } from \\"./render-block.helpers.js\\";
   selector: \\"render-block\\",
   template: \`
     <ng-template #rendercomponenttagTemplate></ng-template>
-    <ng-container *ngIf=\\"shouldWrap\\">
-      <ng-container *ngIf=\\"isEmptyHtmlElement(tag)\\">
-        <ng-container
+    <ng-container *ngIf=\\"shouldWrap\\"
+      ><ng-container *ngIf=\\"isEmptyHtmlElement(tag)\\"
+        ><ng-container
           *ngComponentOutlet=\\"
               tag;
               inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
-        ></ng-container>
-      </ng-container>
-      <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
-        <ng-container
-          *ngFor=\\"let data of repeatItemData; index as index; trackBy: trackByData0\\"
         >
-          <render-repeated-block
+        </ng-container
+      ></ng-container>
+      <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\"
+        ><ng-container
+          *ngFor=\\"let data of repeatItemData; index as index; trackBy: trackByData0\\"
+          ><render-repeated-block
             [repeatContext]=\\"data.context\\"
             [block]=\\"data.block\\"
-          ></render-repeated-block>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\">
-        <ng-container
+          ></render-repeated-block></ng-container
+      ></ng-container>
+      <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\"
+        ><ng-container
           *ngComponentOutlet=\\"
               tag;
               inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
-        ></ng-container>
-      </ng-container>
-    </ng-container>
-    <ng-container *ngIf=\\"!(shouldWrap)\\">
-      <ng-container
+        >
+        </ng-container></ng-container></ng-container
+    ><ng-container *ngIf=\\"!(shouldWrap)\\"
+      ><ng-container
         *ngComponentOutlet=\\"
               renderComponentTag;
               inputs: { renderComponentProps: renderComponentProps };
               content: myContent;
               \\"
-      ></ng-container>
-    </ng-container>
+      >
+      </ng-container
+    ></ng-container>
   \`,
 })
 export default class RenderBlock {
@@ -5788,20 +5738,19 @@ import {
 @Component({
   selector: \\"button\\",
   template: \`
-    <ng-container>
-      <ng-container *ngIf=\\"link\\">
-        <a
+    <ng-container
+      ><ng-container *ngIf=\\"link\\"
+        ><a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
           #elRef0
-        >
-          {{text}}
-        </a>
-      </ng-container>
-      <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" #elRef1>{{text}}</button>
-      </ng-container>
-    </ng-container>
+          >{{text}}</a
+        ></ng-container
+      >
+      <ng-container *ngIf=\\"!link\\"
+        ><button type=\\"button\\" #elRef1>{{text}}</button></ng-container
+      ></ng-container
+    >
   \`,
 })
 export default class Button {
@@ -5888,8 +5837,8 @@ import { Component, Input } from \\"@angular/core\\";
 @Component({
   selector: \\"render-styles\\",
   template: \`
-    <ng-container *ngIf=\\"foo === 'bar'\\"><div>Bar</div></ng-container>
-    <ng-container *ngIf=\\"!(foo === 'bar')\\"><div>Foo</div></ng-container>
+    <ng-container *ngIf=\\"foo === 'bar'\\"><div>Bar</div></ng-container
+    ><ng-container *ngIf=\\"!(foo === 'bar')\\"><div>Foo</div></ng-container>
   \`,
 })
 export default class RenderStyles {
@@ -5918,9 +5867,7 @@ import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <div [innerHTML]=\\"html\\"></div>
-  \`,
+  template: \` <div [innerHTML]=\\"html\\"></div> \`,
 })
 export default class MyComponent {
   @Input() html;
@@ -5946,9 +5893,9 @@ import { Component, Input } from \\"@angular/core\\";
   template: \`
     <div>
       {{name}}
-      <ng-container *ngIf=\\"name === 'Batman'\\">
-        <my-component name=\\"Bruce Wayne\\"></my-component>
-      </ng-container>
+      <ng-container *ngIf=\\"name === 'Batman'\\"
+        ><my-component name=\\"Bruce Wayne\\"></my-component
+      ></ng-container>
     </div>
   \`,
 })
@@ -5977,9 +5924,11 @@ import { Component, Input } from \\"@angular/core\\";
     <div>
       {{name}}
       <ng-content></ng-content>
-      <ng-container *ngIf=\\"name === 'Batman'\\">
-        <my-component name=\\"Bruce\\"><div>Wayne</div></my-component>
-      </ng-container>
+      <ng-container *ngIf=\\"name === 'Batman'\\"
+        ><my-component name=\\"Bruce\\"
+          ><div>Wayne</div></my-component
+        ></ng-container
+      >
     </div>
   \`,
 })
@@ -6004,9 +5953,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"set-state\\",
-  template: \`
-    <div><button (click)=\\"someFn()\\">Click me</button></div>
-  \`,
+  template: \` <div><button (click)=\\"someFn()\\">Click me</button></div> \`,
 })
 export default class SetState {
   n = [\\"123\\"];
@@ -6034,51 +5981,54 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"show-with-other-values\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"conditionA\\">Content0</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">Content0</ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
       <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
-      <ng-container *ngIf=\\"conditionA\\"></ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">{{undefined}}</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">{{undefined}}</ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">ContentB</ng-container>
       <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
-      <ng-container *ngIf=\\"conditionA\\"></ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">ContentC</ng-container>
       <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
-      <ng-container *ngIf=\\"conditionA\\"></ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">ContentD</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">hello</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">ContentE</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">123</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">ContentF</ng-container>
-      <ng-container *ngIf=\\"conditionA === 'Default'\\">4mb</ng-container>
-      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
-        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
-        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
-      </ng-container>
-      <ng-container *ngIf=\\"conditionA === 'Default'\\">
-        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
-        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
-      </ng-container>
-      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
-      <ng-container *ngIf=\\"conditionA === 'Default'\\">
-        <ng-container *ngIf=\\"conditionB === 'Complete'\\">
-          <div>complete</div>
-        </ng-container>
-        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
-      </ng-container>
-      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
-        <ng-container *ngIf=\\"conditionC === 'Complete'\\">dff</ng-container>
-        <ng-container *ngIf=\\"!(conditionC === 'Complete')\\">
-          <div>complete else</div>
-        </ng-container>
-      </ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">hello</ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">123</ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">4mb</ng-container
+      ><ng-container *ngIf=\\"!(conditionA === 'Default')\\"
+        ><ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container
+        ><ng-container *ngIf=\\"!(conditionB === 'Complete')\\"
+          >9mb</ng-container
+        ></ng-container
+      >
+      <ng-container *ngIf=\\"conditionA === 'Default'\\"
+        ><ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container
+        ><ng-container *ngIf=\\"!(conditionB === 'Complete')\\"
+          >9mb</ng-container
+        ></ng-container
+      ><ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\"
+        ><ng-container *ngIf=\\"conditionB === 'Complete'\\"
+          ><div>complete</div></ng-container
+        ><ng-container *ngIf=\\"!(conditionB === 'Complete')\\"
+          >9mb</ng-container
+        ></ng-container
+      ><ng-container *ngIf=\\"!(conditionA === 'Default')\\"
+        ><ng-container *ngIf=\\"conditionC === 'Complete'\\">dff</ng-container
+        ><ng-container *ngIf=\\"!(conditionC === 'Complete')\\"
+          ><div>complete else</div></ng-container
+        ></ng-container
+      >
     </div>
   \`,
 })
@@ -6106,16 +6056,14 @@ import { Component, Input } from \\"@angular/core\\";
 @Component({
   selector: \\"nested-show\\",
   template: \`
-    <ng-container *ngIf=\\"conditionA\\">
-      <ng-container
+    <ng-container *ngIf=\\"conditionA\\"
+      ><ng-container
         *ngFor=\\"let item of items; index as idx; trackBy: trackByItem0\\"
-      >
-        <div>{{item}}</div>
-      </ng-container>
-    </ng-container>
-    <ng-container *ngIf=\\"!(conditionA)\\">
-      <div>else-condition-A</div>
-    </ng-container>
+        ><div>{{item}}</div></ng-container
+      ></ng-container
+    ><ng-container *ngIf=\\"!(conditionA)\\"
+      ><div>else-condition-A</div></ng-container
+    >
   \`,
 })
 export default class NestedShow {
@@ -6146,15 +6094,15 @@ import { Component, Input } from \\"@angular/core\\";
   selector: \\"show-with-other-values\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"> ContentA </ng-container>
+      <ng-container *ngIf=\\"conditionA\\"> ContentB </ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"> ContentC </ng-container>
+      <ng-container *ngIf=\\"conditionA\\"> ContentD </ng-container>
+      <ng-container *ngIf=\\"conditionA\\"> ContentE </ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"> ContentF </ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
     </div>
   \`,
 })
@@ -6180,10 +6128,10 @@ import { Component, Input } from \\"@angular/core\\";
 @Component({
   selector: \\"show-root-text\\",
   template: \`
-    <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
-    <ng-container *ngIf=\\"!(conditionA)\\">
-      <div>else-condition-A</div>
-    </ng-container>
+    <ng-container *ngIf=\\"conditionA\\"> ContentA </ng-container
+    ><ng-container *ngIf=\\"!(conditionA)\\"
+      ><div>else-condition-A</div></ng-container
+    >
   \`,
 })
 export default class ShowRootText {
@@ -6280,9 +6228,7 @@ import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component\\",
-  template: \`
-    <div class=\\"test div\\">{{id}} {{foo.value.bar.baz}}</div>
-  \`,
+  template: \` <div class=\\"test div\\">{{id}} {{foo.value.bar.baz}}</div> \`,
   styles: [
     \`
       .div {
@@ -6320,9 +6266,7 @@ import { Component, ViewChild, ElementRef, Renderer2 } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component\\",
-  template: \`
-    <input #elRef0 />
-  \`,
+  template: \` <input #elRef0 /> \`,
 })
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0;
@@ -6401,9 +6345,7 @@ import {
 
 @Component({
   selector: \\"my-basic-component\\",
-  template: \`
-    <input #elRef0 />
-  \`,
+  template: \` <input #elRef0 /> \`,
 })
 export default class MyBasicComponent {
   @Input() nested;
@@ -6478,9 +6420,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component\\",
-  template: \`
-    <input />
-  \`,
+  template: \` <input /> \`,
 })
 export default class MyBasicComponent {}
 
@@ -6554,9 +6494,8 @@ import { Component, Input } from \\"@angular/core\\";
     <Comp
       [val]=\\"useObjectWrapper( val
         )\\"
+      >{{val}}</Comp
     >
-      {{val}}
-    </Comp>
   \`,
 })
 export default class MyComponent {
@@ -6594,9 +6533,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"string-literal-store\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class StringLiteralStore {
   arrowFunction = async function arrowFunction() {
@@ -6627,9 +6564,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"string-literal-store\\",
-  template: \`
-    <div>{{foo}}</div>
-  \`,
+  template: \` <div>{{foo}}</div> \`,
 })
 export default class StringLiteralStore {
   foo = 123;
@@ -6790,9 +6725,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"sub-component\\",
-  template: \`
-    <foo></foo>
-  \`,
+  template: \` <foo></foo> \`,
 })
 export default class SubComponent {}
 
@@ -6859,12 +6792,12 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem0\\">
-        <div>{{item}}</div>
-      </ng-container>
-      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem1\\">
-        <div>{{item}}</div>
-      </ng-container>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem0\\"
+        ><div>{{item}}</div></ng-container
+      >
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem1\\"
+        ><div>{{item}}</div></ng-container
+      >
     </div>
   \`,
 })
@@ -6895,9 +6828,7 @@ import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"type-dependency\\",
-  template: \`
-    <div>{{foo}}</div>
-  \`,
+  template: \` <div>{{foo}}</div> \`,
 })
 export default class TypeDependency {
   @Input() foo;
@@ -6920,9 +6851,7 @@ import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"type-external-props\\",
-  template: \`
-    <div>Hello {{name}} !</div>
-  \`,
+  template: \` <div>Hello {{name}} !</div> \`,
 })
 export default class TypeExternalProps {
   @Input() name;
@@ -6945,9 +6874,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"type-external-store\\",
-  template: \`
-    <div>Hello {{_name}} !</div>
-  \`,
+  template: \` <div>Hello {{_name}} !</div> \`,
 })
 export default class TypeExternalStore {
   _name = \\"test\\";
@@ -6970,9 +6897,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"type-getter-store\\",
-  template: \`
-    <div>Hello {{name}} !</div>
-  \`,
+  template: \` <div>Hello {{name}} !</div> \`,
 })
 export default class TypeGetterStore {
   name = \\"test\\";
@@ -7005,9 +6930,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <button type=\\"button\\">Button</button>
-  \`,
+  template: \` <button type=\\"button\\">Button</button> \`,
   styles: [
     \`
       button {
@@ -7038,9 +6961,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <button type=\\"button\\" class=\\"button\\">Button</button>
-  \`,
+  template: \` <button type=\\"button\\" class=\\"button\\">Button</button> \`,
   styles: [
     \`
       button {
@@ -7074,9 +6995,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <button type=\\"button\\">Button</button>
-  \`,
+  template: \` <button type=\\"button\\">Button</button> \`,
   styles: [
     \`
       button {
@@ -7177,9 +7096,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"use-target-component\\",
-  template: \`
-    <div>{{name}}</div>
-  \`,
+  template: \` <div>{{name}}</div> \`,
 })
 export default class UseTargetComponent {
   get name() {
@@ -7217,11 +7134,11 @@ import { register } from \\"swiper/element/bundle\\";
 @Component({
   selector: \\"my-basic-web-component\\",
   template: \`
-    <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
-      <swiper-slide>Slide 1</swiper-slide>
+    <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\"
+      ><swiper-slide>Slide 1</swiper-slide>
       <swiper-slide>Slide 2</swiper-slide>
-      <swiper-slide>Slide 3</swiper-slide>
-    </swiper-container>
+      <swiper-slide>Slide 3</swiper-slide></swiper-container
+    >
   \`,
 })
 export default class MyBasicWebComponent {
@@ -7274,12 +7191,12 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-basic-for-show-component\\",
   template: \`
     <main>
-      <ng-container *ngFor=\\"let person of names; index as i\\">
-        <div>{{i}} : {{person}}</div>
-      </ng-container>
-      <ng-container *ngFor=\\"let person of names\\">
-        <span>{{person}}</span>
-      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as i\\"
+        ><div>{{i}} : {{person}}</div></ng-container
+      >
+      <ng-container *ngFor=\\"let person of names\\"
+        ><span>{{person}}</span></ng-container
+      >
       <ng-container *ngFor=\\"let _ of names\\"><br /></ng-container>
       <ng-container
         *ngFor=\\"let _ of Array.from({
@@ -7292,29 +7209,26 @@ import { Component } from \\"@angular/core\\";
         *ngFor=\\"let _ of Array.from({
           length: 10
         })\\"
+        ><p>{{index}}</p></ng-container
       >
-        <p>{{index}}</p>
-      </ng-container>
-      <ng-container *ngFor=\\"let person of names; index as index\\">
-        <span>{{person}} {{index}}</span>
-      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as index\\"
+        ><span>{{person}} {{index}}</span></ng-container
+      >
       <ng-container
         *ngFor=\\"let person of Array.from({
           length: 10
         }); index as count\\"
+        ><span>{{person}} {{count}}</span></ng-container
       >
-        <span>{{person}} {{count}}</span>
-      </ng-container>
-      <ng-container *ngFor=\\"let person of names; index as i\\">
-        <span>{{person}} {{i}}</span>
-      </ng-container>
+      <ng-container *ngFor=\\"let person of names; index as i\\"
+        ><span>{{person}} {{i}}</span></ng-container
+      >
       <ng-container
         *ngFor=\\"let person of Array.from({
           length: 10
         }); index as index\\"
+        ><span>{{person}} {{index}}</span></ng-container
       >
-        <span>{{person}} {{index}}</span>
-      </ng-container>
     </main>
   \`,
 })
@@ -7352,22 +7266,22 @@ export interface Props {
   selector: \\"my-basic-ref-component\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"showInput\\">
-        <ng-container>
-          <input
+      <ng-container *ngIf=\\"showInput\\"
+        ><ng-container
+          ><input
             class=\\"input\\"
             #inputRef
             [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
             (change)=\\"name = $event.target.value\\"
           />
-          <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+          <label for=\\"cars\\" #inputNoArgRef> Choose a car: </label>
           <select name=\\"cars\\" id=\\"cars\\">
             <option value=\\"supra\\">GR Supra</option>
             <option value=\\"86\\">GR 86</option>
-          </select>
-        </ng-container>
-      </ng-container>
+          </select></ng-container
+        ></ng-container
+      >
 
       Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
       Component!
@@ -7476,9 +7390,9 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-basic-for-show-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let person of names\\">
-        <ng-container *ngIf=\\"person === name\\">
-          <input
+      <ng-container *ngFor=\\"let person of names\\"
+        ><ng-container *ngIf=\\"person === name\\"
+          ><input
             [attr.value]=\\"name\\"
             (change)=\\"
           name = $event.target.value + ' and ' + person;
@@ -7487,8 +7401,8 @@ import { Component } from \\"@angular/core\\";
 
           Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
           Solid, or Liquid!
-        </ng-container>
-      </ng-container>
+        </ng-container></ng-container
+      >
     </div>
   \`,
 })
@@ -7567,9 +7481,7 @@ export interface Props {
 
 @Component({
   selector: \\"my-basic-on-mount-update-component\\",
-  template: \`
-    <div>Hello {{name}}</div>
-  \`,
+  template: \` <div>Hello {{name}}</div> \`,
 })
 export default class MyBasicOnMountUpdateComponent {
   @Input() bye!: Props[\\"bye\\"];
@@ -7604,9 +7516,7 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-outputs-component\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class MyBasicOutputsComponent {
   @Input() message!: any;
@@ -7645,9 +7555,7 @@ import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-outputs-component\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class MyBasicOutputsComponent {
   @Input() message!: any;
@@ -7714,10 +7622,9 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
   selector: \\"my-boolean-attribute\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"children\\">
-        <ng-content></ng-content>
-        {{type}}
-      </ng-container>
+      <ng-container *ngIf=\\"children\\"
+        ><ng-content></ng-content> {{type}}</ng-container
+      >
       <my-boolean-attribute-component
         [toggle]=\\"true\\"
       ></my-boolean-attribute-component>
@@ -7804,9 +7711,9 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-basic-for-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let person of names\\">
-        <ng-container>
-          <input
+      <ng-container *ngFor=\\"let person of names\\"
+        ><ng-container
+          ><input
             [attr.value]=\\"name\\"
             (change)=\\"
           name = $event.target.value + ' and ' + person;
@@ -7815,8 +7722,8 @@ import { Component } from \\"@angular/core\\";
 
           Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
           Solid, or Liquid!
-        </ng-container>
-      </ng-container>
+        </ng-container></ng-container
+      >
     </div>
   \`,
 })
@@ -7854,22 +7761,22 @@ export interface Props {
   selector: \\"my-basic-ref-component\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"showInput\\">
-        <ng-container>
-          <input
+      <ng-container *ngIf=\\"showInput\\"
+        ><ng-container
+          ><input
             class=\\"input\\"
             #inputRef
             [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
             (change)=\\"name = $event.target.value\\"
           />
-          <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+          <label for=\\"cars\\" #inputNoArgRef> Choose a car: </label>
           <select name=\\"cars\\" id=\\"cars\\">
             <option value=\\"supra\\">GR Supra</option>
             <option value=\\"86\\">GR 86</option>
-          </select>
-        </ng-container>
-      </ng-container>
+          </select></ng-container
+        ></ng-container
+      >
 
       Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
       Component!
@@ -8020,18 +7927,17 @@ export interface ButtonProps {
   selector: \\"button\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"link\\">
-        <a
+      <ng-container *ngIf=\\"link\\"
+        ><a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
           #elRef0
-        >
-          {{text}}
-        </a>
-      </ng-container>
-      <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" #elRef1>{{text}}</button>
-      </ng-container>
+          >{{text}}</a
+        ></ng-container
+      >
+      <ng-container *ngIf=\\"!link\\"
+        ><button type=\\"button\\" #elRef1>{{text}}</button></ng-container
+      >
     </div>
   \`,
 })
@@ -8135,9 +8041,11 @@ export interface ColumnProps {
   selector: \\"column\\",
   template: \`
     <div class=\\"builder-columns div\\">
-      <ng-container *ngFor=\\"let column of columns; index as index\\">
-        <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
-      </ng-container>
+      <ng-container *ngFor=\\"let column of columns; index as index\\"
+        ><div class=\\"builder-column div-2\\">
+          {{column.content}} {{index}}
+        </div></ng-container
+      >
     </div>
   \`,
   styles: [
@@ -8258,21 +8166,20 @@ import type { JSX } from \\"../../../../jsx-runtime\\";
 @Component({
   selector: \\"content-slot-jsx-code\\",
   template: \`
-    <ng-container *ngIf=\\"slotReference\\">
-      <div
+    <ng-container *ngIf=\\"slotReference\\"
+      ><div
         [attr.name]=\\"slotContent ? 'name1' : 'name2'\\"
         [attr.title]=\\"slotContent ? 'title1' : 'title2'\\"
         (click)=\\"show()\\"
         [class]=\\"cls\\"
         #elRef0
       >
-        <ng-container *ngIf=\\"showContent && slotContent\\">
-          <ng-content select=\\"[content]\\">{{content}}</ng-content>
-        </ng-container>
+        <ng-container *ngIf=\\"showContent && slotContent\\"
+          ><ng-content select=\\"[content]\\">{{content}}</ng-content></ng-container
+        >
         <div><hr /></div>
-        <div><ng-content></ng-content></div>
-      </div>
-    </ng-container>
+        <div><ng-content></ng-content></div></div
+    ></ng-container>
   \`,
 })
 export default class ContentSlotJsxCode {
@@ -8589,37 +8496,35 @@ import {
       (submit)=\\"onSubmit($event)\\"
       #elRef0
     >
-      <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
-        <ng-container
+      <ng-container *ngIf=\\"builderBlock && builderBlock.children\\"
+        ><ng-container
           *ngFor=\\"let block of builderBlock?.children; index as index; trackBy: trackByBlock0\\"
-        >
-          <builder-block-component
+          ><builder-block-component
             [block]=\\"block\\"
             [index]=\\"index\\"
-          ></builder-block-component>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf=\\"submissionState === 'error'\\">
-        <builder-blocks
+          ></builder-block-component></ng-container
+      ></ng-container>
+      <ng-container *ngIf=\\"submissionState === 'error'\\"
+        ><builder-blocks
           dataPath=\\"errorMessage\\"
           [blocks]=\\"errorMessage!\\"
-        ></builder-blocks>
-      </ng-container>
-      <ng-container *ngIf=\\"submissionState === 'sending'\\">
-        <builder-blocks
+        ></builder-blocks
+      ></ng-container>
+      <ng-container *ngIf=\\"submissionState === 'sending'\\"
+        ><builder-blocks
           dataPath=\\"sendingMessage\\"
           [blocks]=\\"sendingMessage!\\"
-        ></builder-blocks>
-      </ng-container>
+        ></builder-blocks
+      ></ng-container>
       <ng-container *ngIf=\\"submissionState === 'error' && responseData\\">
         <pre class=\\"builder-form-error-text pre\\">{{responseData | json}}</pre>
       </ng-container>
-      <ng-container *ngIf=\\"submissionState === 'success'\\">
-        <builder-blocks
+      <ng-container *ngIf=\\"submissionState === 'success'\\"
+        ><builder-blocks
           dataPath=\\"successMessage\\"
           [blocks]=\\"successMessage!\\"
-        ></builder-blocks>
-      </ng-container>
+        ></builder-blocks
+      ></ng-container>
     </form>
   \`,
   styles: [
@@ -8975,9 +8880,9 @@ export interface ImageProps {
   selector: \\"image\\",
   template: \`
     <div>
-      <picture #pictureRef>
-        <ng-container *ngIf=\\"!useLazyLoading() || load\\">
-          <img
+      <picture #pictureRef
+        ><ng-container *ngIf=\\"!useLazyLoading() || load\\"
+          ><img
             [attr.alt]=\\"altText\\"
             [attr.aria-role]=\\"altText ? 'presentation' : undefined\\"
             [class]=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
@@ -8985,10 +8890,9 @@ export interface ImageProps {
             (load)=\\"setLoaded()\\"
             [attr.srcset]=\\"srcset\\"
             [attr.sizes]=\\"sizes\\"
-          />
-        </ng-container>
-        <source [attr.srcset]=\\"srcset\\" />
-      </picture>
+        /></ng-container>
+        <source [attr.srcset]=\\"srcset\\"
+      /></picture>
       <ng-content></ng-content>
     </div>
   \`,
@@ -9082,11 +8986,10 @@ import { Component } from \\"@angular/core\\";
   selector: \\"img-state-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let item of images; index as itemIndex\\">
-        <ng-container>
-          <img class=\\"custom-class\\" [attr.src]=\\"item\\" />
-        </ng-container>
-      </ng-container>
+      <ng-container *ngFor=\\"let item of images; index as itemIndex\\"
+        ><ng-container
+          ><img class=\\"custom-class\\" [attr.src]=\\"item\\" /></ng-container
+      ></ng-container>
     </div>
   \`,
 })
@@ -9561,18 +9464,16 @@ export interface SectionProps {
 @Component({
   selector: \\"section-state-component\\",
   template: \`
-    <ng-container *ngIf=\\"max\\">
-      <ng-container *ngFor=\\"let item of items\\">
-        <section
+    <ng-container *ngIf=\\"max\\"
+      ><ng-container *ngFor=\\"let item of items\\"
+        ><section
           [ngStyle]=\\"{
           maxWidth: item + max
         }\\"
           #elRef0
         >
-          <ng-content></ng-content>
-        </section>
-      </ng-container>
-    </ng-container>
+          <ng-content></ng-content></section></ng-container
+    ></ng-container>
   \`,
 })
 export default class SectionStateComponent {
@@ -9677,11 +9578,11 @@ import { Builder } from \\"@builder.io/sdk\\";
       [attr.name]=\\"name\\"
       #elRef0
     >
-      <ng-container *ngFor=\\"let option of options; index as index\\">
-        <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
+      <ng-container *ngFor=\\"let option of options; index as index\\"
+        ><option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
-        </option>
-      </ng-container>
+        </option></ng-container
+      >
     </select>
   \`,
 })
@@ -9799,9 +9700,9 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
   selector: \\"slot-code\\",
   template: \`
     <div>
-      <content-slot-code>
-        <ng-content><div>Hello</div></ng-content>
-      </content-slot-code>
+      <content-slot-code
+        ><ng-content><div>Hello</div></ng-content></content-slot-code
+      >
     </div>
   \`,
 })
@@ -9897,8 +9798,8 @@ import { kebabCase, snakeCase } from \\"lodash\\";
   template: \`
     <div [attr.data-user]=\\"name\\">
       <button (click)=\\"showReviewPrompt = true\\">Write a review</button>
-      <ng-container *ngIf=\\"showReviewPrompt || 'asdf'\\">
-        <input placeholder=\\"Email\\" />
+      <ng-container *ngIf=\\"showReviewPrompt || 'asdf'\\"
+        ><input placeholder=\\"Email\\" />
         <input placeholder=\\"Title\\" class=\\"input\\" />
         <textarea
           placeholder=\\"How was your experience?\\"
@@ -9912,20 +9813,19 @@ import { kebabCase, snakeCase } from \\"lodash\\";
         \\"
         >
           Submit
-        </button>
-      </ng-container>
+        </button></ng-container
+      >
       <ng-container
         *ngFor=\\"let review of reviews; index as index; trackBy: trackByReview0\\"
-      >
-        <div class=\\"review\\">
+        ><div class=\\"review\\">
           <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
             <div>N: {{index}}</div>
             <div>{{review.author}}</div>
             <div>{{review.reviewMessage}}</div>
           </div>
-        </div>
-      </ng-container>
+        </div></ng-container
+      >
     </div>
   \`,
   styles: [
@@ -10005,9 +9905,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"string-literal-store\\",
-  template: \`
-    <ng-container>{{foo}}</ng-container>
-  \`,
+  template: \` <ng-container>{{foo}}</ng-container> \`,
 })
 export default class StringLiteralStore {
   foo = true;
@@ -10031,9 +9929,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <ng-container>{{foo(errors)}}</ng-container>
-  \`,
+  template: \` <ng-container>{{foo(errors)}}</ng-container> \`,
 })
 export default class MyComponent {
   errors = {};
@@ -10059,9 +9955,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <ng-container>{{bar()}}</ng-container>
-  \`,
+  template: \` <ng-container>{{bar()}}</ng-container> \`,
 })
 export default class MyComponent {
   foo = false;
@@ -10099,9 +9993,7 @@ export interface ButtonProps {
 
 @Component({
   selector: \\"submit-button\\",
-  template: \`
-    <button type=\\"submit\\" #elRef0>{{text}}</button>
-  \`,
+  template: \` <button type=\\"submit\\" #elRef0>{{text}}</button> \`,
 })
 export default class SubmitButton {
   @Input() attributes!: ButtonProps[\\"attributes\\"];
@@ -10335,9 +10227,7 @@ type MyStore = {
 
 @Component({
   selector: \\"use-value-and-fn-from-store\\",
-  template: \`
-    <div>Test</div>
-  \`,
+  template: \` <div>Test</div> \`,
 })
 export default class UseValueAndFnFromStore {
   @Output() onChange = new EventEmitter<any>();
@@ -10647,9 +10537,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <div>Hello {{name}}</div>
-  \`,
+  template: \` <div>Hello {{name}}</div> \`,
 })
 export default class MyComponent {
   name = \\"steve\\";
@@ -10682,24 +10570,21 @@ import { Component } from \\"@angular/core\\";
     <div>
       <ng-container
         *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption0\\"
+        ><ng-container
+          ><div>{{option}}</div></ng-container
+        ></ng-container
       >
-        <ng-container>
-          <div>{{option}}</div>
-        </ng-container>
-      </ng-container>
       <ng-container
         *ngFor=\\"let option of ['a', 'b', 'c']; trackBy: trackByOption1\\"
+        ><ng-container
+          ><div>{{option}}</div></ng-container
+        ></ng-container
       >
-        <ng-container>
-          <div>{{option}}</div>
-        </ng-container>
-      </ng-container>
       <select>
         <ng-container
           *ngFor=\\"let option of ['d', 'e', 'f']; trackBy: trackByOption2\\"
+          ><option [attr.value]=\\"option\\">{{option}}</option></ng-container
         >
-          <option [attr.value]=\\"option\\">{{option}}</option>
-        </ng-container>
       </select>
     </div>
   \`,
@@ -10749,7 +10634,8 @@ import {
               inputs: {  };
               content: myContent;
               \\"
-    ></ng-container>
+    >
+    </ng-container>
   \`,
 })
 export default class MyBasicForNoTagRefComponent {
@@ -10892,9 +10778,7 @@ import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-on-update-return-component\\",
-  template: \`
-    <div>Hello! {{name}}</div>
-  \`,
+  template: \` <div>Hello! {{name}}</div> \`,
 })
 export default class MyBasicOnUpdateReturnComponent {
   name = \\"PatrickJS\\";
@@ -10941,9 +10825,7 @@ import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
 
 @Component({
   selector: \\"basic-ref-attribute-passing-component\\",
-  template: \`
-    <button #buttonRef #_root>Attribute Passing</button>
-  \`,
+  template: \` <button #buttonRef #_root>Attribute Passing</button> \`,
 })
 export default class BasicRefAttributePassingComponent {
   @ViewChild(\\"buttonRef\\") buttonRef!: ElementRef;
@@ -10989,6 +10871,12 @@ export default class BasicRefAttributePassingComponent {
     }
   }
 
+  ngOnInit() {
+    if (typeof window !== \\"undefined\\") {
+      console.log(\\"onMount\\");
+    }
+  }
+
   ngAfterViewInit() {
     const element: HTMLElement | null = this._root?.nativeElement;
     this.enableAttributePassing(
@@ -11020,9 +10908,7 @@ import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
 
 @Component({
   selector: \\"basic-ref-attribute-passing-custom-ref-component\\",
-  template: \`
-    <div><button #buttonRef>Attribute Passing</button></div>
-  \`,
+  template: \` <div><button #buttonRef>Attribute Passing</button></div> \`,
 })
 export default class BasicRefAttributePassingCustomRefComponent {
   @ViewChild(\\"buttonRef\\") buttonRef!: ElementRef;
@@ -11098,9 +10984,7 @@ import { Component, Input, ChangeDetectionStrategy } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <div>{{count}}</div>
-  \`,
+  template: \` <div>{{count}}</div> \`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class MyComponent {
@@ -11342,9 +11226,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"complex-meta-raw\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class ComplexMetaRaw {}
 
@@ -11373,9 +11255,9 @@ import Context2 from \\"@dummy/2\\";
 @Component({
   selector: \\"component-with-context\\",
   template: \`
-    <ng-container>
-      <ng-container>{{foo.value}}</ng-container>
-    </ng-container>
+    <ng-container
+      ><ng-container>{{foo.value}}</ng-container></ng-container
+    >
   \`,
 })
 export default class ComponentWithContext {
@@ -11409,10 +11291,10 @@ import Context2 from \\"@dummy/2\\";
 @Component({
   selector: \\"component-with-context\\",
   template: \`
-    <ng-container>
-      <ng-container>{{foo.value}}</ng-container>
-      <div>other</div>
-    </ng-container>
+    <ng-container
+      ><ng-container>{{foo.value}}</ng-container>
+      <div>other</div></ng-container
+    >
   \`,
 })
 export default class ComponentWithContext {
@@ -11438,9 +11320,7 @@ import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"render-content\\",
-  template: \`
-    <div>setting context</div>
-  \`,
+  template: \` <div>setting context</div> \`,
 })
 export default class RenderContent {
   @Input() content!: any;
@@ -11469,9 +11349,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"not-my-component\\",
-  template: \`
-    <span>My selector shouldn't be my-component!</span>
-  \`,
+  template: \` <span>My selector shouldn't be my-component!</span> \`,
 })
 export default class MyComponent {}
 
@@ -11521,20 +11399,19 @@ const defaultProps: any = {
   selector: \\"button\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"link\\">
-        <a
+      <ng-container *ngIf=\\"link\\"
+        ><a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
           #elRef0
-        >
-          {{text}}
-        </a>
-      </ng-container>
-      <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" (click)=\\"this.onClick.emit()\\" #elRef1>
+          >{{text}}</a
+        ></ng-container
+      >
+      <ng-container *ngIf=\\"!link\\"
+        ><button type=\\"button\\" (click)=\\"this.onClick.emit()\\" #elRef1>
           {{buttonText}}
-        </button>
-      </ng-container>
+        </button></ng-container
+      >
     </div>
   \`,
 })
@@ -11649,20 +11526,19 @@ const defaultProps: any = {
   selector: \\"button\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"link\\">
-        <a
+      <ng-container *ngIf=\\"link\\"
+        ><a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
           #elRef0
-        >
+          >{{text}}</a
+        ></ng-container
+      >
+      <ng-container *ngIf=\\"!link\\"
+        ><button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\" #elRef1>
           {{text}}
-        </a>
-      </ng-container>
-      <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\" #elRef1>
-          {{text}}
-        </button>
-      </ng-container>
+        </button></ng-container
+      >
     </div>
   \`,
 })
@@ -11759,9 +11635,7 @@ const DEFAULT_VALUES: Props = {
 
 @Component({
   selector: \\"component-with-types\\",
-  template: \`
-    <div>Hello {{name || DEFAULT_VALUES.name}}</div>
-  \`,
+  template: \` <div>Hello {{name || DEFAULT_VALUES.name}}</div> \`,
 })
 export default class ComponentWithTypes {
   DEFAULT_VALUES = DEFAULT_VALUES;
@@ -11797,15 +11671,16 @@ import {
     <ng-template #objTemplate>
       hello
 
-      <ng-content></ng-content>
-    </ng-template>
+      <ng-content></ng-content
+    ></ng-template>
     <ng-container
       *ngComponentOutlet=\\"
               obj.Component;
               inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, something: something };
               content: myContent;
               \\"
-    ></ng-container>
+    >
+    </ng-container>
   \`,
 })
 export default class MyComponent {
@@ -11858,14 +11733,15 @@ import {
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <ng-template #componentTemplate>hello</ng-template>
+    <ng-template #componentTemplate> hello </ng-template>
     <ng-container
       *ngComponentOutlet=\\"
               Component;
               inputs: { hello: 'world', onClick: onClick.bind(this), attributes: attributes, something: something };
               content: myContent;
               \\"
-    ></ng-container>
+    >
+    </ng-container>
   \`,
 })
 export default class MyComponent {
@@ -11951,9 +11827,7 @@ import { EventProps, EventState } from \\"./event-props.type\\";
 
 @Component({
   selector: \\"event-props-component\\",
-  template: \`
-    <button (click)=\\"handleClick()\\">Test</button>
-  \`,
+  template: \` <button (click)=\\"handleClick()\\">Test</button> \`,
 })
 export default class EventPropsComponent {
   @Output() onGetVoid = new EventEmitter<any>();
@@ -11992,9 +11866,7 @@ import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <div>{{refToUse}}</div>
-  \`,
+  template: \` <div>{{refToUse}}</div> \`,
 })
 export default class MyComponent {
   @Input() componentRef!: any;
@@ -12162,9 +12034,7 @@ import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
 @Component({
   selector: \\"render-content\\",
-  template: \`
-    <render-block></render-block>
-  \`,
+  template: \` <render-block></render-block> \`,
 })
 export default class RenderContent {
   @Input() renderContentProps!: RenderContentProps[\\"renderContentProps\\"];
@@ -12194,9 +12064,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-import-component\\",
-  template: \`
-    <div>Testing which imports get excluded!</div>
-  \`,
+  template: \` <div>Testing which imports get excluded!</div> \`,
 })
 export default class MyImportComponent {}
 
@@ -12251,9 +12119,7 @@ import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"multiple-on-update\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class MultipleOnUpdate {
   ngOnChanges(changes: SimpleChanges) {
@@ -12281,9 +12147,7 @@ import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"multiple-on-update-with-deps\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class MultipleOnUpdateWithDeps {
   a = \\"a\\";
@@ -12330,9 +12194,7 @@ import {
 
 @Component({
   selector: \\"my-basic-component\\",
-  template: \`
-    <input #elRef0 />
-  \`,
+  template: \` <input #elRef0 /> \`,
 })
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
@@ -12449,17 +12311,15 @@ interface Props {
 @Component({
   selector: \\"nested-show\\",
   template: \`
-    <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngIf=\\"!conditionB\\">
-        <div>if condition A and condition B</div>
-      </ng-container>
-      <ng-container *ngIf=\\"!(!conditionB)\\">
-        <div>else-condition-B</div>
-      </ng-container>
-    </ng-container>
-    <ng-container *ngIf=\\"!(conditionA)\\">
-      <div>else-condition-A</div>
-    </ng-container>
+    <ng-container *ngIf=\\"conditionA\\"
+      ><ng-container *ngIf=\\"!conditionB\\"
+        ><div>if condition A and condition B</div></ng-container
+      ><ng-container *ngIf=\\"!(!conditionB)\\"
+        ><div>else-condition-B</div></ng-container
+      ></ng-container
+    ><ng-container *ngIf=\\"!(conditionA)\\"
+      ><div>else-condition-A</div></ng-container
+    >
   \`,
 })
 export default class NestedShow {
@@ -12484,9 +12344,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"nested-styles\\",
-  template: \`
-    <div class=\\"div\\">Hello world</div>
-  \`,
+  template: \` <div class=\\"div\\">Hello world</div> \`,
   styles: [
     \`
       .div {
@@ -12598,9 +12456,7 @@ import { Component, ViewChild, ElementRef } from \\"@angular/core\\";
 
 @Component({
   selector: \\"embed\\",
-  template: \`
-    <div class=\\"builder-embed\\" #elem><div>Test</div></div>
-  \`,
+  template: \` <div class=\\"builder-embed\\" #elem><div>Test</div></div> \`,
 })
 export default class Embed {
   @ViewChild(\\"elem\\") elem!: ElementRef;
@@ -12635,9 +12491,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-init\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class OnInit {
   ngOnInit() {
@@ -12674,9 +12528,7 @@ export const defaultValues = {
 
 @Component({
   selector: \\"on-init\\",
-  template: \`
-    <div>Default name defined by parent {{name}}</div>
-  \`,
+  template: \` <div>Default name defined by parent {{name}}</div> \`,
 })
 export default class OnInit {
   @Input() name!: Props[\\"name\\"];
@@ -12706,9 +12558,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-init-plain\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class OnInitPlain {
   ngOnInit() {
@@ -12733,9 +12583,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"comp\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class Comp {
   ngOnInit() {
@@ -12766,9 +12614,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"comp\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class Comp {
   ngOnInit() {
@@ -12806,9 +12652,7 @@ import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-update\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class OnUpdate {
   ngOnChanges(changes: SimpleChanges) {
@@ -12839,9 +12683,7 @@ type Props = {
 
 @Component({
   selector: \\"on-update-with-deps\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class OnUpdateWithDeps {
   @Input() size!: Props[\\"size\\"];
@@ -12929,9 +12771,7 @@ export function run<T>(value: T) {}
 
 @Component({
   selector: \\"my-basic-component\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class MyBasicComponent {}
 
@@ -12979,6 +12819,36 @@ export default class MyBasicComponent {
   exports: [MyBasicComponent],
 })
 export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular with visuallyIgnoreHostElement = false > jsx > Typescript Test > prettierInline 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"prettier-inline\\",
+  template: \`
+    <div>
+      <span class=\\"dolorum atque aspernatur\\"
+        >Est molestiae sunt facilis qui rem.</span
+      >
+      <div class=\\"voluptatem architecto at\\">
+        Architecto rerum architecto incidunt sint.
+      </div>
+    </div>
+  \`,
+})
+export default class PrettierInline {}
+
+@NgModule({
+  declarations: [PrettierInline],
+  imports: [CommonModule],
+  exports: [PrettierInline],
+})
+export class PrettierInlineModule {}
 "
 `;
 
@@ -13085,9 +12955,7 @@ import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-update\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class OnUpdate {
   foo = function foo(params) {};
@@ -13156,45 +13024,44 @@ import type { RepeatData } from \\"./types.js\\";
   selector: \\"render-block\\",
   template: \`
     <ng-template #rendercomponenttagTemplate></ng-template>
-    <ng-container *ngIf=\\"shouldWrap\\">
-      <ng-container *ngIf=\\"isEmptyHtmlElement(tag)\\">
-        <ng-container
+    <ng-container *ngIf=\\"shouldWrap\\"
+      ><ng-container *ngIf=\\"isEmptyHtmlElement(tag)\\"
+        ><ng-container
           *ngComponentOutlet=\\"
               tag;
               inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
-        ></ng-container>
-      </ng-container>
-      <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\">
-        <ng-container
-          *ngFor=\\"let data of repeatItemData; index as index; trackBy: trackByData0\\"
         >
-          <render-repeated-block
+        </ng-container
+      ></ng-container>
+      <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && repeatItemData\\"
+        ><ng-container
+          *ngFor=\\"let data of repeatItemData; index as index; trackBy: trackByData0\\"
+          ><render-repeated-block
             [repeatContext]=\\"data.context\\"
             [block]=\\"data.block\\"
-          ></render-repeated-block>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\">
-        <ng-container
+          ></render-repeated-block></ng-container
+      ></ng-container>
+      <ng-container *ngIf=\\"!isEmptyHtmlElement(tag) && !repeatItemData\\"
+        ><ng-container
           *ngComponentOutlet=\\"
               tag;
               inputs: { attributes: attributes, actions: actions };
               content: myContent;
               \\"
-        ></ng-container>
-      </ng-container>
-    </ng-container>
-    <ng-container *ngIf=\\"!(shouldWrap)\\">
-      <ng-container
+        >
+        </ng-container></ng-container></ng-container
+    ><ng-container *ngIf=\\"!(shouldWrap)\\"
+      ><ng-container
         *ngComponentOutlet=\\"
               renderComponentTag;
               inputs: { renderComponentProps: renderComponentProps };
               content: myContent;
               \\"
-      ></ng-container>
-    </ng-container>
+      >
+      </ng-container
+    ></ng-container>
   \`,
 })
 export default class RenderBlock {
@@ -13503,20 +13370,19 @@ export interface ButtonProps {
 @Component({
   selector: \\"button\\",
   template: \`
-    <ng-container>
-      <ng-container *ngIf=\\"link\\">
-        <a
+    <ng-container
+      ><ng-container *ngIf=\\"link\\"
+        ><a
           [attr.href]=\\"link\\"
           [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
           #elRef0
-        >
-          {{text}}
-        </a>
-      </ng-container>
-      <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\" #elRef1>{{text}}</button>
-      </ng-container>
-    </ng-container>
+          >{{text}}</a
+        ></ng-container
+      >
+      <ng-container *ngIf=\\"!link\\"
+        ><button type=\\"button\\" #elRef1>{{text}}</button></ng-container
+      ></ng-container
+    >
   \`,
 })
 export default class Button {
@@ -13607,8 +13473,8 @@ export interface RenderStylesProps {
 @Component({
   selector: \\"render-styles\\",
   template: \`
-    <ng-container *ngIf=\\"foo === 'bar'\\"><div>Bar</div></ng-container>
-    <ng-container *ngIf=\\"!(foo === 'bar')\\"><div>Foo</div></ng-container>
+    <ng-container *ngIf=\\"foo === 'bar'\\"><div>Bar</div></ng-container
+    ><ng-container *ngIf=\\"!(foo === 'bar')\\"><div>Foo</div></ng-container>
   \`,
 })
 export default class RenderStyles {
@@ -13637,9 +13503,7 @@ import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <div [innerHTML]=\\"html\\"></div>
-  \`,
+  template: \` <div [innerHTML]=\\"html\\"></div> \`,
 })
 export default class MyComponent {
   @Input() html!: any;
@@ -13665,9 +13529,9 @@ import { Component, Input } from \\"@angular/core\\";
   template: \`
     <div>
       {{name}}
-      <ng-container *ngIf=\\"name === 'Batman'\\">
-        <my-component name=\\"Bruce Wayne\\"></my-component>
-      </ng-container>
+      <ng-container *ngIf=\\"name === 'Batman'\\"
+        ><my-component name=\\"Bruce Wayne\\"></my-component
+      ></ng-container>
     </div>
   \`,
 })
@@ -13696,9 +13560,11 @@ import { Component, Input } from \\"@angular/core\\";
     <div>
       {{name}}
       <ng-content></ng-content>
-      <ng-container *ngIf=\\"name === 'Batman'\\">
-        <my-component name=\\"Bruce\\"><div>Wayne</div></my-component>
-      </ng-container>
+      <ng-container *ngIf=\\"name === 'Batman'\\"
+        ><my-component name=\\"Bruce\\"
+          ><div>Wayne</div></my-component
+        ></ng-container
+      >
     </div>
   \`,
 })
@@ -13723,9 +13589,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"set-state\\",
-  template: \`
-    <div><button (click)=\\"someFn()\\">Click me</button></div>
-  \`,
+  template: \` <div><button (click)=\\"someFn()\\">Click me</button></div> \`,
 })
 export default class SetState {
   n = [\\"123\\"];
@@ -13758,51 +13622,54 @@ interface Props {
   selector: \\"show-with-other-values\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"conditionA\\">Content0</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">Content0</ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
       <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
-      <ng-container *ngIf=\\"conditionA\\"></ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">{{undefined}}</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">ContentB</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">ContentA</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">{{undefined}}</ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">ContentB</ng-container>
       <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
-      <ng-container *ngIf=\\"conditionA\\"></ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">ContentC</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">ContentC</ng-container>
       <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
-      <ng-container *ngIf=\\"conditionA\\"></ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">ContentD</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">hello</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">ContentE</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">123</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">ContentF</ng-container>
-      <ng-container *ngIf=\\"conditionA === 'Default'\\">4mb</ng-container>
-      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
-        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
-        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
-      </ng-container>
-      <ng-container *ngIf=\\"conditionA === 'Default'\\">
-        <ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container>
-        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
-      </ng-container>
-      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
-      <ng-container *ngIf=\\"conditionA === 'Default'\\">
-        <ng-container *ngIf=\\"conditionB === 'Complete'\\">
-          <div>complete</div>
-        </ng-container>
-        <ng-container *ngIf=\\"!(conditionB === 'Complete')\\">9mb</ng-container>
-      </ng-container>
-      <ng-container *ngIf=\\"!(conditionA === 'Default')\\">
-        <ng-container *ngIf=\\"conditionC === 'Complete'\\">dff</ng-container>
-        <ng-container *ngIf=\\"!(conditionC === 'Complete')\\">
-          <div>complete else</div>
-        </ng-container>
-      </ng-container>
+      <ng-container *ngIf=\\"conditionA\\"></ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">ContentD</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">hello</ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">ContentE</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+      <ng-container *ngIf=\\"conditionA\\">123</ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">ContentF</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\">4mb</ng-container
+      ><ng-container *ngIf=\\"!(conditionA === 'Default')\\"
+        ><ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container
+        ><ng-container *ngIf=\\"!(conditionB === 'Complete')\\"
+          >9mb</ng-container
+        ></ng-container
+      >
+      <ng-container *ngIf=\\"conditionA === 'Default'\\"
+        ><ng-container *ngIf=\\"conditionB === 'Complete'\\">20mb</ng-container
+        ><ng-container *ngIf=\\"!(conditionB === 'Complete')\\"
+          >9mb</ng-container
+        ></ng-container
+      ><ng-container *ngIf=\\"!(conditionA === 'Default')\\">4mb</ng-container>
+      <ng-container *ngIf=\\"conditionA === 'Default'\\"
+        ><ng-container *ngIf=\\"conditionB === 'Complete'\\"
+          ><div>complete</div></ng-container
+        ><ng-container *ngIf=\\"!(conditionB === 'Complete')\\"
+          >9mb</ng-container
+        ></ng-container
+      ><ng-container *ngIf=\\"!(conditionA === 'Default')\\"
+        ><ng-container *ngIf=\\"conditionC === 'Complete'\\">dff</ng-container
+        ><ng-container *ngIf=\\"!(conditionC === 'Complete')\\"
+          ><div>complete else</div></ng-container
+        ></ng-container
+      >
     </div>
   \`,
 })
@@ -13835,16 +13702,14 @@ interface Props {
 @Component({
   selector: \\"nested-show\\",
   template: \`
-    <ng-container *ngIf=\\"conditionA\\">
-      <ng-container
+    <ng-container *ngIf=\\"conditionA\\"
+      ><ng-container
         *ngFor=\\"let item of items; index as idx; trackBy: trackByItem0\\"
-      >
-        <div>{{item}}</div>
-      </ng-container>
-    </ng-container>
-    <ng-container *ngIf=\\"!(conditionA)\\">
-      <div>else-condition-A</div>
-    </ng-container>
+        ><div>{{item}}</div></ng-container
+      ></ng-container
+    ><ng-container *ngIf=\\"!(conditionA)\\"
+      ><div>else-condition-A</div></ng-container
+    >
   \`,
 })
 export default class NestedShow {
@@ -13879,15 +13744,15 @@ interface Props {
   selector: \\"show-with-other-values\\",
   template: \`
     <div>
-      <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentB</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentC</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentD</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentE</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
-      <ng-container *ngIf=\\"conditionA\\">ContentF</ng-container>
-      <ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"> ContentA </ng-container>
+      <ng-container *ngIf=\\"conditionA\\"> ContentB </ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">{{undefined}}</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"> ContentC </ng-container>
+      <ng-container *ngIf=\\"conditionA\\"> ContentD </ng-container>
+      <ng-container *ngIf=\\"conditionA\\"> ContentE </ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">hello</ng-container>
+      <ng-container *ngIf=\\"conditionA\\"> ContentF </ng-container
+      ><ng-container *ngIf=\\"!(conditionA)\\">123</ng-container>
     </div>
   \`,
 })
@@ -13917,10 +13782,10 @@ interface Props {
 @Component({
   selector: \\"show-root-text\\",
   template: \`
-    <ng-container *ngIf=\\"conditionA\\">ContentA</ng-container>
-    <ng-container *ngIf=\\"!(conditionA)\\">
-      <div>else-condition-A</div>
-    </ng-container>
+    <ng-container *ngIf=\\"conditionA\\"> ContentA </ng-container
+    ><ng-container *ngIf=\\"!(conditionA)\\"
+      ><div>else-condition-A</div></ng-container
+    >
   \`,
 })
 export default class ShowRootText {
@@ -14038,9 +13903,7 @@ type Props = {
 
 @Component({
   selector: \\"my-basic-component\\",
-  template: \`
-    <div class=\\"test div\\">{{id}} {{foo.bar.baz}}</div>
-  \`,
+  template: \` <div class=\\"test div\\">{{id}} {{foo.bar.baz}}</div> \`,
   styles: [
     \`
       .div {
@@ -14084,9 +13947,7 @@ import {
 
 @Component({
   selector: \\"my-basic-component\\",
-  template: \`
-    <input #elRef0 />
-  \`,
+  template: \` <input #elRef0 /> \`,
 })
 export default class MyBasicComponent {
   @ViewChild(\\"elRef0\\") elRef0!: ElementRef;
@@ -14166,9 +14027,7 @@ import {
 
 @Component({
   selector: \\"my-basic-component\\",
-  template: \`
-    <input #elRef0 />
-  \`,
+  template: \` <input #elRef0 /> \`,
 })
 export default class MyBasicComponent {
   @Input() nested!: any;
@@ -14243,9 +14102,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-basic-component\\",
-  template: \`
-    <input />
-  \`,
+  template: \` <input /> \`,
 })
 export default class MyBasicComponent {}
 
@@ -14319,9 +14176,8 @@ import { Component, Input } from \\"@angular/core\\";
     <Comp
       [val]=\\"useObjectWrapper( val
         )\\"
+      >{{val}}</Comp
     >
-      {{val}}
-    </Comp>
   \`,
 })
 export default class MyComponent {
@@ -14359,9 +14215,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"string-literal-store\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class StringLiteralStore {
   arrowFunction = async function arrowFunction() {
@@ -14392,9 +14246,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"string-literal-store\\",
-  template: \`
-    <div>{{foo}}</div>
-  \`,
+  template: \` <div>{{foo}}</div> \`,
 })
 export default class StringLiteralStore {
   foo = 123;
@@ -14555,9 +14407,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"sub-component\\",
-  template: \`
-    <foo></foo>
-  \`,
+  template: \` <foo></foo> \`,
 })
 export default class SubComponent {}
 
@@ -14624,12 +14474,12 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem0\\">
-        <div>{{item}}</div>
-      </ng-container>
-      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem1\\">
-        <div>{{item}}</div>
-      </ng-container>
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem0\\"
+        ><div>{{item}}</div></ng-container
+      >
+      <ng-container *ngFor=\\"let item of items; trackBy: trackByItem1\\"
+        ><div>{{item}}</div></ng-container
+      >
     </div>
   \`,
 })
@@ -14667,9 +14517,7 @@ import type { Foo } from \\"./foo-type\\";
 
 @Component({
   selector: \\"type-dependency\\",
-  template: \`
-    <div>{{foo}}</div>
-  \`,
+  template: \` <div>{{foo}}</div> \`,
 })
 export default class TypeDependency {
   @Input() foo!: TypeDependencyProps[\\"foo\\"];
@@ -14694,9 +14542,7 @@ import { FooProps } from \\"./foo-props\\";
 
 @Component({
   selector: \\"type-external-props\\",
-  template: \`
-    <div>Hello {{name}} !</div>
-  \`,
+  template: \` <div>Hello {{name}} !</div> \`,
 })
 export default class TypeExternalProps {
   @Input() name!: FooProps[\\"name\\"];
@@ -14721,9 +14567,7 @@ import { FooStore } from \\"./foo-store\\";
 
 @Component({
   selector: \\"type-external-store\\",
-  template: \`
-    <div>Hello {{_name}} !</div>
-  \`,
+  template: \` <div>Hello {{_name}} !</div> \`,
 })
 export default class TypeExternalStore {
   _name: FooStore[\\"_name\\"] = \\"test\\";
@@ -14752,9 +14596,7 @@ type GetterStore = {
 
 @Component({
   selector: \\"type-getter-store\\",
-  template: \`
-    <div>Hello {{name}} !</div>
-  \`,
+  template: \` <div>Hello {{name}} !</div> \`,
 })
 export default class TypeGetterStore {
   name: GetterStore[\\"name\\"] = \\"test\\";
@@ -14787,9 +14629,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <button type=\\"button\\">Button</button>
-  \`,
+  template: \` <button type=\\"button\\">Button</button> \`,
   styles: [
     \`
       button {
@@ -14820,9 +14660,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <button type=\\"button\\" class=\\"button\\">Button</button>
-  \`,
+  template: \` <button type=\\"button\\" class=\\"button\\">Button</button> \`,
   styles: [
     \`
       button {
@@ -14856,9 +14694,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <button type=\\"button\\">Button</button>
-  \`,
+  template: \` <button type=\\"button\\">Button</button> \`,
   styles: [
     \`
       button {
@@ -14959,9 +14795,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"use-target-component\\",
-  template: \`
-    <div>{{name}}</div>
-  \`,
+  template: \` <div>{{name}}</div> \`,
 })
 export default class UseTargetComponent {
   get name() {
@@ -14999,11 +14833,11 @@ import { register } from \\"swiper/element/bundle\\";
 @Component({
   selector: \\"my-basic-web-component\\",
   template: \`
-    <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\">
-      <swiper-slide>Slide 1</swiper-slide>
+    <swiper-container slides-per-view=\\"3\\" navigation=\\"true\\" pagination=\\"true\\"
+      ><swiper-slide>Slide 1</swiper-slide>
       <swiper-slide>Slide 2</swiper-slide>
-      <swiper-slide>Slide 3</swiper-slide>
-    </swiper-container>
+      <swiper-slide>Slide 3</swiper-slide></swiper-container
+    >
   \`,
 })
 export default class MyBasicWebComponent {
@@ -15131,9 +14965,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <input [attr.value]=\\"value\\" />
-  \`,
+  template: \` <input [attr.value]=\\"value\\" /> \`,
 })
 export default class MyComponent {
   value = \\"hello\\";
@@ -15187,9 +15019,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <div>{{activeTab}}</div>
-  \`,
+  template: \` <div>{{activeTab}}</div> \`,
 })
 export default class MyComponent {
   activeTab = 0;
@@ -15216,9 +15046,9 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-component\\",
   template: \`
     <ul>
-      <ng-container *ngFor=\\"let num of numbers\\">
-        <li>{{num}}</li>
-      </ng-container>
+      <ng-container *ngFor=\\"let num of numbers\\"
+        ><li>{{num}}</li></ng-container
+      >
     </ul>
   \`,
 })
@@ -15303,12 +15133,11 @@ import { Component } from \\"@angular/core\\";
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <ng-container *ngIf=\\"show\\">
-      <button (click)=\\"toggle($event)\\">Hide</button>
-    </ng-container>
-    <ng-container *ngIf=\\"!(show)\\">
-      <button (click)=\\"toggle($event)\\">Show</button>
-    </ng-container>
+    <ng-container *ngIf=\\"show\\"
+      ><button (click)=\\"toggle($event)\\">Hide</button></ng-container
+    ><ng-container *ngIf=\\"!(show)\\"
+      ><button (click)=\\"toggle($event)\\">Show</button></ng-container
+    >
   \`,
 })
 export default class MyComponent {
@@ -15364,9 +15193,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class MyComponent {
   ngOnInit() {
@@ -15510,9 +15337,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <input class=\\"form-input\\" />
-  \`,
+  template: \` <input class=\\"form-input\\" /> \`,
   styles: [
     \`
       input {
@@ -15678,9 +15503,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <input [attr.value]=\\"value\\" />
-  \`,
+  template: \` <input [attr.value]=\\"value\\" /> \`,
 })
 export default class MyComponent {
   value = \\"hello\\";
@@ -15734,9 +15557,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <div>{{activeTab}}</div>
-  \`,
+  template: \` <div>{{activeTab}}</div> \`,
 })
 export default class MyComponent {
   activeTab = 0;
@@ -15763,9 +15584,9 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-component\\",
   template: \`
     <ul>
-      <ng-container *ngFor=\\"let num of numbers\\">
-        <li>{{num}}</li>
-      </ng-container>
+      <ng-container *ngFor=\\"let num of numbers\\"
+        ><li>{{num}}</li></ng-container
+      >
     </ul>
   \`,
 })
@@ -15850,12 +15671,11 @@ import { Component } from \\"@angular/core\\";
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <ng-container *ngIf=\\"show\\">
-      <button (click)=\\"toggle($event)\\">Hide</button>
-    </ng-container>
-    <ng-container *ngIf=\\"!(show)\\">
-      <button (click)=\\"toggle($event)\\">Show</button>
-    </ng-container>
+    <ng-container *ngIf=\\"show\\"
+      ><button (click)=\\"toggle($event)\\">Hide</button></ng-container
+    ><ng-container *ngIf=\\"!(show)\\"
+      ><button (click)=\\"toggle($event)\\">Show</button></ng-container
+    >
   \`,
 })
 export default class MyComponent {
@@ -15911,9 +15731,7 @@ import { Component, SimpleChanges } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <div></div>
-  \`,
+  template: \` <div></div> \`,
 })
 export default class MyComponent {
   ngOnInit() {
@@ -16057,9 +15875,7 @@ import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component\\",
-  template: \`
-    <input class=\\"form-input\\" />
-  \`,
+  template: \` <input class=\\"form-input\\" /> \`,
   styles: [
     \`
       input {
