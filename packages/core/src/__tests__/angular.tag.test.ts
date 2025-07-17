@@ -1,4 +1,4 @@
-import { componentToAngular } from '../generators/angular';
+import { componentToAngular } from '@/generators/angular';
 const component = {
   '@type': '@builder.io/mitosis/component' as const,
   children: [
@@ -49,9 +49,7 @@ describe('Angular tag name output', () => {
 
       @Component({
         selector: \\"my-component\\",
-        template: \`
-          <input placeholder=\\"placeholder text\\" />
-        \`,
+        template: \` <input placeholder=\\"placeholder text\\" /> \`,
         styles: [
           \`
             :host {
@@ -77,9 +75,7 @@ describe('Angular tag name output', () => {
         selector: \\"my-component\\",
         standalone: true,
         imports: [CommonModule, CustomComponent],
-        template: \`
-          <input $tagName=\\"input\\" placeholder=\\"placeholder text\\" />
-        \`,
+        template: \`<input $tagName=\\"input\\" placeholder=\\"placeholder text\\" /> \`,
         styles: \`:host { display: contents; }\`,
       })
       export class MyComponent {

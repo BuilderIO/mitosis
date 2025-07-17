@@ -8,6 +8,7 @@ import { tryFormat } from '@/generators/angular/helpers/format';
 import { getOutputs } from '@/generators/angular/helpers/get-outputs';
 import { getDomRefs } from '@/generators/angular/helpers/get-refs';
 import { getAngularStyles } from '@/generators/angular/helpers/get-styles';
+import { addCodeNgAfterViewInit } from '@/generators/angular/helpers/hooks';
 import { blockToAngularSignals } from '@/generators/angular/signals/blocks';
 import { getAngularCoreImportsAsString } from '@/generators/angular/signals/helpers';
 import { getComputedGetters } from '@/generators/angular/signals/helpers/get-computed';
@@ -18,7 +19,6 @@ import {
   DEFAULT_ANGULAR_OPTIONS,
   ToAngularOptions,
 } from '@/generators/angular/types';
-import { stringifySingleScopeOnMount } from '@/generators/helpers/on-mount';
 import { ProcessBindingOptions } from '@/helpers/class-components';
 import { dedent } from '@/helpers/dedent';
 import { checkIsEvent } from '@/helpers/event-handlers';
@@ -30,6 +30,7 @@ import { getStateObjectStringFromComponent } from '@/helpers/get-state-object-st
 import { isHookEmpty } from '@/helpers/is-hook-empty';
 import { isUpperCase } from '@/helpers/is-upper-case';
 import { initializeOptions } from '@/helpers/merge-options';
+
 import { ImportValues, renderPreComponent } from '@/helpers/render-imports';
 import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import {
@@ -133,16 +134,6 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
       injectables.push('protected sanitizer: DomSanitizer');
     }
 
-    if (json.hooks.onMount.length > 0) {
-      json.compileContext!.angular!.hooks!.ngAfterViewInit = {
-        code: `
-        if (typeof window !== 'undefined') {
-          ${stringifySingleScopeOnMount(json)}
-        }
-        `,
-      };
-    }
-
     // HTML
     let template = json.children
       .map((item) => {
@@ -162,7 +153,8 @@ export const componentToAngularSignals: TranspilerGenerator<ToAngularOptions> = 
       .join('\n');
 
     if (options.prettier !== false) {
-      template = tryFormat(template, 'html');
+      // We need to use 'strict' mode for Angular otherwise it could add spaces around some content
+      template = tryFormat(template, 'html', 'strict');
     }
 
     const { components: dynamicComponents, dynamicTemplate } = traverseToGetAllDynamicComponents(
@@ -280,6 +272,11 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       json.compileContext?.angular?.extra?.spreadRefs?.length > 0;
 
     // Imports
+    const emptyOnMount = isHookEmpty(json.hooks.onMount);
+    const emptyOnUnMount = isHookEmpty(json.hooks.onUnMount);
+    const AfterViewInit = Boolean(!emptyOnMount || withAttributePassing);
+    const OnDestroy = !emptyOnUnMount;
+
     const coreImports = getAngularCoreImportsAsString({
       refs: domRefs.size !== 0,
       input: props.length !== 0,
@@ -289,11 +286,28 @@ Please add a initial value for every state property even if it's \`undefined\`.`
       signal: dataString.length !== 0 || hasDynamicComponents,
       computed: gettersString.length !== 0,
       onPush,
+      AfterViewInit,
+      OnDestroy,
       viewChild: importsViewChild,
       viewContainerRef: hasDynamicComponents,
       templateRef: hasDynamicComponents,
       renderer: usesRenderer2,
     });
+
+    // Hooks
+
+    if (!emptyOnMount) {
+      addCodeNgAfterViewInit(json, json.hooks.onMount.map((onMount) => onMount.code).join('\n'));
+    }
+
+    // Angular interfaces
+    const angularInterfaces = [];
+    if (AfterViewInit) {
+      angularInterfaces.push('AfterViewInit');
+    }
+    if (OnDestroy) {
+      angularInterfaces.push('OnDestroy');
+    }
 
     let str = dedent`
         import { ${coreImports} } from '@angular/core';
@@ -332,7 +346,9 @@ Please add a initial value for every state property even if it's \`undefined\`.`
             .map(([k, v]) => `${k}: ${v}`)
             .join(',')}
         })
-        export ${options.defaultExportComponents ? 'default ' : ''}class ${json.name} {   
+        export ${options.defaultExportComponents ? 'default ' : ''}class ${json.name} ${
+      angularInterfaces.length ? ` implements ${angularInterfaces.join(',')}` : ''
+    } {   
           ${uniq<string>(json.compileContext!.angular!.extra!.importCalls)
             .map((importCall: string) => `protected readonly ${importCall} = ${importCall};`)
             .join('\n')}
@@ -422,7 +438,9 @@ Please add a initial value for every state property even if it's \`undefined\`.`
                   .filter(([_, value]) => !isHookEmpty(value))
                   .map(([key, value]) => {
                     return `${key}() {
+                    if (typeof window !== 'undefined') {
                 ${value.code}
+                }
               }`;
                   })
                   .join('\n')
@@ -430,11 +448,11 @@ Please add a initial value for every state property even if it's \`undefined\`.`
           }
     
           ${
-            json.hooks.onUnMount
-              ? `ngOnDestroy() {
+            emptyOnUnMount
+              ? ''
+              : `ngOnDestroy() {
                   ${json.hooks.onUnMount?.code || ''}
                 }`
-              : ''
           }
     
         }
