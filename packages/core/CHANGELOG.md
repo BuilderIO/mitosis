@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.12.1
+
+### Patch Changes
+
+- 072c095: [angular]:
+
+  Fix minor issues for `api=signals`:
+
+  - Missing `OnDestroy` import
+  - `onMount` hook will be `AfterViewInit` instead of `OnInit`
+  - HTML template uses prettiers [html-whitespace-sensitivity](https://github.com/angular/angular/issues/37635#issuecomment-2298369500) to avoid spaces around content
+
 ## 0.12.0
 
 ### Minor Changes
