@@ -812,12 +812,15 @@ export const builderElementToMitosisNode = (
   ) {
     dataAttributes['data-builder-originalName'] = block.component?.name;
   }
+  let nodeName = block.component?.name?.replace(/[^a-z0-9]/gi, '');
+  // Handle component names starting with numbers (invalid in most frameworks)
+  if (block.component?.name && nodeName && /^\d/.test(nodeName)) {
+    dataAttributes['data-builder-originalName'] = block.component?.name;
+    nodeName = `T${nodeName}`;
+  }
 
   const node = createMitosisNode({
-    name:
-      block.component?.name?.replace(/[^a-z0-9]/gi, '') ||
-      block.tagName ||
-      ((block as any).linkUrl ? 'a' : 'div'),
+    name: nodeName || block.tagName || ((block as any).linkUrl ? 'a' : 'div'),
     properties: {
       ...(block.component && includeSpecialBindings && { $tagName: block.tagName }),
       ...(block.class && { class: block.class }),

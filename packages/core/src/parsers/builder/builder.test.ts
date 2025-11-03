@@ -109,4 +109,50 @@ describe('Unpaired Surrogates', () => {
       'data-builder-originalName',
     );
   });
+
+  test('should handle component names starting with numbers', () => {
+    const builderContent: BuilderContent = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element' as const,
+            component: {
+              name: '123Button',
+              options: {
+                text: 'Click Me',
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    // Convert Builder JSON to Mitosis JSON
+    const mitosisCmp = builderContentToMitosisComponent(builderContent);
+    expect(mitosisCmp.children[0].name).toBe('T123Button');
+    expect(mitosisCmp.children[0].properties['data-builder-originalName']).toBe('123Button');
+
+    // Convert Mitosis JSON to Mitosis JSX
+    const mitosisJsx = componentToMitosis()({ component: mitosisCmp });
+    expect(mitosisJsx).toMatchInlineSnapshot(`
+      "import { T123Button } from \\"@components\\";
+
+      export default function MyComponent(props) {
+        return <T123Button text=\\"Click Me\\" data-builder-originalName=\\"123Button\\" />;
+      }
+      "
+    `);
+
+    // Convert back Mitosis JSX to Mitosis JSON
+    const backToMitosisCmp = parseJsx(mitosisJsx);
+    expect(backToMitosisCmp.children[0].name).toBe('T123Button');
+    expect(backToMitosisCmp.children[0].properties['data-builder-originalName']).toBe('123Button');
+
+    // Convert back Mitosis JSON to Builder JSON
+    const backToBuilder = componentToBuilder()({ component: backToMitosisCmp });
+    expect(backToBuilder?.data?.blocks?.[0]?.component?.name).toBe('123Button');
+    expect(backToBuilder?.data?.blocks?.[0]?.component?.options).not.toHaveProperty(
+      'data-builder-originalName',
+    );
+  });
 });
