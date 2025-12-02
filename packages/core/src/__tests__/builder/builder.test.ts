@@ -34,6 +34,10 @@ import lazyLoadSection from '../data/builder/lazy-load-section.json?raw';
 import localization from '../data/builder/localization.json?raw';
 import slotsContent from '../data/builder/slots.json?raw';
 import slots2Content from '../data/builder/slots2.json?raw';
+import symbolBasic from '../data/builder/symbol-basic.json?raw';
+import symbolMultiple from '../data/builder/symbol-multiple.json?raw';
+import symbolWithInputs from '../data/builder/symbol-with-inputs.json?raw';
+import symbolWithNamedEntry from '../data/builder/symbol-with-named-entry.json?raw';
 import tagNameContent from '../data/builder/tag-name.json?raw';
 import textBindings from '../data/builder/text-bindings.json?raw';
 import advancedFor from '../data/for/advanced-for.raw.tsx?raw';
@@ -2094,3 +2098,81 @@ const bindingJson = {
     ],
   },
 };
+
+describe('Symbol Serialization', () => {
+  test('Symbol with basic metadata', () => {
+    const builderContent = JSON.parse(symbolBasic) as BuilderContent;
+    const component = builderContentToMitosisComponent(builderContent);
+    const mitosis = componentToMitosis(mitosisOptions)({ component });
+
+    // Verify symbol name is sanitized and prefixed
+    expect(component.children[0].name).toBe('SymbolBasicSymbol');
+    expect(mitosis).toMatchSnapshot();
+  });
+
+  test('Symbol with entry name', () => {
+    const builderContent = JSON.parse(symbolWithNamedEntry) as BuilderContent;
+    const component = builderContentToMitosisComponent(builderContent);
+    const mitosis = componentToMitosis(mitosisOptions)({ component });
+
+    // Verify symbol name is sanitized and prefixed
+    expect(component.children[0].name).toBe('SymbolHeaderNavigation');
+    expect(mitosis).toMatchSnapshot();
+  });
+
+  test('Symbol with inputs as top-level props', () => {
+    const builderContent = JSON.parse(symbolWithInputs) as BuilderContent;
+    const component = builderContentToMitosisComponent(builderContent);
+    const mitosis = componentToMitosis(mitosisOptions)({ component });
+
+    // Verify inputs are top-level bindings
+    const symbolNode = component.children[0];
+    expect(symbolNode.name).toBe('SymbolButtonComponent');
+    expect(symbolNode.bindings).toHaveProperty('buttonText');
+    expect(symbolNode.bindings).toHaveProperty('variant');
+    expect(symbolNode.bindings).toHaveProperty('isDisabled');
+    expect(symbolNode.bindings).toHaveProperty('count');
+    expect(symbolNode.bindings).toHaveProperty('config');
+    expect(symbolNode.bindings.symbol).toBeDefined();
+
+    // Verify symbol binding doesn't contain data anymore
+    const symbolBinding = JSON.parse(symbolNode.bindings.symbol.code);
+    expect(symbolBinding.data).toBeUndefined();
+
+    expect(mitosis).toMatchSnapshot();
+  });
+
+  test('Multiple symbols with different names', () => {
+    const builderContent = JSON.parse(symbolMultiple) as BuilderContent;
+    const component = builderContentToMitosisComponent(builderContent);
+    const mitosis = componentToMitosis(mitosisOptions)({ component });
+
+    // Verify each symbol has unique name
+    expect(component.children[0].name).toBe('SymbolPrimaryButton');
+    expect(component.children[1].name).toBe('SymbolSecondaryButton');
+    expect(component.children[2].name).toBe('SymbolFooterSection');
+
+    // Verify inputs are extracted for each
+    expect(component.children[0].bindings).toHaveProperty('text');
+    expect(component.children[0].bindings).toHaveProperty('variant');
+    expect(component.children[1].bindings).toHaveProperty('text');
+    expect(component.children[1].bindings).toHaveProperty('variant');
+    expect(component.children[2].bindings).toHaveProperty('copyrightText');
+    expect(component.children[2].bindings).toHaveProperty('showSocialLinks');
+
+    expect(mitosis).toMatchSnapshot();
+  });
+
+  test('Symbol roundtrip: Builder -> Mitosis -> Builder', () => {
+    const original = JSON.parse(symbolWithInputs) as BuilderContent;
+    const mitosisComponent = builderContentToMitosisComponent(original);
+    const backToBuilder = componentToBuilder()({ component: mitosisComponent });
+
+    // Verify the symbol structure is preserved
+    const originalSymbol = original.data?.blocks?.[0];
+    const roundtripSymbol = backToBuilder.data?.blocks?.[0];
+
+    expect(roundtripSymbol?.component?.name).toBeDefined();
+    expect(roundtripSymbol?.component?.options?.symbol).toBeDefined();
+  });
+});
