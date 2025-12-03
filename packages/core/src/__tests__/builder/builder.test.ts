@@ -2175,4 +2175,67 @@ describe('Symbol Serialization', () => {
     expect(roundtripSymbol?.component?.name).toBeDefined();
     expect(roundtripSymbol?.component?.options?.symbol).toBeDefined();
   });
+
+  test('Symbol roundtrip: Named symbol converts back to "Symbol" component name', () => {
+    const original = JSON.parse(symbolWithInputs) as BuilderContent;
+
+    // Step 1: Builder -> Mitosis (named component)
+    const mitosisComponent = builderContentToMitosisComponent(original);
+    expect(mitosisComponent.children[0].name).toBe('SymbolButtonComponent');
+
+    // Step 2: Mitosis -> Builder (should be "Symbol" not "SymbolButtonComponent")
+    const backToBuilder = componentToBuilder()({ component: mitosisComponent });
+    const roundtripSymbol = backToBuilder.data?.blocks?.[0];
+
+    // CRITICAL: Builder Editor requires component.name === "Symbol"
+    expect(roundtripSymbol?.component?.name).toBe('Symbol');
+
+    // Verify symbol metadata is preserved
+    expect(roundtripSymbol?.component?.options?.symbol).toBeDefined();
+    expect(roundtripSymbol?.component?.options?.symbol?.entry).toBeDefined();
+
+    // Verify the display name is preserved for next roundtrip
+    expect(roundtripSymbol?.component?.options?.symbol?.name).toBe('Button Component');
+
+    // Verify inputs are merged back into symbol.data
+    expect(roundtripSymbol?.component?.options?.symbol?.data).toBeDefined();
+    expect(roundtripSymbol?.component?.options?.symbol?.data?.buttonText).toBe('Click me!');
+  });
+
+  test('Symbol roundtrip preserves symbol.name for re-conversion to JSX', () => {
+    // Simulate what MCP returns: symbol with name field
+    const builderWithSymbolName: BuilderContent = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element',
+            '@version': 2,
+            id: 'builder-roundtrip-test',
+            component: {
+              name: 'Symbol',
+              options: {
+                symbol: {
+                  entry: 'test-entry-123',
+                  model: 'symbol',
+                  name: 'Copyright Reserved', // This should be used for component naming
+                  data: {},
+                },
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    // Builder -> Mitosis: should use symbol.name for component name
+    const mitosisComponent = builderContentToMitosisComponent(builderWithSymbolName);
+    expect(mitosisComponent.children[0].name).toBe('SymbolCopyrightReserved');
+
+    // Mitosis -> Builder: should preserve name and use "Symbol" as component name
+    const backToBuilder = componentToBuilder()({ component: mitosisComponent });
+    const symbol = backToBuilder.data?.blocks?.[0];
+
+    expect(symbol?.component?.name).toBe('Symbol');
+    expect(symbol?.component?.options?.symbol?.name).toBe('Copyright Reserved');
+  });
 });
