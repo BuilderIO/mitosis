@@ -683,6 +683,12 @@ export const blockToBuilder = (
           }
         }
       }
+      // Also check properties for inputs that became simple string props after JSX roundtrip
+      for (const key of Object.keys(json.properties)) {
+        if (!key.startsWith('$') && !key.startsWith('_') && !key.startsWith('data-')) {
+          inputData[key] = json.properties[key];
+        }
+      }
       if (Object.keys(inputData).length > 0) {
         symbolOptions.data = { ...symbolOptions.data, ...inputData };
       }
