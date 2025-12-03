@@ -361,16 +361,13 @@ const componentMappers: {
     const styleString = getStyleStringFromBlock(block, options);
     const actionBindings = getActionBindingsFromBlock(block, options);
 
-    // Extract symbol name for component naming
-    // Note: extractSymbols may have already set block.component.name, so use that if available
     const symbolOptions = block.component?.options?.symbol;
     const symbolName = symbolOptions?.content?.name || symbolOptions?.name;
     const componentName =
       block.component?.name !== 'Symbol'
         ? block.component?.name // Use name already set by extractSymbols
-        : sanitizeSymbolName(symbolName); // Otherwise sanitize it ourselves
+        : sanitizeSymbolName(symbolName);
 
-    // Phase 2: Extract inputs from symbol.data to create top-level bindings
     const symbolData = symbolOptions?.data || {};
     const inputBindings: Dictionary<Binding> = {};
     const hasInputs = Object.keys(symbolData).length > 0;
@@ -1124,7 +1121,6 @@ function extractSymbols(json: BuilderContent) {
       continue;
     }
 
-    // Use actual symbol name instead of generic counter
     const symbolName = elContent.name || symbolValue?.name;
     const componentName = sanitizeSymbolName(symbolName) || `Symbol${++symbolsFound}`;
 
