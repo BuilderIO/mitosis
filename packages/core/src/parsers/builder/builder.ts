@@ -368,6 +368,18 @@ const componentMappers: {
         ? block.component?.name // Use name already set by extractSymbols
         : sanitizeSymbolName(symbolName);
 
+    // Extract inputs from symbol.data to make them visible as top-level JSX props
+    //
+    // In Builder.io, Symbol components can receive inputs through symbol.options.data,
+    // which contains key-value pairs for props passed to the symbol instance.
+    //
+    // We extract these from the nested data structure and create individual bindings
+    // for each input so they become first-class props in the generated code
+    // (e.g., <MySymbol title="Hello" count={5} />) instead of being buried in metadata
+    // (e.g., <MySymbol symbol={{ data: { title: "Hello", count: 5 } }} />).
+    //
+    // This transformation enables proper prop passing and makes the component usage
+    // more idiomatic in the target framework.
     const symbolData = symbolOptions?.data || {};
     const inputBindings: Dictionary<Binding> = {};
     const hasInputs = Object.keys(symbolData).length > 0;
