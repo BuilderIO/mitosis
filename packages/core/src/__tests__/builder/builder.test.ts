@@ -1403,7 +1403,6 @@ describe('Builder', () => {
   });
 
   test('layerLocked roundtrip conversion', () => {
-    // Test Builder -> Mitosis -> Builder roundtrip
     const originalBuilder = {
       data: {
         blocks: [
@@ -1422,17 +1421,13 @@ describe('Builder', () => {
       },
     };
 
-    // Convert to Mitosis
     const mitosisComponent = builderContentToMitosisComponent(originalBuilder);
 
-    // Verify Mitosis conversion
     expect(mitosisComponent.children[0].properties['data-builder-layerLocked']).toBe('true');
     expect(mitosisComponent.children[0].properties.$name).toBe('test-layer');
 
-    // Convert back to Builder
     const backToBuilder = componentToBuilder()({ component: mitosisComponent });
 
-    // Verify roundtrip conversion
     expect(backToBuilder.data?.blocks?.[0]?.layerLocked).toBe(true);
     expect(backToBuilder.data?.blocks?.[0]?.layerName).toBe('test-layer');
   });
@@ -1473,7 +1468,6 @@ describe('Builder', () => {
   });
 
   test('groupLocked roundtrip conversion', () => {
-    // Test Builder -> Mitosis -> Builder roundtrip
     const originalBuilder = {
       data: {
         blocks: [
@@ -1492,17 +1486,13 @@ describe('Builder', () => {
       },
     };
 
-    // Convert to Mitosis
     const mitosisComponent = builderContentToMitosisComponent(originalBuilder);
 
-    // Verify Mitosis conversion
     expect(mitosisComponent.children[0].properties['data-builder-groupLocked']).toBe('true');
     expect(mitosisComponent.children[0].properties.$name).toBe('test-layer');
 
-    // Convert back to Builder
     const backToBuilder = componentToBuilder()({ component: mitosisComponent });
 
-    // Verify roundtrip conversion
     expect(backToBuilder.data?.blocks?.[0]?.groupLocked).toBe(true);
     expect(backToBuilder.data?.blocks?.[0]?.layerName).toBe('test-layer');
   });
@@ -1517,7 +1507,6 @@ describe('Builder', () => {
       refs: {},
       state: {
         dataBuilderList1: {
-          // Should not use this key
           type: 'property',
           code: '[1,2,3,4,5]',
           propertyType: 'normal',
@@ -1614,7 +1603,6 @@ describe('Builder', () => {
       }
     `);
 
-    // Test roundtrip conversion
     const backToMitosis = builderContentToMitosisComponent(builderJson);
     expect(backToMitosis).toMatchInlineSnapshot(`
       {
@@ -2105,7 +2093,6 @@ describe('Symbol Serialization', () => {
     const component = builderContentToMitosisComponent(builderContent);
     const mitosis = componentToMitosis(mitosisOptions)({ component });
 
-    // Verify symbol name is sanitized and prefixed
     expect(component.children[0].name).toBe('SymbolBasicSymbol');
     expect(mitosis).toMatchSnapshot();
   });
@@ -2115,7 +2102,6 @@ describe('Symbol Serialization', () => {
     const component = builderContentToMitosisComponent(builderContent);
     const mitosis = componentToMitosis(mitosisOptions)({ component });
 
-    // Verify symbol name is sanitized and prefixed
     expect(component.children[0].name).toBe('SymbolHeaderNavigation');
     expect(mitosis).toMatchSnapshot();
   });
@@ -2125,17 +2111,12 @@ describe('Symbol Serialization', () => {
     const component = builderContentToMitosisComponent(builderContent);
     const mitosis = componentToMitosis(mitosisOptions)({ component });
 
-    // Verify inputs are top-level bindings
     const symbolNode = component.children[0];
-    expect(symbolNode.name).toBe('SymbolButtonComponent');
-    expect(symbolNode.bindings).toHaveProperty('buttonText');
-    expect(symbolNode.bindings).toHaveProperty('variant');
-    expect(symbolNode.bindings).toHaveProperty('isDisabled');
-    expect(symbolNode.bindings).toHaveProperty('count');
-    expect(symbolNode.bindings).toHaveProperty('config');
-    expect(symbolNode.bindings.symbol).toBeDefined();
+    expect({
+      name: symbolNode.name,
+      bindings: symbolNode.bindings,
+    }).toMatchSnapshot();
 
-    // Verify symbol binding doesn't contain data anymore
     const symbolBinding = JSON.parse(symbolNode.bindings.symbol!.code);
     expect(symbolBinding.data).toBeUndefined();
 
@@ -2147,18 +2128,12 @@ describe('Symbol Serialization', () => {
     const component = builderContentToMitosisComponent(builderContent);
     const mitosis = componentToMitosis(mitosisOptions)({ component });
 
-    // Verify each symbol has unique name
-    expect(component.children[0].name).toBe('SymbolPrimaryButton');
-    expect(component.children[1].name).toBe('SymbolSecondaryButton');
-    expect(component.children[2].name).toBe('SymbolFooterSection');
-
-    // Verify inputs are extracted for each
-    expect(component.children[0].bindings).toHaveProperty('text');
-    expect(component.children[0].bindings).toHaveProperty('variant');
-    expect(component.children[1].bindings).toHaveProperty('text');
-    expect(component.children[1].bindings).toHaveProperty('variant');
-    expect(component.children[2].bindings).toHaveProperty('copyrightText');
-    expect(component.children[2].bindings).toHaveProperty('showSocialLinks');
+    expect(
+      component.children.map((child) => ({
+        name: child.name,
+        bindings: child.bindings,
+      })),
+    ).toMatchSnapshot();
 
     expect(mitosis).toMatchSnapshot();
   });
@@ -2166,19 +2141,14 @@ describe('Symbol Serialization', () => {
   test('Symbol roundtrip: Builder -> Mitosis -> JSX -> Mitosis -> Builder', () => {
     const original = JSON.parse(symbolWithInputs) as BuilderContent;
 
-    // Step 1: Builder JSON -> Mitosis Component
     const mitosisComponent = builderContentToMitosisComponent(original);
 
-    // Step 2: Mitosis Component -> Mitosis JSX string (what AI sees)
     const jsxString = componentToMitosis()({ component: mitosisComponent });
 
-    // Step 3: Mitosis JSX string -> Mitosis Component (after AI edits)
     const parsedComponent = parseJsx(jsxString);
 
-    // Step 4: Mitosis Component -> Builder JSON
     const backToBuilder = componentToBuilder()({ component: parsedComponent });
 
-    // Verify the symbol structure is preserved through full roundtrip
     const roundtripSymbol = backToBuilder.data?.blocks?.[0];
 
     expect(roundtripSymbol?.component?.name).toBeDefined();
@@ -2188,37 +2158,29 @@ describe('Symbol Serialization', () => {
   test('Symbol roundtrip: Named symbol converts back to "Symbol" component name', () => {
     const original = JSON.parse(symbolWithInputs) as BuilderContent;
 
-    // Step 1: Builder -> Mitosis (named component)
     const mitosisComponent = builderContentToMitosisComponent(original);
     expect(mitosisComponent.children[0].name).toBe('SymbolButtonComponent');
 
-    // Step 2: Mitosis -> JSX string (what AI sees)
     const jsxString = componentToMitosis()({ component: mitosisComponent });
 
-    // Step 3: JSX string -> Mitosis (after AI edits)
     const parsedComponent = parseJsx(jsxString);
 
-    // Step 4: Mitosis -> Builder (should be "Symbol" not "SymbolButtonComponent")
     const backToBuilder = componentToBuilder()({ component: parsedComponent });
     const roundtripSymbol = backToBuilder.data?.blocks?.[0];
 
     // CRITICAL: Builder Editor requires component.name === "Symbol"
     expect(roundtripSymbol?.component?.name).toBe('Symbol');
 
-    // Verify symbol metadata is preserved
     expect(roundtripSymbol?.component?.options?.symbol).toBeDefined();
     expect(roundtripSymbol?.component?.options?.symbol?.entry).toBeDefined();
 
-    // Verify the display name is preserved for next roundtrip
     expect(roundtripSymbol?.component?.options?.symbol?.name).toBe('Button Component');
 
-    // Verify inputs are merged back into symbol.data
     expect(roundtripSymbol?.component?.options?.symbol?.data).toBeDefined();
     expect(roundtripSymbol?.component?.options?.symbol?.data?.buttonText).toBe('Click me!');
   });
 
   test('Symbol roundtrip preserves symbol.name for re-conversion to JSX', () => {
-    // Simulate what MCP returns: symbol with name field
     const builderWithSymbolName: BuilderContent = {
       data: {
         blocks: [
@@ -2232,7 +2194,7 @@ describe('Symbol Serialization', () => {
                 symbol: {
                   entry: 'test-entry-123',
                   model: 'symbol',
-                  name: 'Copyright Reserved', // This should be used for component naming
+                  name: 'Copyright Reserved',
                   data: {},
                 },
               },
@@ -2242,17 +2204,13 @@ describe('Symbol Serialization', () => {
       },
     };
 
-    // Step 1: Builder -> Mitosis: should use symbol.name for component name
     const mitosisComponent = builderContentToMitosisComponent(builderWithSymbolName);
     expect(mitosisComponent.children[0].name).toBe('SymbolCopyrightReserved');
 
-    // Step 2: Mitosis -> JSX string (what AI sees)
     const jsxString = componentToMitosis()({ component: mitosisComponent });
 
-    // Step 3: JSX string -> Mitosis (after AI edits)
     const parsedComponent = parseJsx(jsxString);
 
-    // Step 4: Mitosis -> Builder: should preserve name and use "Symbol" as component name
     const backToBuilder = componentToBuilder()({ component: parsedComponent });
     const symbol = backToBuilder.data?.blocks?.[0];
 
