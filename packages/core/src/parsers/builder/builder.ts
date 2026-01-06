@@ -1134,7 +1134,7 @@ function extractSymbols(json: BuilderContent) {
     }
 
     const symbolName = elContent.name || symbolValue?.name;
-    const componentName = sanitizeSymbolName(symbolName) || `Symbol${++symbolsFound}`;
+    const componentName = sanitizeSymbolName(symbolName);
 
     el.component!.name = componentName;
 
