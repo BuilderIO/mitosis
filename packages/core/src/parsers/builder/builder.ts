@@ -413,6 +413,7 @@ const componentMappers: {
 
     return createMitosisNode({
       name: componentName,
+      type: 'user-symbol',
       bindings: bindings,
       meta: getMetaFromBlock(block, options),
     });
@@ -701,7 +702,10 @@ export const builderElementToMitosisNode = (
     block.component &&
     (componentMappers[block.component!.name] ||
       // Handle symbols that were renamed by extractSymbols (e.g., "SymbolButtonComponent")
-      (block.component!.name.startsWith('Symbol') ? componentMappers['Symbol'] : undefined));
+      // Check for symbol options or exact 'Symbol' name instead of name pattern
+      (block.component?.options?.symbol || block.component?.name === 'Symbol'
+        ? componentMappers['Symbol']
+        : undefined));
 
   if (mapper) {
     return mapper(block, options);
