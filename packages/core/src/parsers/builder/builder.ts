@@ -241,6 +241,37 @@ const wrapBindingIfNeeded = (value: string, options: BuilderToMitosisOptions) =>
   return value;
 };
 
+/**
+ * Sanitizes a symbol name to be a valid JSX component name.
+ * - Converts to PascalCase
+ * - Removes invalid characters
+ * - Adds "Symbol" prefix to avoid collisions
+ * - Returns "Symbol" if no valid name can be generated
+ */
+const sanitizeSymbolName = (name: string | undefined): string => {
+  if (!name || typeof name !== 'string') {
+    return 'Symbol';
+  }
+
+  // Remove special characters and split into words
+  const words = name
+    .replace(/[^a-zA-Z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .filter(Boolean);
+
+  if (words.length === 0) {
+    return 'Symbol';
+  }
+
+  // Convert to PascalCase
+  const pascalCase = words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join('');
+
+  // Add Symbol prefix to avoid collisions with other components
+  return `Symbol${pascalCase}`;
+};
+
 const getBlockActions = (block: BuilderElement, options: BuilderToMitosisOptions) => {
   const obj = {
     ...block.actions,
@@ -330,12 +361,47 @@ const componentMappers: {
     const styleString = getStyleStringFromBlock(block, options);
     const actionBindings = getActionBindingsFromBlock(block, options);
 
+    const symbolOptions = block.component?.options?.symbol;
+    const symbolName = symbolOptions?.content?.name || symbolOptions?.name;
+    const componentName =
+      block.component?.name !== 'Symbol'
+        ? block.component?.name // Use name already set by extractSymbols
+        : sanitizeSymbolName(symbolName);
+
+    // Extract inputs from symbol.data to make them visible as top-level JSX props
+    //
+    // In Builder.io, Symbol components can receive inputs through symbol.options.data,
+    // which contains key-value pairs for props passed to the symbol instance.
+    //
+    // We extract these from the nested data structure and create individual bindings
+    // for each input so they become first-class props in the generated code
+    // (e.g., <MySymbol title="Hello" count={5} />) instead of being buried in metadata
+    // (e.g., <MySymbol symbol={{ data: { title: "Hello", count: 5 } }} />).
+    //
+    // This transformation enables proper prop passing and makes the component usage
+    // more idiomatic in the target framework.
+    const symbolData = symbolOptions?.data || {};
+    const inputBindings: Dictionary<Binding> = {};
+    const hasInputs = Object.keys(symbolData).length > 0;
+
+    // Only extract inputs if there are any to avoid data loss
+    if (hasInputs) {
+      // Create individual bindings for each input
+      for (const key in symbolData) {
+        inputBindings[key] = createSingleBinding({
+          code: json5.stringify(symbolData[key]),
+        });
+      }
+    }
+
+    // Keep symbol metadata - only omit data if we extracted inputs
+    const symbolMetadata = hasInputs ? omit(symbolOptions, 'data') : symbolOptions;
+
     const bindings: Dictionary<Binding> = {
       symbol: createSingleBinding({
-        code: JSON.stringify({
-          ...block.component?.options.symbol,
-        }),
+        code: JSON.stringify(symbolMetadata),
       }),
+      ...inputBindings,
       ...actionBindings,
       ...(styleString && {
         style: createSingleBinding({ code: styleString }),
@@ -346,7 +412,8 @@ const componentMappers: {
     };
 
     return createMitosisNode({
-      name: 'Symbol',
+      name: componentName,
+      type: 'user-symbol',
       bindings: bindings,
       meta: getMetaFromBlock(block, options),
     });
@@ -631,7 +698,14 @@ export const builderElementToMitosisNode = (
     }
   }
   const mapper =
-    !_internalOptions.skipMapper && block.component && componentMappers[block.component!.name];
+    !_internalOptions.skipMapper &&
+    block.component &&
+    (componentMappers[block.component!.name] ||
+      // Handle symbols that were renamed by extractSymbols (e.g., "SymbolButtonComponent")
+      // Check for symbol options or exact 'Symbol' name instead of name pattern
+      (block.component?.options?.symbol || block.component?.name === 'Symbol'
+        ? componentMappers['Symbol']
+        : undefined));
 
   if (mapper) {
     return mapper(block, options);
@@ -1063,7 +1137,8 @@ function extractSymbols(json: BuilderContent) {
       continue;
     }
 
-    const componentName = 'Symbol' + ++symbolsFound;
+    const symbolName = elContent.name || symbolValue?.name;
+    const componentName = sanitizeSymbolName(symbolName);
 
     el.component!.name = componentName;
 
