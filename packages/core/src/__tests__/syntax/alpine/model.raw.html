@@ -1,0 +1,81 @@
+<div
+  x-data="{ 
+  text: 'Initial text',
+  number: 0,
+  checkbox: false,
+  radio: 'option1',
+  select: 'option1',
+  textarea: 'Initial textarea content',
+  array: ['item1', 'item2'],
+  object: { name: 'John', age: 30 }
+}"
+>
+  <!-- Text input with display -->
+  <div>
+    <p>Text Value: <span x-text="text"></span></p>
+    <input type="text" x-model="text" placeholder="Type something..." />
+  </div>
+
+  <!-- Number input with display -->
+  <div>
+    <p>Number Value: <span x-text="number"></span></p>
+    <input type="number" x-model="number" />
+    <button x-on:click="number++">Increment</button>
+    <button x-on:click="number--">Decrement</button>
+  </div>
+
+  <!-- Checkbox with display -->
+  <div>
+    <p>Checkbox State: <span x-text="checkbox ? 'Checked' : 'Unchecked'"></span></p>
+    <input type="checkbox" x-model="checkbox" />
+  </div>
+
+  <!-- Radio buttons with display -->
+  <div>
+    <p>Selected Radio: <span x-text="radio"></span></p>
+    <input type="radio" x-model="radio" value="option1" /> Option 1
+    <input type="radio" x-model="radio" value="option2" /> Option 2
+    <input type="radio" x-model="radio" value="option3" /> Option 3
+  </div>
+
+  <!-- Select with display -->
+  <div>
+    <p>Selected Option: <span x-text="select"></span></p>
+    <select x-model="select">
+      <option value="option1">Option 1</option>
+      <option value="option2">Option 2</option>
+      <option value="option3">Option 3</option>
+    </select>
+  </div>
+
+  <!-- Textarea with display -->
+  <div>
+    <p>Textarea Content: <span x-text="textarea"></span></p>
+    <textarea x-model="textarea" rows="3"></textarea>
+  </div>
+
+  <!-- Array with display -->
+  <div>
+    <p>Array Items: <span x-text="JSON.stringify(array)"></span></p>
+    <input type="text" x-model="array[0]" placeholder="Array item 1" />
+    <input type="text" x-model="array[1]" placeholder="Array item 2" />
+    <button x-on:click="array.push('new item')">Add Item</button>
+  </div>
+
+  <!-- Object with display -->
+  <div>
+    <p>Object Data: <span x-text="JSON.stringify(object)"></span></p>
+    <input type="text" x-model="object.name" placeholder="Name" />
+    <input type="number" x-model="object.age" placeholder="Age" />
+  </div>
+
+  <!-- Complex object with nested properties -->
+  <div x-data="{ user: { profile: { name: 'John', settings: { theme: 'light' } } } }">
+    <p>Nested Object: <span x-text="JSON.stringify(user)"></span></p>
+    <input type="text" x-model="user.profile.name" placeholder="Name" />
+    <select x-model="user.profile.settings.theme">
+      <option value="light">Light Theme</option>
+      <option value="dark">Dark Theme</option>
+    </select>
+  </div>
+</div>

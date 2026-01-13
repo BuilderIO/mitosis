@@ -2,7 +2,7 @@ import { parseJsx } from '@/parsers/jsx';
 import { Target } from '@/types/config';
 import { BaseTranspilerOptions, TranspilerGenerator } from '@/types/transpiler';
 import { describe, expect, test } from 'vitest';
-import { MitosisComponent, Plugin, createTypescriptProject, parseSvelte } from '..';
+import { MitosisComponent, Plugin, createTypescriptProject, parseAlpine, parseSvelte } from '..';
 
 const getRawFile = async (filePath: string) => {
   const code = await import(`${filePath}?raw`).then((x) => x.default as string);
@@ -393,6 +393,15 @@ const ANGULAR_TESTS: Tests = {
 const CONTEXT_TEST: Tests = {
   componentWithContext,
   componentWithContextMultiRoot,
+};
+
+const ALPINE_SYNTAX_TESTS: Tests = {
+  basic: getRawFile('./syntax/alpine/basic.raw.html'),
+  bind: getRawFile('./syntax/alpine/bind.raw.html'),
+  model: getRawFile('./syntax/alpine/model.raw.html'),
+  on: getRawFile('./syntax/alpine/on.raw.html'),
+  for: getRawFile('./syntax/alpine/for.raw.html'),
+  conditional: getRawFile('./syntax/alpine/conditional.raw.html'),
 };
 
 const JSX_TESTS: Tests[] = [
@@ -819,5 +828,16 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
         });
       }
     }
+  });
+};
+
+export const runTestsForAlpineSyntax = () => {
+  Object.keys(ALPINE_SYNTAX_TESTS).forEach((key) => {
+    test(key, async () => {
+      const singleTest = ALPINE_SYNTAX_TESTS[key];
+      const t = isTestWithFailFor(singleTest) ? singleTest.file : singleTest;
+      const component = parseAlpine((await t).code);
+      expect(component).toMatchSnapshot();
+    });
   });
 };

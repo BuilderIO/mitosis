@@ -1,0 +1,22 @@
+<div
+  x-data="{ items: ['Item 1', 'Item 2', 'Item 3'], users: [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }] }"
+>
+  <ul>
+    <template x-for="item in items">
+      <li x-text="item"></li>
+    </template>
+  </ul>
+
+  <template x-for="user in users" :key="user.id">
+    <div>
+      <span x-text="user.name"></span>
+    </div>
+  </template>
+
+  <template x-for="(item, index) in items">
+    <div>
+      <span x-text="index + 1"></span>
+      <span x-text="item"></span>
+    </div>
+  </template>
+</div>
