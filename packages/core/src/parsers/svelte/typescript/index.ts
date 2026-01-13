@@ -9,9 +9,14 @@ import type { SveltosisComponent } from '../types';
 
 export function isTypeScriptComponent(string_: string) {
   const regex = createTagRegex('script', 'gi');
-  const match = regex.exec(string_);
-  const { lang } = parseAttributes((match?.length && match[1]) || '');
-  return lang === 'ts';
+  let isTypeScript = false;
+  // match all
+  string_.replace(regex, (...match) => {
+    const { lang } = parseAttributes((match?.length && match[1]) || '');
+    if (lang === 'ts') isTypeScript = true;
+    return '';
+  });
+  return isTypeScript;
 }
 
 /** Create a tag matching regexp. */
