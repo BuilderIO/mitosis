@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.13.0
+
+### Minor Changes
+
+- 720e30b: add symbol name serialization to enable symbols to work well with editor-ai
+
 ## 0.12.1
 
 ### Patch Changes
