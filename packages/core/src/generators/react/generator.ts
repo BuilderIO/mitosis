@@ -24,7 +24,6 @@ import { CODE_PROCESSOR_PLUGIN } from '@/helpers/plugins/process-code';
 import { processHttpRequests } from '@/helpers/process-http-requests';
 import { renderPreComponent } from '@/helpers/render-imports';
 import { replaceNodes, replaceStateIdentifier } from '@/helpers/replace-identifiers';
-import { stripNewlinesInStrings } from '@/helpers/replace-new-lines-in-strings';
 import { checkHasState } from '@/helpers/state';
 import { stripMetaProperties } from '@/helpers/strip-meta-properties';
 import { collectCss } from '@/helpers/styles/collect-css';
@@ -508,5 +507,5 @@ const _componentToReact = (
 
   `;
 
-  return stripNewlinesInStrings(str);
+  return str;
 };

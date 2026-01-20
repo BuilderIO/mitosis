@@ -2,7 +2,6 @@ import { HOOKS } from '@/constants/hooks';
 import { createMitosisComponent } from '@/helpers/create-mitosis-component';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import { tryParseJson } from '@/helpers/json';
-import { stripNewlinesInStrings } from '@/helpers/replace-new-lines-in-strings';
 import { getSignalImportName } from '@/helpers/signals';
 import { traverseNodes } from '@/helpers/traverse-nodes';
 import { MitosisComponent } from '@/types/mitosis-component';
@@ -170,17 +169,12 @@ export function parseJsx(
     throw new Error('Could not parse JSX');
   }
 
-  const stringifiedMitosisComponent = stripNewlinesInStrings(
-    output.code
-      .trim()
-      // Occasional issues where comments get kicked to the top. Full fix should strip these sooner
-      .replace(/^\/\*[\s\S]*?\*\/\s*/, '')
-      // Weird bug with adding a newline in a normal at end of a normal string that can't have one
-      // If not one-off find full solve and cause
-      .replace(/\n"/g, '"')
-      .replace(/^\({/, '{')
-      .replace(/}\);$/, '}'),
-  );
+  const stringifiedMitosisComponent = output.code
+    .trim()
+    // Occasional issues where comments get kicked to the top. Full fix should strip these sooner
+    .replace(/^\/\*[\s\S]*?\*\/\s*/, '')
+    .replace(/^\({/, '{')
+    .replace(/}\);$/, '}');
 
   const mitosisComponent: MitosisComponent = tryParseJson(stringifiedMitosisComponent);
 
