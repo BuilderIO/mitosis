@@ -353,37 +353,37 @@ export declare namespace JSX {
     cite?: string;
   }
 
-interface ButtonHTMLAttributes<T> extends HTMLAttributes<T> {
-  autofocus?: boolean;
-  disabled?: boolean;
-  form?: string;
-  formaction?: string;
-  formenctype?: HTMLFormEncType;
-  formmethod?: HTMLFormMethod;
-  formnovalidate?: boolean;
-  formtarget?: string;
-  name?: string;
-  type?: 'submit' | 'reset' | 'button';
-  value?: string;
+  interface ButtonHTMLAttributes<T> extends HTMLAttributes<T> {
+    autofocus?: boolean;
+    disabled?: boolean;
+    form?: string;
+    formaction?: string;
+    formenctype?: HTMLFormEncType;
+    formmethod?: HTMLFormMethod;
+    formnovalidate?: boolean;
+    formtarget?: string;
+    name?: string;
+    type?: 'submit' | 'reset' | 'button';
+    value?: string;
+    
+    // Invoker Commands API
+    command?: 
+      | 'show-modal'
+      | 'close'
+      | 'show-popover'
+      | 'hide-popover'
+      | 'toggle-popover'
+      | string;
+    commandfor?: string;
   
-  // Invoker Commands API
-  command?: 
-    | 'show-modal'
-    | 'close'
-    | 'show-popover'
-    | 'hide-popover'
-    | 'toggle-popover'
-    | string;
-  commandfor?: string;
-
-  // camelcase
-  formAction?: string;
-  formEnctype?: HTMLFormEncType;
-  formMethod?: HTMLFormMethod;
-  formNoValidate?: boolean;
-  formTarget?: string;
-  commandFor?: string;
-}
+    // camelcase
+    formAction?: string;
+    formEnctype?: HTMLFormEncType;
+    formMethod?: HTMLFormMethod;
+    formNoValidate?: boolean;
+    formTarget?: string;
+    commandFor?: string;
+  }
 
   interface CanvasHTMLAttributes<T> extends HTMLAttributes<T> {
     width?: number | string;
