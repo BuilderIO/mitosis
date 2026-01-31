@@ -365,17 +365,11 @@ export declare namespace JSX {
     name?: string;
     type?: 'submit' | 'reset' | 'button';
     value?: string;
-    
+
     // Invoker Commands API
-    command?: 
-      | 'show-modal'
-      | 'close'
-      | 'show-popover'
-      | 'hide-popover'
-      | 'toggle-popover'
-      | string;
+    command?: 'show-modal' | 'close' | 'show-popover' | 'hide-popover' | 'toggle-popover' | string;
     commandfor?: string;
-  
+
     // camelcase
     formAction?: string;
     formEnctype?: HTMLFormEncType;
