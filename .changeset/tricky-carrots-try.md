@@ -1,5 +1,5 @@
 ---
-"@builder.io/mitosis": patch
+"@builder.io/mitosis": minor
 ---
 
-refactor: Enhance Button HTML attributes with Invoker Commands API
+feat: Enhance Button HTML attributes with Invoker Commands API
