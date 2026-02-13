@@ -33,7 +33,9 @@ const parent = element?.closest(customElementSelector);
           } else {
             parent.removeAttribute(attr.name);
           }
-        } else if (!attr.name.startsWith('_')${exceptions?.length ? `&& ![${exceptions.join(",")}].includes(attr)`:""}) {
+        } else if (!attr.name.startsWith('_')${
+          exceptions?.length ? `&& ![${exceptions.join(',')}].includes(attr)` : ''
+        }) {
           element.setAttribute(attr.name, attr.value)
           parent.removeAttribute(attr.name);
         }
