@@ -18,6 +18,7 @@ export type TranspilerGenerator<X extends BaseTranspilerOptions, Y = string> = (
 export type AttributePassingType = {
   enabled: boolean;
   customRef?: string;
+  exceptions?: string[];
 };
 
 export interface BaseTranspilerOptions {

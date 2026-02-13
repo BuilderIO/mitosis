@@ -412,7 +412,14 @@ Please add a initial value for every state property even if it's \`undefined\`.`
                   `
           }}
           
-          ${withAttributePassing ? getAttributePassingString(options.typescript) : ''}
+          ${
+            withAttributePassing
+              ? getAttributePassingString(
+                  options.typescript,
+                  json.meta.useMetadata?.attributePassing?.exceptions,
+                )
+              : ''
+          }
           
           ${
             isHookEmpty(json.hooks.onInit)

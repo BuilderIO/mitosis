@@ -164,7 +164,11 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> = (
           ${dataString}
           ${methodsString}
           ${getExportsAndLocal(json)}
-          ${withAttributePassing ? getAttributePassingString(true) : ''}
+          ${
+            withAttributePassing
+              ? getAttributePassingString(true, json.meta.useMetadata?.attributePassing?.exceptions)
+              : ''
+          }
           
           ${dependencyOnUpdateHooks
             .map((hook: BaseHook, index: number) => {
