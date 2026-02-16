@@ -350,7 +350,7 @@ export const componentToAngularClassic: TranspilerGenerator<ToAngularOptions> = 
             withAttributePassing
               ? getAttributePassingString(
                   options.typescript,
-                  json.meta.useMetadata?.attributePassing?.exceptions,
+                  json.meta.useMetadata?.attributePassing?.additional,
                 )
               : ''
           }

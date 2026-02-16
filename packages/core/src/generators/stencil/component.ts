@@ -166,7 +166,7 @@ export const componentToStencil: TranspilerGenerator<ToStencilOptions> = (
           ${getExportsAndLocal(json)}
           ${
             withAttributePassing
-              ? getAttributePassingString(true, json.meta.useMetadata?.attributePassing?.exceptions)
+              ? getAttributePassingString(true, json.meta.useMetadata?.attributePassing?.additional)
               : ''
           }
           

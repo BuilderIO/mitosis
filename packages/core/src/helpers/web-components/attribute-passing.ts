@@ -3,7 +3,7 @@ import { BaseTranspilerOptions } from '@/types/transpiler';
 
 export const ROOT_REF = '_root';
 
-export const getAttributePassingString = (typescript?: boolean, exceptions?: string[]) => {
+export const getAttributePassingString = (typescript?: boolean, additional?: string[]) => {
   return `/**
  * Passes attributes to correct child. Used in angular and stencil.
  * @param element  the ref for the component
@@ -33,8 +33,8 @@ const parent = element?.closest(customElementSelector);
           } else {
             parent.removeAttribute(attr.name);
           }
-        } else if (!attr.name.startsWith('_')${
-          exceptions?.length ? `&& ![${exceptions.join(',')}].includes(attr)` : ''
+        } else if (attr.name === 'style' || attr.name.startsWith('data-') || attr.name.startsWith('aria-')${
+          additional?.length ? `&& [${additional.join(',')}].includes(attr)` : ''
         }) {
           element.setAttribute(attr.name, attr.value)
           parent.removeAttribute(attr.name);
