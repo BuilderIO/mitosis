@@ -3,11 +3,13 @@ import rule from '../jsx-callback-arg-name';
 
 const opts = {
   filename: 'component.lite.tsx',
-  parserOptions: {
-    ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
-    sourceType: 'module', // Allows for the use of imports
-    ecmaFeatures: {
-      jsx: true, // Allows for the parsing of JSX
+  languageOptions: {
+    ecmaVersion: 2018,
+    sourceType: 'module' as const,
+    parserOptions: {
+      ecmaFeatures: {
+        jsx: true,
+      },
     },
   },
 } as const;
@@ -16,13 +18,13 @@ var ruleTester = new RuleTester();
 
 ruleTester.run('jsx-callback-arg-name', rule, {
   valid: [
-    { ...opts, code: '<button/>', ...opts },
-    { ...opts, code: '<button type="button"/>', ...opts },
-    { ...opts, code: '<button onClick={ null }/>', ...opts },
-    { ...opts, code: '<button onClick={ "string" }/>', ...opts },
+    { ...opts, code: '<button/>' },
+    { ...opts, code: '<button type="button"/>' },
+    { ...opts, code: '<button onClick={ null }/>' },
+    { ...opts, code: '<button onClick={ "string" }/>' },
     { ...opts, code: '<button onClick={ event => doSomething(event) }/>' },
-    { ...opts, code: '<button onClick={ () => doSomething() }/>', ...opts },
-    { ...opts, code: '<button onClick={ function(event) {} }/>', ...opts },
+    { ...opts, code: '<button onClick={ () => doSomething() }/>' },
+    { ...opts, code: '<button onClick={ function(event) {} }/>' },
     // Doesn't apply to none mitosis files
     {
       ...opts,

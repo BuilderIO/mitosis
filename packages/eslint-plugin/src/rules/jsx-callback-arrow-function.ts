@@ -16,6 +16,7 @@ const rule: Rule.RuleModule = {
       recommended: true,
     },
     fixable: 'code',
+    schema: [],
   },
 
   create(context) {
@@ -49,7 +50,12 @@ const rule: Rule.RuleModule = {
           node: value.expression as any,
           message: 'Callback value must be an arrow function expression',
           fix(fixer) {
-            return fixer.replaceTextRange(node.value.expression.range as AST.Range, '(event)=>{}');
+            const sourceCode = context.sourceCode || context.getSourceCode();
+            const exprText = sourceCode.getText(value.expression as any);
+            return fixer.replaceTextRange(
+              node.value.expression.range as AST.Range,
+              `()=> ${exprText}()`,
+            );
           },
         });
       },

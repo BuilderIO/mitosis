@@ -1,3 +1,4 @@
+import type { Linter } from 'eslint';
 import { rules } from '../rules';
 
 const PLUGIN_NAME = '@builder.io/mitosis' as const;
@@ -20,11 +21,32 @@ const recommendedRules: Record<RulesKeys, 'error' | 'warn' | 'off' | 0 | 1 | 2> 
   '@builder.io/mitosis/use-state-var-declarator': 'error',
   '@builder.io/mitosis/static-control-flow': 'error',
   '@builder.io/mitosis/no-var-name-same-as-prop-name': 'error',
-  '@builder.io/mitosis/no-map-function-in-jsx-return-body': 'warn',
+  '@builder.io/mitosis/no-map-function-in-jsx-return-body': 'error',
   '@builder.io/mitosis/no-setter-with-same-name-as-state-prop': 'error',
+  '@builder.io/mitosis/prefer-show-over-ternary-operator': 'error',
 };
 
-export default {
+// Flat config format (ESLint 9+)
+export const recommended: Linter.Config = {
+  languageOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    parserOptions: {
+      ecmaFeatures: {
+        jsx: true,
+      },
+    },
+  },
+  plugins: {
+    [PLUGIN_NAME]: {
+      rules,
+    },
+  },
+  rules: recommendedRules,
+};
+
+// Legacy config format (ESLint < 9) - for backwards compatibility
+export const recommendedLegacy = {
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -33,3 +55,5 @@ export default {
   plugins: [PLUGIN_NAME],
   rules: recommendedRules,
 };
+
+export default recommended;

@@ -15,6 +15,7 @@ const rule: Rule.RuleModule = {
       description: 'disallow assigning useStore() to a variable with name other than state.',
       recommended: true,
     },
+    schema: [],
   },
 
   create(context) {

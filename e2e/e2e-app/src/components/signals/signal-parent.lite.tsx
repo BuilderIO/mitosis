@@ -19,7 +19,7 @@ export default function SignalParent() {
     <div>
       <SignalItemList list={n} />
       <span>{n.value}</span>
-      <button onClick={state.someFn}>Click me</button>
+      <button onClick={() => state.someFn()}>Click me</button>
       <div title={n.value.toString()} />
     </div>
   );

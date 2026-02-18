@@ -12,6 +12,7 @@ import noVarDeclarationOrAssignmentInComponent from './no-var-declaration-or-ass
 import noVarNameSameAsPropName from './no-var-name-same-as-prop-name';
 import noVarNameSameAsStateProperty from './no-var-name-same-as-state-property';
 import onlyDefaultFunctionAndImports from './only-default-function-and-imports';
+import preferShowOverTernaryOperator from './prefer-show-over-ternary-operator';
 import refNoCurrent from './ref-no-current';
 import { staticControlFlow } from './static-control-flow';
 import useStateVarDeclarator from './use-state-var-declarator';
@@ -34,4 +35,5 @@ export const rules = {
   'no-var-declaration-or-assignment-in-component': noVarDeclarationOrAssignmentInComponent,
   'no-map-function-in-jsx-return-body': noMapFunctionInJsxReturnBody,
   'no-setter-with-same-name-as-state-prop': noSetterWithSameNameAsStateProp,
+  'prefer-show-over-ternary-operator': preferShowOverTernaryOperator,
 };

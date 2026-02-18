@@ -15,6 +15,7 @@ const rule: Rule.RuleModule = {
       description: 'disallow variable declaration inside component file.',
       recommended: true,
     },
+    schema: [],
   },
 
   create(context) {
