@@ -23,7 +23,7 @@ const recommendedRules: Record<RulesKeys, 'error' | 'warn' | 'off' | 0 | 1 | 2> 
   '@builder.io/mitosis/no-var-name-same-as-prop-name': 'error',
   '@builder.io/mitosis/no-map-function-in-jsx-return-body': 'error',
   '@builder.io/mitosis/no-setter-with-same-name-as-state-prop': 'error',
-  '@builder.io/mitosis/prefer-show-over-ternary-operator': 'error',
+  '@builder.io/mitosis/no-ternary-operator-in-jsx-return-body': 'error',
 };
 
 // Flat config format (ESLint 9+)

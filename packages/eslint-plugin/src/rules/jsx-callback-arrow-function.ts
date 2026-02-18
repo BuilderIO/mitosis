@@ -52,9 +52,17 @@ const rule: Rule.RuleModule = {
           fix(fixer) {
             const sourceCode = context.sourceCode || context.getSourceCode();
             const exprText = sourceCode.getText(value.expression as any);
+            
+            if (types.isIdentifier(value.expression) || types.isMemberExpression(value.expression)) {
+              return fixer.replaceTextRange(
+                node.value.expression.range as AST.Range,
+                `()=> ${exprText}()`,
+              );
+            }
+            
             return fixer.replaceTextRange(
               node.value.expression.range as AST.Range,
-              `()=> ${exprText}()`,
+              '(event)=>{}',
             );
           },
         });

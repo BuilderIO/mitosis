@@ -20,7 +20,7 @@ linter.defineParser(TS_PARSER, {
 });
 
 linter.defineRules(rules as any);
-Object.entries(lintConfigs.recommended.rules).forEach(([key, value]) => {
+Object.entries(lintConfigs.recommended.rules || {}).forEach(([key, value]) => {
   const trimmedKey = key.replace(/^@builder.io\/mitosis\//, '');
   recommendedRules[trimmedKey] = value;
 });

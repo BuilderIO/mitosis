@@ -1,5 +1,5 @@
 import { RuleTester } from 'eslint';
-import rule from '../prefer-show-over-ternary-operator';
+import rule from '../no-ternary-operator-in-jsx-return-body';
 
 const opts = {
   filename: 'component.lite.tsx',
@@ -20,7 +20,7 @@ var ruleTester = new RuleTester({
   },
 });
 
-ruleTester.run('prefer-show-over-ternary-operator', rule, {
+ruleTester.run('no-ternary-operator-in-jsx-return-body', rule, {
   valid: [
     {
       ...opts,
@@ -73,6 +73,12 @@ ruleTester.run('prefer-show-over-ternary-operator', rule, {
       code: `
       export default function MyComponent(props) {
         return <div>{foo ? <bar /> : <baz />}</div>;
+      }
+    `,
+      output: `import { Show } from '@builder.io/mitosis';
+
+      export default function MyComponent(props) {
+        return <div><Show when={foo} else={<baz />}>{<bar />}</Show></div>;
       }
     `,
       errors: [
