@@ -1,29 +1,31 @@
 import {
   BaseTranspilerOptions,
-  MitosisComponent,
-  MitosisConfig,
-  MitosisPlugin,
-  OutputFiles,
-  ParseMitosisOptions,
-  Target,
-  TargetContext,
   checkIsMitosisComponentFilePath,
   checkIsSvelteComponentFilePath,
   checkShouldOutputTypeScript,
   createTypescriptProject,
   mapSignalTypeInTSFile,
+  MitosisComponent,
+  MitosisConfig,
+  MitosisPlugin,
+  OutputFiles,
   parseJsx,
+  ParseMitosisOptions,
   parseSvelte,
   removeMitosisImport,
   renameComponentFile,
+  Target,
+  TargetContext,
   targets,
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { outputFile, pathExists, pathExistsSync, readFile, remove } from 'fs-extra';
+import { Listr } from 'listr2';
 import { clone, kebabCase } from 'lodash';
+import { BuildCache } from './helpers/cache';
 import { generateContextFile } from './helpers/context';
-import { getFiles } from './helpers/files';
+import { getFiles, getFilesWithStats } from './helpers/files';
 import { getOverrideFile } from './helpers/overrides';
 import { transformImports, transpile, transpileIfNecessary } from './helpers/transpile';
 
@@ -98,12 +100,17 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => {
   return newConfig;
 };
 
-async function clean(options: MitosisConfig, target: Target) {
+async function clean(
+  options: MitosisConfig,
+  target: Target,
+  cache: BuildCache,
+  allFilePaths: string[],
+) {
   const targetPath = getTargetPath(options, target);
   const outputPattern = `${options.dest}/${targetPath}/${options.files}`;
   const oldFiles = getFiles({ files: outputPattern, exclude: options.exclude });
 
-  const newFilenames = getFiles({ files: options.files, exclude: options.exclude })
+  const newFilenames = allFilePaths
     .map((path) =>
       checkIsMitosisComponentFilePath(path)
         ? renameComponentFile({ target, path, options })
@@ -122,6 +129,7 @@ async function clean(options: MitosisConfig, target: Target) {
        * Modified files will be overwritten, and new files will be created.
        */
       if (!fileExists) {
+        cache.remove(oldFile);
         await remove(oldFile);
       }
     }),
@@ -236,13 +244,11 @@ const findTsConfigFile = (options: MitosisConfig) => {
   return undefined;
 };
 
-const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedMitosisJson[]> => {
-  const paths = getFiles({ files: options.files, exclude: options.exclude }).filter(
-    checkIsMitosisComponentFilePath,
-  );
-
+const parseAllComponents = async (
+  options: MitosisConfig,
+  paths: string[],
+): Promise<ParsedMitosisJson[]> => {
   const tsConfigFilePath = findTsConfigFile(options);
-
   const tsProject = tsConfigFilePath ? createTypescriptProject(tsConfigFilePath) : undefined;
 
   return Promise.all(
@@ -275,8 +281,11 @@ const getTargetContexts = (options: MitosisConfig) =>
     }),
   );
 
-const buildAndOutputNonComponentFiles = async (targetContext: TargetContextWithConfig) => {
-  const files = await buildNonComponentFiles(targetContext);
+const buildAndOutputNonComponentFiles = async (
+  targetContext: TargetContextWithConfig,
+  nonComponentFiles: string[],
+): Promise<OutputFiles[]> => {
+  const files = await buildNonComponentFiles(targetContext, nonComponentFiles);
   return await outputNonComponentFiles({ ...targetContext, files });
 };
 
@@ -301,40 +310,82 @@ export function runBuildPlugins(type: 'pre' | 'post', plugins: MitosisPlugin[]) 
 }
 
 export async function build(config?: MitosisConfig) {
-  // merge default options
+  console.info('Mitosis starts to generate files');
+  const timestamp = Date.now();
   const options = getOptions(config);
-
-  // get all mitosis component JSONs
-  const mitosisComponents = await getMitosisComponentJSONs(options);
+  const cache = new BuildCache(options.dest || DEFAULT_CONFIG.dest);
+  await cache.load();
 
   const targetContexts: TargetContext[] = getTargetContexts(options);
 
-  await Promise.all(
-    targetContexts.map(async (targetContext) => {
-      const plugins: MitosisPlugin[] = options?.options[targetContext.target]?.plugins ?? [];
-      await runBuildPlugins('pre', plugins)(targetContext);
-      // clean output directory
-      await clean(options, targetContext.target);
-      // clone mitosis JSONs for each target, so we can modify them in each generator without affecting future runs.
-      // each generator also clones the JSON before manipulating it, but this is an extra safety measure.
-      const files = clone(mitosisComponents);
+  const allFiles = getFilesWithStats({
+    files: options.files,
+    exclude: options.exclude,
+  });
 
-      const x = await Promise.all([
-        buildAndOutputNonComponentFiles({ ...targetContext, options }),
-        buildAndOutputComponentFiles({ ...targetContext, options, files }),
-      ]);
+  const allFilePaths = allFiles.map(({ path }) => path);
 
-      console.info(
-        `Mitosis: ${targetContext.target}: generated ${x[1].length} components, ${x[0].length} regular files.`,
-      );
-      await runBuildPlugins('post', plugins)(targetContext, {
-        componentFiles: x[1],
-        nonComponentFiles: x[0],
-      });
-    }),
+  const mitosisComponentFiles = allFiles.filter(({ path }) =>
+    checkIsMitosisComponentFilePath(path),
+  );
+  const filteredComponentFiles = mitosisComponentFiles.filter(({ path, stats }) => {
+    return cache.shouldProcessWithStats(path, stats);
+  });
+  const nonMitosisComponentFiles = allFiles.filter(
+    ({ path }) => path.endsWith('.ts') || path.endsWith('.js'),
+  );
+  const filteredNonComponentFiles = nonMitosisComponentFiles.filter(({ path, stats }) => {
+    return cache.shouldProcessWithStats(path, stats);
+  });
+  const filteredNonComponentFilePaths = filteredNonComponentFiles.map(({ path }) => path);
+
+  const allComponents = await parseAllComponents(
+    options,
+    filteredComponentFiles.map(({ path }) => path),
   );
 
-  console.info('Mitosis: generation completed.');
+  const skippedComponents =
+    allFiles.length - filteredComponentFiles.length - filteredNonComponentFiles.length;
+
+  const tasks = new Listr(
+    targetContexts.map((targetContext) => ({
+      title: targetContext.target,
+      task: async (_, task) => {
+        const plugins: MitosisPlugin[] = options?.options[targetContext.target]?.plugins ?? [];
+        await runBuildPlugins('pre', plugins)(targetContext);
+        await clean(options, targetContext.target, cache, allFilePaths);
+
+        const files = clone(allComponents);
+
+        const x = await Promise.all([
+          buildAndOutputNonComponentFiles(
+            { ...targetContext, options },
+            filteredNonComponentFilePaths,
+          ),
+          buildAndOutputComponentFiles({ ...targetContext, options, files, task }),
+        ]);
+
+        task.title = `${targetContext.target}: ${x[1].length} components, ${x[0].length} files${
+          skippedComponents > 0 ? ` (${skippedComponents} cached)` : ''
+        }`;
+
+        await runBuildPlugins('post', plugins)(targetContext, {
+          componentFiles: x[1],
+          nonComponentFiles: x[0],
+        });
+      },
+    })),
+    { concurrent: true },
+  );
+
+  // Update cache for processed files
+  for (const { path, stats } of [...filteredComponentFiles, ...filteredNonComponentFiles]) {
+    cache.updateCacheWithStats(path, stats);
+  }
+
+  await tasks.run();
+  await cache.save();
+  console.info(`Finished building in ${Date.now() - timestamp}ms`);
 }
 
 /**
@@ -346,9 +397,15 @@ async function buildAndOutputComponentFiles({
   options,
   generator,
   outputPath,
-}: TargetContextWithConfig & { files: ParsedMitosisJson[] }): Promise<OutputFiles[]> {
+  task,
+}: TargetContextWithConfig & {
+  files: ParsedMitosisJson[];
+  task?: any;
+}): Promise<OutputFiles[]> {
   const debugTarget = debug(`mitosis:${target}`);
   const shouldOutputTypescript = checkShouldOutputTypeScript({ options, target });
+  const total = files.length;
+  let completed = 0;
 
   const output = files.map(async ({ path, typescriptMitosisJson, javascriptMitosisJson }) => {
     const outputFilePath = renameComponentFile({ target, path, options });
@@ -393,7 +450,14 @@ async function buildAndOutputComponentFiles({
 
     transpiled = transformImports({ target, options })(transpiled);
 
-    await outputFile(`${outputDir}/${outputFilePath}`, transpiled);
+    const fullPath = `${outputDir}/${outputFilePath}`;
+    await outputFile(fullPath, transpiled);
+
+    completed++;
+    if (task) {
+      task.title = `${target}: ${completed}/${total} components`;
+    }
+
     return { outputDir, outputFilePath };
   });
   return await Promise.all(output);
@@ -464,11 +528,8 @@ async function buildContextFile({
 /**
  * Transpiles all non-component files, including Context files.
  */
-async function buildNonComponentFiles(args: TargetContextWithConfig) {
+async function buildNonComponentFiles(args: TargetContextWithConfig, nonComponentFiles: string[]) {
   const { target, options } = args;
-  const nonComponentFiles = getFiles({ files: options.files, exclude: options.exclude }).filter(
-    (file) => file.endsWith('.ts') || file.endsWith('.js'),
-  );
 
   return await Promise.all(
     nonComponentFiles.map(async (path): Promise<{ path: string; output: string }> => {
