@@ -386,26 +386,18 @@ Please add a initial value for every state property even if it's \`undefined\`.`
                 ${json.hooks.onUpdate
                   ?.map(
                     ({ code, depsArray }) =>
-                      /**
-                       * We need allowSignalWrites only for Angular 17 https://angular.dev/api/core/CreateEffectOptions#allowSignalWrites
-                       * TODO: remove on 2025-05-15 https://angular.dev/reference/releases#actively-supported-versions
-                       */
                       `effect(() => {
                       ${
                         depsArray?.length
                           ? `
                       // --- Mitosis: Workaround to make sure the effect() is triggered ---
                       ${depsArray.join('\n')}
-                      // --- 
+                      // ---
                       `
                           : ''
                       }
                       ${code}
-                      },
-                      {
-                      allowSignalWrites: true, // Enable writing to signals inside effects
-                      }
-                      );`,
+                      });`,
                   )
                   .join('\n')}
                   }
