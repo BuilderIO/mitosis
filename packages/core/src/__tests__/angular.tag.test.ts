@@ -68,7 +68,7 @@ describe('Angular tag name output', () => {
     // signals API uses standalone but has a different codepath than standalone: true
     const angular = componentToAngular({ api: 'signals' })({ component });
     expect(angular).toMatchInlineSnapshot(`
-      "import { Component, effect } from \\"@angular/core\\";
+      "import { Component, effect, VERSION } from \\"@angular/core\\";
       import { CommonModule } from \\"@angular/common\\";
 
       @Component({

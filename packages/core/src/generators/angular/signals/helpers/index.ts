@@ -40,6 +40,7 @@ export const getAngularCoreImportsAsString = ({
     output,
     input,
     effect,
+    VERSION: effect,
     signal,
     computed,
     ChangeDetectionStrategy: onPush,

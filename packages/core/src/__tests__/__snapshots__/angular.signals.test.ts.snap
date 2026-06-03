@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Angular signals > jsx > Javascript Test > Advanced 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -49,6 +49,7 @@ exports[`Angular signals > jsx > Javascript Test > AdvancedRef 1`] = `
   ElementRef,
   input,
   effect,
+  VERSION,
   signal,
   InputSignal,
 } from \\"@angular/core\\";
@@ -101,14 +102,19 @@ export class MyBasicRefComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.inputRef();
-        this.inputNoArgRef();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.inputRef();
+          this.inputNoArgRef();
+          // ---
 
-        console.log(\\"Received an update\\");
-      });
+          console.log(\\"Received an update\\");
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -116,7 +122,7 @@ export class MyBasicRefComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Basic 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export const DEFAULT_VALUES = {
@@ -158,7 +164,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Basic 2`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -189,7 +195,13 @@ export class MyBasicForShowComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Basic Context 1`] = `
-"import { Component, effect, signal, AfterViewInit } from \\"@angular/core\\";
+"import {
+  Component,
+  effect,
+  VERSION,
+  signal,
+  AfterViewInit,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
@@ -236,6 +248,7 @@ exports[`Angular signals > jsx > Javascript Test > Basic OnMount Update 1`] = `
   Component,
   input,
   effect,
+  VERSION,
   signal,
   AfterViewInit,
   InputSignal,
@@ -277,6 +290,7 @@ exports[`Angular signals > jsx > Javascript Test > Basic Outputs 1`] = `
   output,
   input,
   effect,
+  VERSION,
   signal,
   AfterViewInit,
   InputSignal,
@@ -320,6 +334,7 @@ import {
   output,
   input,
   effect,
+  VERSION,
   signal,
   AfterViewInit,
   InputSignal,
@@ -353,7 +368,7 @@ export class MyBasicOutputsComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > BasicAttribute 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -374,7 +389,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { MyBooleanAttributeComponent } from \\"./basic-boolean-attribute-component.raw\\";
@@ -408,7 +423,7 @@ export class MyBooleanAttribute {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > BasicChildComponent 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { MyBasicOnMountUpdateComponent } from \\"./basic-onMount-update.raw\\";
@@ -454,7 +469,13 @@ export class MyBasicChildComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > BasicFor 1`] = `
-"import { Component, effect, signal, AfterViewInit } from \\"@angular/core\\";
+"import {
+  Component,
+  effect,
+  VERSION,
+  signal,
+  AfterViewInit,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -500,6 +521,7 @@ exports[`Angular signals > jsx > Javascript Test > BasicRef 1`] = `
   ElementRef,
   input,
   effect,
+  VERSION,
   signal,
   InputSignal,
 } from \\"@angular/core\\";
@@ -556,7 +578,7 @@ export class MyBasicRefComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > BasicRefAssignment 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -581,7 +603,7 @@ export class MyBasicRefAssignmentComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > BasicRefPrevious 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export function usePrevious(value) {
@@ -612,13 +634,18 @@ export class MyPreviousComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.count();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.count();
+          // ---
 
-        this._prevCount = this.count();
-      });
+          this._prevCount = this.count();
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -633,6 +660,7 @@ exports[`Angular signals > jsx > Javascript Test > Button 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -694,12 +722,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -720,7 +758,7 @@ export class Button implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Columns 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -781,7 +819,7 @@ export class Column {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > ContentSlotHtml 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -811,6 +849,7 @@ exports[`Angular signals > jsx > Javascript Test > ContentSlotJSX 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   OnDestroy,
@@ -891,9 +930,14 @@ export class ContentSlotJsxCode implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -919,6 +963,7 @@ exports[`Angular signals > jsx > Javascript Test > CustomCode 1`] = `
   ElementRef,
   input,
   effect,
+  VERSION,
   signal,
   AfterViewInit,
   InputSignal,
@@ -1006,6 +1051,7 @@ exports[`Angular signals > jsx > Javascript Test > Embed 1`] = `
   ElementRef,
   input,
   effect,
+  VERSION,
   signal,
   AfterViewInit,
   InputSignal,
@@ -1094,6 +1140,7 @@ exports[`Angular signals > jsx > Javascript Test > Form 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   OnDestroy,
@@ -1432,9 +1479,14 @@ export class FormComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -1460,6 +1512,7 @@ exports[`Angular signals > jsx > Javascript Test > Image 1`] = `
   ElementRef,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   AfterViewInit,
@@ -1563,7 +1616,7 @@ export class Image implements AfterViewInit, OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Image State 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -1594,6 +1647,7 @@ exports[`Angular signals > jsx > Javascript Test > Img 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -1656,9 +1710,14 @@ export class ImgComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -1686,6 +1745,7 @@ exports[`Angular signals > jsx > Javascript Test > Input 1`] = `
   output,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -1752,9 +1812,14 @@ export class FormInputComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -1774,7 +1839,7 @@ export class FormInputComponent implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > InputParent 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { FormInputComponent } from \\"./input.raw\\";
@@ -1801,7 +1866,7 @@ export class Stepper {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > NestedStore 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -1825,7 +1890,7 @@ export class NestedStore {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > RawText 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 import { DomSanitizer } from \\"@angular/platform-browser\\";
 
@@ -1856,6 +1921,7 @@ exports[`Angular signals > jsx > Javascript Test > Section 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -1910,9 +1976,14 @@ export class SectionComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -1939,6 +2010,7 @@ exports[`Angular signals > jsx > Javascript Test > Section 2`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -1996,9 +2068,14 @@ export class SectionStateComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -2025,6 +2102,7 @@ exports[`Angular signals > jsx > Javascript Test > Select 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -2090,9 +2168,14 @@ export class SelectComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -2112,7 +2195,7 @@ export class SelectComponent implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > SlotDefault 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2133,7 +2216,7 @@ export class SlotCode {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > SlotHtml 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { ContentSlotCode } from \\"./content-slot-jsx.raw\\";
@@ -2154,7 +2237,7 @@ export class SlotCode {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > SlotJsx 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { ContentSlotCode } from \\"./content-slot-jsx.raw\\";
@@ -2175,7 +2258,7 @@ export class SlotCode {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > SlotNamed 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2201,6 +2284,7 @@ exports[`Angular signals > jsx > Javascript Test > Stamped.io 1`] = `
   Component,
   input,
   effect,
+  VERSION,
   signal,
   AfterViewInit,
   InputSignal,
@@ -2307,7 +2391,7 @@ export class SmileReviews implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > StoreComment 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2328,7 +2412,7 @@ export class StringLiteralStore {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > StoreShadowVars 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2351,7 +2435,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > StoreWithState 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2381,6 +2465,7 @@ exports[`Angular signals > jsx > Javascript Test > Submit 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -2428,9 +2513,14 @@ export class SubmitButton implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -2450,7 +2540,14 @@ export class SubmitButton implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > Text 1`] = `
-"import { Component, input, effect, signal, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  signal,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 import { DomSanitizer } from \\"@angular/platform-browser\\";
 
@@ -2488,6 +2585,7 @@ exports[`Angular signals > jsx > Javascript Test > Textarea 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -2544,9 +2642,14 @@ export class Textarea implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -2566,7 +2669,7 @@ export class Textarea implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > UseValueAndFnFromStore 1`] = `
-"import { Component, output, effect, signal } from \\"@angular/core\\";
+"import { Component, output, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2592,11 +2695,16 @@ export class UseValueAndFnFromStore {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        if (this._do.bind(this)) {
-          this._do(this._id());
-        }
-      });
+      effect(
+        () => {
+          if (this._do.bind(this)) {
+            this._do(this._id());
+          }
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -2611,6 +2719,7 @@ exports[`Angular signals > jsx > Javascript Test > Video 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   OnDestroy,
@@ -2687,9 +2796,14 @@ export class Video implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -2716,6 +2830,7 @@ exports[`Angular signals > jsx > Javascript Test > allSpread 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -2776,24 +2891,44 @@ export class MyComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(
-          this.elRef0()?.nativeElement,
-          this.attrsUsingUseState()
-        );
-      });
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.properties());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, {
-          someOtherAttrs: this.accessHere(),
-          someStateAttrs: this.specifics(),
-        });
-      });
+      effect(
+        () => {
+          this.setAttributes(
+            this.elRef0()?.nativeElement,
+            this.attrsUsingUseState()
+          );
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.properties());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, {
+            someOtherAttrs: this.accessHere(),
+            someStateAttrs: this.specifics(),
+          });
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -2822,7 +2957,7 @@ export class MyComponent implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2848,7 +2983,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > basicForFragment 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -2904,6 +3039,7 @@ exports[`Angular signals > jsx > Javascript Test > basicForNoTagReference 1`] = 
   TemplateRef,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   InputSignal,
@@ -2966,7 +3102,7 @@ export class MyBasicForNoTagRefComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > basicForwardRef 1`] = `
-"import { Component, viewChild, ElementRef, input, effect, signal, InputSignal } from '@angular/core';
+"import { Component, viewChild, ElementRef, input, effect, VERSION, signal, InputSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 
@@ -3032,7 +3168,7 @@ exports[`Angular signals > jsx > Javascript Test > basicForwardRefMetadata 1`] =
           {\\"forwardRef\\":\\"inputRef\\"}
           */
 
-          import { Component, viewChild, ElementRef, input, effect, signal, InputSignal } from '@angular/core';
+          import { Component, viewChild, ElementRef, input, effect, VERSION, signal, InputSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 
@@ -3092,7 +3228,7 @@ export class MyBasicForwardRefComponent  {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3107,26 +3243,31 @@ export class MyBasicOnUpdateReturnComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.name();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.name();
+          // ---
 
-        const controller = new AbortController();
-        const signal = controller.signal;
-        fetch(\\"https://patrickjs.com/api/resource.json\\", {
-          signal,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            this.name.set(data.name);
-          });
-        return () => {
-          if (!signal.aborted) {
-            controller.abort();
-          }
-        };
-      });
+          const controller = new AbortController();
+          const signal = controller.signal;
+          fetch(\\"https://patrickjs.com/api/resource.json\\", {
+            signal,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              this.name.set(data.name);
+            });
+          return () => {
+            if (!signal.aborted) {
+              controller.abort();
+            }
+          };
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -3144,6 +3285,7 @@ import {
   viewChild,
   ElementRef,
   effect,
+  VERSION,
   AfterViewInit,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -3226,6 +3368,7 @@ import {
   viewChild,
   ElementRef,
   effect,
+  VERSION,
   AfterViewInit,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -3307,6 +3450,7 @@ import {
   Component,
   input,
   effect,
+  VERSION,
   ChangeDetectionStrategy,
   InputSignal,
 } from \\"@angular/core\\";
@@ -3329,7 +3473,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > class + ClassName + css 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { MyComp } from \\"./my-component.lite\\";
@@ -3359,7 +3503,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > class + css 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3382,7 +3526,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > className + css 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3405,7 +3549,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > className 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3427,7 +3571,7 @@ export class ClassNameCode {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > classState 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3460,7 +3604,7 @@ exports[`Angular signals > jsx > Javascript Test > classnameProps 1`] = `
           {\\"stencil\\":{\\"propOptions\\":{\\"className\\":{\\"attribute\\":\\"classname\\",\\"mutable\\":false,\\"reflect\\":false}}}}
           */
 
-import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3488,7 +3632,7 @@ exports[`Angular signals > jsx > Javascript Test > complexMeta 1`] = `
           {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
           */
 
-import { Component, effect } from \\"@angular/core\\";
+import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3505,7 +3649,7 @@ export class ComplexMetaRaw {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > componentWithContext 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import Context1 from \\"@dummy/1\\";
@@ -3529,7 +3673,7 @@ export class ComponentWithContext {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > componentWithContextMultiRoot 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import Context1 from \\"@dummy/1\\";
@@ -3554,7 +3698,7 @@ export class ComponentWithContext {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > contentState 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import BuilderContext from \\"@dummy/context.js\\";
@@ -3581,7 +3725,7 @@ exports[`Angular signals > jsx > Javascript Test > customSelector 1`] = `
           {\\"angular\\":{\\"selector\\":\\"not-my-component\\"}}
           */
 
-import { Component, effect } from \\"@angular/core\\";
+import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -3606,6 +3750,7 @@ exports[`Angular signals > jsx > Javascript Test > defaultProps 1`] = `
   output,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -3680,12 +3825,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -3714,6 +3869,7 @@ exports[`Angular signals > jsx > Javascript Test > defaultPropsOutsideComponent 
   output,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -3785,12 +3941,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -3811,7 +3977,7 @@ export class Button implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > defaultValsWithTypes 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 const DEFAULT_VALUES = {
@@ -3844,6 +4010,7 @@ exports[`Angular signals > jsx > Javascript Test > dynamicComponent 1`] = `
   TemplateRef,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   InputSignal,
@@ -3918,6 +4085,7 @@ exports[`Angular signals > jsx > Javascript Test > dynamicComponentWithEventArg 
   TemplateRef,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   InputSignal,
@@ -3979,7 +4147,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > eventInputAndChange 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4011,7 +4179,7 @@ export class EventInputAndChange {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > eventProps 1`] = `
-"import { Component, output, effect } from \\"@angular/core\\";
+"import { Component, output, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4046,7 +4214,14 @@ export class EventPropsComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > expressionState 1`] = `
-"import { Component, input, effect, signal, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  signal,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4078,7 +4253,7 @@ exports[`Angular signals > jsx > Javascript Test > figmaMeta 1`] = `
           {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
           */
 
-import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4108,7 +4283,7 @@ export class FigmaButton {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > functionProps 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4142,7 +4317,14 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > getterState 1`] = `
-"import { Component, input, effect, computed, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  computed,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4175,7 +4357,7 @@ export class Button {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > import types 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { RenderBlock } from \\"./builder-render-block.raw\\";
@@ -4203,7 +4385,7 @@ export class RenderContent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > importRaw 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4220,7 +4402,7 @@ export class MyImportComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > layerName 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4245,7 +4427,7 @@ export class MyLayerNameComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > multipleOnUpdate 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4258,12 +4440,22 @@ import { CommonModule } from \\"@angular/common\\";
 export class MultipleOnUpdate {
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        console.log(\\"Runs on every update/rerender\\");
-      });
-      effect(() => {
-        console.log(\\"Runs on every update/rerender as well\\");
-      });
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender\\");
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender as well\\");
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -4271,7 +4463,7 @@ export class MultipleOnUpdate {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4289,30 +4481,40 @@ export class MultipleOnUpdateWithDeps {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.a();
-        this.b();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.a();
+          this.b();
+          // ---
 
-        console.log(\\"Runs when a or b changes\\", this.a(), this.b());
+          console.log(\\"Runs when a or b changes\\", this.a(), this.b());
 
-        if (this.a() === \\"a\\") {
-          this.a.set(\\"b\\");
-        }
-      });
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.c();
-        this.d();
-        // ---
+          if (this.a() === \\"a\\") {
+            this.a.set(\\"b\\");
+          }
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.c();
+          this.d();
+          // ---
 
-        console.log(\\"Runs when c or d changes\\", this.c(), this.d());
+          console.log(\\"Runs when c or d changes\\", this.c(), this.d());
 
-        if (this.a() === \\"a\\") {
-          this.a.set(\\"b\\");
-        }
-      });
+          if (this.a() === \\"a\\") {
+            this.a.set(\\"b\\");
+          }
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -4326,6 +4528,7 @@ exports[`Angular signals > jsx > Javascript Test > multipleSpreads 1`] = `
   ElementRef,
   Renderer2,
   effect,
+  VERSION,
   signal,
   OnDestroy,
 } from \\"@angular/core\\";
@@ -4372,9 +4575,14 @@ export class MyBasicComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -4399,7 +4607,7 @@ exports[`Angular signals > jsx > Javascript Test > nativeAttributes 1`] = `
           {\\"angular\\":{\\"nativeAttributes\\":[\\"disabled\\"]}}
           */
 
-import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4423,7 +4631,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > nestedShow 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4449,7 +4657,7 @@ export class NestedShow {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > nestedStyles 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4492,7 +4700,7 @@ export class NestedStyles {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > normalizeLayerNames 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4546,6 +4754,7 @@ exports[`Angular signals > jsx > Javascript Test > onEvent 1`] = `
   viewChild,
   ElementRef,
   effect,
+  VERSION,
   AfterViewInit,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -4578,7 +4787,7 @@ export class Embed implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > onInit & onMount 1`] = `
-"import { Component, effect, AfterViewInit } from \\"@angular/core\\";
+"import { Component, effect, VERSION, AfterViewInit } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4605,7 +4814,14 @@ export class OnInit implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > onInit 1`] = `
-"import { Component, input, effect, signal, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  signal,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export const defaultValues = {
@@ -4635,7 +4851,7 @@ export class OnInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > onInitPlain 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4656,7 +4872,13 @@ export class OnInitPlain {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > onMount 1`] = `
-"import { Component, effect, OnDestroy, AfterViewInit } from \\"@angular/core\\";
+"import {
+  Component,
+  effect,
+  VERSION,
+  OnDestroy,
+  AfterViewInit,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4683,7 +4905,7 @@ export class Comp implements AfterViewInit, OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > onMountMultiple 1`] = `
-"import { Component, effect, AfterViewInit } from \\"@angular/core\\";
+"import { Component, effect, VERSION, AfterViewInit } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4708,7 +4930,7 @@ export class Comp implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > onUpdate 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4721,9 +4943,14 @@ import { CommonModule } from \\"@angular/common\\";
 export class OnUpdate {
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        console.log(\\"Runs on every update/rerender\\");
-      });
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender\\");
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -4731,7 +4958,14 @@ export class OnUpdate {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > onUpdateWithDeps 1`] = `
-"import { Component, input, effect, signal, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  signal,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4749,20 +4983,25 @@ export class OnUpdateWithDeps {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.a();
-        this.b();
-        this.size();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.a();
+          this.b();
+          this.size();
+          // ---
 
-        console.log(
-          \\"Runs when a, b or size changes\\",
-          this.a(),
-          this.b(),
-          this.size()
-        );
-      });
+          console.log(
+            \\"Runs when a, b or size changes\\",
+            this.a(),
+            this.b(),
+            this.size()
+          );
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -4775,7 +5014,7 @@ exports[`Angular signals > jsx > Javascript Test > outputEventBinding 1`] = `
           {\\"angular\\":{\\"nativeEvents\\":[\\"onFakeNative\\"]}}
           */
 
-import { Component, effect, signal } from \\"@angular/core\\";
+import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4804,7 +5043,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 const b = 3;
@@ -4827,7 +5066,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > preserveTyping 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4848,7 +5087,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > prettierInline 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4872,7 +5111,14 @@ export class PrettierInline {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > propsDestructure 1`] = `
-"import { Component, input, effect, signal, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  signal,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4896,7 +5142,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > propsInterface 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4917,7 +5163,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > propsType 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4938,7 +5184,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > referencingFunInsideHook 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -4959,11 +5205,16 @@ export class OnUpdate {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.foo({
-          someOption: this.bar.bind(this),
-        });
-      });
+      effect(
+        () => {
+          this.foo({
+            someOption: this.bar.bind(this),
+          });
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -4979,6 +5230,7 @@ exports[`Angular signals > jsx > Javascript Test > renderBlock 1`] = `
   TemplateRef,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   InputSignal,
@@ -5266,6 +5518,7 @@ exports[`Angular signals > jsx > Javascript Test > renderContentExample 1`] = `
   Component,
   input,
   effect,
+  VERSION,
   AfterViewInit,
   InputSignal,
 } from \\"@angular/core\\";
@@ -5301,13 +5554,18 @@ export class RenderContent implements AfterViewInit {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.content();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.content();
+          // ---
 
-        dispatchNewContentToVisualEditor(this.content());
-      });
+          dispatchNewContentToVisualEditor(this.content());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -5328,6 +5586,7 @@ exports[`Angular signals > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -5389,12 +5648,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -5415,7 +5684,7 @@ export class Button implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > rootShow 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5443,7 +5712,7 @@ exports[`Angular signals > jsx > Javascript Test > sanitizeInnerHTML 1`] = `
           {\\"angular\\":{\\"sanitizeInnerHTML\\":true}}
           */
 
-import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5462,7 +5731,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > self-referencing component 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5485,7 +5754,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > self-referencing component with children 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5510,7 +5779,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > setState 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5536,7 +5805,7 @@ export class SetState {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > showExpressions 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5573,7 +5842,7 @@ export class ShowWithOtherValues {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > showWithFor 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5602,7 +5871,7 @@ export class NestedShow {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > showWithOtherValues 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5626,7 +5895,7 @@ export class ShowWithOtherValues {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > showWithRootText 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5660,6 +5929,7 @@ import {
   output,
   input,
   effect,
+  VERSION,
   signal,
   InputSignal,
   ModelSignal,
@@ -5710,18 +5980,23 @@ export class SignalsTestComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this._counter();
-        this.buttonRef();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this._counter();
+          this.buttonRef();
+          // ---
 
-        console.log(this._counter(), this.buttonRef()?.nativeElement);
-        this.buttonRef()?.nativeElement?.setAttribute(
-          \\"data-counter\\",
-          this._counter().toString()
-        );
-      });
+          console.log(this._counter(), this.buttonRef()?.nativeElement);
+          this.buttonRef()?.nativeElement?.setAttribute(
+            \\"data-counter\\",
+            this._counter().toString()
+          );
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -5729,7 +6004,7 @@ export class SignalsTestComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > signalsOnUpdate 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5749,17 +6024,22 @@ export class MyBasicComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.id();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.id();
+          // ---
 
-        console.log(\\"props.id changed\\", this.id());
-        console.log(
-          \\"props.foo.value.bar.baz changed\\",
-          this.foo().value.bar.baz
-        );
-      });
+          console.log(\\"props.id changed\\", this.id());
+          console.log(
+            \\"props.foo.value.bar.baz changed\\",
+            this.foo().value.bar.baz
+          );
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -5773,6 +6053,7 @@ exports[`Angular signals > jsx > Javascript Test > spreadAttrs 1`] = `
   ElementRef,
   Renderer2,
   effect,
+  VERSION,
   signal,
   OnDestroy,
 } from \\"@angular/core\\";
@@ -5816,9 +6097,14 @@ export class MyBasicComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, attrs);
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, attrs);
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -5845,6 +6131,7 @@ exports[`Angular signals > jsx > Javascript Test > spreadNestedProps 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -5891,9 +6178,14 @@ export class MyBasicComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.nested());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.nested());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -5913,7 +6205,7 @@ export class MyBasicComponent implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > spreadProps 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5930,7 +6222,14 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > stateInit 1`] = `
-"import { Component, input, effect, signal, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  signal,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -5975,6 +6274,7 @@ exports[`Angular signals > jsx > Javascript Test > stateInitSequence 1`] = `
   Component,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   InputSignal,
@@ -6007,7 +6307,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > store-async-function 1`] = `
-"import { Component, effect } from '@angular/core';
+"import { Component, effect, VERSION } from '@angular/core';
       import { CommonModule } from '@angular/common';
 
 
@@ -6065,7 +6365,7 @@ return Promise.resolve();
 `;
 
 exports[`Angular signals > jsx > Javascript Test > string-literal-store 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6084,7 +6384,7 @@ export class StringLiteralStore {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > string-literal-store-kebab 1`] = `
-"import { Component, effect, signal } from '@angular/core';
+"import { Component, effect, VERSION, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 
@@ -6134,7 +6434,7 @@ export class StringLiteralStore  {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > styleClassAndCss 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6162,7 +6462,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > stylePropClassAndCss 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6190,7 +6490,7 @@ export class StylePropClassAndCss {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > subComponent 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Foo } from \\"./foo-sub-component.lite\\";
@@ -6209,7 +6509,7 @@ export class SubComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > svgComponent 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6247,7 +6547,7 @@ export class SvgComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > twoForsTrackBy 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6279,7 +6579,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > typeDependency 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6298,7 +6598,7 @@ export class TypeDependency {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > typeExternalProps 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6317,7 +6617,7 @@ export class TypeExternalProps {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > typeExternalStore 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6336,7 +6636,7 @@ export class TypeExternalStore {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > typeGetterStore 1`] = `
-"import { Component, effect, signal, computed } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal, computed } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6366,7 +6666,7 @@ export class TypeGetterStore {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > use-style 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6390,7 +6690,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > use-style-and-css 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6417,7 +6717,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > use-style-outside-component 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6445,6 +6745,7 @@ exports[`Angular signals > jsx > Javascript Test > useObjectWrapper 1`] = `
   Component,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   InputSignal,
@@ -6520,6 +6821,7 @@ exports[`Angular signals > jsx > Javascript Test > useTarget 1`] = `
 "import {
   Component,
   effect,
+  VERSION,
   signal,
   computed,
   AfterViewInit,
@@ -6555,7 +6857,7 @@ export class UseTargetComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Javascript Test > webComponent 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { register } from \\"swiper/element/bundle\\";
@@ -6585,7 +6887,7 @@ export class MyBasicWebComponent {
 `;
 
 exports[`Angular signals > jsx > Remove Internal mitosis package 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6606,7 +6908,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Advanced 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6654,6 +6956,7 @@ exports[`Angular signals > jsx > Typescript Test > AdvancedRef 1`] = `
   ElementRef,
   input,
   effect,
+  VERSION,
   signal,
   InputSignal,
 } from \\"@angular/core\\";
@@ -6710,14 +7013,19 @@ export class MyBasicRefComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.inputRef();
-        this.inputNoArgRef();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.inputRef();
+          this.inputNoArgRef();
+          // ---
 
-        console.log(\\"Received an update\\");
-      });
+          console.log(\\"Received an update\\");
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -6725,7 +7033,7 @@ export class MyBasicRefComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Basic 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface MyBasicComponentProps {
@@ -6771,7 +7079,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Basic 2`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6802,7 +7110,13 @@ export class MyBasicForShowComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Basic Context 1`] = `
-"import { Component, effect, signal, AfterViewInit } from \\"@angular/core\\";
+"import {
+  Component,
+  effect,
+  VERSION,
+  signal,
+  AfterViewInit,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
@@ -6849,6 +7163,7 @@ exports[`Angular signals > jsx > Typescript Test > Basic OnMount Update 1`] = `
   Component,
   input,
   effect,
+  VERSION,
   signal,
   AfterViewInit,
   InputSignal,
@@ -6895,6 +7210,7 @@ exports[`Angular signals > jsx > Typescript Test > Basic Outputs 1`] = `
   output,
   input,
   effect,
+  VERSION,
   signal,
   AfterViewInit,
   InputSignal,
@@ -6938,6 +7254,7 @@ import {
   output,
   input,
   effect,
+  VERSION,
   signal,
   AfterViewInit,
   InputSignal,
@@ -6971,7 +7288,7 @@ export class MyBasicOutputsComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > BasicAttribute 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -6992,7 +7309,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -7031,7 +7348,7 @@ export class MyBooleanAttribute {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > BasicChildComponent 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { MyBasicOnMountUpdateComponent } from \\"./basic-onMount-update.raw\\";
@@ -7077,7 +7394,13 @@ export class MyBasicChildComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > BasicFor 1`] = `
-"import { Component, effect, signal, AfterViewInit } from \\"@angular/core\\";
+"import {
+  Component,
+  effect,
+  VERSION,
+  signal,
+  AfterViewInit,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -7123,6 +7446,7 @@ exports[`Angular signals > jsx > Typescript Test > BasicRef 1`] = `
   ElementRef,
   input,
   effect,
+  VERSION,
   signal,
   InputSignal,
 } from \\"@angular/core\\";
@@ -7183,7 +7507,7 @@ export class MyBasicRefComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > BasicRefAssignment 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface Props {
@@ -7212,7 +7536,7 @@ export class MyBasicRefAssignmentComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > BasicRefPrevious 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface Props {
@@ -7247,13 +7571,18 @@ export class MyPreviousComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.count();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.count();
+          // ---
 
-        this._prevCount = this.count();
-      });
+          this._prevCount = this.count();
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -7268,6 +7597,7 @@ exports[`Angular signals > jsx > Typescript Test > Button 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -7338,12 +7668,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -7364,7 +7704,7 @@ export class Button implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Columns 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Column = {
@@ -7441,7 +7781,7 @@ export class Column {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > ContentSlotHtml 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -7479,6 +7819,7 @@ exports[`Angular signals > jsx > Typescript Test > ContentSlotJSX 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   OnDestroy,
@@ -7570,9 +7911,14 @@ export class ContentSlotJsxCode implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -7598,6 +7944,7 @@ exports[`Angular signals > jsx > Typescript Test > CustomCode 1`] = `
   ElementRef,
   input,
   effect,
+  VERSION,
   signal,
   AfterViewInit,
   InputSignal,
@@ -7691,6 +8038,7 @@ exports[`Angular signals > jsx > Typescript Test > Embed 1`] = `
   ElementRef,
   input,
   effect,
+  VERSION,
   signal,
   AfterViewInit,
   InputSignal,
@@ -7785,6 +8133,7 @@ exports[`Angular signals > jsx > Typescript Test > Form 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   OnDestroy,
@@ -8168,9 +8517,14 @@ export class FormComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -8196,6 +8550,7 @@ exports[`Angular signals > jsx > Typescript Test > Image 1`] = `
   ElementRef,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   AfterViewInit,
@@ -8318,7 +8673,7 @@ export class Image implements AfterViewInit, OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Image State 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -8349,6 +8704,7 @@ exports[`Angular signals > jsx > Typescript Test > Img 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -8431,9 +8787,14 @@ export class ImgComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -8461,6 +8822,7 @@ exports[`Angular signals > jsx > Typescript Test > Input 1`] = `
   output,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -8545,9 +8907,14 @@ export class FormInputComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -8567,7 +8934,7 @@ export class FormInputComponent implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > InputParent 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { FormInputComponent } from \\"./input.raw\\";
@@ -8594,7 +8961,7 @@ export class Stepper {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > NestedStore 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type MyStore = {
@@ -8623,7 +8990,7 @@ export class NestedStore {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > RawText 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 import { DomSanitizer } from \\"@angular/platform-browser\\";
 
@@ -8660,6 +9027,7 @@ exports[`Angular signals > jsx > Typescript Test > Section 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -8722,9 +9090,14 @@ export class SectionComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -8751,6 +9124,7 @@ exports[`Angular signals > jsx > Typescript Test > Section 2`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -8815,9 +9189,14 @@ export class SectionStateComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -8844,6 +9223,7 @@ exports[`Angular signals > jsx > Typescript Test > Select 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -8924,9 +9304,14 @@ export class SelectComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -8946,7 +9331,7 @@ export class SelectComponent implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > SlotDefault 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -8971,7 +9356,7 @@ export class SlotCode {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > SlotHtml 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -8996,7 +9381,7 @@ export class SlotCode {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > SlotJsx 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -9021,7 +9406,7 @@ export class SlotCode {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > SlotNamed 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -9051,6 +9436,7 @@ exports[`Angular signals > jsx > Typescript Test > Stamped.io 1`] = `
   Component,
   input,
   effect,
+  VERSION,
   signal,
   AfterViewInit,
   InputSignal,
@@ -9164,7 +9550,7 @@ export class SmileReviews implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > StoreComment 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9185,7 +9571,7 @@ export class StringLiteralStore {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > StoreShadowVars 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9208,7 +9594,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > StoreWithState 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9238,6 +9624,7 @@ exports[`Angular signals > jsx > Typescript Test > Submit 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -9291,9 +9678,14 @@ export class SubmitButton implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -9313,7 +9705,14 @@ export class SubmitButton implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > Text 1`] = `
-"import { Component, input, effect, signal, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  signal,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 import { DomSanitizer } from \\"@angular/platform-browser\\";
 
@@ -9359,6 +9758,7 @@ exports[`Angular signals > jsx > Typescript Test > Textarea 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -9426,9 +9826,14 @@ export class Textarea implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -9448,7 +9853,7 @@ export class Textarea implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > UseValueAndFnFromStore 1`] = `
-"import { Component, output, effect, signal } from \\"@angular/core\\";
+"import { Component, output, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type MyProps = {
@@ -9483,11 +9888,16 @@ export class UseValueAndFnFromStore {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        if (this._do.bind(this)) {
-          this._do(this._id());
-        }
-      });
+      effect(
+        () => {
+          if (this._do.bind(this)) {
+            this._do(this._id());
+          }
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -9502,6 +9912,7 @@ exports[`Angular signals > jsx > Typescript Test > Video 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   OnDestroy,
@@ -9609,9 +10020,14 @@ export class Video implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -9638,6 +10054,7 @@ exports[`Angular signals > jsx > Typescript Test > allSpread 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -9698,24 +10115,44 @@ export class MyComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(
-          this.elRef0()?.nativeElement,
-          this.attrsUsingUseState()
-        );
-      });
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.properties());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, {
-          someOtherAttrs: this.accessHere(),
-          someStateAttrs: this.specifics(),
-        });
-      });
+      effect(
+        () => {
+          this.setAttributes(
+            this.elRef0()?.nativeElement,
+            this.attrsUsingUseState()
+          );
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.properties());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, {
+            someOtherAttrs: this.accessHere(),
+            someStateAttrs: this.specifics(),
+          });
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -9744,7 +10181,7 @@ export class MyComponent implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9770,7 +10207,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > basicForFragment 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -9826,6 +10263,7 @@ exports[`Angular signals > jsx > Typescript Test > basicForNoTagReference 1`] = 
   TemplateRef,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   InputSignal,
@@ -9888,7 +10326,7 @@ export class MyBasicForNoTagRefComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > basicForwardRef 1`] = `
-"import { Component, viewChild, ElementRef, input, effect, signal, InputSignal } from '@angular/core';
+"import { Component, viewChild, ElementRef, input, effect, VERSION, signal, InputSignal } from '@angular/core';
       import { CommonModule } from '@angular/common';
 
 
@@ -9957,7 +10395,7 @@ exports[`Angular signals > jsx > Typescript Test > basicForwardRefMetadata 1`] =
           {\\"forwardRef\\":\\"inputRef\\"}
           */
 
-          import { Component, viewChild, ElementRef, input, effect, signal, InputSignal } from '@angular/core';
+          import { Component, viewChild, ElementRef, input, effect, VERSION, signal, InputSignal } from '@angular/core';
       import { CommonModule } from '@angular/common';
 
 
@@ -10020,7 +10458,7 @@ inputRef: HTMLInputElement;
 `;
 
 exports[`Angular signals > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10035,26 +10473,31 @@ export class MyBasicOnUpdateReturnComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.name();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.name();
+          // ---
 
-        const controller = new AbortController();
-        const signal = controller.signal;
-        fetch(\\"https://patrickjs.com/api/resource.json\\", {
-          signal,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            this.name.set(data.name);
-          });
-        return () => {
-          if (!signal.aborted) {
-            controller.abort();
-          }
-        };
-      });
+          const controller = new AbortController();
+          const signal = controller.signal;
+          fetch(\\"https://patrickjs.com/api/resource.json\\", {
+            signal,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              this.name.set(data.name);
+            });
+          return () => {
+            if (!signal.aborted) {
+              controller.abort();
+            }
+          };
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -10072,6 +10515,7 @@ import {
   viewChild,
   ElementRef,
   effect,
+  VERSION,
   AfterViewInit,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -10154,6 +10598,7 @@ import {
   viewChild,
   ElementRef,
   effect,
+  VERSION,
   AfterViewInit,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -10235,6 +10680,7 @@ import {
   Component,
   input,
   effect,
+  VERSION,
   ChangeDetectionStrategy,
   InputSignal,
 } from \\"@angular/core\\";
@@ -10257,7 +10703,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > class + ClassName + css 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { MyComp } from \\"./my-component.lite\\";
@@ -10287,7 +10733,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > class + css 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10310,7 +10756,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > className + css 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10333,7 +10779,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > className 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -10362,7 +10808,7 @@ export class ClassNameCode {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > classState 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10395,7 +10841,7 @@ exports[`Angular signals > jsx > Typescript Test > classnameProps 1`] = `
           {\\"stencil\\":{\\"propOptions\\":{\\"className\\":{\\"attribute\\":\\"classname\\",\\"mutable\\":false,\\"reflect\\":false}}}}
           */
 
-import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -10429,7 +10875,7 @@ exports[`Angular signals > jsx > Typescript Test > complexMeta 1`] = `
           {\\"x\\":\\"y\\",\\"asdf\\":{\\"stringValue\\":\\"d\\",\\"booleanValue\\":true,\\"numberValue\\":1,\\"innerObject\\":{\\"stringValue\\":\\"inner\\",\\"numberValue\\":2,\\"booleanValue\\":false},\\"spreadStringValue\\":\\"f\\"}}
           */
 
-import { Component, effect } from \\"@angular/core\\";
+import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10446,7 +10892,7 @@ export class ComplexMetaRaw {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > componentWithContext 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ComponentWithContextProps {
@@ -10475,7 +10921,7 @@ export class ComponentWithContext {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > componentWithContextMultiRoot 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ComponentWithContextProps {
@@ -10505,7 +10951,7 @@ export class ComponentWithContext {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > contentState 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import BuilderContext from \\"@dummy/context.js\\";
@@ -10532,7 +10978,7 @@ exports[`Angular signals > jsx > Typescript Test > customSelector 1`] = `
           {\\"angular\\":{\\"selector\\":\\"not-my-component\\"}}
           */
 
-import { Component, effect } from \\"@angular/core\\";
+import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10557,6 +11003,7 @@ exports[`Angular signals > jsx > Typescript Test > defaultProps 1`] = `
   output,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -10646,12 +11093,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -10680,6 +11137,7 @@ exports[`Angular signals > jsx > Typescript Test > defaultPropsOutsideComponent 
   output,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -10763,12 +11221,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -10789,7 +11257,7 @@ export class Button implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > defaultValsWithTypes 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -10826,6 +11294,7 @@ exports[`Angular signals > jsx > Typescript Test > dynamicComponent 1`] = `
   TemplateRef,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   InputSignal,
@@ -10900,6 +11369,7 @@ exports[`Angular signals > jsx > Typescript Test > dynamicComponentWithEventArg 
   TemplateRef,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   InputSignal,
@@ -10961,7 +11431,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > eventInputAndChange 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -10993,7 +11463,7 @@ export class EventInputAndChange {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > eventProps 1`] = `
-"import { Component, output, effect } from \\"@angular/core\\";
+"import { Component, output, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { EventProps, EventState } from \\"./event-props.type\\";
@@ -11032,7 +11502,14 @@ export class EventPropsComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > expressionState 1`] = `
-"import { Component, input, effect, signal, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  signal,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11064,7 +11541,7 @@ exports[`Angular signals > jsx > Typescript Test > figmaMeta 1`] = `
           {\\"figma\\":{\\"name\\":\\"def-button-beta-outlined\\",\\"url\\":\\"https://www.figma.com/xxx\\",\\"props\\":{\\"iconSmall\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Small\\"},\\"iconMedium\\":{\\"type\\":\\"instance\\",\\"key\\":\\"📍 Icon Medium\\"},\\"label\\":{\\"type\\":\\"string\\",\\"key\\":\\"✏️ Label\\"},\\"icon\\":{\\"type\\":\\"boolean\\",\\"key\\":\\"👁️ Icon\\",\\"value\\":{\\"false\\":false,\\"true\\":\\"placeholder\\"}},\\"interactiveState\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Interactive State\\",\\"value\\":{\\"(Def) Enabled\\":false,\\"Hovered\\":false,\\"Pressed\\":false,\\"Focused\\":false,\\"Disabled\\":\\"true\\"}},\\"size\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Size\\",\\"value\\":{\\"(Def) Medium\\":false,\\"Small\\":\\"small\\"}},\\"width\\":{\\"type\\":\\"enum\\",\\"key\\":\\"Width\\",\\"value\\":{\\"(Def) Auto Width\\":false,\\"Full Width\\":\\"full\\"}}}}}
           */
 
-import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11094,7 +11571,7 @@ export class FigmaButton {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > functionProps 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface MyBasicComponentProps {
@@ -11132,7 +11609,14 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > getterState 1`] = `
-"import { Component, input, effect, computed, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  computed,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -11169,7 +11653,7 @@ export class Button {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > import types 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type RenderContentProps = {
@@ -11205,7 +11689,7 @@ export class RenderContent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > importRaw 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11222,7 +11706,7 @@ export class MyImportComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > layerName 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11247,7 +11731,7 @@ export class MyLayerNameComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > multipleOnUpdate 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11260,12 +11744,22 @@ import { CommonModule } from \\"@angular/common\\";
 export class MultipleOnUpdate {
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        console.log(\\"Runs on every update/rerender\\");
-      });
-      effect(() => {
-        console.log(\\"Runs on every update/rerender as well\\");
-      });
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender\\");
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender as well\\");
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -11273,7 +11767,7 @@ export class MultipleOnUpdate {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11291,30 +11785,40 @@ export class MultipleOnUpdateWithDeps {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.a();
-        this.b();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.a();
+          this.b();
+          // ---
 
-        console.log(\\"Runs when a or b changes\\", this.a(), this.b());
+          console.log(\\"Runs when a or b changes\\", this.a(), this.b());
 
-        if (this.a() === \\"a\\") {
-          this.a.set(\\"b\\");
-        }
-      });
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.c();
-        this.d();
-        // ---
+          if (this.a() === \\"a\\") {
+            this.a.set(\\"b\\");
+          }
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.c();
+          this.d();
+          // ---
 
-        console.log(\\"Runs when c or d changes\\", this.c(), this.d());
+          console.log(\\"Runs when c or d changes\\", this.c(), this.d());
 
-        if (this.a() === \\"a\\") {
-          this.a.set(\\"b\\");
-        }
-      });
+          if (this.a() === \\"a\\") {
+            this.a.set(\\"b\\");
+          }
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -11328,6 +11832,7 @@ exports[`Angular signals > jsx > Typescript Test > multipleSpreads 1`] = `
   ElementRef,
   Renderer2,
   effect,
+  VERSION,
   signal,
   OnDestroy,
 } from \\"@angular/core\\";
@@ -11374,9 +11879,14 @@ export class MyBasicComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -11401,7 +11911,7 @@ exports[`Angular signals > jsx > Typescript Test > nativeAttributes 1`] = `
           {\\"angular\\":{\\"nativeAttributes\\":[\\"disabled\\"]}}
           */
 
-import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11425,7 +11935,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > nestedShow 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 interface Props {
@@ -11456,7 +11966,7 @@ export class NestedShow {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > nestedStyles 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11499,7 +12009,7 @@ export class NestedStyles {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > normalizeLayerNames 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface MyNormalizedLayerNamesComponentProps {
@@ -11557,6 +12067,7 @@ exports[`Angular signals > jsx > Typescript Test > onEvent 1`] = `
   viewChild,
   ElementRef,
   effect,
+  VERSION,
   AfterViewInit,
 } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
@@ -11589,7 +12100,7 @@ export class Embed implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > onInit & onMount 1`] = `
-"import { Component, effect, AfterViewInit } from \\"@angular/core\\";
+"import { Component, effect, VERSION, AfterViewInit } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11616,7 +12127,14 @@ export class OnInit implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > onInit 1`] = `
-"import { Component, input, effect, signal, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  signal,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -11650,7 +12168,7 @@ export class OnInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > onInitPlain 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11671,7 +12189,13 @@ export class OnInitPlain {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > onMount 1`] = `
-"import { Component, effect, OnDestroy, AfterViewInit } from \\"@angular/core\\";
+"import {
+  Component,
+  effect,
+  VERSION,
+  OnDestroy,
+  AfterViewInit,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11698,7 +12222,7 @@ export class Comp implements AfterViewInit, OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > onMountMultiple 1`] = `
-"import { Component, effect, AfterViewInit } from \\"@angular/core\\";
+"import { Component, effect, VERSION, AfterViewInit } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11723,7 +12247,7 @@ export class Comp implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > onUpdate 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11736,9 +12260,14 @@ import { CommonModule } from \\"@angular/common\\";
 export class OnUpdate {
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        console.log(\\"Runs on every update/rerender\\");
-      });
+      effect(
+        () => {
+          console.log(\\"Runs on every update/rerender\\");
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -11746,7 +12275,14 @@ export class OnUpdate {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > onUpdateWithDeps 1`] = `
-"import { Component, input, effect, signal, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  signal,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -11768,20 +12304,25 @@ export class OnUpdateWithDeps {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.a();
-        this.b();
-        this.size();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.a();
+          this.b();
+          this.size();
+          // ---
 
-        console.log(
-          \\"Runs when a, b or size changes\\",
-          this.a(),
-          this.b(),
-          this.size()
-        );
-      });
+          console.log(
+            \\"Runs when a, b or size changes\\",
+            this.a(),
+            this.b(),
+            this.size()
+          );
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -11794,7 +12335,7 @@ exports[`Angular signals > jsx > Typescript Test > outputEventBinding 1`] = `
           {\\"angular\\":{\\"nativeEvents\\":[\\"onFakeNative\\"]}}
           */
 
-import { Component, effect, signal } from \\"@angular/core\\";
+import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11823,7 +12364,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Types = {
@@ -11856,7 +12397,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > preserveTyping 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export type A = \\"test\\";
@@ -11891,7 +12432,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > prettierInline 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -11915,7 +12456,14 @@ export class PrettierInline {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > propsDestructure 1`] = `
-"import { Component, input, effect, signal, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  signal,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -11944,7 +12492,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > propsInterface 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 interface Person {
@@ -11970,7 +12518,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > propsType 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Person = {
@@ -11996,7 +12544,7 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > referencingFunInsideHook 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12017,11 +12565,16 @@ export class OnUpdate {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.foo({
-          someOption: this.bar.bind(this),
-        });
-      });
+      effect(
+        () => {
+          this.foo({
+            someOption: this.bar.bind(this),
+          });
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -12037,6 +12590,7 @@ exports[`Angular signals > jsx > Typescript Test > renderBlock 1`] = `
   TemplateRef,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   InputSignal,
@@ -12339,6 +12893,7 @@ exports[`Angular signals > jsx > Typescript Test > renderContentExample 1`] = `
   Component,
   input,
   effect,
+  VERSION,
   AfterViewInit,
   InputSignal,
 } from \\"@angular/core\\";
@@ -12383,13 +12938,18 @@ export class RenderContent implements AfterViewInit {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.content();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.content();
+          // ---
 
-        dispatchNewContentToVisualEditor(this.content());
-      });
+          dispatchNewContentToVisualEditor(this.content());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -12410,6 +12970,7 @@ exports[`Angular signals > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -12480,12 +13041,22 @@ export class Button implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      });
-      effect(() => {
-        this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
+      effect(
+        () => {
+          this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -12506,7 +13077,7 @@ export class Button implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > rootShow 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface RenderStylesProps {
@@ -12539,7 +13110,7 @@ exports[`Angular signals > jsx > Typescript Test > sanitizeInnerHTML 1`] = `
           {\\"angular\\":{\\"sanitizeInnerHTML\\":true}}
           */
 
-import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12558,7 +13129,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > self-referencing component 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12581,7 +13152,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > self-referencing component with children 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12606,7 +13177,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > setState 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -12632,7 +13203,7 @@ export class SetState {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > showExpressions 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 interface Props {
@@ -12674,7 +13245,7 @@ export class ShowWithOtherValues {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > showWithFor 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 interface Props {
@@ -12708,7 +13279,7 @@ export class NestedShow {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > showWithOtherValues 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 interface Props {
@@ -12736,7 +13307,7 @@ export class ShowWithOtherValues {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > showWithRootText 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 interface Props {
@@ -12774,6 +13345,7 @@ import {
   output,
   input,
   effect,
+  VERSION,
   signal,
   InputSignal,
   ModelSignal,
@@ -12841,18 +13413,23 @@ export class SignalsTestComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this._counter();
-        this.buttonRef();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this._counter();
+          this.buttonRef();
+          // ---
 
-        console.log(this._counter(), this.buttonRef()?.nativeElement);
-        this.buttonRef()?.nativeElement?.setAttribute(
-          \\"data-counter\\",
-          this._counter().toString()
-        );
-      });
+          console.log(this._counter(), this.buttonRef()?.nativeElement);
+          this.buttonRef()?.nativeElement?.setAttribute(
+            \\"data-counter\\",
+            this._counter().toString()
+          );
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -12860,7 +13437,7 @@ export class SignalsTestComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > signalsOnUpdate 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type Props = {
@@ -12889,14 +13466,19 @@ export class MyBasicComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        // --- Mitosis: Workaround to make sure the effect() is triggered ---
-        this.id();
-        // ---
+      effect(
+        () => {
+          // --- Mitosis: Workaround to make sure the effect() is triggered ---
+          this.id();
+          // ---
 
-        console.log(\\"props.id changed\\", this.id());
-        console.log(\\"props.foo.value.bar.baz changed\\", this.foo().bar.baz);
-      });
+          console.log(\\"props.id changed\\", this.id());
+          console.log(\\"props.foo.value.bar.baz changed\\", this.foo().bar.baz);
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -12910,6 +13492,7 @@ exports[`Angular signals > jsx > Typescript Test > spreadAttrs 1`] = `
   ElementRef,
   Renderer2,
   effect,
+  VERSION,
   signal,
   OnDestroy,
 } from \\"@angular/core\\";
@@ -12953,9 +13536,14 @@ export class MyBasicComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, attrs);
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, attrs);
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -12982,6 +13570,7 @@ exports[`Angular signals > jsx > Typescript Test > spreadNestedProps 1`] = `
   Renderer2,
   input,
   effect,
+  VERSION,
   signal,
   OnDestroy,
   InputSignal,
@@ -13028,9 +13617,14 @@ export class MyBasicComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2) {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.setAttributes(this.elRef0()?.nativeElement, this.nested());
-      });
+      effect(
+        () => {
+          this.setAttributes(this.elRef0()?.nativeElement, this.nested());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -13050,7 +13644,7 @@ export class MyBasicComponent implements OnDestroy {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > spreadProps 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13067,7 +13661,14 @@ export class MyBasicComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > stateInit 1`] = `
-"import { Component, input, effect, signal, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  signal,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13112,6 +13713,7 @@ exports[`Angular signals > jsx > Typescript Test > stateInitSequence 1`] = `
   Component,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   InputSignal,
@@ -13144,7 +13746,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > store-async-function 1`] = `
-"import { Component, effect } from '@angular/core';
+"import { Component, effect, VERSION } from '@angular/core';
       import { CommonModule } from '@angular/common';
 
 
@@ -13202,7 +13804,7 @@ return Promise.resolve();
 `;
 
 exports[`Angular signals > jsx > Typescript Test > string-literal-store 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13221,7 +13823,7 @@ export class StringLiteralStore {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > string-literal-store-kebab 1`] = `
-"import { Component, effect, signal } from '@angular/core';
+"import { Component, effect, VERSION, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 
@@ -13271,7 +13873,7 @@ export class StringLiteralStore  {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > styleClassAndCss 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13299,7 +13901,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > stylePropClassAndCss 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13327,7 +13929,7 @@ export class StylePropClassAndCss {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > subComponent 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Foo } from \\"./foo-sub-component.lite\\";
@@ -13346,7 +13948,7 @@ export class SubComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > svgComponent 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13384,7 +13986,7 @@ export class SvgComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > twoForsTrackBy 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13416,7 +14018,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > typeDependency 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export type TypeDependencyProps = {
@@ -13444,7 +14046,7 @@ export class TypeDependency {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > typeExternalProps 1`] = `
-"import { Component, input, effect, InputSignal } from \\"@angular/core\\";
+"import { Component, input, effect, VERSION, InputSignal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { FooProps } from \\"./foo-props\\";
@@ -13465,7 +14067,7 @@ export class TypeExternalProps {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > typeExternalStore 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { FooStore } from \\"./foo-store\\";
@@ -13486,7 +14088,7 @@ export class TypeExternalStore {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > typeGetterStore 1`] = `
-"import { Component, effect, signal, computed } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal, computed } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 type GetterStore = {
@@ -13522,7 +14124,7 @@ export class TypeGetterStore {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > use-style 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13546,7 +14148,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > use-style-and-css 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13573,7 +14175,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > use-style-outside-component 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13601,6 +14203,7 @@ exports[`Angular signals > jsx > Typescript Test > useObjectWrapper 1`] = `
   Component,
   input,
   effect,
+  VERSION,
   signal,
   computed,
   InputSignal,
@@ -13676,6 +14279,7 @@ exports[`Angular signals > jsx > Typescript Test > useTarget 1`] = `
 "import {
   Component,
   effect,
+  VERSION,
   signal,
   computed,
   AfterViewInit,
@@ -13711,7 +14315,7 @@ export class UseTargetComponent implements AfterViewInit {
 `;
 
 exports[`Angular signals > jsx > Typescript Test > webComponent 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { register } from \\"swiper/element/bundle\\";
@@ -13741,7 +14345,7 @@ export class MyBasicWebComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > basic 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13764,7 +14368,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > bindGroup 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13831,7 +14435,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > bindProperty 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13850,7 +14454,14 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > classDirective 1`] = `
-"import { Component, input, effect, signal, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  signal,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 const defaultProps: any = {};
@@ -13879,7 +14490,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > context 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13898,7 +14509,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > each 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13921,7 +14532,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > eventHandlers 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13946,7 +14557,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > html 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 import { DomSanitizer } from \\"@angular/platform-browser\\";
 
@@ -13968,7 +14579,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > ifElse 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -13995,7 +14606,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > imports 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Button } from \\"./Button.lite\\";
@@ -14020,7 +14631,13 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > lifecycleHooks 1`] = `
-"import { Component, effect, OnDestroy, AfterViewInit } from \\"@angular/core\\";
+"import {
+  Component,
+  effect,
+  VERSION,
+  OnDestroy,
+  AfterViewInit,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14033,9 +14650,14 @@ import { CommonModule } from \\"@angular/common\\";
 export class MyComponent implements AfterViewInit, OnDestroy {
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        console.log(\\"onAfterUpdate\\");
-      });
+      effect(
+        () => {
+          console.log(\\"onAfterUpdate\\");
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -14053,7 +14675,7 @@ export class MyComponent implements AfterViewInit, OnDestroy {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > reactive 1`] = `
-"import { Component, effect, signal, computed } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal, computed } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14080,7 +14702,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > reactiveWithFn 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14114,9 +14736,14 @@ export class MyComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.calculateResult(this.a(), this.b());
-      });
+      effect(
+        () => {
+          this.calculateResult(this.a(), this.b());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -14124,7 +14751,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > slots 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14146,7 +14773,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > style 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14172,7 +14799,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Javascript Test > textExpressions 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14197,7 +14824,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > basic 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14220,7 +14847,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > bindGroup 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14287,7 +14914,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > bindProperty 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14306,7 +14933,14 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > classDirective 1`] = `
-"import { Component, input, effect, signal, InputSignal } from \\"@angular/core\\";
+"import {
+  Component,
+  input,
+  effect,
+  VERSION,
+  signal,
+  InputSignal,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 const defaultProps: any = {};
@@ -14335,7 +14969,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > context 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14354,7 +14988,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > each 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14377,7 +15011,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > eventHandlers 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14402,7 +15036,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > html 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 import { DomSanitizer } from \\"@angular/platform-browser\\";
 
@@ -14424,7 +15058,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > ifElse 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14451,7 +15085,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > imports 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 import { Button } from \\"./Button.lite\\";
@@ -14476,7 +15110,13 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > lifecycleHooks 1`] = `
-"import { Component, effect, OnDestroy, AfterViewInit } from \\"@angular/core\\";
+"import {
+  Component,
+  effect,
+  VERSION,
+  OnDestroy,
+  AfterViewInit,
+} from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14489,9 +15129,14 @@ import { CommonModule } from \\"@angular/common\\";
 export class MyComponent implements AfterViewInit, OnDestroy {
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        console.log(\\"onAfterUpdate\\");
-      });
+      effect(
+        () => {
+          console.log(\\"onAfterUpdate\\");
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 
@@ -14509,7 +15154,7 @@ export class MyComponent implements AfterViewInit, OnDestroy {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > reactive 1`] = `
-"import { Component, effect, signal, computed } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal, computed } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14536,7 +15181,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > reactiveWithFn 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14570,9 +15215,14 @@ export class MyComponent {
 
   constructor() {
     if (typeof window !== \\"undefined\\") {
-      effect(() => {
-        this.calculateResult(this.a(), this.b());
-      });
+      effect(
+        () => {
+          this.calculateResult(this.a(), this.b());
+        },
+        Number(VERSION.major) < 19
+          ? ({ allowSignalWrites: true } as any)
+          : undefined
+      );
     }
   }
 }
@@ -14580,7 +15230,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > slots 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14602,7 +15252,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > style 1`] = `
-"import { Component, effect } from \\"@angular/core\\";
+"import { Component, effect, VERSION } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({
@@ -14628,7 +15278,7 @@ export class MyComponent {
 `;
 
 exports[`Angular signals > svelte > Typescript Test > textExpressions 1`] = `
-"import { Component, effect, signal } from \\"@angular/core\\";
+"import { Component, effect, VERSION, signal } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 @Component({

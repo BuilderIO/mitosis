@@ -386,6 +386,12 @@ Please add a initial value for every state property even if it's \`undefined\`.`
                 ${json.hooks.onUpdate
                   ?.map(
                     ({ code, depsArray }) =>
+                      /**
+                       * `allowSignalWrites` is required for Angular < 19 to permit signal writes
+                       * inside effects. It was deprecated in Angular 19 (writes are always allowed)
+                       * and logging it there produces console noise, so we gate it on the runtime
+                       * Angular version to keep backwards compatibility with v17/v18.
+                       */
                       `effect(() => {
                       ${
                         depsArray?.length
@@ -397,7 +403,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
                           : ''
                       }
                       ${code}
-                      });`,
+                      }, Number(VERSION.major) < 19 ? ({ allowSignalWrites: true } as any) : undefined);`,
                   )
                   .join('\n')}
                   }
