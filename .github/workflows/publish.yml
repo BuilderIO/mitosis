@@ -10,6 +10,10 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+permissions:
+  id-token: write # Required for npm OIDC trusted publishing
+  contents: read
+
 jobs:
   publish-sdks:
     name: Publish package
@@ -40,6 +44,11 @@ jobs:
           cache-node-modules: true
           cache-install-state: true
 
+      - name: Upgrade npm for OIDC trusted publishing
+        run: |
+          npm install -g npm@11.5.1 # minimum version supporting OIDC trusted publishing
+          npm --version
+
       - name: Create Release PR & Publish to npm
         id: changesets
         uses: changesets/action@v1
@@ -50,7 +59,3 @@ jobs:
         env:
           # need this token to run CI checks on the created PR
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-
-          # probably don't need both of those, but it works!
-          NPM_TOKEN: ${{ secrets.NPM_RELEASE_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_RELEASE_TOKEN }}
