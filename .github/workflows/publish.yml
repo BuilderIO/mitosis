@@ -36,7 +36,8 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22 # OIDC trusted publishing requires Node >= 22.14.0
+          registry-url: 'https://registry.npmjs.org'
 
       - name: 📥 Monorepo install
         uses: ./.github/actions/yarn-nm-install
