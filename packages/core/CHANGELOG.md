@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.13.2
+
+### Patch Changes
+
+- f08c686: Fix and guard onMount execution in SSR with window check for Angular
+
 ## 0.13.1
 
 ### Patch Changes
