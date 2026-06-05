@@ -298,9 +298,7 @@ Please add a initial value for every state property even if it's \`undefined\`.`
 
     if (!emptyOnMount) {
       // `onMount` runs only in the browser, after view initialization. Guard it
-      // so it does not execute during SSR. Other lifecycle code (slot rendering
-      // via `_updateView()` and attribute passing) must run on the server too,
-      // and is therefore emitted unguarded.
+      // so it does not execute during SSR.
       addCodeNgAfterViewInit(
         json,
         `if (typeof window !== 'undefined') {

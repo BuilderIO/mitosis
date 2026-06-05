@@ -742,10 +742,8 @@ export class Button implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -942,9 +940,7 @@ export class ContentSlotJsxCode implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -1491,9 +1487,7 @@ export class FormComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -1722,9 +1716,7 @@ export class ImgComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -1824,9 +1816,7 @@ export class FormInputComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -1988,9 +1978,7 @@ export class SectionComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -2080,9 +2068,7 @@ export class SectionStateComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -2180,9 +2166,7 @@ export class SelectComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -2525,9 +2509,7 @@ export class SubmitButton implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -2654,9 +2636,7 @@ export class Textarea implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -2808,9 +2788,7 @@ export class Video implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -2933,18 +2911,13 @@ export class MyComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(
-        this.elRef0()?.nativeElement,
-        this.attrsUsingUseState()
-      );
-      this.setAttributes(this.elRef0()?.nativeElement, this.properties());
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      this.setAttributes(this.elRef0()?.nativeElement, {
-        someOtherAttrs: this.accessHere(),
-        someStateAttrs: this.specifics(),
-      });
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attrsUsingUseState());
+    this.setAttributes(this.elRef0()?.nativeElement, this.properties());
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef0()?.nativeElement, {
+      someOtherAttrs: this.accessHere(),
+      someStateAttrs: this.specifics(),
+    });
   }
 
   ngOnDestroy() {
@@ -3093,9 +3066,7 @@ export class MyBasicForNoTagRefComponent {
   }
 
   ngAfterContentInit() {
-    if (typeof window !== \\"undefined\\") {
-      this._updateView();
-    }
+    this._updateView();
   }
 }
 "
@@ -3344,12 +3315,12 @@ export class BasicRefAttributePassingComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(
+      element,
+      \\"basic-ref-attribute-passing-component\\"
+    );
     if (typeof window !== \\"undefined\\") {
-      const element: HTMLElement | null = this._root()?.nativeElement;
-      this.enableAttributePassing(
-        element,
-        \\"basic-ref-attribute-passing-component\\"
-      );
       console.log(\\"onMount\\");
     }
   }
@@ -3428,13 +3399,11 @@ export class BasicRefAttributePassingCustomRefComponent
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      const element: HTMLElement | null = this.buttonRef()?.nativeElement;
-      this.enableAttributePassing(
-        element,
-        \\"basic-ref-attribute-passing-custom-ref-component\\"
-      );
-    }
+    const element: HTMLElement | null = this.buttonRef()?.nativeElement;
+    this.enableAttributePassing(
+      element,
+      \\"basic-ref-attribute-passing-custom-ref-component\\"
+    );
   }
 }
 "
@@ -3845,10 +3814,8 @@ export class Button implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -3961,10 +3928,8 @@ export class Button implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -4068,9 +4033,7 @@ export class MyComponent {
   }
 
   ngAfterContentInit() {
-    if (typeof window !== \\"undefined\\") {
-      this._updateView();
-    }
+    this._updateView();
   }
 }
 "
@@ -4138,9 +4101,7 @@ export class MyComponent {
   }
 
   ngAfterContentInit() {
-    if (typeof window !== \\"undefined\\") {
-      this._updateView();
-    }
+    this._updateView();
   }
 }
 "
@@ -4587,9 +4548,7 @@ export class MyBasicComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
   }
 
   ngOnDestroy() {
@@ -5505,9 +5464,7 @@ export class RenderBlock {
   }
 
   ngAfterContentInit() {
-    if (typeof window !== \\"undefined\\") {
-      this._updateView();
-    }
+    this._updateView();
   }
 }
 "
@@ -5668,10 +5625,8 @@ export class Button implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -6109,9 +6064,7 @@ export class MyBasicComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, attrs);
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, attrs);
   }
 
   ngOnDestroy() {
@@ -6190,9 +6143,7 @@ export class MyBasicComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.nested());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.nested());
   }
 
   ngOnDestroy() {
@@ -7688,10 +7639,8 @@ export class Button implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -7923,9 +7872,7 @@ export class ContentSlotJsxCode implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -8529,9 +8476,7 @@ export class FormComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -8799,9 +8744,7 @@ export class ImgComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -8919,9 +8862,7 @@ export class FormInputComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -9102,9 +9043,7 @@ export class SectionComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -9201,9 +9140,7 @@ export class SectionStateComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -9316,9 +9253,7 @@ export class SelectComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -9690,9 +9625,7 @@ export class SubmitButton implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -9838,9 +9771,7 @@ export class Textarea implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -10032,9 +9963,7 @@ export class Video implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -10157,18 +10086,13 @@ export class MyComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(
-        this.elRef0()?.nativeElement,
-        this.attrsUsingUseState()
-      );
-      this.setAttributes(this.elRef0()?.nativeElement, this.properties());
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      this.setAttributes(this.elRef0()?.nativeElement, {
-        someOtherAttrs: this.accessHere(),
-        someStateAttrs: this.specifics(),
-      });
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attrsUsingUseState());
+    this.setAttributes(this.elRef0()?.nativeElement, this.properties());
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef0()?.nativeElement, {
+      someOtherAttrs: this.accessHere(),
+      someStateAttrs: this.specifics(),
+    });
   }
 
   ngOnDestroy() {
@@ -10317,9 +10241,7 @@ export class MyBasicForNoTagRefComponent {
   }
 
   ngAfterContentInit() {
-    if (typeof window !== \\"undefined\\") {
-      this._updateView();
-    }
+    this._updateView();
   }
 }
 "
@@ -10574,12 +10496,12 @@ export class BasicRefAttributePassingComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    const element: HTMLElement | null = this._root()?.nativeElement;
+    this.enableAttributePassing(
+      element,
+      \\"basic-ref-attribute-passing-component\\"
+    );
     if (typeof window !== \\"undefined\\") {
-      const element: HTMLElement | null = this._root()?.nativeElement;
-      this.enableAttributePassing(
-        element,
-        \\"basic-ref-attribute-passing-component\\"
-      );
       console.log(\\"onMount\\");
     }
   }
@@ -10658,13 +10580,11 @@ export class BasicRefAttributePassingCustomRefComponent
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      const element: HTMLElement | null = this.buttonRef()?.nativeElement;
-      this.enableAttributePassing(
-        element,
-        \\"basic-ref-attribute-passing-custom-ref-component\\"
-      );
-    }
+    const element: HTMLElement | null = this.buttonRef()?.nativeElement;
+    this.enableAttributePassing(
+      element,
+      \\"basic-ref-attribute-passing-custom-ref-component\\"
+    );
   }
 }
 "
@@ -11113,10 +11033,8 @@ export class Button implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -11241,10 +11159,8 @@ export class Button implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -11352,9 +11268,7 @@ export class MyComponent {
   }
 
   ngAfterContentInit() {
-    if (typeof window !== \\"undefined\\") {
-      this._updateView();
-    }
+    this._updateView();
   }
 }
 "
@@ -11422,9 +11336,7 @@ export class MyComponent {
   }
 
   ngAfterContentInit() {
-    if (typeof window !== \\"undefined\\") {
-      this._updateView();
-    }
+    this._updateView();
   }
 }
 "
@@ -11891,9 +11803,7 @@ export class MyBasicComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attrs());
   }
 
   ngOnDestroy() {
@@ -12880,9 +12790,7 @@ export class RenderBlock {
   }
 
   ngAfterContentInit() {
-    if (typeof window !== \\"undefined\\") {
-      this._updateView();
-    }
+    this._updateView();
   }
 }
 "
@@ -13061,10 +12969,8 @@ export class Button implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
-      this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.attributes());
+    this.setAttributes(this.elRef1()?.nativeElement, this.attributes());
   }
 
   ngOnDestroy() {
@@ -13548,9 +13454,7 @@ export class MyBasicComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, attrs);
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, attrs);
   }
 
   ngOnDestroy() {
@@ -13629,9 +13533,7 @@ export class MyBasicComponent implements OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (typeof window !== \\"undefined\\") {
-      this.setAttributes(this.elRef0()?.nativeElement, this.nested());
-    }
+    this.setAttributes(this.elRef0()?.nativeElement, this.nested());
   }
 
   ngOnDestroy() {
