@@ -346,7 +346,14 @@ export const componentToAngularClassic: TranspilerGenerator<ToAngularOptions> = 
     
           ${!hasConstructor ? '' : `constructor(\n${constructorInjectables}) {}`}
           
-          ${withAttributePassing ? getAttributePassingString(options.typescript) : ''}
+          ${
+            withAttributePassing
+              ? getAttributePassingString(
+                  options.typescript,
+                  json.meta.useMetadata?.attributePassing?.additional,
+                )
+              : ''
+          }
           
           ${
             !json.hooks.onMount.length && !dynamicComponents.size && !json.hooks.onInit?.code

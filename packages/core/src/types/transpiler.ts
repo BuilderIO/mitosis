@@ -16,8 +16,12 @@ export type TranspilerGenerator<X extends BaseTranspilerOptions, Y = string> = (
 ) => Transpiler<Y>;
 
 export type AttributePassingType = {
+  /** enable/disable attribute passing */
   enabled: boolean;
+  /** Custom ref name to use instead of `_ref` */
   customRef?: string;
+  /** Custom attributes to always pass through */
+  additional?: string[];
 };
 
 export interface BaseTranspilerOptions {

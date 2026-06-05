@@ -3745,9 +3745,9 @@ export default class BasicRefAttributePassingComponent {
   @ViewChild(\\"_root\\") _root;
 
   /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * Passes attributes to correct child. Used in angular and stencil.
    * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
+   * @param customElementSelector the custom element like \`my-component\`
    */
   private enableAttributePassing(element, customElementSelector) {
     const parent = element?.closest(customElementSelector);
@@ -3755,14 +3755,9 @@ export default class BasicRefAttributePassingComponent {
       const attributes = parent.attributes;
       for (let i = 0; i < attributes.length; i++) {
         const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
+        if (!attr) continue;
+
+        if (attr.name === \\"class\\") {
           const isWebComponent = attr.value.includes(\\"hydrated\\");
           const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
           const currentClass = element.getAttribute(\\"class\\");
@@ -3776,6 +3771,13 @@ export default class BasicRefAttributePassingComponent {
           } else {
             parent.removeAttribute(attr.name);
           }
+        } else if (
+          attr.name === \\"style\\" ||
+          attr.name.startsWith(\\"data-\\") ||
+          attr.name.startsWith(\\"aria-\\")
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
         }
       }
     }
@@ -3832,9 +3834,9 @@ export default class BasicRefAttributePassingCustomRefComponent {
   @ViewChild(\\"buttonRef\\") buttonRef;
 
   /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * Passes attributes to correct child. Used in angular and stencil.
    * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
+   * @param customElementSelector the custom element like \`my-component\`
    */
   private enableAttributePassing(element, customElementSelector) {
     const parent = element?.closest(customElementSelector);
@@ -3842,14 +3844,9 @@ export default class BasicRefAttributePassingCustomRefComponent {
       const attributes = parent.attributes;
       for (let i = 0; i < attributes.length; i++) {
         const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
+        if (!attr) continue;
+
+        if (attr.name === \\"class\\") {
           const isWebComponent = attr.value.includes(\\"hydrated\\");
           const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
           const currentClass = element.getAttribute(\\"class\\");
@@ -3863,6 +3860,13 @@ export default class BasicRefAttributePassingCustomRefComponent {
           } else {
             parent.removeAttribute(attr.name);
           }
+        } else if (
+          attr.name === \\"style\\" ||
+          attr.name.startsWith(\\"data-\\") ||
+          attr.name.startsWith(\\"aria-\\")
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
         }
       }
     }
@@ -12255,9 +12259,9 @@ export default class BasicRefAttributePassingComponent {
   @ViewChild(\\"_root\\") _root!: ElementRef;
 
   /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * Passes attributes to correct child. Used in angular and stencil.
    * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
+   * @param customElementSelector the custom element like \`my-component\`
    */
   private enableAttributePassing(
     element: HTMLElement | null,
@@ -12268,14 +12272,9 @@ export default class BasicRefAttributePassingComponent {
       const attributes = parent.attributes;
       for (let i = 0; i < attributes.length; i++) {
         const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
+        if (!attr) continue;
+
+        if (attr.name === \\"class\\") {
           const isWebComponent = attr.value.includes(\\"hydrated\\");
           const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
           const currentClass = element.getAttribute(\\"class\\");
@@ -12289,6 +12288,13 @@ export default class BasicRefAttributePassingComponent {
           } else {
             parent.removeAttribute(attr.name);
           }
+        } else if (
+          attr.name === \\"style\\" ||
+          attr.name.startsWith(\\"data-\\") ||
+          attr.name.startsWith(\\"aria-\\")
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
         }
       }
     }
@@ -12345,9 +12351,9 @@ export default class BasicRefAttributePassingCustomRefComponent {
   @ViewChild(\\"buttonRef\\") buttonRef!: ElementRef;
 
   /**
-   * Passes \`aria-*\`, \`data-*\` & \`class\` attributes to correct child. Used in angular and stencil.
+   * Passes attributes to correct child. Used in angular and stencil.
    * @param element  the ref for the component
-   * @param customElementSelector  the custom element like \`my-component\`
+   * @param customElementSelector the custom element like \`my-component\`
    */
   private enableAttributePassing(
     element: HTMLElement | null,
@@ -12358,14 +12364,9 @@ export default class BasicRefAttributePassingCustomRefComponent {
       const attributes = parent.attributes;
       for (let i = 0; i < attributes.length; i++) {
         const attr = attributes.item(i);
-        if (
-          attr &&
-          (attr.name.startsWith(\\"data-\\") || attr.name.startsWith(\\"aria-\\"))
-        ) {
-          element.setAttribute(attr.name, attr.value);
-          parent.removeAttribute(attr.name);
-        }
-        if (attr && attr.name === \\"class\\") {
+        if (!attr) continue;
+
+        if (attr.name === \\"class\\") {
           const isWebComponent = attr.value.includes(\\"hydrated\\");
           const value = attr.value.replace(\\"hydrated\\", \\"\\").trim();
           const currentClass = element.getAttribute(\\"class\\");
@@ -12379,6 +12380,13 @@ export default class BasicRefAttributePassingCustomRefComponent {
           } else {
             parent.removeAttribute(attr.name);
           }
+        } else if (
+          attr.name === \\"style\\" ||
+          attr.name.startsWith(\\"data-\\") ||
+          attr.name.startsWith(\\"aria-\\")
+        ) {
+          element.setAttribute(attr.name, attr.value);
+          parent.removeAttribute(attr.name);
         }
       }
     }
