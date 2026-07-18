@@ -22,10 +22,10 @@ import { camelCase, some } from 'lodash';
 import { format } from 'prettier/standalone';
 import { SELF_CLOSING_HTML_TAGS } from '../../constants/html_tags';
 import {
-    runPostCodePlugins,
-    runPostJsonPlugins,
-    runPreCodePlugins,
-    runPreJsonPlugins,
+  runPostCodePlugins,
+  runPostJsonPlugins,
+  runPreCodePlugins,
+  runPreJsonPlugins,
 } from '../../modules/plugins';
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import { collectClassString } from './collect-class-string';
@@ -115,7 +115,8 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
       } else {
         // TODO: handle boolean attributes too by matching list of html boolean attributes
         // https://lit.dev/docs/templates/expressions/#boolean-attribute-expressions
-        const propKey = ATTR_TO_PROP.get(key) ?? key;
+        const isNativeElement = !json.name.includes('-') && !isUpperCase(json.name[0]);
+        const propKey = isNativeElement ? ATTR_TO_PROP.get(key) ?? key : key;
         str += ` .${propKey}=\${${value}} `;
       }
     }
