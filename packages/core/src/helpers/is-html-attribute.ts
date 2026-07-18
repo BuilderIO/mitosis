@@ -19,6 +19,7 @@ export const htmlElementAttributes: { [key: string]: string[] } = {
     'itemtype',
     'lang',
     'nonce',
+    'popover',
     'slot',
     'spellcheck',
     'style',
