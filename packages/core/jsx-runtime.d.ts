@@ -260,13 +260,13 @@ export declare namespace JSX {
     hidden?: boolean;
     id?: string;
     lang?: string;
+    popover?: 'auto' | 'hint' | 'manual' | '';
     spellcheck?: boolean;
     style?: CSS;
     css?: CSS | { [key: string]: CSS | undefined };
     tabindex?: number | string;
     title?: string;
     translate?: 'yes' | 'no';
-    popover?: 'auto' | 'hint' | 'manual' | '' | boolean;
 
     // RDFa Attributes
     about?: string;
