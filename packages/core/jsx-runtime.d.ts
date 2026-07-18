@@ -402,11 +402,7 @@ export declare namespace JSX {
   interface DialogHtmlAttributes<T> extends HTMLAttributes<T> {
     open?: boolean;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDialogElement/closedby) */
-    closedby?: string;
-
-    // camelcase
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDialogElement/closedby) */
-    closedBy?: string;
+    closedby?: 'any' | 'closerequest' | 'none';
   }
 
   interface EmbedHTMLAttributes<T> extends HTMLAttributes<T> {
