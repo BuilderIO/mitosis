@@ -93,7 +93,7 @@ export const htmlElementAttributes: { [key: string]: string[] } = {
   data: ['value'],
   del: ['cite', 'datetime'],
   details: ['open'],
-  dialog: ['open'],
+  dialog: ['open', 'closedby'],
   dir: ['compact'],
   div: ['align'],
   dl: ['compact'],
