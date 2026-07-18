@@ -266,6 +266,7 @@ export declare namespace JSX {
     tabindex?: number | string;
     title?: string;
     translate?: 'yes' | 'no';
+    popover?: 'auto' | 'hint' | 'manual' | '' | boolean;
 
     // RDFa Attributes
     about?: string;
