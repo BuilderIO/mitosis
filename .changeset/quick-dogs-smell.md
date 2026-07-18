@@ -2,4 +2,4 @@
 '@builder.io/mitosis': patch
 ---
 
-added closedby property
+feat(`dialog`): added `closedby` property
