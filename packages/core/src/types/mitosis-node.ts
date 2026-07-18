@@ -47,6 +47,11 @@ export type BaseNode = {
   name: string;
   scope: {};
   /**
+   * Optional type identifier for special node types (e.g., 'user-symbol' for Builder.io user symbols).
+   * Used to explicitly identify node types without relying on name patterns.
+   */
+  type?: 'user-symbol';
+  /**
    * Key-value store of string values for DOM attributes.
    * ```js
    * {

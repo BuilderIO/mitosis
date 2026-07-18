@@ -23,9 +23,7 @@ describe('Unpaired Surrogates', () => {
     };
 
     const output = builderContentToMitosisComponent(builderContent);
-    // Text should be cleaned of unpaired surrogates
     expect(output.children[0].properties.text).toBe('Hello  World. Welcome to section');
-    // Verify unpaired surrogates are removed
     expect(output.children[0].properties.text).not.toContain('\uD800');
     expect(output.children[0].properties.text).not.toContain('\uDFFF');
   });
@@ -81,12 +79,10 @@ describe('Unpaired Surrogates', () => {
       },
     };
 
-    // Convert Builder JSON to Mitosis JSON
     const mitosisCmp = builderContentToMitosisComponent(builderContent);
     expect(mitosisCmp.children[0].name).toBe('Text123');
     expect(mitosisCmp.children[0].properties['data-builder-originalName']).toBe('Text:123');
 
-    // Convert Mitosis JSON to Mitosis JSX
     const mitosisJsx = componentToMitosis()({ component: mitosisCmp });
     expect(mitosisJsx).toMatchInlineSnapshot(`
       "import { Text123 } from \\"@components\\";
@@ -97,12 +93,10 @@ describe('Unpaired Surrogates', () => {
       "
     `);
 
-    // Convert back Mitosis JSX to Mitosis JSON
     const backToMitosisCmp = parseJsx(mitosisJsx);
     expect(backToMitosisCmp.children[0].name).toBe('Text123');
     expect(backToMitosisCmp.children[0].properties['data-builder-originalName']).toBe('Text:123');
 
-    // Convert back Mitosis JSON to Builder JSON
     const backToBuilder = componentToBuilder()({ component: backToMitosisCmp });
     expect(backToBuilder?.data?.blocks?.[0]?.component?.name).toBe('Text:123');
     expect(backToBuilder?.data?.blocks?.[0]?.component?.options).not.toHaveProperty(

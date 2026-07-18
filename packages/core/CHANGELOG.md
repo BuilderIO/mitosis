@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.13.2
+
+### Patch Changes
+
+- f08c686: Fix and guard onMount execution in SSR with window check for Angular
+
+## 0.13.1
+
+### Patch Changes
+
+- 819c56d: Angular signals: gate the deprecated `allowSignalWrites` effect option on the runtime Angular version (`VERSION.major < 19`) instead of dropping it. This silences the deprecation warning on Angular 19+ while keeping backwards compatibility with lower versions.
+
+## 0.13.0
+
+### Minor Changes
+
+- 720e30b: add symbol name serialization to enable symbols to work well with editor-ai
+
 ## 0.12.1
 
 ### Patch Changes

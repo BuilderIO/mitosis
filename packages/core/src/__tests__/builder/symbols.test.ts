@@ -45,6 +45,7 @@ describe('Builder Symbols', () => {
         "name": "Symbol",
         "properties": {},
         "scope": {},
+        "type": "user-symbol",
       }
     `);
 

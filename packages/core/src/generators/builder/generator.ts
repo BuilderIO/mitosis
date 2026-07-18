@@ -656,6 +656,69 @@ export const blockToBuilder = (
     const element = mapper(json, options);
     return processLocalizedValues(element, json);
   }
+
+  const symbolBinding = json.bindings.symbol;
+  if (symbolBinding?.code) {
+    const isExplicitUserSymbol = json.type === 'user-symbol';
+
+    let hasValidSymbolMetadata = false;
+    if (!isExplicitUserSymbol) {
+      const parsed = attempt(() => json5.parse(symbolBinding.code));
+      hasValidSymbolMetadata =
+        !(parsed instanceof Error) &&
+        parsed &&
+        typeof parsed === 'object' &&
+        (parsed.entry || parsed.model === 'symbol');
+    }
+
+    if (isExplicitUserSymbol || hasValidSymbolMetadata) {
+      const symbolOptions = attempt(() => json5.parse(symbolBinding.code));
+
+      if (!(symbolOptions instanceof Error)) {
+        if (!symbolOptions.name) {
+          const displayName = json.name
+            .replace(/^Symbol/, '')
+            .replace(/([A-Z])/g, ' $1')
+            .trim();
+          if (displayName) {
+            symbolOptions.name = displayName;
+          }
+        }
+
+        const inputData: Record<string, any> = {};
+        for (const key of Object.keys(json.bindings)) {
+          if (key !== 'symbol' && key !== 'css' && key !== 'style') {
+            const value = attempt(() => json5.parse(json.bindings[key]!.code));
+            if (!(value instanceof Error)) {
+              inputData[key] = value;
+            }
+          }
+        }
+        for (const key of Object.keys(json.properties)) {
+          if (!key.startsWith('$') && !key.startsWith('_') && !key.startsWith('data-')) {
+            inputData[key] = json.properties[key];
+          }
+        }
+        if (Object.keys(inputData).length > 0) {
+          symbolOptions.data = { ...symbolOptions.data, ...inputData };
+        }
+
+        const element = el(
+          {
+            component: {
+              name: 'Symbol',
+              options: {
+                symbol: symbolOptions,
+              },
+            },
+          },
+          options,
+        );
+        return processLocalizedValues(element, json);
+      }
+    }
+  }
+
   if (json.properties._text || json.bindings._text?.code) {
     const element = el(
       {
