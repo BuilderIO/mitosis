@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.14.0
+
+### Minor Changes
+
+- 77354f7: feat: Enhance Button HTML attributes with Invoker Commands API
+
+### Patch Changes
+
+- da57ccd: fix(Angular & Stencil): attribute passing removals
+- e7b1aba: feat: added global `popover` property
+- 1dbe6b9: feat(`dialog`): added `closedby` property
+
 ## 0.13.2
 
 ### Patch Changes
