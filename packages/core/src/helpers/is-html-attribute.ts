@@ -75,6 +75,8 @@ export const htmlElementAttributes: { [key: string]: string[] } = {
   body: ['alink', 'background', 'bgcolor', 'link', 'text', 'vlink'],
   br: ['clear'],
   button: [
+    'command',
+    'commandfor',
     'disabled',
     'form',
     'formaction',

@@ -366,12 +366,17 @@ export declare namespace JSX {
     type?: 'submit' | 'reset' | 'button';
     value?: string;
 
+    // Invoker Commands API
+    command?: 'show-modal' | 'close' | 'show-popover' | 'hide-popover' | 'toggle-popover' | string;
+    commandfor?: string;
+
     // camelcase
     formAction?: string;
     formEnctype?: HTMLFormEncType;
     formMethod?: HTMLFormMethod;
     formNoValidate?: boolean;
     formTarget?: string;
+    commandFor?: string;
   }
 
   interface CanvasHTMLAttributes<T> extends HTMLAttributes<T> {
