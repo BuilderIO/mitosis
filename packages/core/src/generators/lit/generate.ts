@@ -30,6 +30,13 @@ import {
 import { stringifySingleScopeOnMount } from '../helpers/on-mount';
 import { collectClassString } from './collect-class-string';
 
+/**
+ * Maps lowercase HTML attribute names to their corresponding camelCase DOM property names
+ * where the two differ. Needed because Lit property bindings (`.prop=${val}`) must use
+ * the actual DOM property name.
+ */
+const ATTR_TO_PROP = new Map<string, string>([['closedby', 'closedBy']]);
+
 const getCustomTagName = (name: string, options: ToLitOptions) => {
   if (!name || !isUpperCase(name[0])) {
     return name;
@@ -108,7 +115,9 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
       } else {
         // TODO: handle boolean attributes too by matching list of html boolean attributes
         // https://lit.dev/docs/templates/expressions/#boolean-attribute-expressions
-        str += ` .${key}=\${${value}} `;
+        const isNativeElement = !json.name.includes('-') && !isUpperCase(json.name[0]);
+        const propKey = isNativeElement ? ATTR_TO_PROP.get(key) ?? key : key;
+        str += ` .${propKey}=\${${value}} `;
       }
     }
   }
