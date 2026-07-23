@@ -16,7 +16,7 @@ export const getAttributePassingString = (typescript?: boolean) => {
 ` +
     '  const parent = element?.closest(customElementSelector);\n' +
     '  if (element && parent) {\n' +
-    '    const attributes = [...parent.attributes];\n' +
+    '    const attributes = Array.from(parent.attributes);\n' +
     '    for (let i = 0; i < attributes.length; i++) {\n' +
     '      const attr = attributes[i];\n' +
     "      if (attr && (attr.name.startsWith('data-') || attr.name.startsWith('aria-'))) {\n" +
