@@ -18,6 +18,7 @@ const rule: Rule.RuleModule = {
         'disallow anything other than import declarations, the component itself (in a default export), module-scope hooks, and type declarations inside the component file.',
       recommended: true,
     },
+    schema: [],
   },
 
   create(context) {

@@ -15,6 +15,7 @@ const rule: Rule.RuleModule = {
       description: 'disallow variables as a value for the css attribute.',
       recommended: true,
     },
+    schema: [],
   },
 
   create(context) {
