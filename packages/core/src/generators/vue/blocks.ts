@@ -1,4 +1,5 @@
 import { createSingleBinding } from '@/helpers/bindings';
+import { dashCase } from '@/helpers/dash-case';
 import { checkIsEvent } from '@/helpers/event-handlers';
 import { filterEmptyTextNodes } from '@/helpers/filter-empty-text-nodes';
 import isChildren from '@/helpers/is-children';
@@ -201,6 +202,9 @@ const getBlockBindings = (node: MitosisNode, options: ToVueOptions) => {
     .join(' ');
 
   const stringifiedBindings = Object.entries(node.bindings as Dictionary<Binding>)
+    .filter(([key]) => {
+      return !node.slots || !node.slots[key];
+    })
     .map(stringifyBinding(node, options))
     .join(' ');
 
@@ -255,6 +259,16 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
   str += '>';
   if (node.children) {
     str += node.children.map((item) => blockToVue(item, options)).join('');
+  }
+
+  if (node.slots) {
+    for (const [key, children] of Object.entries(node.slots)) {
+      str += `
+<template #${dashCase(key)}>
+${children.map((item) => blockToVue(item, options)).join('')}
+</template>
+`;
+    }
   }
 
   return str + `</${node.name}>`;
