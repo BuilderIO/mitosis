@@ -207,3 +207,31 @@ describe('null values', () => {
     `);
   });
 });
+
+describe('side effect imports', () => {
+  test('css import without specifiers is preserved', () => {
+    const result = parseJsx(`
+     import './test.css';
+
+     export default function MyComponent() {
+       return <div>hello</div>;
+     }
+    `);
+    expect(result.imports).toContainEqual(
+      expect.objectContaining({ path: './test.css', imports: {} }),
+    );
+  });
+
+  test('side effect import is preserved alongside compiled-away mitosis import', () => {
+    const result = parseJsx(`
+     import { useStore } from '@builder.io/mitosis';
+     import './test.css';
+
+     export default function MyComponent() {
+       const state = useStore({ name: 'foo' });
+       return <div>{state.name}</div>;
+     }
+    `);
+    expect(result.imports.map((theImport) => theImport.path)).toContain('./test.css');
+  });
+});
