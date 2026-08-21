@@ -38,7 +38,6 @@ _PS: We are actively looking for folks interested in becoming contributors to Mi
 ## Quickstart
 
 To create a new Mitosis project from scratch, run the following `create` command:
-
 ```bash
 npm create @builder.io/mitosis@latest
 ```
