@@ -109,6 +109,21 @@ export const hasFirstChildKeyAttribute = (node: MitosisNode): boolean => {
   return Boolean(firstChildBinding && firstChildBinding.key?.code);
 };
 
+const ENDS_WITH_PLAIN_TEXT = /[^\s<>{}]$/;
+const STARTS_WITH_PLAIN_TEXT = /^[^\s<>{}]/;
+
+export const joinChildren = (children: string[] = []): string =>
+  children.reduce((template, child, index) => {
+    if (index === 0) {
+      return child;
+    }
+
+    const isAdjacentPlainText =
+      ENDS_WITH_PLAIN_TEXT.test(template) && STARTS_WITH_PLAIN_TEXT.test(child);
+
+    return isAdjacentPlainText ? `${template}${child}` : `${template}\n${child}`;
+  }, '');
+
 export const preprocessCssAsJson = (json: MitosisComponent) => {
   traverse(json).forEach((item) => {
     if (isMitosisNode(item)) {
