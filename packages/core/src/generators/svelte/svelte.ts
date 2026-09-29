@@ -135,7 +135,45 @@ const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
 const DEFAULT_OPTIONS: ToSvelteOptions = {
   stateType: 'variables',
   prettier: true,
+  memoizeGetters: false,
 };
+
+const MEMOIZE_GETTER_FN_NAME = '__mitosisMemoizeGetter';
+
+/**
+ * Caches a getter's value until the end of the current task. The reactive declaration that wraps
+ * it creates a fresh cache whenever the getter's dependencies change.
+ */
+const getMemoizeGetterFn = (typescript: boolean | undefined) =>
+  typescript
+    ? `function ${MEMOIZE_GETTER_FN_NAME}<T>(fn: () => T): () => T {
+  let hasValue = false;
+  let value: T;
+  return () => {
+    if (!hasValue) {
+      value = fn();
+      hasValue = true;
+      queueMicrotask(() => {
+        hasValue = false;
+      });
+    }
+    return value;
+  };
+}`
+    : `function ${MEMOIZE_GETTER_FN_NAME}(fn) {
+  let hasValue = false;
+  let value;
+  return () => {
+    if (!hasValue) {
+      value = fn();
+      hasValue = true;
+      queueMicrotask(() => {
+        hasValue = false;
+      });
+    }
+    return value;
+  };
+}`;
 
 export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
   (userProvidedOptions) =>
@@ -239,10 +277,10 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
         format: 'variables',
         keyPrefix: '$: ',
         valueMapper: (code) => {
-          return code
-            .trim()
-            .replace(/^([a-zA-Z_\$0-9]+)/, '$1 = ')
-            .replace(/\)/, ') => ');
+          const getter = code.trim().replace(/\)/, ') => ');
+          return options.memoizeGetters
+            ? getter.replace(/^([a-zA-Z_\$0-9]+)/, `$1 = ${MEMOIZE_GETTER_FN_NAME}(`) + ')'
+            : getter.replace(/^([a-zA-Z_\$0-9]+)/, '$1 = ');
         },
       }),
       babelTransformCode,
@@ -357,7 +395,13 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
       ${getContextCode(json)}
 
       ${functionsString.length < 4 ? '' : functionsString}
-      ${getterString.length < 4 ? '' : getterString}
+      ${
+        getterString.length < 4
+          ? ''
+          : options.memoizeGetters
+          ? `${getMemoizeGetterFn(options.typescript)}\n${getterString}`
+          : getterString
+      }
 
       ${refs.map((ref) => `let ${ref}`).join('\n')}
 
