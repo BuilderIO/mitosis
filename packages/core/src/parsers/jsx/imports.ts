@@ -29,9 +29,10 @@ export const handleImportDeclaration = ({
     delete importObject.imports[resolvedImport.value];
   }
 
-  if (Object.keys(importObject.imports).length > 0) {
+  const isSideEffectImport = path.node.specifiers.length === 0;
+
+  if (isSideEffectImport || Object.keys(importObject.imports).length > 0) {
     context.builder.component.imports.push(importObject);
   }
-
   path.remove();
 };
