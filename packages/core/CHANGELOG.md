@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.14.1
+
+### Patch Changes
+
+- 447919b: [Svelte]: add `memoizeGetters` option. When enabled, getter results are cached until their dependencies change or the current task ends, instead of re-running the getter body on every read.
+
 ## 0.14.0
 
 ### Minor Changes
