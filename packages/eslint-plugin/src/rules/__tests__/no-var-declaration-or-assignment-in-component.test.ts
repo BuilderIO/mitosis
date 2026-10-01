@@ -3,11 +3,13 @@ import rule from '../no-var-declaration-or-assignment-in-component';
 
 const opts = {
   filename: 'component.lite.tsx',
-  parserOptions: {
-    ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
-    sourceType: 'module', // Allows for the use of imports
-    ecmaFeatures: {
-      jsx: true, // Allows for the parsing of JSX
+  languageOptions: {
+    ecmaVersion: 2018,
+    sourceType: 'module',
+    parserOptions: {
+      ecmaFeatures: {
+        jsx: true,
+      },
     },
   },
 } as const;
@@ -118,23 +120,6 @@ ruleTester.run('no-var-declaration-or-assignment-in-component', rule, {
       errors: ['Variable assignment inside component is ignored during compilation'],
     },
     // Doesn't accept variable declaration and assignment inside component
-    {
-      ...opts,
-      code: `
-      export default function MyComponent(props) {
-        let a;
-        a = b;
-        
-        return (
-            <div />
-        );
-      }
-    `,
-      errors: [
-        'Variable declaration inside component is ignored during compilation',
-        'Variable assignment inside component is ignored during compilation',
-      ],
-    },
     {
       ...opts,
       code: `

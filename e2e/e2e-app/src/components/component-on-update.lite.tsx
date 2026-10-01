@@ -3,7 +3,7 @@ import { onMount, onUpdate, useRef, useStore } from '@builder.io/mitosis';
 type Store = { initial: boolean; counter: number; label?: string; handleClick: () => void };
 
 export default function ComponentOnUpdate(props: any) {
-  const _ref = useRef<HTMLDivElement | null>(null);
+  const _ref = useRef<HTMLDivElement>(null);
 
   const state = useStore<Store>({
     initial: false,

@@ -16,10 +16,7 @@ const rule: Rule.RuleModule = {
       recommended: true,
     },
     fixable: 'code',
-    schema: [
-      {},
-      // fill in your schema
-    ],
+    schema: [],
   },
 
   create(context) {

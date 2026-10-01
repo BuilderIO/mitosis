@@ -3,11 +3,13 @@ import rule from '../no-map-function-in-jsx-return-body';
 
 const opts = {
   filename: 'component.lite.tsx',
-  parserOptions: {
+  languageOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
+    parserOptions: {
+      ecmaFeatures: {
+        jsx: true,
+      },
     },
   },
 } as const;

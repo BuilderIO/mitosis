@@ -3,6 +3,14 @@ import { Rule } from 'eslint';
 import isMitosisPath from '../helpers/isMitosisPath';
 
 export const staticControlFlow: Rule.RuleModule = {
+  meta: {
+    type: 'problem',
+    docs: {
+      description: 'enforce static control flow patterns',
+      recommended: true,
+    },
+    schema: [],
+  },
   create(context) {
     if (!isMitosisPath(context.getFilename())) return {};
 

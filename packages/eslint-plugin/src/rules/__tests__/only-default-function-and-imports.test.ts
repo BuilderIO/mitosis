@@ -3,17 +3,21 @@ import rule, { onlyDefaultFunctionAndImportsMessage } from '../only-default-func
 
 const opts = {
   filename: 'component.lite.tsx',
-  parserOptions: {
-    ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
-    sourceType: 'module', // Allows for the use of imports
-    ecmaFeatures: {
-      jsx: true, // Allows for the parsing of JSX
+  languageOptions: {
+    ecmaVersion: 2018,
+    sourceType: 'module',
+    parserOptions: {
+      ecmaFeatures: {
+        jsx: true,
+      },
     },
   },
 } as const;
 
 var ruleTester = new RuleTester({
-  parser: require.resolve('@typescript-eslint/parser'),
+  languageOptions: {
+    parser: require('@typescript-eslint/parser'),
+  },
 });
 
 ruleTester.run('only-default-function-and-imports', rule, {

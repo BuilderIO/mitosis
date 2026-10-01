@@ -13,6 +13,7 @@ const rule: Rule.RuleModule = {
       description: 'disallow variable declarations inside jsx.',
       recommended: true,
     },
+    schema: [],
   },
 
   create(context) {
@@ -33,7 +34,8 @@ const rule: Rule.RuleModule = {
     //
     const listener: Rule.RuleListener = {
       VariableDeclarator(node) {
-        const ans = context.getAncestors();
+        const sourceCode = context.sourceCode || context.getSourceCode();
+        const ans = sourceCode.getAncestors(node);
         if (ans.find(types.isJSXElement as any) && !ans.find(types.isJSXAttribute as any)) {
           context.report({
             node: node as any,

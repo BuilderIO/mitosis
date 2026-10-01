@@ -1,4 +1,4 @@
-import { onMount, Signal, useStore } from '@builder.io/mitosis';
+import { For, onMount, Signal, useStore } from '@builder.io/mitosis';
 
 interface ItemListProps {
   list: Signal<string[]>;
@@ -18,17 +18,19 @@ export default function SignalItemList(props: ItemListProps) {
 
   return (
     <ul class="shadow-md rounded">
-      {props.list.value.map((item) => (
-        <li
-          class="border-gray-200 border-b"
-          css={{
-            padding: '10px',
-          }}
-        >
-          {item}
-          <button onClick={state.someFn}>Click me</button>
-        </li>
-      ))}
+      <For each={props.list.value}>
+        {(item) => (
+          <li
+            class="border-gray-200 border-b"
+            css={{
+              padding: '10px',
+            }}
+          >
+            {item}
+            <button onClick={() => state.someFn()}>Click me</button>
+          </li>
+        )}
+      </For>
     </ul>
   );
 }
