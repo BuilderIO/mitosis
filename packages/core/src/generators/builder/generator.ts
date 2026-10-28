@@ -1023,7 +1023,12 @@ export const componentToBuilder =
         }
         if (el.bindings) {
           for (const [key, value] of Object.entries(el.bindings)) {
-            if (value.match(/\n|;/)) {
+            // Elements embedded as literal JSON (e.g. inside an object option) arrive
+            // already normalized: `code.bindings` holds the readable form and differs
+            // from `bindings`. Doing it again would wrap them a second time.
+            const alreadyNormalized =
+              el.code?.bindings?.[key] !== undefined && el.code.bindings[key] !== value;
+            if (value.match(/\n|;/) && !alreadyNormalized) {
               if (!el.code) {
                 el.code = {};
               }
