@@ -104,15 +104,15 @@ const trimExpression = (type: ExpressionType) => (code: string) => {
 type ExpressionType = 'expression' | 'unknown' | 'block' | 'functionBody';
 
 const getType = (code: string, initialType: ExpressionType): ExpressionType => {
-  // match for object literal like { foo: ... }
-  if (initialType === 'unknown' && code.trim().match(/^\s*{\s*[a-z0-9]+:/i)) {
+  // match for object literal like { foo: ... }, { foo_bar: ... } or { 'foo-bar': ... }
+  if (initialType === 'unknown' && code.trim().match(/^\s*{\s*(?:[\w$]+|'[^']*'|"[^"]*")\s*:/)) {
     return 'expression';
   }
 
   // For Builder content
   if (
     initialType === 'unknown' &&
-    (code.includes('return _virtual_index') || code.trim().startsWith('return ')) &&
+    (/return _virtual_index;?\s*$/.test(code) || code.trim().startsWith('return ')) &&
     !code.trim().startsWith('function')
   ) {
     return 'functionBody';
