@@ -36,9 +36,8 @@ const content = {
 
 describe('object options holding Builder blocks', () => {
   test('treats an object literal with an underscored first key as an expression', () => {
-    expect(babelTransformExpression(`{foo_bar: [1], baz: 'return _virtual_index'}`, {})).toContain(
-      'foo_bar',
-    );
+    // Parsed as a labeled block (`foo_bar: [1];`) when not recognized as an object literal.
+    expect(babelTransformExpression(`{foo_bar: [1]}`, {})).toBe('{\n  foo_bar: [1]\n}');
   });
 
   test('serializes to Mitosis JSX and parses back to the same option value', () => {
