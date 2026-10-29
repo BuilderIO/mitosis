@@ -1,5 +1,9 @@
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '@/constants/html_tags';
-import { HELPER_FUNCTIONS, hasFirstChildKeyAttribute } from '@/generators/angular/helpers';
+import {
+  HELPER_FUNCTIONS,
+  hasFirstChildKeyAttribute,
+  joinChildren,
+} from '@/generators/angular/helpers';
 import {
   addCodeNgAfterViewInit,
   addCodeToOnInit,
@@ -30,15 +34,15 @@ const mappers: {
   ) => string;
 } = {
   Fragment: (root, json, options, blockOptions) => {
-    return `<ng-container>${json.children
-      .map((item) => blockToAngular({ root, json: item, options, blockOptions }))
-      .join('\n')}</ng-container>`;
+    return `<ng-container>${joinChildren(
+      json.children.map((item) => blockToAngular({ root, json: item, options, blockOptions })),
+    )}</ng-container>`;
   },
   Slot: (root, json, options, blockOptions) => {
     const renderChildren = () =>
-      json.children
-        ?.map((item) => blockToAngular({ root, json: item, options, blockOptions }))
-        .join('\n');
+      joinChildren(
+        json.children?.map((item) => blockToAngular({ root, json: item, options, blockOptions })),
+      );
 
     return `<ng-content ${Object.entries({ ...json.bindings, ...json.properties })
       .map(([binding, value]) => {
@@ -309,9 +313,9 @@ export const blockToAngular = ({
         indexName ? `; index as ${indexName}` : ''
       }">`;
     }
-    str += json.children
-      .map((item) => blockToAngular({ root, json: item, options, blockOptions }))
-      .join('\n');
+    str += joinChildren(
+      json.children.map((item) => blockToAngular({ root, json: item, options, blockOptions })),
+    );
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
     let condition = json.bindings.when?.code;
@@ -320,9 +324,9 @@ export const blockToAngular = ({
       condition = condition.replace(`typeof ${wordAfterTypeof}`, `useTypeOf(${wordAfterTypeof})`);
     }
     str += `<ng-container *ngIf="${condition}">`;
-    str += json.children
-      .map((item) => blockToAngular({ root, json: item, options, blockOptions }))
-      .join('\n');
+    str += joinChildren(
+      json.children.map((item) => blockToAngular({ root, json: item, options, blockOptions })),
+    );
     str += `</ng-container>`;
     // else condition
     if (isMitosisNode(json.meta?.else)) {
@@ -484,9 +488,9 @@ export const blockToAngular = ({
     str += '>';
 
     if (json.children) {
-      str += json.children
-        .map((item) => blockToAngular({ root, json: item, options, blockOptions }))
-        .join('\n');
+      str += joinChildren(
+        json.children.map((item) => blockToAngular({ root, json: item, options, blockOptions })),
+      );
     }
 
     str += `</${element}>`;

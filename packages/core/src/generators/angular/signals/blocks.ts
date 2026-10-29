@@ -1,5 +1,9 @@
 import { SELF_CLOSING_HTML_TAGS, VALID_HTML_TAGS } from '@/constants/html_tags';
-import { HELPER_FUNCTIONS, hasFirstChildKeyAttribute } from '@/generators/angular/helpers';
+import {
+  HELPER_FUNCTIONS,
+  hasFirstChildKeyAttribute,
+  joinChildren,
+} from '@/generators/angular/helpers';
 import { parseSelector } from '@/generators/angular/helpers/parse-selector';
 import { AngularBlockOptions, ToAngularOptions } from '@/generators/angular/types';
 import { babelTransformExpression } from '@/helpers/babel-transform';
@@ -27,9 +31,11 @@ const getChildren = (
   options: ToAngularOptions,
   blockOptions: AngularBlockOptions,
 ): string =>
-  json.children
-    ?.map((item) => blockToAngularSignals({ root, json: item, options, blockOptions }))
-    .join('\n');
+  joinChildren(
+    json.children?.map((item) =>
+      blockToAngularSignals({ root, json: item, options, blockOptions }),
+    ),
+  );
 
 const MAPPERS: {
   [key: string]: (
@@ -465,9 +471,11 @@ export const blockToAngularSignals = ({
   str += '>';
 
   if (json.children) {
-    str += json.children
-      .map((item) => blockToAngularSignals({ root, json: item, options, blockOptions }))
-      .join('\n');
+    str += joinChildren(
+      json.children.map((item) =>
+        blockToAngularSignals({ root, json: item, options, blockOptions }),
+      ),
+    );
   }
 
   str += `</${element}>`;
