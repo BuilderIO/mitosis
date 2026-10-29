@@ -16,7 +16,7 @@ export const runPreJsonPlugins = ({
   for (const plugin of plugins) {
     const preFunction = plugin(options).json?.pre;
     if (preFunction) {
-      useJson = preFunction(json) || json;
+      useJson = preFunction(useJson) || useJson;
     }
   }
   return useJson;
@@ -35,7 +35,7 @@ export const runPostJsonPlugins = ({
   for (const plugin of plugins) {
     const postFunction = plugin(options).json?.post;
     if (postFunction) {
-      useJson = postFunction(json) || json;
+      useJson = postFunction(useJson) || useJson;
     }
   }
   return useJson;
