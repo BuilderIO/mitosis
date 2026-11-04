@@ -50,13 +50,59 @@ export function dedent(strings: TemplateStringsArray, ...values: any[]): string 
     .map((l) => l.trimEnd())
     .join('\n');
 
-  return (
-    result
-      // dedent eats leading and trailing whitespace too
-      .trim()
-      // handle escaped newlines at the end to ensure they don't get stripped too
-      .replace(/\\n/g, '\n')
-  );
+  // dedent eats leading and trailing whitespace too
+  result = result.trim();
+
+  // Handle escaped newlines at the end to ensure they don't get stripped too.
+  // Only convert `\n` escape sequences that appear outside of string literals:
+  // inside a string, the two-character escape sequence is meaningful code
+  // (e.g. `split("\n")`) and must be preserved as-is, otherwise the generated
+  // code ends up with a literal line break inside the string (#1064).
+  return unescapeNewlinesOutsideStrings(result);
+}
+
+/**
+ * Converts literal `\n` escape sequences into actual newline characters,
+ * except inside string literals ('...', "..." and `...`), where the escape
+ * sequence is preserved verbatim.
+ * @param input The original input string.
+ * @returns The string with escaped newlines converted outside of strings.
+ */
+function unescapeNewlinesOutsideStrings(input: string): string {
+  let result = '';
+  let inString: string | null = null;
+
+  for (let i = 0; i < input.length; i++) {
+    const char = input[i];
+
+    if (inString) {
+      result += char;
+      if (char === '\\' && i + 1 < input.length) {
+        // copy the escaped character verbatim
+        result += input[i + 1];
+        i++;
+      } else if (char === inString) {
+        inString = null;
+      }
+      continue;
+    }
+
+    if (char === '"' || char === "'" || char === '`') {
+      inString = char;
+      result += char;
+      continue;
+    }
+
+    if (char === '\\' && input[i + 1] === 'n') {
+      result += '\n';
+      i++;
+      continue;
+    }
+
+    result += char;
+  }
+
+  return result;
 }
 
 /**
