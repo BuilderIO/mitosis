@@ -1,1 +1,1 @@
-This doc has moved to [mitosis.builder.io](https://mitosis.builder.io/docs/customization/)
+This doc has moved to [mitosis.builder.io](https://mitosis.builder.io/docs/customizability/)
