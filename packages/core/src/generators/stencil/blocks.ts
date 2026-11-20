@@ -101,8 +101,11 @@ export const blockToStencil = ({
     // Stencil uses ´htmlFor´ (JSX) instead of ´for´ (HTML)
     str += ` ${transformAttributeToJSX(key)}="${value}" `;
   }
-  for (const key in json.bindings) {
-    const { code, arguments: cusArgs = [], type } = json.bindings[key]!;
+
+  for (const [key, value] of Object.entries(json.bindings).filter(([key]) => {
+    return !json.slots || !json.slots[key];
+  })) {
+    const { code, arguments: cusArgs = [], type } = value!;
     if (type === 'spread') {
       str += ` {...(${code})} `;
     } else if (key === 'ref') {
@@ -132,6 +135,26 @@ export const blockToStencil = ({
         }),
       )
       .join('\n');
+  }
+
+  if (json.slots) {
+    for (const [key, children] of Object.entries(json.slots)) {
+      str += `
+${children
+  .map((item) =>
+    blockToStencil({
+      json: {
+        ...item,
+        properties: { ...item.properties, slot: key },
+      },
+      options,
+      insideJsx: true,
+      childComponents,
+    }),
+  )
+  .join('')}
+`;
+    }
   }
 
   str += `</${blockName}>`;

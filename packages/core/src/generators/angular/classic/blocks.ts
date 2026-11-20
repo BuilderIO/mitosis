@@ -9,6 +9,7 @@ import {
 import { parseSelector } from '@/generators/angular/helpers/parse-selector';
 import { AngularBlockOptions, ToAngularOptions } from '@/generators/angular/types';
 import { createSingleBinding } from '@/helpers/bindings';
+import { dashCase } from '@/helpers/dash-case';
 import { checkIsBindingNativeEvent, checkIsEvent } from '@/helpers/event-handlers';
 import { getBuilderTagName } from '@/helpers/get-tag-name';
 import isChildren from '@/helpers/is-children';
@@ -468,6 +469,9 @@ export const blockToAngular = ({
     }
 
     const stringifiedBindings = Object.entries(json.bindings)
+      .filter(([key]) => {
+        return !json.slots || !json.slots[key];
+      })
       .map(stringifyBinding(json, options, blockOptions))
       .join('');
 
@@ -487,6 +491,16 @@ export const blockToAngular = ({
       str += json.children
         .map((item) => blockToAngular({ root, json: item, options, blockOptions }))
         .join('\n');
+    }
+
+    if (json.slots) {
+      for (const [key, children] of Object.entries(json.slots)) {
+        str += `
+<ng-container ${dashCase(key)}>
+${children.map((item) => blockToAngular({ root, json: item, options, blockOptions })).join('')}
+</ng-container>
+`;
+      }
     }
 
     str += `</${element}>`;
