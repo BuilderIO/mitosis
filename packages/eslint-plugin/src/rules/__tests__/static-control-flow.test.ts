@@ -6,11 +6,13 @@ const ruleTester = new RuleTester();
 
 const options = {
   filename: 'component.lite.tsx',
-  parserOptions: {
-    ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
-    sourceType: 'module', // Allows for the use of imports
-    ecmaFeatures: {
-      jsx: true, // Allows for the parsing of JSX
+  languageOptions: {
+    ecmaVersion: 2018,
+    sourceType: 'module',
+    parserOptions: {
+      ecmaFeatures: {
+        jsx: true,
+      },
     },
   },
 } as const;

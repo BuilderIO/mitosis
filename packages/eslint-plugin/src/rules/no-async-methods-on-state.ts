@@ -14,6 +14,7 @@ const rule: Rule.RuleModule = {
       description: 'disallow defining async methods as a state property',
       recommended: true,
     },
+    schema: [],
   },
 
   create(context) {
@@ -35,7 +36,8 @@ const rule: Rule.RuleModule = {
 
     const listener: Rule.RuleListener = {
       CallExpression(node) {
-        const program = context.getAncestors()[0];
+        const sourceCode = context.sourceCode || context.getSourceCode();
+        const program = sourceCode.getAncestors(node)[0];
 
         if (!types.isProgram(program)) return;
 

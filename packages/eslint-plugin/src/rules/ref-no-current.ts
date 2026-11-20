@@ -13,6 +13,7 @@ const rule: Rule.RuleModule = {
       description: 'disallow using ref.current',
       recommended: true,
     },
+    schema: [],
   },
 
   create(context) {
@@ -37,7 +38,8 @@ const rule: Rule.RuleModule = {
         if (types.isIdentifier(node.property) && node.property.name === 'current') {
           if (types.isIdentifier(node.object)) {
             const { name } = node.object;
-            const program = context.getAncestors()[0];
+            const sourceCode = context.sourceCode || context.getSourceCode();
+            const program = sourceCode.getAncestors(node)[0];
 
             if (!types.isProgram(program)) return;
 

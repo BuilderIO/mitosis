@@ -7,6 +7,7 @@ import noConditionalLogicInComponentRender from './no-conditional-logic-in-compo
 import noMapFunctionInJsxReturnBody from './no-map-function-in-jsx-return-body';
 import noSetterWithSameNameAsStateProp from './no-setter-with-same-name-as-state-prop';
 import noStateDestructuring from './no-state-destructuring';
+import noTernaryOperatorInJsxReturnBody from './no-ternary-operator-in-jsx-return-body';
 import notVarDeclarationInJSX from './no-var-declaration-in-jsx';
 import noVarDeclarationOrAssignmentInComponent from './no-var-declaration-or-assignment-in-component';
 import noVarNameSameAsPropName from './no-var-name-same-as-prop-name';
@@ -34,4 +35,5 @@ export const rules = {
   'no-var-declaration-or-assignment-in-component': noVarDeclarationOrAssignmentInComponent,
   'no-map-function-in-jsx-return-body': noMapFunctionInJsxReturnBody,
   'no-setter-with-same-name-as-state-prop': noSetterWithSameNameAsStateProp,
+  'no-ternary-operator-in-jsx-return-body': noTernaryOperatorInJsxReturnBody,
 };

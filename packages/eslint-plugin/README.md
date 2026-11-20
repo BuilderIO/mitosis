@@ -2,6 +2,11 @@
 
 A Mitosis plugin containing rules that help you write valid and idiomatic Mitosis code
 
+## Requirements
+
+- ESLint >= 9.0.0
+- Node.js >= 18.18.0
+
 ## Setup
 
 First, make sure you have [ESLint setup correctly](https://eslint.org/docs/user-guide/getting-started#installation-and-usage). Then, install this plugin by running:
@@ -10,9 +15,39 @@ First, make sure you have [ESLint setup correctly](https://eslint.org/docs/user-
 yarn add -D @builder.io/eslint-plugin-mitosis
 ```
 
-Finally, add the plugin to the `plugins` array, and the rules you want to the `rules` array:
+### ESLint 9+ (Flat Config)
+
+For ESLint 9.0.0 and above, use the flat config format:
 
 ```js
+// eslint.config.js
+import mitosis from '@builder.io/eslint-plugin-mitosis';
+import tsParser from '@typescript-eslint/parser';
+
+export default [
+  {
+    files: ['**/*.lite.tsx', '**/*.lite.jsx'],
+    ...mitosis.configs.recommended,
+    languageOptions: {
+      ...mitosis.configs.recommended.languageOptions,
+      parser: tsParser,
+    },
+  },
+];
+```
+
+**Note:** If your Mitosis files use TypeScript, you need to install and configure `@typescript-eslint/parser`:
+
+```bash
+yarn add -D @typescript-eslint/parser
+```
+
+### ESLint < 9 (Legacy Config)
+
+If you're still using ESLint 8.x or earlier with eslintrc format:
+
+```js
+// .eslintrc.js
 module.exports = {
   parserOptions: {
     ecmaFeatures: {
@@ -22,7 +57,7 @@ module.exports = {
   plugins: ['@builder.io/mitosis'],
   extends: [
     // Use this approach for our recommended rules configuration
-    'plugin:@builder.io/mitosis/recommended',
+    'plugin:@builder.io/mitosis/recommended-legacy',
   ],
   rules: {
     // Use this to configure rules individually
@@ -30,6 +65,10 @@ module.exports = {
   },
 };
 ```
+
+## Migration from ESLint 8.x
+
+See [MIGRATION.md](./MIGRATION.md) for detailed migration instructions.
 
 ## Rules
 

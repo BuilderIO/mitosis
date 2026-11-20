@@ -13,6 +13,7 @@ const rule: Rule.RuleModule = {
       description: 'disallow defining variables with the same name as a prop name',
       recommended: true,
     },
+    schema: [],
   },
 
   create(context) {
@@ -34,8 +35,9 @@ const rule: Rule.RuleModule = {
 
     const listener: Rule.RuleListener = {
       VariableDeclarator(node) {
-        const ancestors = context.getAncestors();
-        const program = context.getAncestors()[0];
+        const sourceCode = context.sourceCode || context.getSourceCode();
+        const ancestors = sourceCode.getAncestors(node);
+        const program = ancestors[0];
 
         if (!types.isProgram(program)) return;
 

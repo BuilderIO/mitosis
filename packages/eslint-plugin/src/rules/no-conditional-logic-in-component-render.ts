@@ -14,6 +14,7 @@ const rule: Rule.RuleModule = {
       description: 'disallow conditional logic in component render.',
       recommended: true,
     },
+    schema: [],
   },
 
   create(context) {

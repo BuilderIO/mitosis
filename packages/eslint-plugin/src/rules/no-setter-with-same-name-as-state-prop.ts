@@ -13,6 +13,7 @@ const rule: Rule.RuleModule = {
       description: 'disallow defining setters with the same name as a state property',
       recommended: true,
     },
+    schema: [],
   },
 
   create(context) {

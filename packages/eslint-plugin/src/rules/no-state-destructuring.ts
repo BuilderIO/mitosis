@@ -13,6 +13,7 @@ const rule: Rule.RuleModule = {
       description: 'disallow destructuring state',
       recommended: true,
     },
+    schema: [],
   },
 
   create(context) {

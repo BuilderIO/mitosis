@@ -1,22 +1,26 @@
 import { RuleTester } from 'eslint';
-import rule from '../prefer-show-over-ternary-operator';
+import rule from '../no-ternary-operator-in-jsx-return-body';
 
 const opts = {
   filename: 'component.lite.tsx',
-  parserOptions: {
-    ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
-    sourceType: 'module', // Allows for the use of imports
-    ecmaFeatures: {
-      jsx: true, // Allows for the parsing of JSX
+  languageOptions: {
+    ecmaVersion: 2018,
+    sourceType: 'module',
+    parserOptions: {
+      ecmaFeatures: {
+        jsx: true,
+      },
     },
   },
 } as const;
 
 var ruleTester = new RuleTester({
-  parser: require.resolve('@typescript-eslint/parser'),
+  languageOptions: {
+    parser: require('@typescript-eslint/parser'),
+  },
 });
 
-ruleTester.run('prefer-show-over-ternary-operator', rule, {
+ruleTester.run('no-ternary-operator-in-jsx-return-body', rule, {
   valid: [
     {
       ...opts,
@@ -69,6 +73,12 @@ ruleTester.run('prefer-show-over-ternary-operator', rule, {
       code: `
       export default function MyComponent(props) {
         return <div>{foo ? <bar /> : <baz />}</div>;
+      }
+    `,
+      output: `import { Show } from '@builder.io/mitosis';
+
+      export default function MyComponent(props) {
+        return <div><Show when={foo} else={<baz />}>{<bar />}</Show></div>;
       }
     `,
       errors: [
