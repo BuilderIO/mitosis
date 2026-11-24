@@ -354,13 +354,16 @@ const getBlockBindings = (block: BuilderElement, options: BuilderToMitosisOption
 export const symbolBlocksAsChildren = false;
 
 /**
- * Builder stores display names ("Personalization Container") while mappers are keyed by
- * the SDK name ("PersonalizationContainer"). Fall back to the normalized name so the
- * mapper runs and its children/variants are parsed instead of passed through as props.
+ * Builder stores this component under its display name. Map that name to the SDK name
+ * so the mapper runs. Only this component is listed on purpose.
  */
+const DISPLAY_NAME_ALIASES: Record<string, string> = {
+  'Personalization Container': 'PersonalizationContainer',
+};
+
 function mapperFor(name: string | undefined) {
   if (!name) return undefined;
-  return componentMappers[name] ?? componentMappers[name.replace(/[^a-z0-9]/gi, '')];
+  return componentMappers[DISPLAY_NAME_ALIASES[name] ?? name];
 }
 
 const componentMappers: {
