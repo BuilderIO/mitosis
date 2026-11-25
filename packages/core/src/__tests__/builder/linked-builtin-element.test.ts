@@ -105,4 +105,22 @@ describe('Linked built-in elements', () => {
     expect(image.tagName).toBeUndefined();
     expect(image.properties).toBeUndefined();
   });
+  test('falls back to _tagName when $tagName is empty', () => {
+    const code = `
+      import { Fragment, Image } from "@components";
+      export default function MyComponent(props) {
+        return (
+          <Fragment>
+            <Image $tagName="" _tagName="a" href="/" image="https://example.com/a.jpg" />
+          </Fragment>
+        );
+      }
+    `;
+    const builderJson: any = componentToBuilder()({ component: parseJsx(code) });
+    const image = findImage(builderJson.data.blocks);
+
+    expect(image.tagName).toBe('a');
+    expect(image.properties).toEqual({ href: '/' });
+    expect(image.component.options._tagName).toBeUndefined();
+  });
 });

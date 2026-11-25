@@ -144,7 +144,7 @@ const isLinkedComponent = (json: MitosisNode): boolean =>
 
 /** Anchor tag of a linked built-in element. Accepts the `$tagName` and `_tagName` JSX encodings. */
 const linkTagName = (properties: Record<string, any>): string | undefined =>
-  properties.$tagName ?? properties._tagName;
+  properties.$tagName || properties._tagName;
 
 /** The href of a linked built-in element, kept on the element's properties. */
 const linkProperties = (properties: Record<string, any>): Record<string, any> | undefined => {
