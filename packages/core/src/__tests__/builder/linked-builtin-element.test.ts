@@ -87,4 +87,22 @@ describe('Linked built-in elements', () => {
     expect(image.tagName).toBeUndefined();
     expect(image.properties).toBeUndefined();
   });
+  test('keeps a plain href input on a non-anchor component with a tag', () => {
+    const code = `
+      import { Fragment, Image } from "@components";
+      export default function MyComponent(props) {
+        return (
+          <Fragment>
+            <Image $tagName="section" href="/pricing" image="https://example.com/a.jpg" />
+          </Fragment>
+        );
+      }
+    `;
+    const builderJson: any = componentToBuilder()({ component: parseJsx(code) });
+    const image = findImage(builderJson.data.blocks);
+
+    expect(image.component.options.href).toBe('/pricing');
+    expect(image.tagName).toBeUndefined();
+    expect(image.properties).toBeUndefined();
+  });
 });

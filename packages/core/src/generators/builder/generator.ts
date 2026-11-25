@@ -136,11 +136,11 @@ const findStateWithinMitosisComponent = (
 };
 
 /**
- * A component is a linked element only when Builder marked it with an anchor tag and gave it an href.
+ * A component is a linked element only when Builder marked it as an anchor (`a`) and gave it an href.
  * A plain `href` input on a component (for example a link component) stays in its options.
  */
 const isLinkedComponent = (json: MitosisNode): boolean =>
-  linkTagName(json.properties) !== undefined && linkProperties(json.properties) !== undefined;
+  linkTagName(json.properties) === 'a' && linkProperties(json.properties) !== undefined;
 
 /** Anchor tag of a linked built-in element. Accepts the `$tagName` and `_tagName` JSX encodings. */
 const linkTagName = (properties: Record<string, any>): string | undefined =>
