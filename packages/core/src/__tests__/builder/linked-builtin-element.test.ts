@@ -51,4 +51,40 @@ describe('Linked built-in elements', () => {
     expect(image.tagName).toBeUndefined();
     expect(image.properties).toBeUndefined();
   });
+  test('keeps a plain href input on a component that is not linked', () => {
+    const code = `
+      import { Fragment, MyLink } from "@components";
+      export default function MyComponent(props) {
+        return (
+          <Fragment>
+            <MyLink href="/pricing" label="Go" />
+          </Fragment>
+        );
+      }
+    `;
+    const builderJson: any = componentToBuilder()({ component: parseJsx(code) });
+    const link = findImage(builderJson.data.blocks) ?? builderJson.data.blocks[0].children[0];
+
+    expect(link.component.options.href).toBe('/pricing');
+    expect(link.properties).toBeUndefined();
+    expect(link.tagName).toBeUndefined();
+  });
+
+  test('does not set a tag on a component that has a tag but no href', () => {
+    const code = `
+      import { Fragment, Image } from "@components";
+      export default function MyComponent(props) {
+        return (
+          <Fragment>
+            <Image $tagName="section" image="https://example.com/a.jpg" />
+          </Fragment>
+        );
+      }
+    `;
+    const builderJson: any = componentToBuilder()({ component: parseJsx(code) });
+    const image = findImage(builderJson.data.blocks);
+
+    expect(image.tagName).toBeUndefined();
+    expect(image.properties).toBeUndefined();
+  });
 });

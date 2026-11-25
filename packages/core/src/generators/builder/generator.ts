@@ -135,6 +135,13 @@ const findStateWithinMitosisComponent = (
   return state;
 };
 
+/**
+ * A component is a linked element only when Builder marked it with an anchor tag and gave it an href.
+ * A plain `href` input on a component (for example a link component) stays in its options.
+ */
+const isLinkedComponent = (json: MitosisNode): boolean =>
+  linkTagName(json.properties) !== undefined && linkProperties(json.properties) !== undefined;
+
 /** Anchor tag of a linked built-in element. Accepts the `$tagName` and `_tagName` JSX encodings. */
 const linkTagName = (properties: Record<string, any>): string | undefined =>
   properties.$tagName ?? properties._tagName;
@@ -786,7 +793,7 @@ export const blockToBuilder = (
 
   const builderBindings: Record<string, string> = {};
   const componentOptions: Record<string, any> = omitMetaProperties(json.properties);
-  if (thisIsComponent && linkProperties(json.properties)) {
+  if (isLinkedComponent(json)) {
     // A linked built-in keeps its anchor tag and href on the element, not in its options.
     delete componentOptions.href;
     delete componentOptions._tagName;
@@ -861,7 +868,7 @@ export const blockToBuilder = (
 
   const element = el(
     {
-      tagName: thisIsComponent ? linkTagName(json.properties) : json.name,
+      tagName: thisIsComponent ? (isLinkedComponent(json) ? linkTagName(json.properties) : undefined) : json.name,
       ...(hasCss && {
         responsiveStyles,
       }),
@@ -882,7 +889,7 @@ export const blockToBuilder = (
         bindings: builderBindings,
         actions,
       },
-      properties: thisIsComponent ? linkProperties(json.properties) : omitMetaProperties(json.properties),
+      properties: thisIsComponent ? (isLinkedComponent(json) ? linkProperties(json.properties) : undefined) : omitMetaProperties(json.properties),
       bindings: thisIsComponent
         ? builderBindings
         : omit(
