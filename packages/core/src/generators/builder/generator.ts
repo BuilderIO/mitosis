@@ -868,7 +868,11 @@ export const blockToBuilder = (
 
   const element = el(
     {
-      tagName: thisIsComponent ? (isLinkedComponent(json) ? linkTagName(json.properties) : undefined) : json.name,
+      tagName: thisIsComponent
+        ? isLinkedComponent(json)
+          ? linkTagName(json.properties)
+          : undefined
+        : json.name,
       ...(hasCss && {
         responsiveStyles,
       }),
@@ -889,7 +893,11 @@ export const blockToBuilder = (
         bindings: builderBindings,
         actions,
       },
-      properties: thisIsComponent ? (isLinkedComponent(json) ? linkProperties(json.properties) : undefined) : omitMetaProperties(json.properties),
+      properties: thisIsComponent
+        ? isLinkedComponent(json)
+          ? linkProperties(json.properties)
+          : undefined
+        : omitMetaProperties(json.properties),
       bindings: thisIsComponent
         ? builderBindings
         : omit(
