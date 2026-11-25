@@ -179,3 +179,53 @@ describe('Builder Personalization Container/Variants', () => {
     `);
   });
 });
+
+describe('Builder display names for Personalization Container', () => {
+  test('keeps variants when the stored name is "Personalization Container"', () => {
+    const builderJson: any = {
+      data: {
+        blocks: [
+          {
+            '@type': '@builder.io/sdk:Element',
+            id: 'builder-pc',
+            component: {
+              name: 'Personalization Container',
+              options: {
+                variants: [
+                  {
+                    name: 'v1',
+                    query: [
+                      {
+                        '@type': '@builder.io/core:Query',
+                        property: 'urlPath',
+                        operator: 'is',
+                        value: '/a',
+                      },
+                    ],
+                    blocks: [
+                      {
+                        '@type': '@builder.io/sdk:Element',
+                        id: 'builder-v1t',
+                        component: { name: 'Text', options: { text: 'Variant 1' } },
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    const component = builderContentToMitosisComponent(builderJson);
+    const back: any = componentToBuilder()({ component });
+    const variants = back.data.blocks[0].component.options.variants;
+
+    expect(variants).toHaveLength(1);
+    expect(variants[0].name).toBe('v1');
+    expect(variants[0].query).toEqual([
+      expect.objectContaining({ property: 'urlPath', operator: 'is', value: '/a' }),
+    ]);
+  });
+});

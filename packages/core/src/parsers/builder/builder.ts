@@ -353,6 +353,19 @@ const getBlockBindings = (block: BuilderElement, options: BuilderToMitosisOption
 // add back if this direction (blocks as children not prop) is desired
 export const symbolBlocksAsChildren = false;
 
+/**
+ * Builder stores this component under its display name. Map that name to the SDK name
+ * so the mapper runs. Only this component is listed on purpose.
+ */
+const DISPLAY_NAME_ALIASES: Record<string, string> = {
+  'Personalization Container': 'PersonalizationContainer',
+};
+
+function mapperFor(name: string | undefined) {
+  if (!name) return undefined;
+  return componentMappers[DISPLAY_NAME_ALIASES[name] ?? name];
+}
+
 const componentMappers: {
   [key: string]: (block: BuilderElement, options: BuilderToMitosisOptions) => MitosisNode;
 } = {
@@ -700,7 +713,7 @@ export const builderElementToMitosisNode = (
   const mapper =
     !_internalOptions.skipMapper &&
     block.component &&
-    (componentMappers[block.component!.name] ||
+    (mapperFor(block.component!.name) ||
       // Handle symbols that were renamed by extractSymbols (e.g., "SymbolButtonComponent")
       // Check for symbol options or exact 'Symbol' name instead of name pattern
       (block.component?.options?.symbol || block.component?.name === 'Symbol'
@@ -826,7 +839,7 @@ export const builderElementToMitosisNode = (
         slots[key] = childrenElements;
       } else if (
         options.enableBlocksSlots &&
-        !componentMappers[block.component?.name] &&
+        !mapperFor(block.component?.name) &&
         (Array.isArray(value) || (typeof value === 'object' && value !== null))
       ) {
         /**
