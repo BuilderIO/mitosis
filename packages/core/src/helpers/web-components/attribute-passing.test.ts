@@ -163,4 +163,27 @@ describe('enableAttributePassing runtime behavior', () => {
     expect(parent['data-y']).toBeUndefined();
     expect(parent['data-z']).toBeUndefined();
   });
+
+  it('passes the style attribute from parent to child', () => {
+    const { parent, child } = runAttributePassing({ style: 'width: 120px' }, { class: 'db-stack' });
+
+    expect(child.style).toBe('width: 120px');
+    expect(parent.style).toBeUndefined();
+  });
+
+  it('appends the parent style to the style the child already has', () => {
+    const { parent, child } = runAttributePassing(
+      { style: 'width: 120px' },
+      { class: 'db-stack', style: 'display: flex' },
+    );
+
+    expect(child.style).toBe('display: flex; width: 120px');
+    expect(parent.style).toBeUndefined();
+  });
+
+  it('keeps an escaped semicolon at the end of the child style', () => {
+    const { child } = runAttributePassing({ style: 'width: 120px' }, { style: '--gap: 1\\;' });
+
+    expect(child.style).toBe('--gap: 1\\;; width: 120px');
+  });
 });
