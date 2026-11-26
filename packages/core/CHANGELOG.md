@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.14.3
+
+### Patch Changes
+
+- 9fd3825: [Builder] Bug: Keep the anchor tag and href of linked built-in elements such as Image when converting back to Builder content.
+- 55cab7e: [Builder] Bug: Map the "Personalization Container" display name to its mapper so its variants are kept.
+
 ## 0.14.2
 
 ### Patch Changes
