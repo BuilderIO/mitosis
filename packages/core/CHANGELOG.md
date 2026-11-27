@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.14.4
+
+### Patch Changes
+
+- a1de232: [Builder] Bug: Read the link from the `_propertiesHref` marker before a plain `href`, so a component's own href input is kept when the block also has a link.
+
 ## 0.14.3
 
 ### Patch Changes
