@@ -123,4 +123,23 @@ describe('Linked built-in elements', () => {
     expect(image.properties).toEqual({ href: '/' });
     expect(image.component.options._tagName).toBeUndefined();
   });
+  test('keeps a component href input when the link is marked with _propertiesHref', () => {
+    const code = `
+      import { Fragment, CustomCard } from "@components";
+      export default function MyComponent(props) {
+        return (
+          <Fragment>
+            <CustomCard _tagName="a" _propertiesHref="https://example.com/block-link" href="https://example.com/component-input" />
+          </Fragment>
+        );
+      }
+    `;
+    const builderJson: any = componentToBuilder()({ component: parseJsx(code) });
+    const card = builderJson.data.blocks[0].children[0];
+
+    expect(card.tagName).toBe('a');
+    expect(card.properties).toEqual({ href: 'https://example.com/block-link' });
+    expect(card.component.options.href).toBe('https://example.com/component-input');
+    expect(card.component.options._propertiesHref).toBeUndefined();
+  });
 });

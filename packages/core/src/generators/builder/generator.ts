@@ -148,7 +148,8 @@ const linkTagName = (properties: Record<string, any>): string | undefined =>
 
 /** The href of a linked built-in element, kept on the element's properties. */
 const linkProperties = (properties: Record<string, any>): Record<string, any> | undefined => {
-  const href = properties.href ?? properties._propertiesHref;
+  // The marker holds the element's own link. A plain `href` can be a component input.
+  const href = properties._propertiesHref ?? properties.href;
   return href !== undefined ? { href } : undefined;
 };
 
@@ -795,7 +796,8 @@ export const blockToBuilder = (
   const componentOptions: Record<string, any> = omitMetaProperties(json.properties);
   if (isLinkedComponent(json)) {
     // A linked built-in keeps its anchor tag and href on the element, not in its options.
-    delete componentOptions.href;
+    // Without the marker, the plain `href` was the link, so it leaves the options too.
+    if (json.properties._propertiesHref === undefined) delete componentOptions.href;
     delete componentOptions._tagName;
     delete componentOptions._propertiesHref;
   }
